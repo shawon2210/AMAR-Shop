@@ -81,7 +81,9 @@ export class AdminController {
     return this.adminService.getProducts({
       page: page ? parseInt(page) : 1,
       limit: limit ? parseInt(limit) : 20,
-      status, search, category,
+      status,
+      search,
+      category,
     });
   }
 
@@ -106,7 +108,9 @@ export class AdminController {
     return this.adminService.getOrders({
       page: page ? parseInt(page) : 1,
       limit: limit ? parseInt(limit) : 20,
-      status, from, to,
+      status,
+      from,
+      to,
     });
   }
 
@@ -121,7 +125,9 @@ export class AdminController {
     return this.adminService.getPayments({
       page: page ? parseInt(page) : 1,
       limit: limit ? parseInt(limit) : 20,
-      status, from, to,
+      status,
+      from,
+      to,
     });
   }
 
@@ -202,7 +208,8 @@ export class AdminController {
     return this.adminService.getSupportTickets({
       page: page ? parseInt(page) : 1,
       limit: limit ? parseInt(limit) : 20,
-      status, priority,
+      status,
+      priority,
     });
   }
 }

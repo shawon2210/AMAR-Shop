@@ -27,7 +27,10 @@ export interface SearchResult<T> {
 export class SearchService {
   constructor(private prisma: PrismaService) {}
 
-  async search(query: string, filters: SearchFilters): Promise<SearchResult<any>> {
+  async search(
+    query: string,
+    filters: SearchFilters,
+  ): Promise<SearchResult<any>> {
     const page = filters.page || 1;
     const limit = filters.limit || 20;
     const skip = (page - 1) * limit;
@@ -74,11 +77,21 @@ export class SearchService {
 
     let orderBy: any = { createdAt: 'desc' };
     switch (filters.sort) {
-      case 'price_asc': orderBy = { price: 'asc' }; break;
-      case 'price_desc': orderBy = { price: 'desc' }; break;
-      case 'rating': orderBy = { rating: 'desc' }; break;
-      case 'sold': orderBy = { soldCount: 'desc' }; break;
-      case 'newest': orderBy = { createdAt: 'desc' }; break;
+      case 'price_asc':
+        orderBy = { price: 'asc' };
+        break;
+      case 'price_desc':
+        orderBy = { price: 'desc' };
+        break;
+      case 'rating':
+        orderBy = { rating: 'desc' };
+        break;
+      case 'sold':
+        orderBy = { soldCount: 'desc' };
+        break;
+      case 'newest':
+        orderBy = { createdAt: 'desc' };
+        break;
     }
 
     const [items, total] = await Promise.all([
@@ -127,8 +140,19 @@ export class SearchService {
     });
 
     const suggestions = [
-      ...products.map(p => ({ type: 'product' as const, id: p.id, text: p.name, slug: p.slug, price: p.price, image: p.images[0] })),
-      ...popularSearches.map(s => ({ type: 'query' as const, text: s.query, count: s._count.query })),
+      ...products.map((p) => ({
+        type: 'product' as const,
+        id: p.id,
+        text: p.name,
+        slug: p.slug,
+        price: p.price,
+        image: p.images[0],
+      })),
+      ...popularSearches.map((s) => ({
+        type: 'query' as const,
+        text: s.query,
+        count: s._count.query,
+      })),
     ];
 
     return suggestions.slice(0, 10);
@@ -138,21 +162,33 @@ export class SearchService {
     if (!query) return [];
 
     const exact = await this.prisma.product.count({
-      where: { name: { contains: query, mode: 'insensitive' }, status: 'active' },
+      where: {
+        name: { contains: query, mode: 'insensitive' },
+        status: 'active',
+      },
     });
 
     if (exact === 0) {
       const corrected = await this.prisma.product.findFirst({
         where: {
           status: 'active',
-          name: { mode: 'insensitive', contains: query.replace(/[^a-zA-Z0-9 ]/g, '') },
+          name: {
+            mode: 'insensitive',
+            contains: query.replace(/[^a-zA-Z0-9 ]/g, ''),
+          },
         },
         select: { name: true },
         orderBy: { soldCount: 'desc' },
       });
 
       if (corrected) {
-        return [{ type: 'correction' as const, original: query, suggestion: corrected.name }];
+        return [
+          {
+            type: 'correction' as const,
+            original: query,
+            suggestion: corrected.name,
+          },
+        ];
       }
     }
 
@@ -167,7 +203,7 @@ export class SearchService {
       take: limit,
     });
 
-    return searches.map(s => ({ query: s.query, count: s._count.query }));
+    return searches.map((s) => ({ query: s.query, count: s._count.query }));
   }
 
   async getTrendingProducts(limit = 20) {
@@ -209,11 +245,13 @@ export class SearchService {
     });
 
     const seen = new Set<string>();
-    return history.filter(h => {
-      if (seen.has(h.productId)) return false;
-      seen.add(h.productId);
-      return true;
-    }).map(h => h.product);
+    return history
+      .filter((h) => {
+        if (seen.has(h.productId)) return false;
+        seen.add(h.productId);
+        return true;
+      })
+      .map((h) => h.product);
   }
 
   async getPersonalizedFeed(userId: string, limit = 20) {
@@ -224,7 +262,9 @@ export class SearchService {
       take: 50,
     });
 
-    const categoryIds = [...new Set(browsingHistory.map(b => b.product.categoryId))];
+    const categoryIds = [
+      ...new Set(browsingHistory.map((b) => b.product.categoryId)),
+    ];
 
     if (categoryIds.length === 0) {
       return this.getTrendingProducts(limit);
@@ -299,16 +339,20 @@ export class SearchService {
       }),
     ]);
 
-    const brandIds = brandsResult.map(b => b.brandId).filter(Boolean) as string[];
-    const brands = brandIds.length > 0
-      ? await this.prisma.brand.findMany({
-          where: { id: { in: brandIds } },
-          select: { id: true, name: true },
-        })
-      : [];
+    const brandIds = brandsResult
+      .map((b) => b.brandId)
+      .filter(Boolean) as string[];
+    const brands =
+      brandIds.length > 0
+        ? await this.prisma.brand.findMany({
+            where: { id: { in: brandIds } },
+            select: { id: true, name: true },
+          })
+        : [];
 
-    const brandFilters = brands.map(b => {
-      const count = brandsResult.find(br => br.brandId === b.id)?._count.brandId || 0;
+    const brandFilters = brands.map((b) => {
+      const count =
+        brandsResult.find((br) => br.brandId === b.id)?._count.brandId || 0;
       return { id: b.id, name: b.name, count };
     });
 
@@ -320,10 +364,12 @@ export class SearchService {
       { label: 'Over ৳10,000', min: 10000, max: undefined },
     ];
 
-    const ratingFilters = [4, 3, 2, 1].map(r => ({
+    const ratingFilters = [4, 3, 2, 1].map((r) => ({
       rating: r,
       label: `${r}+ Stars`,
-      count: ratingBuckets.filter(b => b.rating >= r).reduce((sum, b) => sum + b._count.rating, 0),
+      count: ratingBuckets
+        .filter((b) => b.rating >= r)
+        .reduce((sum, b) => sum + b._count.rating, 0),
     }));
 
     return {

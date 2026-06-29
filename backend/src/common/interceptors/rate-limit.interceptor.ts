@@ -1,4 +1,11 @@
-import { Injectable, NestInterceptor, ExecutionContext, CallHandler, HttpException, HttpStatus } from '@nestjs/common';
+import {
+  Injectable,
+  NestInterceptor,
+  ExecutionContext,
+  CallHandler,
+  HttpException,
+  HttpStatus,
+} from '@nestjs/common';
 import { Observable } from 'rxjs';
 
 interface TierConfig {
@@ -31,12 +38,23 @@ export class RateLimitInterceptor implements NestInterceptor {
     if (entry && now < entry.resetAt) {
       if (entry.count >= config.limit) {
         const response = context.switchToHttp().getResponse();
-        response.setHeader('Retry-After', Math.ceil((entry.resetAt - now) / 1000));
+        response.setHeader(
+          'Retry-After',
+          Math.ceil((entry.resetAt - now) / 1000),
+        );
         response.setHeader('X-RateLimit-Limit', config.limit);
         response.setHeader('X-RateLimit-Remaining', 0);
-        response.setHeader('X-RateLimit-Reset', Math.ceil(entry.resetAt / 1000));
+        response.setHeader(
+          'X-RateLimit-Reset',
+          Math.ceil(entry.resetAt / 1000),
+        );
         throw new HttpException(
-          { message: 'Rate limit exceeded', tier: config.label, limit: config.limit, resetAt: entry.resetAt },
+          {
+            message: 'Rate limit exceeded',
+            tier: config.label,
+            limit: config.limit,
+            resetAt: entry.resetAt,
+          },
           HttpStatus.TOO_MANY_REQUESTS,
         );
       }
@@ -48,8 +66,14 @@ export class RateLimitInterceptor implements NestInterceptor {
     const response = context.switchToHttp().getResponse();
     const currentEntry = this.store.get(key);
     response.setHeader('X-RateLimit-Limit', config.limit);
-    response.setHeader('X-RateLimit-Remaining', Math.max(0, config.limit - currentEntry!.count));
-    response.setHeader('X-RateLimit-Reset', Math.ceil(currentEntry!.resetAt / 1000));
+    response.setHeader(
+      'X-RateLimit-Remaining',
+      Math.max(0, config.limit - currentEntry!.count),
+    );
+    response.setHeader(
+      'X-RateLimit-Reset',
+      Math.ceil(currentEntry!.resetAt / 1000),
+    );
 
     return next.handle();
   }

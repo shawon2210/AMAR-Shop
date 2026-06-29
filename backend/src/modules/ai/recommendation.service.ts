@@ -50,14 +50,18 @@ export class RecommendationService {
         return this.getColdStartRecommendations(limit);
       }
 
-      const purchasedIds = recentInteractions.filter(i => i.action === 'purchase').map(i => i.productId);
+      const purchasedIds = recentInteractions
+        .filter((i) => i.action === 'purchase')
+        .map((i) => i.productId);
       const viewedCategoryIds = await this.getViewedCategoryIds(userId);
 
       const candidates = await this.prisma.product.findMany({
         where: {
           status: 'active',
           id: { notIn: purchasedIds },
-          ...(viewedCategoryIds.length > 0 ? { categoryId: { in: viewedCategoryIds } } : {}),
+          ...(viewedCategoryIds.length > 0
+            ? { categoryId: { in: viewedCategoryIds } }
+            : {}),
         },
         include: {
           store: { select: { id: true, name: true, isOfficial: true } },
@@ -68,11 +72,15 @@ export class RecommendationService {
         take: limit * 3,
       });
 
-      const scored = candidates.map(product => {
+      const scored = candidates.map((product) => {
         const collabScore = this.predictRating(userId, product.id);
-        const popularScore = (product.soldCount / 1000) * 0.3 + (product.rating / 5) * 0.7;
-        const freshness = (new Date(product.createdAt).getTime() - Date.now() + 30 * 86400000) / (30 * 86400000);
-        const hybridScore = collabScore * 0.5 + popularScore * 0.3 + Math.max(0, freshness) * 0.2;
+        const popularScore =
+          (product.soldCount / 1000) * 0.3 + (product.rating / 5) * 0.7;
+        const freshness =
+          (new Date(product.createdAt).getTime() - Date.now() + 30 * 86400000) /
+          (30 * 86400000);
+        const hybridScore =
+          collabScore * 0.5 + popularScore * 0.3 + Math.max(0, freshness) * 0.2;
         return { ...product, _score: hybridScore };
       });
 
@@ -84,14 +92,17 @@ export class RecommendationService {
     }
   }
 
-  async getFrequentlyBoughtTogether(productId: string, limit = 6): Promise<any[]> {
+  async getFrequentlyBoughtTogether(
+    productId: string,
+    limit = 6,
+  ): Promise<any[]> {
     const ordersWithProduct = await this.prisma.orderItem.findMany({
       where: { productId },
       select: { orderId: true },
       take: 100,
     });
 
-    const orderIds = [...new Set(ordersWithProduct.map(o => o.orderId))];
+    const orderIds = [...new Set(ordersWithProduct.map((o) => o.orderId))];
     if (orderIds.length === 0) return [];
 
     const coOccurrences = await this.prisma.orderItem.groupBy({
@@ -105,7 +116,7 @@ export class RecommendationService {
       take: limit,
     });
 
-    const productIds = coOccurrences.map(c => c.productId);
+    const productIds = coOccurrences.map((c) => c.productId);
     if (productIds.length === 0) return [];
 
     const products = await this.prisma.product.findMany({
@@ -117,7 +128,9 @@ export class RecommendationService {
       },
     });
 
-    return productIds.map(id => products.find(p => p.id === id)).filter(Boolean);
+    return productIds
+      .map((id) => products.find((p) => p.id === id))
+      .filter(Boolean);
   }
 
   async getCrossSellItems(productId: string, limit = 6): Promise<any[]> {
@@ -172,7 +185,7 @@ export class RecommendationService {
 
   async getSimilarUsers(userId: string, limit = 10): Promise<string[]> {
     const userInteractions = await this.getUserInteractions(userId, 100);
-    const userProductSet = new Set(userInteractions.map(i => i.productId));
+    const userProductSet = new Set(userInteractions.map((i) => i.productId));
     if (userProductSet.size === 0) return [];
 
     const allUsers = await this.prisma.userActivity.groupBy({
@@ -189,8 +202,12 @@ export class RecommendationService {
     const similarities: Array<{ userId: string; score: number }> = [];
     for (const { userId: otherId } of allUsers) {
       const otherInteractions = await this.getUserInteractions(otherId, 50);
-      const otherProductSet = new Set(otherInteractions.map(i => i.productId));
-      const intersection = new Set([...userProductSet].filter(x => otherProductSet.has(x)));
+      const otherProductSet = new Set(
+        otherInteractions.map((i) => i.productId),
+      );
+      const intersection = new Set(
+        [...userProductSet].filter((x) => otherProductSet.has(x)),
+      );
       const union = new Set([...userProductSet, ...otherProductSet]);
       const jaccard = union.size > 0 ? intersection.size / union.size : 0;
       if (jaccard > 0.1) {
@@ -198,7 +215,10 @@ export class RecommendationService {
       }
     }
 
-    return similarities.sort((a, b) => b.score - a.score).slice(0, limit).map(s => s.userId);
+    return similarities
+      .sort((a, b) => b.score - a.score)
+      .slice(0, limit)
+      .map((s) => s.userId);
   }
 
   async getColdStartRecommendations(limit = 20): Promise<any[]> {
@@ -214,7 +234,11 @@ export class RecommendationService {
     });
   }
 
-  async trackInteraction(userId: string, productId: string, action: Interaction['action']): Promise<void> {
+  async trackInteraction(
+    userId: string,
+    productId: string,
+    action: Interaction['action'],
+  ): Promise<void> {
     const weightMap: Record<string, number> = {
       view: 0.1,
       add_to_cart: 0.5,
@@ -243,7 +267,10 @@ export class RecommendationService {
     }
   }
 
-  private async getUserInteractions(userId: string, limit = 100): Promise<Interaction[]> {
+  private async getUserInteractions(
+    userId: string,
+    limit = 100,
+  ): Promise<Interaction[]> {
     const cacheKey = `${userId}:interactions`;
     const cached = this.interactionCache.get(cacheKey);
     if (cached) return cached.slice(0, limit);
@@ -254,13 +281,22 @@ export class RecommendationService {
       take: limit,
     });
 
-    const interactions: Interaction[] = activities.map(a => ({
-      userId,
-      productId: (a.metadata as any)?.productId || '',
-      action: (a.action === 'VIEW_PRODUCT' ? 'view' : a.action === 'ADD_TO_CART' ? 'add_to_cart' : a.action === 'PURCHASE' ? 'purchase' : 'view') as Interaction['action'],
-      timestamp: a.createdAt,
-      weight: (a.metadata as any)?.weight || 0.1,
-    })).filter(i => i.productId);
+    const interactions: Interaction[] = activities
+      .map((a) => ({
+        userId,
+        productId: (a.metadata as any)?.productId || '',
+        action:
+          a.action === 'VIEW_PRODUCT'
+            ? 'view'
+            : a.action === 'ADD_TO_CART'
+              ? 'add_to_cart'
+              : a.action === 'PURCHASE'
+                ? 'purchase'
+                : 'wishlist',
+        timestamp: a.createdAt,
+        weight: (a.metadata as any)?.weight || 0.1,
+      }))
+      .filter((i) => i.productId) as Interaction[];
 
     this.interactionCache.set(cacheKey, interactions);
     return interactions;
@@ -274,7 +310,7 @@ export class RecommendationService {
       take: 30,
     });
 
-    return [...new Set(history.map(h => h.product.categoryId))];
+    return [...new Set(history.map((h) => h.product.categoryId))];
   }
 
   private predictRating(userId: string, productId: string): number {
@@ -284,7 +320,10 @@ export class RecommendationService {
     if (!userFactors) {
       userFactors = {
         userId,
-        factors: Array.from({ length: this.latentFactors }, () => (Math.random() - 0.5) * 0.1),
+        factors: Array.from(
+          { length: this.latentFactors },
+          () => (Math.random() - 0.5) * 0.1,
+        ),
         bias: 0,
       };
       this.userFactorsMap.set(userId, userFactors);
@@ -293,7 +332,10 @@ export class RecommendationService {
     if (!productFactors) {
       productFactors = {
         productId,
-        factors: Array.from({ length: this.latentFactors }, () => (Math.random() - 0.5) * 0.1),
+        factors: Array.from(
+          { length: this.latentFactors },
+          () => (Math.random() - 0.5) * 0.1,
+        ),
         bias: 3.0,
       };
       this.productFactorsMap.set(productId, productFactors);

@@ -1,4 +1,9 @@
-import { Injectable, NestInterceptor, ExecutionContext, CallHandler } from '@nestjs/common';
+import {
+  Injectable,
+  NestInterceptor,
+  ExecutionContext,
+  CallHandler,
+} from '@nestjs/common';
 import { Observable, tap } from 'rxjs';
 import { Counter, Histogram, Gauge } from 'prom-client';
 import { register } from 'prom-client';
@@ -42,14 +47,18 @@ export class MetricsInterceptor implements NestInterceptor {
           const status = context.switchToHttp().getResponse().statusCode;
           const duration = Date.now() - start;
           this.requestCounter.labels(method, path, String(status)).inc();
-          this.requestDuration.labels(method, path, String(status)).observe(duration);
+          this.requestDuration
+            .labels(method, path, String(status))
+            .observe(duration);
           this.activeRequests.dec();
         },
         error: () => {
           const status = 500;
           const duration = Date.now() - start;
           this.requestCounter.labels(method, path, String(status)).inc();
-          this.requestDuration.labels(method, path, String(status)).observe(duration);
+          this.requestDuration
+            .labels(method, path, String(status))
+            .observe(duration);
           this.activeRequests.dec();
         },
       }),

@@ -1,4 +1,12 @@
-import { Controller, Get, Post, Body, Param, Query, UseGuards } from '@nestjs/common';
+import {
+  Controller,
+  Get,
+  Post,
+  Body,
+  Param,
+  Query,
+  UseGuards,
+} from '@nestjs/common';
 import { AuthGuard } from '@nestjs/passport';
 import { LogisticsService } from './logistics.service';
 
@@ -23,8 +31,14 @@ export class LogisticsController {
   }
 
   @Post('calculate')
-  async calculateShipping(@Body() body: { weight: number; district: string; courierId: string }) {
-    return this.logisticsService.calculateShipping(body.weight, body.district, body.courierId);
+  async calculateShipping(
+    @Body() body: { weight: number; district: string; courierId: string },
+  ) {
+    return this.logisticsService.calculateShipping(
+      body.weight,
+      body.district,
+      body.courierId,
+    );
   }
 
   @Get('track/:trackingId')

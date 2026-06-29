@@ -1,4 +1,9 @@
-import { Injectable, NotFoundException, ConflictException, UnauthorizedException } from '@nestjs/common';
+import {
+  Injectable,
+  NotFoundException,
+  ConflictException,
+  UnauthorizedException,
+} from '@nestjs/common';
 import { v4 as uuidv4 } from 'uuid';
 import * as crypto from 'crypto';
 import { PrismaService } from '../../common/prisma.service';
@@ -12,7 +17,11 @@ interface RateLimitTier {
 const TIER_LIMITS: Record<string, RateLimitTier> = {
   free: { requestsPerHour: 100, requestsPerMinute: 10, concurrentLimit: 5 },
   pro: { requestsPerHour: 10000, requestsPerMinute: 500, concurrentLimit: 50 },
-  enterprise: { requestsPerHour: Infinity, requestsPerMinute: Infinity, concurrentLimit: Infinity },
+  enterprise: {
+    requestsPerHour: Infinity,
+    requestsPerMinute: Infinity,
+    concurrentLimit: Infinity,
+  },
 };
 
 @Injectable()
@@ -24,8 +33,11 @@ export class DeveloperService {
   }
 
   async createApiKey(name: string, userId: string, permissions: string[]) {
-    const existing = await this.prisma.apiKey.findFirst({ where: { userId, name } });
-    if (existing) throw new ConflictException('API key with this name already exists');
+    const existing = await this.prisma.apiKey.findFirst({
+      where: { userId, name },
+    });
+    if (existing)
+      throw new ConflictException('API key with this name already exists');
 
     const rawKey = `amarshop_${uuidv4().replace(/-/g, '')}`;
     const hashedKey = this.hashKey(rawKey);
@@ -40,12 +52,19 @@ export class DeveloperService {
       },
     });
 
-    return { id: apiKey.id, name: apiKey.name, key: rawKey, createdAt: apiKey.createdAt };
+    return {
+      id: apiKey.id,
+      name: apiKey.name,
+      key: rawKey,
+      createdAt: apiKey.createdAt,
+    };
   }
 
   async validateApiKey(key: string) {
     const hashedKey = this.hashKey(key);
-    const apiKey = await this.prisma.apiKey.findUnique({ where: { key: hashedKey } });
+    const apiKey = await this.prisma.apiKey.findUnique({
+      where: { key: hashedKey },
+    });
     if (!apiKey) throw new UnauthorizedException('Invalid API key');
     if (!apiKey.isActive) throw new UnauthorizedException('API key is revoked');
 
@@ -54,7 +73,11 @@ export class DeveloperService {
       data: { lastUsedAt: new Date() },
     });
 
-    return { userId: apiKey.userId, permissions: apiKey.permissions, keyId: apiKey.id };
+    return {
+      userId: apiKey.userId,
+      permissions: apiKey.permissions,
+      keyId: apiKey.id,
+    };
   }
 
   async revokeApiKey(keyId: string) {
@@ -91,7 +114,10 @@ export class DeveloperService {
       where.createdAt = { gte: dateRange.start, lte: dateRange.end };
     }
 
-    const logs = await this.prisma.apiUsageLog.findMany({ where, orderBy: { createdAt: 'desc' } });
+    const logs = await this.prisma.apiUsageLog.findMany({
+      where,
+      orderBy: { createdAt: 'desc' },
+    });
 
     return {
       total: logs.length,
@@ -102,7 +128,12 @@ export class DeveloperService {
     };
   }
 
-  async logApiCall(keyId: string, endpoint: string, status: number, duration: number) {
+  async logApiCall(
+    keyId: string,
+    endpoint: string,
+    status: number,
+    duration: number,
+  ) {
     return this.prisma.apiUsageLog.create({
       data: { apiKeyId: keyId, endpoint, status, duration },
     });
@@ -115,7 +146,12 @@ export class DeveloperService {
     });
   }
 
-  async registerWebhook(storeId: string, event: string, url: string, secret: string) {
+  async registerWebhook(
+    storeId: string,
+    event: string,
+    url: string,
+    secret: string,
+  ) {
     return this.prisma.webhook.create({
       data: { storeId, event, url, secret },
     });
@@ -127,7 +163,9 @@ export class DeveloperService {
   }
 
   async triggerWebhook(event: string, payload: Record<string, unknown>) {
-    const webhooks = await this.prisma.webhook.findMany({ where: { event, isActive: true } });
+    const webhooks = await this.prisma.webhook.findMany({
+      where: { event, isActive: true },
+    });
 
     const results = await Promise.allSettled(
       webhooks.map(async (wh) => {

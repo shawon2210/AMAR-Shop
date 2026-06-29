@@ -1,4 +1,8 @@
-import { Injectable, NotFoundException, BadRequestException } from '@nestjs/common';
+import {
+  Injectable,
+  NotFoundException,
+  BadRequestException,
+} from '@nestjs/common';
 import { PrismaService } from '../../common/prisma.service';
 
 @Injectable()
@@ -6,11 +10,16 @@ export class FinanceService {
   constructor(private prisma: PrismaService) {}
 
   async createEscrow(orderId: string, amount: number) {
-    const order = await this.prisma.order.findUnique({ where: { id: orderId } });
+    const order = await this.prisma.order.findUnique({
+      where: { id: orderId },
+    });
     if (!order) throw new NotFoundException('Order not found');
 
-    const existing = await this.prisma.escrowTransaction.findUnique({ where: { orderId } });
-    if (existing) throw new BadRequestException('Escrow already exists for this order');
+    const existing = await this.prisma.escrowTransaction.findUnique({
+      where: { orderId },
+    });
+    if (existing)
+      throw new BadRequestException('Escrow already exists for this order');
 
     return this.prisma.escrowTransaction.create({
       data: { orderId, amount, status: 'HELD' },
@@ -18,26 +27,64 @@ export class FinanceService {
   }
 
   async releaseEscrow(orderId: string) {
-    const escrow = await this.prisma.escrowTransaction.findUnique({ where: { orderId } });
+    const escrow = await this.prisma.escrowTransaction.findUnique({
+      where: { orderId },
+    });
     if (!escrow) throw new NotFoundException('Escrow not found');
-    if (escrow.status !== 'HELD') throw new BadRequestException('Escrow not in HELD status');
+    if (escrow.status !== 'HELD')
+      throw new BadRequestException('Escrow not in HELD status');
 
-    const order = await this.prisma.order.findUnique({ where: { id: orderId }, include: { items: true } });
+    const order = await this.prisma.order.findUnique({
+      where: { id: orderId },
+      include: { items: true },
+    });
     if (!order) throw new NotFoundException('Order not found');
 
     const commission = await this.calculateCommission(orderId);
 
     await this.prisma.$transaction([
-      this.prisma.escrowTransaction.update({ where: { id: escrow.id }, data: { status: 'RELEASED', releasedAt: new Date() } }),
-      this.prisma.accountingEntry.create({ data: { entryNumber: `ACC-${Date.now()}`, type: 'CREDIT', account: 'REVENUE', amount: escrow.amount - commission.totalCommission, description: `Escrow release for order ${order.orderNumber}`, referenceId: orderId, referenceType: 'order', entryDate: new Date() } }),
-      this.prisma.accountingEntry.create({ data: { entryNumber: `ACC-${Date.now() + 1}`, type: 'DEBIT', account: 'COMMISSION_INCOME', amount: commission.totalCommission, description: `Commission for order ${order.orderNumber}`, referenceId: orderId, referenceType: 'order', entryDate: new Date() } }),
+      this.prisma.escrowTransaction.update({
+        where: { id: escrow.id },
+        data: { status: 'RELEASED', releasedAt: new Date() },
+      }),
+      this.prisma.accountingEntry.create({
+        data: {
+          entryNumber: `ACC-${Date.now()}`,
+          type: 'CREDIT',
+          account: 'REVENUE',
+          amount: escrow.amount - commission.totalCommission,
+          description: `Escrow release for order ${order.orderNumber}`,
+          referenceId: orderId,
+          referenceType: 'order',
+          entryDate: new Date(),
+        },
+      }),
+      this.prisma.accountingEntry.create({
+        data: {
+          entryNumber: `ACC-${Date.now() + 1}`,
+          type: 'DEBIT',
+          account: 'COMMISSION_INCOME',
+          amount: commission.totalCommission,
+          description: `Commission for order ${order.orderNumber}`,
+          referenceId: orderId,
+          referenceType: 'order',
+          entryDate: new Date(),
+        },
+      }),
     ]);
 
-    return { success: true, orderId, releasedAmount: escrow.amount, commission: commission.totalCommission };
+    return {
+      success: true,
+      orderId,
+      releasedAmount: escrow.amount,
+      commission: commission.totalCommission,
+    };
   }
 
   async refundToEscrow(orderId: string, amount: number) {
-    const escrow = await this.prisma.escrowTransaction.findUnique({ where: { orderId } });
+    const escrow = await this.prisma.escrowTransaction.findUnique({
+      where: { orderId },
+    });
     if (!escrow) throw new NotFoundException('Escrow not found');
 
     await this.prisma.escrowTransaction.update({
@@ -46,14 +93,31 @@ export class FinanceService {
     });
 
     await this.prisma.accountingEntry.create({
-      data: { entryNumber: `ACC-${Date.now()}`, type: 'DEBIT', account: 'ACCOUNTS_PAYABLE', amount, description: `Refund to escrow for order ${orderId}`, referenceId: orderId, referenceType: 'order', entryDate: new Date() },
+      data: {
+        entryNumber: `ACC-${Date.now()}`,
+        type: 'DEBIT',
+        account: 'ACCOUNTS_PAYABLE',
+        amount,
+        description: `Refund to escrow for order ${orderId}`,
+        referenceId: orderId,
+        referenceType: 'order',
+        entryDate: new Date(),
+      },
     });
 
-    return { success: true, orderId, refundedAmount: amount, remainingBalance: escrow.amount - amount };
+    return {
+      success: true,
+      orderId,
+      refundedAmount: amount,
+      remainingBalance: escrow.amount - amount,
+    };
   }
 
   async calculateCommission(orderId: string) {
-    const order = await this.prisma.order.findUnique({ where: { id: orderId }, include: { items: true } });
+    const order = await this.prisma.order.findUnique({
+      where: { id: orderId },
+      include: { items: true },
+    });
     if (!order) throw new NotFoundException('Order not found');
 
     const items = await this.prisma.orderItem.findMany({
@@ -66,22 +130,38 @@ export class FinanceService {
 
     for (const item of items) {
       const rate = item.product.store?.commissionRate || 5.0;
-      const amount = (item.price * item.quantity) * (rate / 100);
-      commissions.push({ sellerId: item.product.storeId, orderId, amount, rate });
+      const amount = item.price * item.quantity * (rate / 100);
+      commissions.push({
+        sellerId: item.product.storeId,
+        orderId,
+        amount,
+        rate,
+      });
       totalCommission += amount;
     }
 
     return { totalCommission, items: commissions };
   }
 
-  async generateSellerSettlement(sellerId: string, dateRange: { start: string; end: string }) {
+  async generateSellerSettlement(
+    sellerId: string,
+    dateRange: { start: string; end: string },
+  ) {
     const orders = await this.prisma.order.findMany({
       where: {
         status: 'DELIVERED',
-        createdAt: { gte: new Date(dateRange.start), lte: new Date(dateRange.end) },
+        createdAt: {
+          gte: new Date(dateRange.start),
+          lte: new Date(dateRange.end),
+        },
         items: { some: { product: { storeId: sellerId } } },
       },
-      include: { items: { where: { product: { storeId: sellerId } }, include: { product: true } } },
+      include: {
+        items: {
+          where: { product: { storeId: sellerId } },
+          include: { product: true },
+        },
+      },
     });
 
     const items: any[] = [];
@@ -95,7 +175,13 @@ export class FinanceService {
         const commission = itemTotal * (commissionRate / 100);
         grossAmount += itemTotal;
         totalCommission += commission;
-        items.push({ orderId: order.id, amount: itemTotal, commission, fee: 0, netAmount: itemTotal - commission });
+        items.push({
+          orderId: order.id,
+          amount: itemTotal,
+          commission,
+          fee: 0,
+          netAmount: itemTotal - commission,
+        });
       }
     }
 
@@ -123,13 +209,30 @@ export class FinanceService {
   }
 
   async processSettlement(settlementId: string) {
-    const settlement = await this.prisma.sellerSettlement.findUnique({ where: { id: settlementId } });
+    const settlement = await this.prisma.sellerSettlement.findUnique({
+      where: { id: settlementId },
+    });
     if (!settlement) throw new NotFoundException('Settlement not found');
-    if (settlement.status !== 'PENDING') throw new BadRequestException('Settlement not in PENDING status');
+    if (settlement.status !== 'PENDING')
+      throw new BadRequestException('Settlement not in PENDING status');
 
     await this.prisma.$transaction([
-      this.prisma.sellerSettlement.update({ where: { id: settlementId }, data: { status: 'COMPLETED', processedAt: new Date() } }),
-      this.prisma.accountingEntry.create({ data: { entryNumber: `ACC-${Date.now()}`, type: 'DEBIT', account: 'ACCOUNTS_PAYABLE', amount: settlement.netAmount, description: `Settlement ${settlement.settlementNumber}`, referenceId: settlementId, referenceType: 'settlement', entryDate: new Date() } }),
+      this.prisma.sellerSettlement.update({
+        where: { id: settlementId },
+        data: { status: 'COMPLETED', processedAt: new Date() },
+      }),
+      this.prisma.accountingEntry.create({
+        data: {
+          entryNumber: `ACC-${Date.now()}`,
+          type: 'DEBIT',
+          account: 'ACCOUNTS_PAYABLE',
+          amount: settlement.netAmount,
+          description: `Settlement ${settlement.settlementNumber}`,
+          referenceId: settlementId,
+          referenceType: 'settlement',
+          entryDate: new Date(),
+        },
+      }),
     ]);
 
     return { success: true, settlementId, netAmount: settlement.netAmount };
@@ -138,9 +241,16 @@ export class FinanceService {
   async getAccountingEntries(dateRange?: { start: string; end: string }) {
     const where: any = {};
     if (dateRange) {
-      where.entryDate = { gte: new Date(dateRange.start), lte: new Date(dateRange.end) };
+      where.entryDate = {
+        gte: new Date(dateRange.start),
+        lte: new Date(dateRange.end),
+      };
     }
-    return this.prisma.accountingEntry.findMany({ where, orderBy: { entryDate: 'desc' }, take: 100 });
+    return this.prisma.accountingEntry.findMany({
+      where,
+      orderBy: { entryDate: 'desc' },
+      take: 100,
+    });
   }
 
   async generateTaxReport(quarter: number, year: number) {
@@ -149,7 +259,10 @@ export class FinanceService {
     const endDate = new Date(year, startMonth + 2, 0);
 
     const orders = await this.prisma.order.findMany({
-      where: { createdAt: { gte: startDate, lte: endDate }, paymentStatus: true },
+      where: {
+        createdAt: { gte: startDate, lte: endDate },
+        paymentStatus: true,
+      },
     });
 
     const totalRevenue = orders.reduce((s, o) => s + o.total, 0);
@@ -171,7 +284,11 @@ export class FinanceService {
   async createInvoice(orderId: string) {
     const order = await this.prisma.order.findUnique({
       where: { id: orderId },
-      include: { items: { include: { product: true } }, address: true, user: true },
+      include: {
+        items: { include: { product: true } },
+        address: true,
+        user: true,
+      },
     });
     if (!order) throw new NotFoundException('Order not found');
 
@@ -189,7 +306,7 @@ export class FinanceService {
         total: order.total,
         status: 'DRAFT',
         items: {
-          create: order.items.map(item => ({
+          create: order.items.map((item) => ({
             productId: item.productId,
             quantity: item.quantity,
             unitPrice: item.price,
@@ -197,7 +314,9 @@ export class FinanceService {
           })),
         },
       },
-      include: { items: { include: { product: { select: { id: true, name: true } } } } },
+      include: {
+        items: { include: { product: { select: { id: true, name: true } } } },
+      },
     });
   }
 
@@ -212,7 +331,7 @@ export class FinanceService {
     const creditNoteNumber = `CN-${String(count + 1).padStart(6, '0')}`;
 
     const amount = returnRequest.order.items
-      .filter(i => i.productId === returnRequest.productId)
+      .filter((i) => i.productId === returnRequest.productId)
       .reduce((s, i) => s + i.price * returnRequest.quantity, 0);
 
     return this.prisma.creditNote.create({
@@ -236,8 +355,10 @@ export class FinanceService {
       where: { createdAt: { gte: targetDate, lt: nextDate } },
     });
 
-    const matched = txns.filter(t => t.status === 'SUCCESS');
-    const unmatched = txns.filter(t => t.status === 'PENDING' || t.status === 'FAILED');
+    const matched = txns.filter((t) => t.status === 'SUCCESS');
+    const unmatched = txns.filter(
+      (t) => t.status === 'PENDING' || t.status === 'FAILED',
+    );
 
     return {
       date,
@@ -252,13 +373,24 @@ export class FinanceService {
 
   async getCashFlow(dateRange: { start: string; end: string }) {
     const entries = await this.prisma.accountingEntry.findMany({
-      where: { entryDate: { gte: new Date(dateRange.start), lte: new Date(dateRange.end) } },
+      where: {
+        entryDate: {
+          gte: new Date(dateRange.start),
+          lte: new Date(dateRange.end),
+        },
+      },
       orderBy: { entryDate: 'asc' },
     });
 
-    const cashEntries = entries.filter(e => e.account === 'CASH' || e.account === 'BANK');
-    const inflows = cashEntries.filter(e => e.type === 'CREDIT').reduce((s, e) => s + e.amount, 0);
-    const outflows = cashEntries.filter(e => e.type === 'DEBIT').reduce((s, e) => s + e.amount, 0);
+    const cashEntries = entries.filter(
+      (e) => e.account === 'CASH' || e.account === 'BANK',
+    );
+    const inflows = cashEntries
+      .filter((e) => e.type === 'CREDIT')
+      .reduce((s, e) => s + e.amount, 0);
+    const outflows = cashEntries
+      .filter((e) => e.type === 'DEBIT')
+      .reduce((s, e) => s + e.amount, 0);
 
     const byMonth: Record<string, { inflows: number; outflows: number }> = {};
     for (const e of cashEntries) {
@@ -272,7 +404,11 @@ export class FinanceService {
       totalInflows: inflows,
       totalOutflows: outflows,
       netCashFlow: inflows - outflows,
-      monthly: Object.entries(byMonth).map(([month, data]) => ({ month, ...data, net: data.inflows - data.outflows })),
+      monthly: Object.entries(byMonth).map(([month, data]) => ({
+        month,
+        ...data,
+        net: data.inflows - data.outflows,
+      })),
     };
   }
 
@@ -292,73 +428,137 @@ export class FinanceService {
     }
 
     const values = Object.values(monthlyRevenue);
-    const avgRevenue = values.length > 0 ? values.reduce((s, v) => s + v, 0) / values.length : 0;
-    const growthRate = values.length >= 2 ? (values[values.length - 1] - values[0]) / values[0] : 0.1;
+    const avgRevenue =
+      values.length > 0 ? values.reduce((s, v) => s + v, 0) / values.length : 0;
+    const growthRate =
+      values.length >= 2
+        ? (values[values.length - 1] - values[0]) / values[0]
+        : 0.1;
 
     const forecast: any[] = [];
     for (let i = 1; i <= months; i++) {
       const forecastMonth = new Date(now.getFullYear(), now.getMonth() + i, 1);
       const key = forecastMonth.toISOString().substring(0, 7);
       const projected = avgRevenue * (1 + growthRate * (i / 12));
-      forecast.push({ month: key, projectedRevenue: Math.round(projected * 100) / 100 });
+      forecast.push({
+        month: key,
+        projectedRevenue: Math.round(projected * 100) / 100,
+      });
     }
 
-    return { historicalRevenue: monthlyRevenue, forecast, avgMonthlyRevenue: avgRevenue, growthRate };
+    return {
+      historicalRevenue: monthlyRevenue,
+      forecast,
+      avgMonthlyRevenue: avgRevenue,
+      growthRate,
+    };
   }
 
   async getBalanceSheet(date: string) {
     const asOfDate = new Date(date);
 
     const assets = await this.prisma.accountingEntry.findMany({
-      where: { entryDate: { lte: asOfDate }, account: { in: ['CASH', 'BANK', 'ACCOUNTS_RECEIVABLE'] } },
+      where: {
+        entryDate: { lte: asOfDate },
+        account: { in: ['CASH', 'BANK', 'ACCOUNTS_RECEIVABLE'] },
+      },
     });
 
     const liabilities = await this.prisma.accountingEntry.findMany({
-      where: { entryDate: { lte: asOfDate }, account: { in: ['ACCOUNTS_PAYABLE'] } },
+      where: {
+        entryDate: { lte: asOfDate },
+        account: { in: ['ACCOUNTS_PAYABLE'] },
+      },
     });
 
-    const totalAssets = assets.reduce((s, e) => s + (e.type === 'DEBIT' ? e.amount : -e.amount), 0);
-    const totalLiabilities = liabilities.reduce((s, e) => s + (e.type === 'CREDIT' ? e.amount : -e.amount), 0);
+    const totalAssets = assets.reduce(
+      (s, e) => s + (e.type === 'DEBIT' ? e.amount : -e.amount),
+      0,
+    );
+    const totalLiabilities = liabilities.reduce(
+      (s, e) => s + (e.type === 'CREDIT' ? e.amount : -e.amount),
+      0,
+    );
 
     const settlements = await this.prisma.sellerSettlement.findMany({
-      where: { status: { in: ['PENDING', 'PROCESSING'] }, createdAt: { lte: asOfDate } },
+      where: {
+        status: { in: ['PENDING', 'PROCESSING'] },
+        createdAt: { lte: asOfDate },
+      },
     });
-    const pendingSettlements = settlements.reduce((s, st) => s + st.netAmount, 0);
+    const pendingSettlements = settlements.reduce(
+      (s, st) => s + st.netAmount,
+      0,
+    );
 
     return {
       asOfDate: date,
-      assets: { cashAndBank: totalAssets, accountsReceivable: 0, total: totalAssets },
-      liabilities: { accountsPayable: totalLiabilities, pendingSettlements, total: totalLiabilities + pendingSettlements },
-      equity: { retainedEarnings: totalAssets - totalLiabilities - pendingSettlements },
+      assets: {
+        cashAndBank: totalAssets,
+        accountsReceivable: 0,
+        total: totalAssets,
+      },
+      liabilities: {
+        accountsPayable: totalLiabilities,
+        pendingSettlements,
+        total: totalLiabilities + pendingSettlements,
+      },
+      equity: {
+        retainedEarnings: totalAssets - totalLiabilities - pendingSettlements,
+      },
     };
   }
 
   async getProfitAndLoss(dateRange: { start: string; end: string }) {
     const entries = await this.prisma.accountingEntry.findMany({
-      where: { entryDate: { gte: new Date(dateRange.start), lte: new Date(dateRange.end) } },
+      where: {
+        entryDate: {
+          gte: new Date(dateRange.start),
+          lte: new Date(dateRange.end),
+        },
+      },
     });
 
-    const revenue = entries.filter(e => e.account === 'REVENUE' && e.type === 'CREDIT').reduce((s, e) => s + e.amount, 0);
-    const commissionIncome = entries.filter(e => e.account === 'COMMISSION_INCOME' && e.type === 'DEBIT').reduce((s, e) => s + e.amount, 0);
-    const expenses = entries.filter(e => e.type === 'DEBIT' && e.account !== 'COMMISSION_INCOME' && e.account !== 'ACCOUNTS_RECEIVABLE').reduce((s, e) => s + e.amount, 0);
+    const revenue = entries
+      .filter((e) => e.account === 'REVENUE' && e.type === 'CREDIT')
+      .reduce((s, e) => s + e.amount, 0);
+    const commissionIncome = entries
+      .filter((e) => e.account === 'COMMISSION_INCOME' && e.type === 'DEBIT')
+      .reduce((s, e) => s + e.amount, 0);
+    const expenses = entries
+      .filter(
+        (e) =>
+          e.type === 'DEBIT' &&
+          e.account !== 'COMMISSION_INCOME' &&
+          e.account !== 'ACCOUNTS_RECEIVABLE',
+      )
+      .reduce((s, e) => s + e.amount, 0);
 
     const grossProfit = revenue - 0;
     const netProfit = grossProfit + commissionIncome - expenses;
 
     return {
       period: dateRange,
-      revenue: { grossRevenue: revenue, commissionIncome, totalRevenue: revenue + commissionIncome },
+      revenue: {
+        grossRevenue: revenue,
+        commissionIncome,
+        totalRevenue: revenue + commissionIncome,
+      },
       expenses: { operating: expenses, totalExpenses: expenses },
       grossProfit,
       netProfit,
-      margin: revenue > 0 ? (netProfit / revenue * 100).toFixed(2) + '%' : '0%',
+      margin:
+        revenue > 0 ? ((netProfit / revenue) * 100).toFixed(2) + '%' : '0%',
     };
   }
 
   async getEscrowStatus(orderId?: string) {
     const where: any = {};
     if (orderId) where.orderId = orderId;
-    return this.prisma.escrowTransaction.findMany({ where, include: { order: { select: { orderNumber: true, total: true } } } });
+    return this.prisma.escrowTransaction.findMany({
+      where,
+      include: { order: { select: { orderNumber: true, total: true } } },
+    });
   }
 
   async listSettlements(sellerId?: string) {
@@ -377,7 +577,9 @@ export class FinanceService {
     if (orderId) where.orderId = orderId;
     return this.prisma.invoice.findMany({
       where,
-      include: { items: { include: { product: { select: { id: true, name: true } } } } },
+      include: {
+        items: { include: { product: { select: { id: true, name: true } } } },
+      },
       orderBy: { createdAt: 'desc' },
     });
   }

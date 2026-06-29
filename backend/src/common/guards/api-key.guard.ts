@@ -1,10 +1,20 @@
-import { Injectable, CanActivate, ExecutionContext, UnauthorizedException, HttpException, HttpStatus } from '@nestjs/common';
+import {
+  Injectable,
+  CanActivate,
+  ExecutionContext,
+  UnauthorizedException,
+  HttpException,
+  HttpStatus,
+} from '@nestjs/common';
 import { Reflector } from '@nestjs/core';
 import { DeveloperService } from '../../modules/developer/developer.service';
 
 @Injectable()
 export class ApiKeyGuard implements CanActivate {
-  private rateLimitStore = new Map<string, { count: number; resetAt: number }>();
+  private rateLimitStore = new Map<
+    string,
+    { count: number; resetAt: number }
+  >();
 
   constructor(
     private reflector: Reflector,
@@ -21,7 +31,11 @@ export class ApiKeyGuard implements CanActivate {
 
     try {
       const validation = await this.developerService.validateApiKey(apiKey);
-      request.user = { ...request.user, userId: validation.userId, permissions: validation.permissions };
+      request.user = {
+        ...request.user,
+        userId: validation.userId,
+        permissions: validation.permissions,
+      };
       request.apiKeyId = validation.keyId;
 
       const now = Date.now();
@@ -30,16 +44,27 @@ export class ApiKeyGuard implements CanActivate {
       if (entry && now < entry.resetAt) {
         if (entry.count >= 100) {
           const response = context.switchToHttp().getResponse();
-          response.setHeader('Retry-After', Math.ceil((entry.resetAt - now) / 1000));
-          throw new HttpException('Rate limit exceeded', HttpStatus.TOO_MANY_REQUESTS);
+          response.setHeader(
+            'Retry-After',
+            Math.ceil((entry.resetAt - now) / 1000),
+          );
+          throw new HttpException(
+            'Rate limit exceeded',
+            HttpStatus.TOO_MANY_REQUESTS,
+          );
         }
         entry.count++;
       } else {
-        this.rateLimitStore.set(validation.keyId, { count: 1, resetAt: now + 3600000 });
+        this.rateLimitStore.set(validation.keyId, {
+          count: 1,
+          resetAt: now + 3600000,
+        });
       }
 
       const { method, path } = request;
-      this.developerService.logApiCall(validation.keyId, `${method} ${path}`, 200, 0).catch(() => {});
+      this.developerService
+        .logApiCall(validation.keyId, `${method} ${path}`, 200, 0)
+        .catch(() => {});
 
       return true;
     } catch (error) {

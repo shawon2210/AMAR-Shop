@@ -20,24 +20,21 @@ export class CartService {
     });
 
     // Group by seller
-    const grouped = items.reduce(
-      (acc: any[], item) => {
-        const storeId = item.product.store.id;
-        const existing = acc.find(g => g.sellerId === storeId);
-        if (existing) {
-          existing.items.push(item);
-        } else {
-          acc.push({
-            sellerId: storeId,
-            sellerName: item.product.store.name,
-            isOfficial: item.product.store.isOfficial,
-            items: [item],
-          });
-        }
-        return acc;
-      },
-      [],
-    );
+    const grouped = items.reduce((acc: any[], item) => {
+      const storeId = item.product.store.id;
+      const existing = acc.find((g) => g.sellerId === storeId);
+      if (existing) {
+        existing.items.push(item);
+      } else {
+        acc.push({
+          sellerId: storeId,
+          sellerName: item.product.store.name,
+          isOfficial: item.product.store.isOfficial,
+          items: [item],
+        });
+      }
+      return acc;
+    }, []);
 
     return {
       items,

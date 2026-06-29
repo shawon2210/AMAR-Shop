@@ -9,10 +9,17 @@ interface ErrorContext {
   extra?: Record<string, unknown>;
 }
 
-export function captureError(error: Error | HttpException, context?: ErrorContext) {
+export function captureError(
+  error: Error | HttpException,
+  context?: ErrorContext,
+) {
   Sentry.withScope((scope) => {
     if (context?.user) {
-      scope.setUser({ id: context.user.id, email: context.user.email, username: context.user.phone });
+      scope.setUser({
+        id: context.user.id,
+        email: context.user.email,
+        username: context.user.phone,
+      });
     }
     if (context?.request) {
       scope.setExtra('request', context.request);
@@ -21,10 +28,14 @@ export function captureError(error: Error | HttpException, context?: ErrorContex
       scope.setTag('environment', context.environment);
     }
     if (context?.tags) {
-      Object.entries(context.tags).forEach(([key, value]) => scope.setTag(key, value));
+      Object.entries(context.tags).forEach(([key, value]) =>
+        scope.setTag(key, value),
+      );
     }
     if (context?.extra) {
-      Object.entries(context.extra).forEach(([key, value]) => scope.setExtra(key, value));
+      Object.entries(context.extra).forEach(([key, value]) =>
+        scope.setExtra(key, value),
+      );
     }
 
     if (error instanceof HttpException) {
@@ -39,19 +50,31 @@ export function captureError(error: Error | HttpException, context?: ErrorContex
 export function captureMessage(message: string, context?: ErrorContext) {
   Sentry.withScope((scope) => {
     if (context?.user) {
-      scope.setUser({ id: context.user.id, email: context.user.email, username: context.user.phone });
+      scope.setUser({
+        id: context.user.id,
+        email: context.user.email,
+        username: context.user.phone,
+      });
     }
     if (context?.tags) {
-      Object.entries(context.tags).forEach(([key, value]) => scope.setTag(key, value));
+      Object.entries(context.tags).forEach(([key, value]) =>
+        scope.setTag(key, value),
+      );
     }
     if (context?.extra) {
-      Object.entries(context.extra).forEach(([key, value]) => scope.setExtra(key, value));
+      Object.entries(context.extra).forEach(([key, value]) =>
+        scope.setExtra(key, value),
+      );
     }
     Sentry.captureMessage(message);
   });
 }
 
-export function setUserContext(user: { id: string; email?: string; phone?: string }) {
+export function setUserContext(user: {
+  id: string;
+  email?: string;
+  phone?: string;
+}) {
   Sentry.setUser({ id: user.id, email: user.email, username: user.phone });
 }
 

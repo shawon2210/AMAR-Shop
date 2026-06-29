@@ -1,4 +1,13 @@
-import { Controller, Get, Post, Body, Query, Request, UseGuards, Param } from '@nestjs/common';
+import {
+  Controller,
+  Get,
+  Post,
+  Body,
+  Query,
+  Request,
+  UseGuards,
+  Param,
+} from '@nestjs/common';
 import { AuthGuard } from '@nestjs/passport';
 import { SearchService } from './search.service';
 import { EnhancedSearchService } from './enhanced-search.service';
@@ -35,7 +44,8 @@ export class SearchController {
       rating: rating ? parseFloat(rating) : undefined,
       brand,
       seller,
-      inStock: inStock === 'true' ? true : inStock === 'false' ? false : undefined,
+      inStock:
+        inStock === 'true' ? true : inStock === 'false' ? false : undefined,
       sort,
       page: page ? parseInt(page) : 1,
       limit: limit ? parseInt(limit) : 20,
@@ -44,30 +54,45 @@ export class SearchController {
     let results;
     switch (mode) {
       case 'vector':
-        results = await this.enhancedSearchService.vectorSearch(q || '', filters);
+        results = await this.enhancedSearchService.vectorSearch(
+          q || '',
+          filters,
+        );
         break;
       case 'hybrid':
-        results = await this.enhancedSearchService.hybridSearch(q || '', filters);
+        results = await this.enhancedSearchService.hybridSearch(
+          q || '',
+          filters,
+        );
         break;
       case 'personalized':
-        results = await this.enhancedSearchService.personalizedSearch(req?.user?.id, q || '', filters);
+        results = await this.enhancedSearchService.personalizedSearch(
+          req?.user?.id,
+          q || '',
+          filters,
+        );
         break;
       default:
         results = await this.searchService.search(q || '', filters);
     }
 
-    await this.searchService.logSearch(req?.user?.id, q || '', results.total || 0);
+    await this.searchService.logSearch(
+      req?.user?.id,
+      q || '',
+      results.total || 0,
+    );
     return results;
   }
 
   @UseGuards(AuthGuard('jwt'))
   @Get('personalized')
-  async getPersonalizedFeed(@Request() req: any, @Query('limit') limit?: string) {
-    return this.enhancedSearchService.personalizedSearch(
-      req.user.id,
-      '',
-      { limit: limit ? parseInt(limit) : 20 },
-    );
+  async getPersonalizedFeed(
+    @Request() req: any,
+    @Query('limit') limit?: string,
+  ) {
+    return this.enhancedSearchService.personalizedSearch(req.user.id, '', {
+      limit: limit ? parseInt(limit) : 20,
+    });
   }
 
   @Get('autocomplete')
@@ -86,9 +111,15 @@ export class SearchController {
   }
 
   @Get('popular')
-  async getPopularSearches(@Query('limit') limit?: string, @Query('timeframe') timeframe?: string) {
+  async getPopularSearches(
+    @Query('limit') limit?: string,
+    @Query('timeframe') timeframe?: string,
+  ) {
     if (timeframe) {
-      return this.searchAnalyticsService.getPopularSearches(timeframe as any, limit ? parseInt(limit) : 10);
+      return this.searchAnalyticsService.getPopularSearches(
+        timeframe as any,
+        limit ? parseInt(limit) : 10,
+      );
     }
     return this.searchService.getPopularSearches(limit ? parseInt(limit) : 10);
   }
@@ -101,13 +132,24 @@ export class SearchController {
   @UseGuards(AuthGuard('jwt'))
   @Get('recently-viewed')
   async getRecentlyViewed(@Request() req: any, @Query('limit') limit?: string) {
-    return this.searchService.getRecentlyViewed(req.user.id, limit ? parseInt(limit) : 20);
+    return this.searchService.getRecentlyViewed(
+      req.user.id,
+      limit ? parseInt(limit) : 20,
+    );
   }
 
   @UseGuards(AuthGuard('jwt'))
   @Post('log')
-  async logSearch(@Request() req: any, @Body() body: { query: string; resultsCount: number }) {
-    return this.searchAnalyticsService.logSearch(body.query, req.user.id, body.resultsCount, 0);
+  async logSearch(
+    @Request() req: any,
+    @Body() body: { query: string; resultsCount: number },
+  ) {
+    return this.searchAnalyticsService.logSearch(
+      body.query,
+      req.user.id,
+      body.resultsCount,
+      0,
+    );
   }
 
   @Get('filters')
@@ -129,7 +171,9 @@ export class SearchController {
 
   @Get('analytics/zero-results')
   async getZeroResultSearches(@Query('limit') limit?: string) {
-    return this.searchAnalyticsService.getZeroResultSearches(limit ? parseInt(limit) : 50);
+    return this.searchAnalyticsService.getZeroResultSearches(
+      limit ? parseInt(limit) : 50,
+    );
   }
 
   @Get('analytics/conversion-rate')
@@ -139,16 +183,23 @@ export class SearchController {
 
   @Get('analytics/top-categories')
   async getTopSearchCategories(@Query('limit') limit?: string) {
-    return this.searchAnalyticsService.getTopSearchCategories(limit ? parseInt(limit) : 10);
+    return this.searchAnalyticsService.getTopSearchCategories(
+      limit ? parseInt(limit) : 10,
+    );
   }
 
   @Get('analytics/trends')
   async getSearchTrends(@Query('days') days?: string) {
-    return this.searchAnalyticsService.getSearchTrends(days ? parseInt(days) : 30);
+    return this.searchAnalyticsService.getSearchTrends(
+      days ? parseInt(days) : 30,
+    );
   }
 
   @Get('analytics/heatmap')
-  async getSearchHeatmap(@Query('start') start: string, @Query('end') end: string) {
+  async getSearchHeatmap(
+    @Query('start') start: string,
+    @Query('end') end: string,
+  ) {
     return this.enhancedSearchService.getSearchHeatmapData({ start, end });
   }
 }

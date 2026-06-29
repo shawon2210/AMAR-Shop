@@ -46,7 +46,12 @@ export interface UserSegment {
 
 export interface DemandForecast {
   productId: string;
-  forecast: Array<{ date: string; predictedDemand: number; confidenceLower: number; confidenceUpper: number }>;
+  forecast: Array<{
+    date: string;
+    predictedDemand: number;
+    confidenceLower: number;
+    confidenceUpper: number;
+  }>;
   trend: 'up' | 'down' | 'stable';
   seasonality: string[];
 }

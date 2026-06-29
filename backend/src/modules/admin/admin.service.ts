@@ -1,4 +1,9 @@
-import { Injectable, NotFoundException, BadRequestException, ForbiddenException } from '@nestjs/common';
+import {
+  Injectable,
+  NotFoundException,
+  BadRequestException,
+  ForbiddenException,
+} from '@nestjs/common';
 import { PrismaService } from '../../common/prisma.service';
 
 @Injectable()
@@ -9,19 +14,44 @@ export class AdminService {
     const now = new Date();
     const thirtyDaysAgo = new Date(now.getTime() - 30 * 24 * 60 * 60 * 1000);
 
-    const [totalUsers, totalSellers, totalProducts, totalOrders, revenueAgg, recentOrders, pendingSellers, lowStockProducts] = await Promise.all([
+    const [
+      totalUsers,
+      totalSellers,
+      totalProducts,
+      totalOrders,
+      revenueAgg,
+      recentOrders,
+      pendingSellers,
+      lowStockProducts,
+    ] = await Promise.all([
       this.prisma.user.count(),
       this.prisma.user.count({ where: { isSeller: true } }),
       this.prisma.product.count(),
       this.prisma.order.count(),
-      this.prisma.order.aggregate({ _sum: { total: true }, where: { paymentStatus: true } }),
+      this.prisma.order.aggregate({
+        _sum: { total: true },
+        where: { paymentStatus: true },
+      }),
       this.prisma.order.findMany({
         take: 10,
         orderBy: { createdAt: 'desc' },
-        include: { user: { select: { id: true, name: true, avatar: true } }, items: { take: 3, include: { product: { select: { name: true, images: true } } } } },
+        include: {
+          user: { select: { id: true, name: true, avatar: true } },
+          items: {
+            take: 3,
+            include: { product: { select: { name: true, images: true } } },
+          },
+        },
       }),
-      this.prisma.sellerProfile.findMany({ where: { isKycVerified: false, kycSubmittedAt: { not: null } }, include: { user: { select: { id: true, name: true, phone: true, email: true } } } }),
-      this.prisma.product.count({ where: { stockCount: { lte: 10 }, inStock: true } }),
+      this.prisma.sellerProfile.findMany({
+        where: { isKycVerified: false, kycSubmittedAt: { not: null } },
+        include: {
+          user: { select: { id: true, name: true, phone: true, email: true } },
+        },
+      }),
+      this.prisma.product.count({
+        where: { stockCount: { lte: 10 }, inStock: true },
+      }),
     ]);
 
     const revenueData = await this.prisma.order.findMany({
@@ -35,7 +65,9 @@ export class AdminService {
       const date = new Date(now.getTime() - i * 24 * 60 * 60 * 1000);
       const dateStr = date.toISOString().split('T')[0];
       const dayRevenue = revenueData
-        .filter((r) => r.paidAt && r.paidAt.toISOString().split('T')[0] === dateStr)
+        .filter(
+          (r) => r.paidAt && r.paidAt.toISOString().split('T')[0] === dateStr,
+        )
         .reduce((sum, r) => sum + r.total, 0);
       revenueChart.push({ date: dateStr, revenue: dayRevenue });
     }
@@ -53,7 +85,12 @@ export class AdminService {
     };
   }
 
-  async getUsers(query: { page?: number; limit?: number; search?: string; role?: string }) {
+  async getUsers(query: {
+    page?: number;
+    limit?: number;
+    search?: string;
+    role?: string;
+  }) {
     const page = query.page || 1;
     const limit = query.limit || 20;
     const skip = (page - 1) * limit;
@@ -74,7 +111,19 @@ export class AdminService {
         skip,
         take: limit,
         orderBy: { createdAt: 'desc' },
-        select: { id: true, name: true, email: true, phone: true, role: true, isSeller: true, isActive: true, isVerified: true, createdAt: true, lastLoginAt: true, avatar: true },
+        select: {
+          id: true,
+          name: true,
+          email: true,
+          phone: true,
+          role: true,
+          isSeller: true,
+          isActive: true,
+          isVerified: true,
+          createdAt: true,
+          lastLoginAt: true,
+          avatar: true,
+        },
       }),
       this.prisma.user.count({ where }),
     ]);
@@ -82,32 +131,57 @@ export class AdminService {
     return { users, total, page, limit, totalPages: Math.ceil(total / limit) };
   }
 
-  async updateUser(userId: string, data: { isActive?: boolean; role?: string; isVerified?: boolean }) {
+  async updateUser(
+    userId: string,
+    data: { isActive?: boolean; role?: string; isVerified?: boolean },
+  ) {
     const user = await this.prisma.user.findUnique({ where: { id: userId } });
     if (!user) throw new NotFoundException('User not found');
 
     return this.prisma.user.update({
       where: { id: userId },
       data: data as any,
-      select: { id: true, name: true, email: true, phone: true, role: true, isActive: true, isVerified: true },
+      select: {
+        id: true,
+        name: true,
+        email: true,
+        phone: true,
+        role: true,
+        isActive: true,
+        isVerified: true,
+      },
     });
   }
 
-  async getSellers(query: { page?: number; limit?: number; search?: string; kycStatus?: string }) {
+  async getSellers(query: {
+    page?: number;
+    limit?: number;
+    search?: string;
+    kycStatus?: string;
+  }) {
     const page = query.page || 1;
     const limit = query.limit || 20;
     const skip = (page - 1) * limit;
     const where: Record<string, unknown> = { isSeller: true };
 
-    if (query.kycStatus === 'verified') where.sellerProfile = { isKycVerified: true };
-    if (query.kycStatus === 'pending') where.sellerProfile = { isKycVerified: false, kycSubmittedAt: { not: null } };
+    if (query.kycStatus === 'verified')
+      where.sellerProfile = { isKycVerified: true };
+    if (query.kycStatus === 'pending')
+      where.sellerProfile = {
+        isKycVerified: false,
+        kycSubmittedAt: { not: null },
+      };
     if (query.kycStatus === 'none') where.sellerProfile = null;
 
     if (query.search) {
       where.OR = [
         { name: { contains: query.search, mode: 'insensitive' as const } },
         { phone: { contains: query.search } },
-        { store: { name: { contains: query.search, mode: 'insensitive' as const } } },
+        {
+          store: {
+            name: { contains: query.search, mode: 'insensitive' as const },
+          },
+        },
       ];
     }
 
@@ -118,15 +192,47 @@ export class AdminService {
         take: limit,
         orderBy: { createdAt: 'desc' },
         select: {
-          id: true, name: true, email: true, phone: true, isActive: true, createdAt: true,
-          store: { select: { id: true, name: true, slug: true, isActive: true, followerCount: true, rating: true } },
-          sellerProfile: { select: { id: true, isKycVerified: true, kycSubmittedAt: true, kycVerifiedAt: true, kycRejectedReason: true, level: true, performanceScore: true, totalOrders: true, totalRevenue: true } },
+          id: true,
+          name: true,
+          email: true,
+          phone: true,
+          isActive: true,
+          createdAt: true,
+          store: {
+            select: {
+              id: true,
+              name: true,
+              slug: true,
+              isActive: true,
+              followerCount: true,
+              rating: true,
+            },
+          },
+          sellerProfile: {
+            select: {
+              id: true,
+              isKycVerified: true,
+              kycSubmittedAt: true,
+              kycVerifiedAt: true,
+              kycRejectedReason: true,
+              level: true,
+              performanceScore: true,
+              totalOrders: true,
+              totalRevenue: true,
+            },
+          },
         },
       }),
       this.prisma.user.count({ where }),
     ]);
 
-    return { sellers: users, total, page, limit, totalPages: Math.ceil(total / limit) };
+    return {
+      sellers: users,
+      total,
+      page,
+      limit,
+      totalPages: Math.ceil(total / limit),
+    };
   }
 
   async approveSeller(sellerId: string) {
@@ -135,11 +241,16 @@ export class AdminService {
       include: { sellerProfile: true, store: true },
     });
     if (!user) throw new NotFoundException('User not found');
-    if (!user.sellerProfile) throw new BadRequestException('User has no seller profile');
+    if (!user.sellerProfile)
+      throw new BadRequestException('User has no seller profile');
 
     await this.prisma.sellerProfile.update({
       where: { userId: sellerId },
-      data: { isKycVerified: true, kycVerifiedAt: new Date(), kycRejectedReason: null },
+      data: {
+        isKycVerified: true,
+        kycVerifiedAt: new Date(),
+        kycRejectedReason: null,
+      },
     });
 
     if (user.store) {
@@ -160,7 +271,8 @@ export class AdminService {
       include: { sellerProfile: true },
     });
     if (!user) throw new NotFoundException('User not found');
-    if (!user.sellerProfile) throw new BadRequestException('User has no seller profile');
+    if (!user.sellerProfile)
+      throw new BadRequestException('User has no seller profile');
 
     await this.prisma.sellerProfile.update({
       where: { userId: sellerId },
@@ -170,7 +282,13 @@ export class AdminService {
     return { message: 'Seller rejected', sellerId, reason };
   }
 
-  async getProducts(query: { page?: number; limit?: number; status?: string; search?: string; category?: string }) {
+  async getProducts(query: {
+    page?: number;
+    limit?: number;
+    status?: string;
+    search?: string;
+    category?: string;
+  }) {
     const page = query.page || 1;
     const limit = query.limit || 20;
     const skip = (page - 1) * limit;
@@ -181,13 +299,18 @@ export class AdminService {
     if (query.search) {
       where.OR = [
         { name: { contains: query.search, mode: 'insensitive' as const } },
-        { description: { contains: query.search, mode: 'insensitive' as const } },
+        {
+          description: { contains: query.search, mode: 'insensitive' as const },
+        },
       ];
     }
 
     const [products, total] = await Promise.all([
       this.prisma.product.findMany({
-        where, skip, take: limit, orderBy: { createdAt: 'desc' },
+        where,
+        skip,
+        take: limit,
+        orderBy: { createdAt: 'desc' },
         include: {
           category: { select: { id: true, name: true } },
           store: { select: { id: true, name: true } },
@@ -196,11 +319,19 @@ export class AdminService {
       this.prisma.product.count({ where }),
     ]);
 
-    return { products, total, page, limit, totalPages: Math.ceil(total / limit) };
+    return {
+      products,
+      total,
+      page,
+      limit,
+      totalPages: Math.ceil(total / limit),
+    };
   }
 
   async approveProduct(productId: string) {
-    const product = await this.prisma.product.findUnique({ where: { id: productId } });
+    const product = await this.prisma.product.findUnique({
+      where: { id: productId },
+    });
     if (!product) throw new NotFoundException('Product not found');
 
     return this.prisma.product.update({
@@ -210,7 +341,9 @@ export class AdminService {
   }
 
   async rejectProduct(productId: string, reason: string) {
-    const product = await this.prisma.product.findUnique({ where: { id: productId } });
+    const product = await this.prisma.product.findUnique({
+      where: { id: productId },
+    });
     if (!product) throw new NotFoundException('Product not found');
 
     return this.prisma.product.update({
@@ -219,7 +352,13 @@ export class AdminService {
     });
   }
 
-  async getOrders(query: { page?: number; limit?: number; status?: string; from?: string; to?: string }) {
+  async getOrders(query: {
+    page?: number;
+    limit?: number;
+    status?: string;
+    from?: string;
+    to?: string;
+  }) {
     const page = query.page || 1;
     const limit = query.limit || 20;
     const skip = (page - 1) * limit;
@@ -235,10 +374,17 @@ export class AdminService {
 
     const [orders, total] = await Promise.all([
       this.prisma.order.findMany({
-        where, skip, take: limit, orderBy: { createdAt: 'desc' },
+        where,
+        skip,
+        take: limit,
+        orderBy: { createdAt: 'desc' },
         include: {
           user: { select: { id: true, name: true, phone: true } },
-          items: { include: { product: { select: { id: true, name: true, images: true } } } },
+          items: {
+            include: {
+              product: { select: { id: true, name: true, images: true } },
+            },
+          },
           address: true,
         },
       }),
@@ -248,7 +394,13 @@ export class AdminService {
     return { orders, total, page, limit, totalPages: Math.ceil(total / limit) };
   }
 
-  async getPayments(query: { page?: number; limit?: number; status?: string; from?: string; to?: string }) {
+  async getPayments(query: {
+    page?: number;
+    limit?: number;
+    status?: string;
+    from?: string;
+    to?: string;
+  }) {
     const page = query.page || 1;
     const limit = query.limit || 20;
     const skip = (page - 1) * limit;
@@ -264,13 +416,25 @@ export class AdminService {
 
     const [payments, total] = await Promise.all([
       this.prisma.paymentTransaction.findMany({
-        where, skip, take: limit, orderBy: { createdAt: 'desc' },
-        include: { order: { select: { id: true, orderNumber: true } }, user: { select: { id: true, name: true } } },
+        where,
+        skip,
+        take: limit,
+        orderBy: { createdAt: 'desc' },
+        include: {
+          order: { select: { id: true, orderNumber: true } },
+          user: { select: { id: true, name: true } },
+        },
       }),
       this.prisma.paymentTransaction.count({ where }),
     ]);
 
-    return { payments, total, page, limit, totalPages: Math.ceil(total / limit) };
+    return {
+      payments,
+      total,
+      page,
+      limit,
+      totalPages: Math.ceil(total / limit),
+    };
   }
 
   async getFlashSales() {
@@ -279,7 +443,13 @@ export class AdminService {
       orderBy: { createdAt: 'desc' },
       include: {
         store: { select: { id: true, name: true } },
-        products: { include: { product: { select: { id: true, name: true, images: true, price: true } } } },
+        products: {
+          include: {
+            product: {
+              select: { id: true, name: true, images: true, price: true },
+            },
+          },
+        },
       },
     });
   }
@@ -288,7 +458,10 @@ export class AdminService {
     return this.prisma.campaign.create({
       data: {
         title: data.title,
-        slug: data.title.toLowerCase().replace(/[^a-z0-9]+/g, '-') + '-' + Math.random().toString(36).substring(2, 8),
+        slug:
+          data.title.toLowerCase().replace(/[^a-z0-9]+/g, '-') +
+          '-' +
+          Math.random().toString(36).substring(2, 8),
         type: 'FLASH_SALE',
         description: data.description,
         banner: data.banner,
@@ -303,13 +476,17 @@ export class AdminService {
 
   async getCategories() {
     return this.prisma.category.findMany({
-      include: { _count: { select: { products: true } }, parent: { select: { id: true, name: true } } },
+      include: {
+        _count: { select: { products: true } },
+        parent: { select: { id: true, name: true } },
+      },
       orderBy: { sortOrder: 'asc' },
     });
   }
 
   async createCategory(data: any) {
-    const slug = data.slug || data.name.toLowerCase().replace(/[^a-z0-9]+/g, '-');
+    const slug =
+      data.slug || data.name.toLowerCase().replace(/[^a-z0-9]+/g, '-');
     return this.prisma.category.create({
       data: {
         name: data.name,
@@ -341,7 +518,11 @@ export class AdminService {
     });
   }
 
-  async getCoupons(query: { page?: number; limit?: number; isActive?: boolean }) {
+  async getCoupons(query: {
+    page?: number;
+    limit?: number;
+    isActive?: boolean;
+  }) {
     const page = query.page || 1;
     const limit = query.limit || 20;
     const skip = (page - 1) * limit;
@@ -349,11 +530,22 @@ export class AdminService {
     if (query.isActive !== undefined) where.isActive = query.isActive;
 
     const [coupons, total] = await Promise.all([
-      this.prisma.coupon.findMany({ where, skip, take: limit, orderBy: { createdAt: 'desc' } }),
+      this.prisma.coupon.findMany({
+        where,
+        skip,
+        take: limit,
+        orderBy: { createdAt: 'desc' },
+      }),
       this.prisma.coupon.count({ where }),
     ]);
 
-    return { coupons, total, page, limit, totalPages: Math.ceil(total / limit) };
+    return {
+      coupons,
+      total,
+      page,
+      limit,
+      totalPages: Math.ceil(total / limit),
+    };
   }
 
   async createCoupon(data: any) {
@@ -376,30 +568,67 @@ export class AdminService {
     const now = new Date();
     const thirtyDaysAgo = new Date(now.getTime() - 30 * 24 * 60 * 60 * 1000);
 
-    const [revenueData, orderData, userData, topCategories, topSellers] = await Promise.all([
-      this.prisma.order.findMany({ where: { paymentStatus: true, paidAt: { gte: thirtyDaysAgo } }, select: { total: true, paidAt: true } }),
-      this.prisma.order.groupBy({ by: ['status'], _count: { id: true } }),
-      this.prisma.user.groupBy({ by: ['role'], _count: { id: true } }),
-      this.prisma.product.groupBy({ by: ['categoryId'], _count: { id: true }, _sum: { soldCount: true }, orderBy: { _sum: { soldCount: 'desc' } }, take: 10 }),
-      this.prisma.store.findMany({ orderBy: { rating: 'desc' }, take: 10, select: { id: true, name: true, followerCount: true, rating: true, _count: { select: { products: true } } } }),
-    ]);
+    const [revenueData, orderData, userData, topCategories, topSellers] =
+      await Promise.all([
+        this.prisma.order.findMany({
+          where: { paymentStatus: true, paidAt: { gte: thirtyDaysAgo } },
+          select: { total: true, paidAt: true },
+        }),
+        this.prisma.order.groupBy({ by: ['status'], _count: { id: true } }),
+        this.prisma.user.groupBy({ by: ['role'], _count: { id: true } }),
+        this.prisma.product.groupBy({
+          by: ['categoryId'],
+          _count: { id: true },
+          _sum: { soldCount: true },
+          orderBy: { _sum: { soldCount: 'desc' } },
+          take: 10,
+        }),
+        this.prisma.store.findMany({
+          orderBy: { rating: 'desc' },
+          take: 10,
+          select: {
+            id: true,
+            name: true,
+            followerCount: true,
+            rating: true,
+            _count: { select: { products: true } },
+          },
+        }),
+      ]);
 
     const revenueChart: { date: string; revenue: number }[] = [];
     for (let i = 29; i >= 0; i--) {
       const date = new Date(now.getTime() - i * 24 * 60 * 60 * 1000);
       const dateStr = date.toISOString().split('T')[0];
-      const dayRevenue = revenueData.filter((r) => r.paidAt && r.paidAt.toISOString().split('T')[0] === dateStr).reduce((sum, r) => sum + r.total, 0);
+      const dayRevenue = revenueData
+        .filter(
+          (r) => r.paidAt && r.paidAt.toISOString().split('T')[0] === dateStr,
+        )
+        .reduce((sum, r) => sum + r.total, 0);
       revenueChart.push({ date: dateStr, revenue: dayRevenue });
     }
 
     const topCategoriesWithNames = await Promise.all(
       topCategories.map(async (c) => {
-        const cat = await this.prisma.category.findUnique({ where: { id: c.categoryId } });
-        return { categoryId: c.categoryId, categoryName: cat?.name || 'Unknown', productCount: c._count.id, totalSold: c._sum.soldCount || 0 };
+        const cat = await this.prisma.category.findUnique({
+          where: { id: c.categoryId },
+        });
+        return {
+          categoryId: c.categoryId,
+          categoryName: cat?.name || 'Unknown',
+          productCount: c._count.id,
+          totalSold: c._sum.soldCount || 0,
+        };
       }),
     );
 
-    return { revenueChart, orderStats: orderData, userStats: userData, topCategories: topCategoriesWithNames, topSellers };
+    return {
+      revenueChart,
+      orderStats: orderData,
+      userStats: userData,
+      topCategories: topCategoriesWithNames,
+      topSellers,
+    };
   }
 
   async getReports(type: string, query: { from?: string; to?: string }) {
@@ -415,13 +644,36 @@ export class AdminService {
       const totalOrders = orders.length;
       const avgOrderValue = totalOrders > 0 ? totalSales / totalOrders : 0;
 
-      return { totalSales, totalOrders, avgOrderValue, orders, period: { from, to } };
+      return {
+        totalSales,
+        totalOrders,
+        avgOrderValue,
+        orders,
+        period: { from, to },
+      };
     }
 
     if (type === 'sellers') {
       const sellers = await this.prisma.user.findMany({
         where: { isSeller: true, createdAt: { gte: from, lte: to } },
-        include: { store: { select: { id: true, name: true, followerCount: true, rating: true, _count: { select: { products: true } } } }, sellerProfile: { select: { totalOrders: true, totalRevenue: true, performanceScore: true } } },
+        include: {
+          store: {
+            select: {
+              id: true,
+              name: true,
+              followerCount: true,
+              rating: true,
+              _count: { select: { products: true } },
+            },
+          },
+          sellerProfile: {
+            select: {
+              totalOrders: true,
+              totalRevenue: true,
+              performanceScore: true,
+            },
+          },
+        },
       });
 
       return { totalSellers: sellers.length, sellers, period: { from, to } };
@@ -431,7 +683,10 @@ export class AdminService {
       const products = await this.prisma.product.findMany({
         where: { createdAt: { gte: from, lte: to } },
         orderBy: { soldCount: 'desc' },
-        include: { category: { select: { id: true, name: true } }, store: { select: { id: true, name: true } } },
+        include: {
+          category: { select: { id: true, name: true } },
+          store: { select: { id: true, name: true } },
+        },
       });
 
       const totalProducts = products.length;
@@ -440,19 +695,31 @@ export class AdminService {
       return { totalProducts, totalSold, products, period: { from, to } };
     }
 
-    throw new BadRequestException('Invalid report type. Use: sales, sellers, products');
+    throw new BadRequestException(
+      'Invalid report type. Use: sales, sellers, products',
+    );
   }
 
   async updateSettings(data: any) {
     const results: Record<string, unknown> = {};
     if (data.commissionRate !== undefined) {
-      await this.prisma.store.updateMany({ data: { commission: data.commissionRate, commissionRate: data.commissionRate } });
+      await this.prisma.store.updateMany({
+        data: {
+          commission: data.commissionRate,
+          commissionRate: data.commissionRate,
+        },
+      });
       results.commissionRate = data.commissionRate;
     }
     return { message: 'Settings updated', ...results };
   }
 
-  async getSupportTickets(query: { page?: number; limit?: number; status?: string; priority?: string }) {
+  async getSupportTickets(query: {
+    page?: number;
+    limit?: number;
+    status?: string;
+    priority?: string;
+  }) {
     const page = query.page || 1;
     const limit = query.limit || 20;
     const skip = (page - 1) * limit;
@@ -463,12 +730,23 @@ export class AdminService {
 
     const [tickets, total] = await Promise.all([
       this.prisma.supportTicket.findMany({
-        where, skip, take: limit, orderBy: { createdAt: 'desc' },
-        include: { user: { select: { id: true, name: true, phone: true, avatar: true } } },
+        where,
+        skip,
+        take: limit,
+        orderBy: { createdAt: 'desc' },
+        include: {
+          user: { select: { id: true, name: true, phone: true, avatar: true } },
+        },
       }),
       this.prisma.supportTicket.count({ where }),
     ]);
 
-    return { tickets, total, page, limit, totalPages: Math.ceil(total / limit) };
+    return {
+      tickets,
+      total,
+      page,
+      limit,
+      totalPages: Math.ceil(total / limit),
+    };
   }
 }

@@ -12,7 +12,9 @@ export function setupObservability() {
       [SemanticResourceAttributes.SERVICE_NAME]: 'amarshop-api',
       [SemanticResourceAttributes.SERVICE_VERSION]: '1.0.0',
     }),
-    traceExporter: new OTLPTraceExporter({ url: process.env.OTEL_EXPORTER_OTLP_ENDPOINT }),
+    traceExporter: new OTLPTraceExporter({
+      url: process.env.OTEL_EXPORTER_OTLP_ENDPOINT,
+    }),
     metricReader: new PeriodicExportingMetricReader({
       exporter: new OTLPMetricExporter(),
       exportIntervalMillis: 60000,

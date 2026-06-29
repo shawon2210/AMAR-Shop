@@ -11,7 +11,11 @@ interface PushPayload {
 export class PushNotificationService {
   constructor(private prisma: PrismaService) {}
 
-  async registerDevice(userId: string, token: string, platform: string): Promise<{ registered: boolean }> {
+  async registerDevice(
+    userId: string,
+    token: string,
+    platform: string,
+  ): Promise<{ registered: boolean }> {
     const user = await this.prisma.user.findUnique({ where: { id: userId } });
     if (!user) throw new NotFoundException('User not found');
 
@@ -32,7 +36,12 @@ export class PushNotificationService {
     return { registered: true };
   }
 
-  async sendPush(userId: string, title: string, body: string, data?: Record<string, unknown>): Promise<{ sent: boolean; error?: string }> {
+  async sendPush(
+    userId: string,
+    title: string,
+    body: string,
+    data?: Record<string, unknown>,
+  ): Promise<{ sent: boolean; error?: string }> {
     const user = await this.prisma.user.findUnique({
       where: { id: userId },
       include: { pushDevices: { where: { isActive: true } } },
@@ -51,7 +60,14 @@ export class PushNotificationService {
         });
       } catch (err: any) {
         await this.prisma.pushLog.create({
-          data: { userId, deviceId: device.id, title, body, status: 'FAILED', error: err.message },
+          data: {
+            userId,
+            deviceId: device.id,
+            title,
+            body,
+            status: 'FAILED',
+            error: err.message,
+          },
         });
       }
     }
@@ -59,7 +75,12 @@ export class PushNotificationService {
     return { sent: true };
   }
 
-  async sendBulkPush(userIds: string[], title: string, body: string, data?: Record<string, unknown>): Promise<{ sent: number; failed: number }> {
+  async sendBulkPush(
+    userIds: string[],
+    title: string,
+    body: string,
+    data?: Record<string, unknown>,
+  ): Promise<{ sent: number; failed: number }> {
     let sent = 0;
     let failed = 0;
 
@@ -72,7 +93,10 @@ export class PushNotificationService {
     return { sent, failed };
   }
 
-  async sendOrderPush(orderId: string, status: string): Promise<{ sent: boolean }> {
+  async sendOrderPush(
+    orderId: string,
+    status: string,
+  ): Promise<{ sent: boolean }> {
     const order = await this.prisma.order.findUnique({
       where: { id: orderId },
       include: { user: true },
@@ -80,21 +104,48 @@ export class PushNotificationService {
     if (!order) throw new NotFoundException('Order not found');
 
     const messages: Record<string, { title: string; body: string }> = {
-      PENDING: { title: 'Order Placed', body: `Order #${order.orderNumber} has been placed successfully.` },
-      CONFIRMED: { title: 'Order Confirmed', body: `Order #${order.orderNumber} is confirmed.` },
-      PROCESSING: { title: 'Order Processing', body: `Order #${order.orderNumber} is being prepared.` },
-      SHIPPED: { title: 'Order Shipped', body: `Order #${order.orderNumber} has been shipped.` },
-      DELIVERED: { title: 'Order Delivered', body: `Order #${order.orderNumber} has been delivered. Enjoy!` },
-      CANCELLED: { title: 'Order Cancelled', body: `Order #${order.orderNumber} has been cancelled.` },
+      PENDING: {
+        title: 'Order Placed',
+        body: `Order #${order.orderNumber} has been placed successfully.`,
+      },
+      CONFIRMED: {
+        title: 'Order Confirmed',
+        body: `Order #${order.orderNumber} is confirmed.`,
+      },
+      PROCESSING: {
+        title: 'Order Processing',
+        body: `Order #${order.orderNumber} is being prepared.`,
+      },
+      SHIPPED: {
+        title: 'Order Shipped',
+        body: `Order #${order.orderNumber} has been shipped.`,
+      },
+      DELIVERED: {
+        title: 'Order Delivered',
+        body: `Order #${order.orderNumber} has been delivered. Enjoy!`,
+      },
+      CANCELLED: {
+        title: 'Order Cancelled',
+        body: `Order #${order.orderNumber} has been cancelled.`,
+      },
     };
 
-    const msg = messages[status] || { title: 'Order Update', body: `Order #${order.orderNumber} status: ${status}` };
-    await this.sendPush(order.userId, msg.title, msg.body, { orderId, status, type: 'order_update' });
+    const msg = messages[status] || {
+      title: 'Order Update',
+      body: `Order #${order.orderNumber} status: ${status}`,
+    };
+    await this.sendPush(order.userId, msg.title, msg.body, {
+      orderId,
+      status,
+      type: 'order_update',
+    });
     return { sent: true };
   }
 
   async sendPromotionPush(campaignId: string): Promise<{ sent: number }> {
-    const campaign = await this.prisma.campaign.findUnique({ where: { id: campaignId } });
+    const campaign = await this.prisma.campaign.findUnique({
+      where: { id: campaignId },
+    });
     if (!campaign) throw new NotFoundException('Campaign not found');
 
     const subscribers = await this.prisma.pushDevice.findMany({
@@ -141,9 +192,17 @@ export class PushNotificationService {
       else if (l.status === 'FAILED') byDayMap[day].failed++;
     });
 
-    const byDay = Object.entries(byDayMap).map(([date, counts]) => ({ date, ...counts }));
+    const byDay = Object.entries(byDayMap).map(([date, counts]) => ({
+      date,
+      ...counts,
+    }));
 
-    return { totalSent, totalFailed, deliveryRate: Math.round(deliveryRate * 100) / 100, byDay };
+    return {
+      totalSent,
+      totalFailed,
+      deliveryRate: Math.round(deliveryRate * 100) / 100,
+      byDay,
+    };
   }
 
   private async sendToDevice(device: any, payload: PushPayload): Promise<void> {

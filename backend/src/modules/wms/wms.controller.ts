@@ -1,4 +1,13 @@
-import { Controller, Get, Post, Put, Body, Param, Query, UseGuards } from '@nestjs/common';
+import {
+  Controller,
+  Get,
+  Post,
+  Put,
+  Body,
+  Param,
+  Query,
+  UseGuards,
+} from '@nestjs/common';
 import { AuthGuard } from '@nestjs/passport';
 import { WmsService } from './wms.service';
 
@@ -8,12 +17,30 @@ export class WmsController {
   constructor(private readonly wms: WmsService) {}
 
   @Post('inbound')
-  async receiveInventory(@Body() body: { inboundOrderId: string; items: { inboundItemId: string; receivedQty: number; damagedQty?: number; binId?: string }[] }) {
+  async receiveInventory(
+    @Body()
+    body: {
+      inboundOrderId: string;
+      items: {
+        inboundItemId: string;
+        receivedQty: number;
+        damagedQty?: number;
+        binId?: string;
+      }[];
+    },
+  ) {
     return this.wms.receiveInventory(body.inboundOrderId, body.items);
   }
 
   @Post('inbound/orders')
-  async createInboundOrder(@Body() body: { warehouseId: string; supplierName?: string; items: { productId: string; expectedQty: number; unitCost?: number }[] }) {
+  async createInboundOrder(
+    @Body()
+    body: {
+      warehouseId: string;
+      supplierName?: string;
+      items: { productId: string; expectedQty: number; unitCost?: number }[];
+    },
+  ) {
     return this.wms.createInboundOrder(body);
   }
 
@@ -38,13 +65,30 @@ export class WmsController {
   }
 
   @Post('pack')
-  async packOrder(@Body() body: { orderId: string; items: { productId: string; quantity: number }[] }) {
+  async packOrder(
+    @Body()
+    body: {
+      orderId: string;
+      items: { productId: string; quantity: number }[];
+    },
+  ) {
     return this.wms.packOrder(body.orderId, body.items);
   }
 
   @Post('transfers')
-  async transferStock(@Body() body: { fromWarehouse: string; toWarehouse: string; items: { productId: string; quantity: number }[] }) {
-    return this.wms.transferStock(body.fromWarehouse, body.toWarehouse, body.items);
+  async transferStock(
+    @Body()
+    body: {
+      fromWarehouse: string;
+      toWarehouse: string;
+      items: { productId: string; quantity: number }[];
+    },
+  ) {
+    return this.wms.transferStock(
+      body.fromWarehouse,
+      body.toWarehouse,
+      body.items,
+    );
   }
 
   @Post('cycle-counts')
@@ -68,12 +112,18 @@ export class WmsController {
   }
 
   @Post('inventory/:id/damage')
-  async markDamaged(@Param('id') id: string, @Body() body: { quantity: number; reason: string }) {
+  async markDamaged(
+    @Param('id') id: string,
+    @Body() body: { quantity: number; reason: string },
+  ) {
     return this.wms.markDamaged(id, body.quantity, body.reason);
   }
 
   @Get('bins')
-  async getBins(@Query('warehouseId') warehouseId: string, @Query('zone') zone?: string) {
+  async getBins(
+    @Query('warehouseId') warehouseId: string,
+    @Query('zone') zone?: string,
+  ) {
     return this.wms.getBinLocation(warehouseId, zone);
   }
 

@@ -1,4 +1,12 @@
-import { Controller, Get, Post, Body, Param, Query, UseGuards } from '@nestjs/common';
+import {
+  Controller,
+  Get,
+  Post,
+  Body,
+  Param,
+  Query,
+  UseGuards,
+} from '@nestjs/common';
 import { AuthGuard } from '@nestjs/passport';
 import { BiService } from './bi.service';
 
@@ -8,7 +16,10 @@ export class BiController {
   constructor(private readonly bi: BiService) {}
 
   @Get('executive-dashboard')
-  async getExecutiveDashboard(@Query('start') start: string, @Query('end') end: string) {
+  async getExecutiveDashboard(
+    @Query('start') start: string,
+    @Query('end') end: string,
+  ) {
     return this.bi.getExecutiveDashboard({ start, end });
   }
 
@@ -33,12 +44,18 @@ export class BiController {
   }
 
   @Get('seller-performance')
-  async getSellerPerformance(@Query('start') start: string, @Query('end') end: string) {
+  async getSellerPerformance(
+    @Query('start') start: string,
+    @Query('end') end: string,
+  ) {
     return this.bi.getSellerPerformance({ start, end });
   }
 
   @Get('product-profitability')
-  async getProductProfitability(@Query('start') start: string, @Query('end') end: string) {
+  async getProductProfitability(
+    @Query('start') start: string,
+    @Query('end') end: string,
+  ) {
     return this.bi.getProductProfitability({ start, end });
   }
 
@@ -48,13 +65,25 @@ export class BiController {
   }
 
   @Get('attribution')
-  async getAttribution(@Query('start') start?: string, @Query('end') end?: string) {
-    return this.bi.getMarketingAttribution({ start: start || new Date().toISOString().split('T')[0], end: end || new Date().toISOString().split('T')[0] });
+  async getAttribution(
+    @Query('start') start?: string,
+    @Query('end') end?: string,
+  ) {
+    return this.bi.getMarketingAttribution({
+      start: start || new Date().toISOString().split('T')[0],
+      end: end || new Date().toISOString().split('T')[0],
+    });
   }
 
   @Get('funnels')
-  async getFunnels(@Query('startEvent') startEvent?: string, @Query('endEvent') endEvent?: string) {
-    return this.bi.getUserFunnels(startEvent || 'VIEW_PRODUCT', endEvent || 'PURCHASE');
+  async getFunnels(
+    @Query('startEvent') startEvent?: string,
+    @Query('endEvent') endEvent?: string,
+  ) {
+    return this.bi.getUserFunnels(
+      startEvent || 'VIEW_PRODUCT',
+      endEvent || 'PURCHASE',
+    );
   }
 
   @Get('sessions')
@@ -63,22 +92,49 @@ export class BiController {
   }
 
   @Get('operations')
-  async getOperations(@Query('start') start: string, @Query('end') end: string) {
+  async getOperations(
+    @Query('start') start: string,
+    @Query('end') end: string,
+  ) {
     return this.bi.getOperationalMetrics({ start, end });
   }
 
   @Get('forecast')
-  async getForecast(@Query('metric') metric?: string, @Query('months') months?: string) {
-    return this.bi.getForecastModels(metric || 'revenue', parseInt(months ?? '6'));
+  async getForecast(
+    @Query('metric') metric?: string,
+    @Query('months') months?: string,
+  ) {
+    return this.bi.getForecastModels(
+      metric || 'revenue',
+      parseInt(months ?? '6'),
+    );
   }
 
   @Post('custom-reports')
-  async createCustomReport(@Body() body: { name: string; metrics: string[]; dateRange: { start: string; end: string }; groupBy?: string }) {
+  async createCustomReport(
+    @Body()
+    body: {
+      name: string;
+      metrics: string[];
+      dateRange: { start: string; end: string };
+      groupBy?: string;
+    },
+  ) {
     return this.bi.generateCustomReport(body);
   }
 
   @Post('schedule-report')
-  async scheduleReport(@Body() body: { name: string; type: string; config: any; cron: string; recipients: string[]; format?: string }) {
+  async scheduleReport(
+    @Body()
+    body: {
+      name: string;
+      type: string;
+      config: any;
+      cron: string;
+      recipients: string[];
+      format?: string;
+    },
+  ) {
     return this.bi.createScheduledReport(body);
   }
 

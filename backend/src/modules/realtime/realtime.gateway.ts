@@ -11,7 +11,12 @@ import { Server, Socket } from 'socket.io';
 import { Injectable, Logger, UseGuards } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import { realtimeConfig } from './realtime.config';
-import { RealtimeEvent, RealtimePayload, SocketUser, PresenceData } from './interfaces/events.interface';
+import {
+  RealtimeEvent,
+  RealtimePayload,
+  SocketUser,
+  PresenceData,
+} from './interfaces/events.interface';
 
 interface RateLimitEntry {
   count: number;
@@ -27,7 +32,9 @@ interface RateLimitEntry {
   namespace: /\/\w+/,
   transports: ['websocket', 'polling'],
 })
-export class RealtimeGateway implements OnGatewayConnection, OnGatewayDisconnect, OnGatewayInit {
+export class RealtimeGateway
+  implements OnGatewayConnection, OnGatewayDisconnect, OnGatewayInit
+{
   @WebSocketServer()
   server!: Server;
 
@@ -46,7 +53,9 @@ export class RealtimeGateway implements OnGatewayConnection, OnGatewayDisconnect
 
   async handleConnection(client: Socket): Promise<void> {
     try {
-      const token = client.handshake.auth?.token || client.handshake.query?.token as string;
+      const token =
+        client.handshake.auth?.token ||
+        (client.handshake.query?.token as string);
       if (!token) {
         client.emit('error', { message: 'Authentication required' });
         client.disconnect();
@@ -73,7 +82,9 @@ export class RealtimeGateway implements OnGatewayConnection, OnGatewayDisconnect
       this.updatePresence(user.userId, 'online', client.id);
 
       client.emit('connected', { userId: user.userId, socketId: client.id });
-      this.logger.log(`Client connected: ${user.userId} on namespace ${client.nsp.name}`);
+      this.logger.log(
+        `Client connected: ${user.userId} on namespace ${client.nsp.name}`,
+      );
     } catch (error) {
       this.logger.warn(`Connection rejected: ${(error as Error).message}`);
       client.emit('error', { message: 'Invalid token' });
@@ -118,7 +129,10 @@ export class RealtimeGateway implements OnGatewayConnection, OnGatewayDisconnect
   }
 
   @SubscribeMessage('chat:typing')
-  handleTyping(client: Socket, data: { conversationId: string; isTyping: boolean }): void {
+  handleTyping(
+    client: Socket,
+    data: { conversationId: string; isTyping: boolean },
+  ): void {
     const user = this.socketUserMap.get(client.id);
     if (!user) throw new WsException('Not authenticated');
     client.to(`conversation:${data.conversationId}`).emit('chat:typing', {
@@ -129,7 +143,10 @@ export class RealtimeGateway implements OnGatewayConnection, OnGatewayDisconnect
   }
 
   @SubscribeMessage('chat:read')
-  handleReadReceipt(client: Socket, data: { conversationId: string; messageId: string }): void {
+  handleReadReceipt(
+    client: Socket,
+    data: { conversationId: string; messageId: string },
+  ): void {
     const user = this.socketUserMap.get(client.id);
     if (!user) throw new WsException('Not authenticated');
     client.to(`conversation:${data.conversationId}`).emit('chat:read', {
@@ -147,28 +164,46 @@ export class RealtimeGateway implements OnGatewayConnection, OnGatewayDisconnect
     this.updatePresence(user.userId, 'away', client.id);
   }
 
-  sendToUser<E extends RealtimeEvent>(userId: string, event: E, data: RealtimePayload<E>): void {
+  sendToUser<E extends RealtimeEvent>(
+    userId: string,
+    event: E,
+    data: RealtimePayload<E>,
+  ): void {
     const sockets = this.userSockets.get(userId);
     if (!sockets) return;
-    sockets.forEach(socketId => {
+    sockets.forEach((socketId) => {
       const client = this.server.sockets.sockets.get(socketId);
       if (client) client.emit(event, data);
     });
   }
 
-  sendToSeller<E extends RealtimeEvent>(sellerId: string, event: E, data: RealtimePayload<E>): void {
+  sendToSeller<E extends RealtimeEvent>(
+    sellerId: string,
+    event: E,
+    data: RealtimePayload<E>,
+  ): void {
     this.server.to(`seller:${sellerId}`).emit(event, data);
   }
 
-  sendToAdmin<E extends RealtimeEvent>(event: E, data: RealtimePayload<E>): void {
+  sendToAdmin<E extends RealtimeEvent>(
+    event: E,
+    data: RealtimePayload<E>,
+  ): void {
     this.server.of('/admin').emit(event, data);
   }
 
-  sendToOrderRoom<E extends RealtimeEvent>(orderId: string, event: E, data: RealtimePayload<E>): void {
+  sendToOrderRoom<E extends RealtimeEvent>(
+    orderId: string,
+    event: E,
+    data: RealtimePayload<E>,
+  ): void {
     this.server.to(`order:${orderId}`).emit(event, data);
   }
 
-  broadcastToAll<E extends RealtimeEvent>(event: E, data: RealtimePayload<E>): void {
+  broadcastToAll<E extends RealtimeEvent>(
+    event: E,
+    data: RealtimePayload<E>,
+  ): void {
     this.server.emit(event, data);
   }
 
@@ -180,7 +215,7 @@ export class RealtimeGateway implements OnGatewayConnection, OnGatewayDisconnect
     const roomSockets = this.server.sockets.adapter.rooms.get(room);
     if (!roomSockets) return [];
     return Array.from(roomSockets)
-      .map(sid => this.socketUserMap.get(sid)?.userId)
+      .map((sid) => this.socketUserMap.get(sid)?.userId)
       .filter(Boolean) as string[];
   }
 
@@ -193,7 +228,10 @@ export class RealtimeGateway implements OnGatewayConnection, OnGatewayDisconnect
   }
 
   isUserConnected(userId: string): boolean {
-    return this.userSockets.has(userId) && (this.userSockets.get(userId)?.size ?? 0) > 0;
+    return (
+      this.userSockets.has(userId) &&
+      (this.userSockets.get(userId)?.size ?? 0) > 0
+    );
   }
 
   private joinNamespacedRooms(client: Socket, user: SocketUser): void {
@@ -208,7 +246,11 @@ export class RealtimeGateway implements OnGatewayConnection, OnGatewayDisconnect
     }
   }
 
-  private updatePresence(userId: string, status: PresenceData['status'], socketId: string): void {
+  private updatePresence(
+    userId: string,
+    status: PresenceData['status'],
+    socketId: string,
+  ): void {
     const existing = this.presenceMap.get(userId);
     this.presenceMap.set(userId, {
       userId,
@@ -237,7 +279,10 @@ export class RealtimeGateway implements OnGatewayConnection, OnGatewayDisconnect
     const now = Date.now();
     const entry = this.rateLimitMap.get(clientId);
     if (!entry || now > entry.resetAt) {
-      this.rateLimitMap.set(clientId, { count: 1, resetAt: now + this.rateLimitConfig.windowMs });
+      this.rateLimitMap.set(clientId, {
+        count: 1,
+        resetAt: now + this.rateLimitConfig.windowMs,
+      });
       return true;
     }
     if (entry.count >= this.rateLimitConfig.maxEventsPerMinute) {

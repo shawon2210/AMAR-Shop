@@ -5,7 +5,15 @@ import { PrismaService } from '../../common/prisma.service';
 export class SupportService {
   constructor(private prisma: PrismaService) {}
 
-  async createTicket(userId: string, data: { subject: string; description: string; category?: string; priority?: string }) {
+  async createTicket(
+    userId: string,
+    data: {
+      subject: string;
+      description: string;
+      category?: string;
+      priority?: string;
+    },
+  ) {
     return this.prisma.supportTicket.create({
       data: {
         userId,
@@ -39,10 +47,22 @@ export class SupportService {
       this.prisma.supportTicket.count({ where }),
     ]);
 
-    return { tickets, total, page, limit, totalPages: Math.ceil(total / limit) };
+    return {
+      tickets,
+      total,
+      page,
+      limit,
+      totalPages: Math.ceil(total / limit),
+    };
   }
 
-  async getAllTickets(query: { page?: number; limit?: number; status?: string; priority?: string; category?: string }) {
+  async getAllTickets(query: {
+    page?: number;
+    limit?: number;
+    status?: string;
+    priority?: string;
+    category?: string;
+  }) {
     const page = query.page || 1;
     const limit = query.limit || 20;
     const skip = (page - 1) * limit;
@@ -58,16 +78,30 @@ export class SupportService {
         skip,
         take: limit,
         orderBy: { createdAt: 'desc' },
-        include: { user: { select: { id: true, name: true, phone: true, avatar: true } } },
+        include: {
+          user: { select: { id: true, name: true, phone: true, avatar: true } },
+        },
       }),
       this.prisma.supportTicket.count({ where }),
     ]);
 
-    return { tickets, total, page, limit, totalPages: Math.ceil(total / limit) };
+    return {
+      tickets,
+      total,
+      page,
+      limit,
+      totalPages: Math.ceil(total / limit),
+    };
   }
 
-  async replyTicket(ticketId: string, userId: string, message: { content: string; attachments?: string[] }) {
-    const ticket = await this.prisma.supportTicket.findUnique({ where: { id: ticketId } });
+  async replyTicket(
+    ticketId: string,
+    userId: string,
+    message: { content: string; attachments?: string[] },
+  ) {
+    const ticket = await this.prisma.supportTicket.findUnique({
+      where: { id: ticketId },
+    });
     if (!ticket) throw new NotFoundException('Ticket not found');
 
     if (ticket.status === 'CLOSED') {
@@ -88,7 +122,9 @@ export class SupportService {
   }
 
   async closeTicket(ticketId: string) {
-    const ticket = await this.prisma.supportTicket.findUnique({ where: { id: ticketId } });
+    const ticket = await this.prisma.supportTicket.findUnique({
+      where: { id: ticketId },
+    });
     if (!ticket) throw new NotFoundException('Ticket not found');
 
     return this.prisma.supportTicket.update({
@@ -116,6 +152,16 @@ export class SupportService {
       this.prisma.supportTicket.count(),
     ]);
 
-    return { total, open, inProgress, resolved, closed, resolutionRate: total > 0 ? Number(((resolved + closed) / total * 100).toFixed(1)) : 0 };
+    return {
+      total,
+      open,
+      inProgress,
+      resolved,
+      closed,
+      resolutionRate:
+        total > 0
+          ? Number((((resolved + closed) / total) * 100).toFixed(1))
+          : 0,
+    };
   }
 }

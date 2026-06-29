@@ -36,11 +36,18 @@ export class CartController {
     @Param('productId') productId: string,
     @Body() body: { quantity: number },
   ) {
-    return this.cartService.updateQuantity(req.user.id, productId, body.quantity);
+    return this.cartService.updateQuantity(
+      req.user.id,
+      productId,
+      body.quantity,
+    );
   }
 
   @Put(':productId/toggle')
-  async toggleSelect(@Request() req: any, @Param('productId') productId: string) {
+  async toggleSelect(
+    @Request() req: any,
+    @Param('productId') productId: string,
+  ) {
     return this.cartService.toggleSelect(req.user.id, productId);
   }
 

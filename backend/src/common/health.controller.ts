@@ -16,7 +16,10 @@ export class DependencyChecker {
 
   async checkRedis() {
     try {
-      if (typeof globalThis.__redis_client__ !== 'undefined' && globalThis.__redis_client__?.ping) {
+      if (
+        typeof globalThis.__redis_client__ !== 'undefined' &&
+        globalThis.__redis_client__?.ping
+      ) {
         await globalThis.__redis_client__.ping();
         return { status: 'up', latency: 0 };
       }
@@ -38,7 +41,9 @@ export class HealthController {
   async check() {
     const db = await this.checker.checkDatabase();
     const redis = await this.checker.checkRedis();
-    const allUp = db.status === 'up' && (redis.status === 'up' || redis.status === 'not_configured');
+    const allUp =
+      db.status === 'up' &&
+      (redis.status === 'up' || redis.status === 'not_configured');
 
     return {
       status: allUp ? 'healthy' : 'degraded',

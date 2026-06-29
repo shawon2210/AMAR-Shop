@@ -1,6 +1,10 @@
 import { Injectable, Logger } from '@nestjs/common';
 import { RealtimeGateway } from './realtime.gateway';
-import { RealtimeEvent, RealtimePayload, PresenceData } from './interfaces/events.interface';
+import {
+  RealtimeEvent,
+  RealtimePayload,
+  PresenceData,
+} from './interfaces/events.interface';
 
 @Injectable()
 export class RealtimeService {
@@ -8,19 +12,34 @@ export class RealtimeService {
 
   constructor(private gateway: RealtimeGateway) {}
 
-  emitToUser<E extends RealtimeEvent>(userId: string, event: E, data: RealtimePayload<E>): void {
+  emitToUser<E extends RealtimeEvent>(
+    userId: string,
+    event: E,
+    data: RealtimePayload<E>,
+  ): void {
     this.gateway.sendToUser(userId, event, data);
   }
 
-  emitToSeller<E extends RealtimeEvent>(sellerId: string, event: E, data: RealtimePayload<E>): void {
+  emitToSeller<E extends RealtimeEvent>(
+    sellerId: string,
+    event: E,
+    data: RealtimePayload<E>,
+  ): void {
     this.gateway.sendToSeller(sellerId, event, data);
   }
 
-  emitToAdmin<E extends RealtimeEvent>(event: E, data: RealtimePayload<E>): void {
+  emitToAdmin<E extends RealtimeEvent>(
+    event: E,
+    data: RealtimePayload<E>,
+  ): void {
     this.gateway.sendToAdmin(event, data);
   }
 
-  emitToOrder<E extends RealtimeEvent>(orderId: string, event: E, data: RealtimePayload<E>): void {
+  emitToOrder<E extends RealtimeEvent>(
+    orderId: string,
+    event: E,
+    data: RealtimePayload<E>,
+  ): void {
     this.gateway.sendToOrderRoom(orderId, event, data);
   }
 

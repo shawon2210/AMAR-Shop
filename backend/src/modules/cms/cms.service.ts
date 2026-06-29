@@ -9,12 +9,30 @@ export class CmsService {
     return this.prisma.cMSPage.findMany({
       where: { isActive: true },
       orderBy: { createdAt: 'desc' },
-      select: { id: true, title: true, slug: true, metaTitle: true, metaDesc: true, updatedAt: true },
+      select: {
+        id: true,
+        title: true,
+        slug: true,
+        metaTitle: true,
+        metaDesc: true,
+        updatedAt: true,
+      },
     });
   }
 
-  async createPage(data: { title: string; slug?: string; content?: string; metaTitle?: string; metaDesc?: string }) {
-    const slug = data.slug || data.title.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '');
+  async createPage(data: {
+    title: string;
+    slug?: string;
+    content?: string;
+    metaTitle?: string;
+    metaDesc?: string;
+  }) {
+    const slug =
+      data.slug ||
+      data.title
+        .toLowerCase()
+        .replace(/[^a-z0-9]+/g, '-')
+        .replace(/^-|-$/g, '');
     return this.prisma.cMSPage.create({
       data: {
         title: data.title,
@@ -26,7 +44,16 @@ export class CmsService {
     });
   }
 
-  async updatePage(id: string, data: { title?: string; content?: string; metaTitle?: string; metaDesc?: string; isActive?: boolean }) {
+  async updatePage(
+    id: string,
+    data: {
+      title?: string;
+      content?: string;
+      metaTitle?: string;
+      metaDesc?: string;
+      isActive?: boolean;
+    },
+  ) {
     const page = await this.prisma.cMSPage.findUnique({ where: { id } });
     if (!page) throw new NotFoundException('Page not found');
 
@@ -50,7 +77,14 @@ export class CmsService {
     });
   }
 
-  async createBanner(data: { title?: string; image: string; link?: string; position: string; sortOrder?: number; storeId?: string }) {
+  async createBanner(data: {
+    title?: string;
+    image: string;
+    link?: string;
+    position: string;
+    sortOrder?: number;
+    storeId?: string;
+  }) {
     return this.prisma.banner.create({
       data: {
         title: data.title,

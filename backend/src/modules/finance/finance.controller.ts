@@ -1,4 +1,12 @@
-import { Controller, Get, Post, Body, Param, Query, UseGuards } from '@nestjs/common';
+import {
+  Controller,
+  Get,
+  Post,
+  Body,
+  Param,
+  Query,
+  UseGuards,
+} from '@nestjs/common';
 import { AuthGuard } from '@nestjs/passport';
 import { FinanceService } from './finance.service';
 
@@ -33,8 +41,13 @@ export class FinanceController {
   }
 
   @Post('settlements')
-  async generateSettlement(@Body() body: { sellerId: string; start: string; end: string }) {
-    return this.finance.generateSellerSettlement(body.sellerId, { start: body.start, end: body.end });
+  async generateSettlement(
+    @Body() body: { sellerId: string; start: string; end: string },
+  ) {
+    return this.finance.generateSellerSettlement(body.sellerId, {
+      start: body.start,
+      end: body.end,
+    });
   }
 
   @Post('settlements/process')
@@ -43,13 +56,24 @@ export class FinanceController {
   }
 
   @Get('accounting')
-  async getAccounting(@Query('start') start?: string, @Query('end') end?: string) {
-    return this.finance.getAccountingEntries(start && end ? { start, end } : undefined);
+  async getAccounting(
+    @Query('start') start?: string,
+    @Query('end') end?: string,
+  ) {
+    return this.finance.getAccountingEntries(
+      start && end ? { start, end } : undefined,
+    );
   }
 
   @Get('tax-report')
-  async getTaxReport(@Query('quarter') quarter?: string, @Query('year') year?: string) {
-    return this.finance.generateTaxReport(parseInt(quarter || '1'), parseInt(year || '2026'));
+  async getTaxReport(
+    @Query('quarter') quarter?: string,
+    @Query('year') year?: string,
+  ) {
+    return this.finance.generateTaxReport(
+      parseInt(quarter || '1'),
+      parseInt(year || '2026'),
+    );
   }
 
   @Get('cash-flow')
@@ -64,11 +88,16 @@ export class FinanceController {
 
   @Get('balance-sheet')
   async getBalanceSheet(@Query('date') date?: string) {
-    return this.finance.getBalanceSheet(date || new Date().toISOString().split('T')[0]);
+    return this.finance.getBalanceSheet(
+      date || new Date().toISOString().split('T')[0],
+    );
   }
 
   @Get('profit-loss')
-  async getProfitAndLoss(@Query('start') start: string, @Query('end') end: string) {
+  async getProfitAndLoss(
+    @Query('start') start: string,
+    @Query('end') end: string,
+  ) {
     return this.finance.getProfitAndLoss({ start, end });
   }
 

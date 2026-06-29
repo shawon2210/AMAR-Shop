@@ -1,4 +1,14 @@
-import { Controller, Post, Get, Delete, Body, Param, Query, UseGuards, Request } from '@nestjs/common';
+import {
+  Controller,
+  Post,
+  Get,
+  Delete,
+  Body,
+  Param,
+  Query,
+  UseGuards,
+  Request,
+} from '@nestjs/common';
 import { AuthGuard } from '@nestjs/passport';
 import { DeveloperService } from './developer.service';
 
@@ -8,8 +18,15 @@ export class DeveloperController {
 
   @UseGuards(AuthGuard('jwt'))
   @Post('api-keys')
-  async createApiKey(@Body() body: { name: string; permissions: string[] }, @Request() req: any) {
-    return this.developerService.createApiKey(body.name, req.user.id, body.permissions || []);
+  async createApiKey(
+    @Body() body: { name: string; permissions: string[] },
+    @Request() req: any,
+  ) {
+    return this.developerService.createApiKey(
+      body.name,
+      req.user.id,
+      body.permissions || [],
+    );
   }
 
   @UseGuards(AuthGuard('jwt'))
@@ -26,17 +43,33 @@ export class DeveloperController {
 
   @UseGuards(AuthGuard('jwt'))
   @Get('api-keys/:id/usage')
-  async getUsage(@Param('id') id: string, @Query('start') start?: string, @Query('end') end?: string) {
-    const dateRange = start && end ? { start: new Date(start), end: new Date(end) } : undefined;
+  async getUsage(
+    @Param('id') id: string,
+    @Query('start') start?: string,
+    @Query('end') end?: string,
+  ) {
+    const dateRange =
+      start && end ? { start: new Date(start), end: new Date(end) } : undefined;
     return this.developerService.getUsageStats(id, dateRange);
   }
 
   @UseGuards(AuthGuard('jwt'))
   @Post('webhooks')
   async registerWebhook(
-    @Body() body: { storeId: string; event: string; url: string; secret: string },
+    @Body()
+    body: {
+      storeId: string;
+      event: string;
+      url: string;
+      secret: string;
+    },
   ) {
-    return this.developerService.registerWebhook(body.storeId, body.event, body.url, body.secret);
+    return this.developerService.registerWebhook(
+      body.storeId,
+      body.event,
+      body.url,
+      body.secret,
+    );
   }
 
   @UseGuards(AuthGuard('jwt'))

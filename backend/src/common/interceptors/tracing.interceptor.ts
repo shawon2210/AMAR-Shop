@@ -1,4 +1,9 @@
-import { Injectable, NestInterceptor, ExecutionContext, CallHandler } from '@nestjs/common';
+import {
+  Injectable,
+  NestInterceptor,
+  ExecutionContext,
+  CallHandler,
+} from '@nestjs/common';
 import { Observable, tap } from 'rxjs';
 import { trace, SpanStatusCode } from '@opentelemetry/api';
 
@@ -27,7 +32,10 @@ export class TracingInterceptor implements NestInterceptor {
           },
           error: (error) => {
             span.setAttribute('http.error', error.message);
-            span.setStatus({ code: SpanStatusCode.ERROR, message: error.message });
+            span.setStatus({
+              code: SpanStatusCode.ERROR,
+              message: error.message,
+            });
             span.end();
           },
         }),

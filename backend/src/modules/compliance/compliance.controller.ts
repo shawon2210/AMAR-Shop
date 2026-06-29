@@ -1,4 +1,15 @@
-import { Controller, Get, Post, Put, Delete, Body, Param, Query, UseGuards, Request } from '@nestjs/common';
+import {
+  Controller,
+  Get,
+  Post,
+  Put,
+  Delete,
+  Body,
+  Param,
+  Query,
+  UseGuards,
+  Request,
+} from '@nestjs/common';
 import { AuthGuard } from '@nestjs/passport';
 import { ComplianceService } from './compliance.service';
 import { RolesGuard } from '../../common/guards/roles.guard';
@@ -19,7 +30,13 @@ export class ComplianceController {
   @Post('kyc')
   async runKYC(
     @Request() req: any,
-    @Body() body: { documentType: string; documentNumber: string; imageFront: string; imageBack?: string },
+    @Body()
+    body: {
+      documentType: string;
+      documentNumber: string;
+      imageFront: string;
+      imageBack?: string;
+    },
   ) {
     return this.complianceService.runKYC(req.user.id, body);
   }
@@ -43,8 +60,14 @@ export class ComplianceController {
   }
 
   @Put('cookie-consent')
-  async updateCookieConsent(@Body() body: { userId: string; consentType: string; granted: boolean }) {
-    return this.complianceService.logConsent(body.userId, body.consentType, body.granted);
+  async updateCookieConsent(
+    @Body() body: { userId: string; consentType: string; granted: boolean },
+  ) {
+    return this.complianceService.logConsent(
+      body.userId,
+      body.consentType,
+      body.granted,
+    );
   }
 
   @Get('privacy')

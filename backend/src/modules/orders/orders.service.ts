@@ -42,7 +42,7 @@ export class OrdersService {
         note: data.note,
         status: 'PENDING',
         items: {
-          create: data.items.map(item => ({
+          create: data.items.map((item) => ({
             productId: item.productId,
             quantity: item.quantity,
             price: item.price,
@@ -51,7 +51,9 @@ export class OrdersService {
       },
       include: {
         items: {
-          include: { product: { select: { id: true, name: true, images: true } } },
+          include: {
+            product: { select: { id: true, name: true, images: true } },
+          },
         },
         address: true,
       },
@@ -61,19 +63,14 @@ export class OrdersService {
     await this.prisma.cartItem.deleteMany({
       where: {
         userId,
-        productId: { in: data.items.map(i => i.productId) },
+        productId: { in: data.items.map((i) => i.productId) },
       },
     });
 
     return order;
   }
 
-  async findByUser(
-    userId: string,
-    status?: string,
-    skip = 0,
-    take = 10,
-  ) {
+  async findByUser(userId: string, status?: string, skip = 0, take = 10) {
     const where: any = { userId };
     if (status && status !== 'ALL') {
       where.status = status.toUpperCase();
@@ -87,7 +84,9 @@ export class OrdersService {
         orderBy: { createdAt: 'desc' },
         include: {
           items: {
-            include: { product: { select: { id: true, name: true, images: true } } },
+            include: {
+              product: { select: { id: true, name: true, images: true } },
+            },
           },
           address: true,
         },

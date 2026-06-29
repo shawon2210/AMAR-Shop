@@ -1,6 +1,11 @@
 import { Injectable, Logger } from '@nestjs/common';
 import { v4 as uuidv4 } from 'uuid';
-import { DomainEventEnvelope, DomainEventName, DomainEventTypes, DomainEventHandler } from './interfaces/domain-event.interface';
+import {
+  DomainEventEnvelope,
+  DomainEventName,
+  DomainEventTypes,
+  DomainEventHandler,
+} from './interfaces/domain-event.interface';
 
 @Injectable()
 export class EventBusService {
@@ -30,7 +35,7 @@ export class EventBusService {
     }
 
     const promises: Promise<void>[] = [];
-    handlers.forEach(handler => {
+    handlers.forEach((handler) => {
       promises.push(this.executeWithRetry(handler, envelope));
     });
 
@@ -44,7 +49,7 @@ export class EventBusService {
     if (!this.handlers.has(eventType)) {
       this.handlers.set(eventType, new Set());
     }
-    this.handlers.get(eventType)!.add(handler as DomainEventHandler);
+    this.handlers.get(eventType)!.add(handler);
     this.logger.debug(`Handler registered for event ${eventType}`);
   }
 
@@ -54,7 +59,7 @@ export class EventBusService {
   ): void {
     const handlers = this.handlers.get(eventType);
     if (handlers) {
-      handlers.delete(handler as DomainEventHandler);
+      handlers.delete(handler);
       if (handlers.size === 0) this.handlers.delete(eventType);
     }
   }
@@ -67,12 +72,18 @@ export class EventBusService {
     try {
       await handler(event);
     } catch (error) {
-      this.logger.error(`Handler failed for event ${event.type} (attempt ${attempt}/${this.retryCount}): ${error}`);
+      this.logger.error(
+        `Handler failed for event ${event.type} (attempt ${attempt}/${this.retryCount}): ${error}`,
+      );
       if (attempt < this.retryCount) {
-        await new Promise(resolve => setTimeout(resolve, this.retryDelay * attempt));
+        await new Promise((resolve) =>
+          setTimeout(resolve, this.retryDelay * attempt),
+        );
         return this.executeWithRetry(handler, event, attempt + 1);
       }
-      this.logger.error(`Handler permanently failed for event ${event.type} after ${this.retryCount} attempts`);
+      this.logger.error(
+        `Handler permanently failed for event ${event.type} after ${this.retryCount} attempts`,
+      );
     }
   }
 }

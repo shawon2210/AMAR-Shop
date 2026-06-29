@@ -1,4 +1,8 @@
-import { Injectable, NotFoundException, BadRequestException } from '@nestjs/common';
+import {
+  Injectable,
+  NotFoundException,
+  BadRequestException,
+} from '@nestjs/common';
 import { PrismaService } from '../../common/prisma.service';
 
 @Injectable()
@@ -52,13 +56,19 @@ export class WalletService {
       },
     });
 
-    return { balance: balanceAfter, amount, method, message: 'Funds added successfully' };
+    return {
+      balance: balanceAfter,
+      amount,
+      method,
+      message: 'Funds added successfully',
+    };
   }
 
   async deductFunds(userId: string, amount: number, reference: string) {
     if (amount <= 0) throw new BadRequestException('Amount must be positive');
     const wallet = await this.ensureWallet(userId);
-    if (wallet.balance < amount) throw new BadRequestException('Insufficient balance');
+    if (wallet.balance < amount)
+      throw new BadRequestException('Insufficient balance');
 
     const balanceBefore = wallet.balance;
     const balanceAfter = balanceBefore - amount;
@@ -82,7 +92,11 @@ export class WalletService {
       },
     });
 
-    return { balance: balanceAfter, amount, message: 'Payment deducted successfully' };
+    return {
+      balance: balanceAfter,
+      amount,
+      message: 'Payment deducted successfully',
+    };
   }
 
   async processRefund(userId: string, amount: number, orderId: string) {
@@ -111,7 +125,11 @@ export class WalletService {
       },
     });
 
-    return { balance: balanceAfter, amount, message: 'Refund processed successfully' };
+    return {
+      balance: balanceAfter,
+      amount,
+      message: 'Refund processed successfully',
+    };
   }
 
   async addCashback(userId: string, amount: number, reference: string) {
@@ -144,7 +162,11 @@ export class WalletService {
       },
     });
 
-    return { balance: balanceAfter, amount, message: 'Cashback added successfully' };
+    return {
+      balance: balanceAfter,
+      amount,
+      message: 'Cashback added successfully',
+    };
   }
 
   async getTransactions(
@@ -169,23 +191,37 @@ export class WalletService {
       this.prisma.walletTransaction.count({ where }),
     ]);
 
-    return { transactions, total, page, limit, totalPages: Math.ceil(total / limit) };
+    return {
+      transactions,
+      total,
+      page,
+      limit,
+      totalPages: Math.ceil(total / limit),
+    };
   }
 
   async requestPayout(sellerId: string, amount: number, method: string) {
     if (amount <= 0) throw new BadRequestException('Amount must be positive');
 
-    const store = await this.prisma.store.findUnique({ where: { userId: sellerId } });
+    const store = await this.prisma.store.findUnique({
+      where: { userId: sellerId },
+    });
     if (!store) throw new NotFoundException('Store not found');
 
     const wallet = await this.ensureWallet(sellerId);
-    if (wallet.balance < amount) throw new BadRequestException('Insufficient balance');
+    if (wallet.balance < amount)
+      throw new BadRequestException('Insufficient balance');
 
-    const sellerProfile = await this.prisma.sellerProfile.findUnique({ where: { userId: sellerId } });
+    const sellerProfile = await this.prisma.sellerProfile.findUnique({
+      where: { userId: sellerId },
+    });
     let accountNumber: string | undefined;
-    if (method === 'bank') accountNumber = sellerProfile?.bankAccountNumber || undefined;
-    else if (method === 'bkash') accountNumber = sellerProfile?.bkashNumber || undefined;
-    else if (method === 'nagad') accountNumber = sellerProfile?.nagadNumber || undefined;
+    if (method === 'bank')
+      accountNumber = sellerProfile?.bankAccountNumber || undefined;
+    else if (method === 'bkash')
+      accountNumber = sellerProfile?.bkashNumber || undefined;
+    else if (method === 'nagad')
+      accountNumber = sellerProfile?.nagadNumber || undefined;
 
     const fee = amount * 0.01;
     const netAmount = amount - fee;
@@ -225,13 +261,20 @@ export class WalletService {
       },
     });
 
-    return { payout, balance: balanceAfter, message: 'Payout request submitted' };
+    return {
+      payout,
+      balance: balanceAfter,
+      message: 'Payout request submitted',
+    };
   }
 
   async processPayout(payoutId: string) {
-    const payout = await this.prisma.sellerPayout.findUnique({ where: { id: payoutId } });
+    const payout = await this.prisma.sellerPayout.findUnique({
+      where: { id: payoutId },
+    });
     if (!payout) throw new NotFoundException('Payout not found');
-    if (payout.status !== 'PENDING') throw new BadRequestException('Payout already processed');
+    if (payout.status !== 'PENDING')
+      throw new BadRequestException('Payout already processed');
 
     return this.prisma.sellerPayout.update({
       where: { id: payoutId },

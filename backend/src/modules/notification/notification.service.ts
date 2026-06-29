@@ -46,7 +46,14 @@ export class NotificationService {
       this.prisma.notification.count({ where: { userId, read: false } }),
     ]);
 
-    return { notifications, total, unreadCount, page, limit, totalPages: Math.ceil(total / limit) };
+    return {
+      notifications,
+      total,
+      unreadCount,
+      page,
+      limit,
+      totalPages: Math.ceil(total / limit),
+    };
   }
 
   async markAsRead(notificationId: string) {

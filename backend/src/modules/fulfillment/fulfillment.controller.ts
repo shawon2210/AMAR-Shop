@@ -1,4 +1,13 @@
-import { Controller, Get, Post, Put, Body, Param, Query, UseGuards } from '@nestjs/common';
+import {
+  Controller,
+  Get,
+  Post,
+  Put,
+  Body,
+  Param,
+  Query,
+  UseGuards,
+} from '@nestjs/common';
 import { AuthGuard } from '@nestjs/passport';
 import { FulfillmentService } from './fulfillment.service';
 
@@ -23,12 +32,21 @@ export class FulfillmentController {
   }
 
   @Put('pickup')
-  async schedulePickup(@Body() body: { shipmentId: string; slot: { date: string; timeSlot: string } }) {
+  async schedulePickup(
+    @Body()
+    body: {
+      shipmentId: string;
+      slot: { date: string; timeSlot: string };
+    },
+  ) {
     return this.fulfillment.schedulePickup(body.shipmentId, body.slot);
   }
 
   @Get('sla')
-  async calculateSLA(@Query('fromWarehouse') fromWarehouse: string, @Query('toAddress') toAddress: string) {
+  async calculateSLA(
+    @Query('fromWarehouse') fromWarehouse: string,
+    @Query('toAddress') toAddress: string,
+  ) {
     return this.fulfillment.calculateSLA(fromWarehouse, toAddress);
   }
 
@@ -38,7 +56,10 @@ export class FulfillmentController {
   }
 
   @Get('courier-performance')
-  async getCourierPerformance(@Query('start') start: string, @Query('end') end: string) {
+  async getCourierPerformance(
+    @Query('start') start: string,
+    @Query('end') end: string,
+  ) {
     return this.fulfillment.getCourierPerformance({ start, end });
   }
 

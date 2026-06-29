@@ -26,8 +26,11 @@ export class EnhancedSearchService {
   async vectorSearch(query: string, filters: SearchFilters): Promise<any> {
     try {
       const embedding = await this.embeddingsService.generateEmbedding(query);
-      const similar = await this.embeddingsService.searchSimilar(embedding.vector, 50);
-      const productIds = similar.map(s => s.id);
+      const similar = await this.embeddingsService.searchSimilar(
+        embedding.vector,
+        50,
+      );
+      const productIds = similar.map((s) => s.id);
 
       if (productIds.length === 0) {
         return this.searchService.search(query, filters);
@@ -46,8 +49,8 @@ export class EnhancedSearchService {
         },
       });
 
-      const scored = candidates.map(product => {
-        const similarity = similar.find(s => s.id === product.id);
+      const scored = candidates.map((product) => {
+        const similarity = similar.find((s) => s.id === product.id);
         return {
           ...product,
           _vectorScore: similarity?.score || 0,
@@ -70,7 +73,9 @@ export class EnhancedSearchService {
         searchType: 'vector',
       };
     } catch (error) {
-      this.logger.error(`Vector search failed, falling back to text search: ${error}`);
+      this.logger.error(
+        `Vector search failed, falling back to text search: ${error}`,
+      );
       return this.searchService.search(query, filters);
     }
   }
@@ -104,8 +109,9 @@ export class EnhancedSearchService {
         const vectorWeight = query ? 0.6 : 0;
         const finalScore = textScore * textWeight + vectorScore * vectorWeight;
 
-        const product = (textResults.items || []).find((p: any) => p.id === id)
-          || (vectorResults.items || []).find((p: any) => p.id === id);
+        const product =
+          (textResults.items || []).find((p: any) => p.id === id) ||
+          (vectorResults.items || []).find((p: any) => p.id === id);
 
         if (product) {
           combined.push({
@@ -125,7 +131,7 @@ export class EnhancedSearchService {
       const paged = combined.slice(start, start + limit);
 
       return {
-        items: paged.map(h => h.product),
+        items: paged.map((h) => h.product),
         total: combined.length,
         page,
         limit,
@@ -148,7 +154,11 @@ export class EnhancedSearchService {
     return { transcript: '', results: [] };
   }
 
-  async personalizedSearch(userId: string, query: string, filters: SearchFilters): Promise<any> {
+  async personalizedSearch(
+    userId: string,
+    query: string,
+    filters: SearchFilters,
+  ): Promise<any> {
     const baseResults = await this.hybridSearch(query, filters);
 
     if (!userId || !baseResults.items?.length) return baseResults;
@@ -161,8 +171,10 @@ export class EnhancedSearchService {
         take: 50,
       });
 
-      const viewedCategoryIds = new Set(history.map(h => h.product.categoryId));
-      const viewedProductIds = new Set(history.map(h => h.product.id));
+      const viewedCategoryIds = new Set(
+        history.map((h) => h.product.categoryId),
+      );
+      const viewedProductIds = new Set(history.map((h) => h.product.id));
 
       const scored = baseResults.items.map((product: any) => {
         let boost = 0;
@@ -171,7 +183,9 @@ export class EnhancedSearchService {
         return { ...product, _personalizationScore: boost };
       });
 
-      scored.sort((a: any, b: any) => b._personalizationScore - a._personalizationScore);
+      scored.sort(
+        (a: any, b: any) => b._personalizationScore - a._personalizationScore,
+      );
 
       return { ...baseResults, items: scored, searchType: 'personalized' };
     } catch {
@@ -183,7 +197,7 @@ export class EnhancedSearchService {
     this.ltrSignals.push({
       ...signal,
       features: {
-        position: 1 - (signal.position / 100),
+        position: 1 - signal.position / 100,
         clicked: signal.clicked ? 1 : 0,
         dwellTimeNormalized: Math.min(signal.dwellTimeMs / 30000, 1),
         ...signal.features,
@@ -209,7 +223,10 @@ export class EnhancedSearchService {
     });
 
     for (const cat of categories) {
-      if (queryLower.includes(cat.name.toLowerCase()) || queryLower.includes(cat.slug.toLowerCase())) {
+      if (
+        queryLower.includes(cat.name.toLowerCase()) ||
+        queryLower.includes(cat.slug.toLowerCase())
+      ) {
         intent.categoryIntent = cat.id;
         intent.confidence = 0.8;
         break;
@@ -229,7 +246,11 @@ export class EnhancedSearchService {
       }
     }
 
-    if (/\b(budget|cheap|under|affordable|luxury|premium|expensive)\b/.test(queryLower)) {
+    if (
+      /\b(budget|cheap|under|affordable|luxury|premium|expensive)\b/.test(
+        queryLower,
+      )
+    ) {
       if (/budget|cheap|under|affordable/.test(queryLower)) {
         intent.priceIntent = 'budget';
       } else {
@@ -241,7 +262,10 @@ export class EnhancedSearchService {
     return intent;
   }
 
-  async getSearchHeatmapData(dateRange: { start: string; end: string }): Promise<SearchHeatmapDataPoint[]> {
+  async getSearchHeatmapData(dateRange: {
+    start: string;
+    end: string;
+  }): Promise<SearchHeatmapDataPoint[]> {
     const startDate = new Date(dateRange.start);
     const endDate = new Date(dateRange.end);
 
@@ -268,19 +292,25 @@ export class EnhancedSearchService {
       }
     }
 
-    return result.sort((a, b) => a.date.localeCompare(b.date) || a.hour - b.hour);
+    return result.sort(
+      (a, b) => a.date.localeCompare(b.date) || a.hour - b.hour,
+    );
   }
 
   async autoCompleteWithAI(query: string): Promise<AutocompleteSuggestion[]> {
     if (!query || query.length < 2) return [];
 
     const baseSuggestions = await this.searchService.autocomplete(query);
-    const suggestions: AutocompleteSuggestion[] = baseSuggestions.map((s: any) => ({
-      text: s.text || s.name || '',
-      type: s.type === 'product' ? 'product' : 'query',
-      score: s.count ? Math.min(s.count / 100, 1) : 0.5,
-      metadata: s.slug ? { slug: s.slug, price: s.price, image: s.image } : undefined,
-    }));
+    const suggestions: AutocompleteSuggestion[] = baseSuggestions.map(
+      (s: any) => ({
+        text: s.text || s.name || '',
+        type: s.type === 'product' ? 'product' : 'query',
+        score: s.count ? Math.min(s.count / 100, 1) : 0.5,
+        metadata: s.slug
+          ? { slug: s.slug, price: s.price, image: s.image }
+          : undefined,
+      }),
+    );
 
     if (suggestions.length < 5) {
       try {
@@ -299,8 +329,10 @@ export class EnhancedSearchService {
   private buildFilterWhere(filters: SearchFilters): Record<string, any> {
     const where: Record<string, any> = {};
     if (filters.category) where.categoryId = filters.category;
-    if (filters.minPrice !== undefined) where.price = { ...(where.price || {}), gte: filters.minPrice };
-    if (filters.maxPrice !== undefined) where.price = { ...(where.price || {}), lte: filters.maxPrice };
+    if (filters.minPrice !== undefined)
+      where.price = { ...(where.price || {}), gte: filters.minPrice };
+    if (filters.maxPrice !== undefined)
+      where.price = { ...(where.price || {}), lte: filters.maxPrice };
     if (filters.rating !== undefined) where.rating = { gte: filters.rating };
     if (filters.inStock !== undefined) where.inStock = filters.inStock;
     return where;

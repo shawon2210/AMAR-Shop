@@ -7,19 +7,81 @@ export interface DeepLinkRoute {
 }
 
 export const deepLinkRoutes: DeepLinkRoute[] = [
-  { scheme: 'amarshop', host: '', pathPattern: 'product/:id', screen: 'ProductDetail', params: ['id'] },
-  { scheme: 'amarshop', host: '', pathPattern: 'order/:id', screen: 'OrderDetail', params: ['id'] },
-  { scheme: 'amarshop', host: '', pathPattern: 'seller/:id', screen: 'SellerStore', params: ['id'] },
-  { scheme: 'amarshop', host: '', pathPattern: 'category/:slug', screen: 'CategoryProducts', params: ['slug'] },
-  { scheme: 'amarshop', host: '', pathPattern: 'promotion/:code', screen: 'Promotion', params: ['code'] },
-  { scheme: 'amarshop', host: '', pathPattern: 'flash-sale/:id', screen: 'FlashSale', params: ['id'] },
-  { scheme: 'https', host: 'amarshop.com', pathPattern: 'product/:id', screen: 'ProductDetail', params: ['id'] },
-  { scheme: 'https', host: 'amarshop.com', pathPattern: 'order/:id', screen: 'OrderDetail', params: ['id'] },
-  { scheme: 'https', host: 'amarshop.com', pathPattern: 'seller/:id', screen: 'SellerStore', params: ['id'] },
-  { scheme: 'https', host: 'amarshop.com', pathPattern: 'category/:slug', screen: 'CategoryProducts', params: ['slug'] },
+  {
+    scheme: 'amarshop',
+    host: '',
+    pathPattern: 'product/:id',
+    screen: 'ProductDetail',
+    params: ['id'],
+  },
+  {
+    scheme: 'amarshop',
+    host: '',
+    pathPattern: 'order/:id',
+    screen: 'OrderDetail',
+    params: ['id'],
+  },
+  {
+    scheme: 'amarshop',
+    host: '',
+    pathPattern: 'seller/:id',
+    screen: 'SellerStore',
+    params: ['id'],
+  },
+  {
+    scheme: 'amarshop',
+    host: '',
+    pathPattern: 'category/:slug',
+    screen: 'CategoryProducts',
+    params: ['slug'],
+  },
+  {
+    scheme: 'amarshop',
+    host: '',
+    pathPattern: 'promotion/:code',
+    screen: 'Promotion',
+    params: ['code'],
+  },
+  {
+    scheme: 'amarshop',
+    host: '',
+    pathPattern: 'flash-sale/:id',
+    screen: 'FlashSale',
+    params: ['id'],
+  },
+  {
+    scheme: 'https',
+    host: 'amarshop.com',
+    pathPattern: 'product/:id',
+    screen: 'ProductDetail',
+    params: ['id'],
+  },
+  {
+    scheme: 'https',
+    host: 'amarshop.com',
+    pathPattern: 'order/:id',
+    screen: 'OrderDetail',
+    params: ['id'],
+  },
+  {
+    scheme: 'https',
+    host: 'amarshop.com',
+    pathPattern: 'seller/:id',
+    screen: 'SellerStore',
+    params: ['id'],
+  },
+  {
+    scheme: 'https',
+    host: 'amarshop.com',
+    pathPattern: 'category/:slug',
+    screen: 'CategoryProducts',
+    params: ['slug'],
+  },
 ];
 
-export function parseDeepLink(url: string): { screen: string; params: Record<string, string> } | null {
+export function parseDeepLink(
+  url: string,
+): { screen: string; params: Record<string, string> } | null {
   try {
     const parsed = new URL(url);
     for (const route of deepLinkRoutes) {
@@ -56,8 +118,13 @@ export function parseDeepLink(url: string): { screen: string; params: Record<str
   return null;
 }
 
-export function buildDeepLink(screen: string, params: Record<string, string>): string | null {
-  const route = deepLinkRoutes.find((r) => r.screen === screen && r.scheme === 'amarshop');
+export function buildDeepLink(
+  screen: string,
+  params: Record<string, string>,
+): string | null {
+  const route = deepLinkRoutes.find(
+    (r) => r.screen === screen && r.scheme === 'amarshop',
+  );
   if (!route) return null;
 
   let path = route.pathPattern;
@@ -68,8 +135,13 @@ export function buildDeepLink(screen: string, params: Record<string, string>): s
   return `amarshop://${path}`;
 }
 
-export function buildUniversalLink(screen: string, params: Record<string, string>): string | null {
-  const route = deepLinkRoutes.find((r) => r.screen === screen && r.scheme === 'https');
+export function buildUniversalLink(
+  screen: string,
+  params: Record<string, string>,
+): string | null {
+  const route = deepLinkRoutes.find(
+    (r) => r.screen === screen && r.scheme === 'https',
+  );
   if (!route) return null;
 
   let path = route.pathPattern;

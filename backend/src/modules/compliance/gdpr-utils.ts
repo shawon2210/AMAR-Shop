@@ -35,14 +35,42 @@ export function getDataRetentionPeriods(): {
   legalBasis: string;
 }[] {
   return [
-    { dataType: 'account', retentionPeriod: '5 years after closure', legalBasis: 'Legal obligation' },
-    { dataType: 'orders', retentionPeriod: '7 years', legalBasis: 'Tax compliance' },
-    { dataType: 'payment', retentionPeriod: '7 years', legalBasis: 'Financial regulations' },
-    { dataType: 'browsing', retentionPeriod: '90 days', legalBasis: 'Legitimate interest' },
-    { dataType: 'search', retentionPeriod: '90 days', legalBasis: 'Legitimate interest' },
-    { dataType: 'messages', retentionPeriod: '2 years', legalBasis: 'Customer service' },
+    {
+      dataType: 'account',
+      retentionPeriod: '5 years after closure',
+      legalBasis: 'Legal obligation',
+    },
+    {
+      dataType: 'orders',
+      retentionPeriod: '7 years',
+      legalBasis: 'Tax compliance',
+    },
+    {
+      dataType: 'payment',
+      retentionPeriod: '7 years',
+      legalBasis: 'Financial regulations',
+    },
+    {
+      dataType: 'browsing',
+      retentionPeriod: '90 days',
+      legalBasis: 'Legitimate interest',
+    },
+    {
+      dataType: 'search',
+      retentionPeriod: '90 days',
+      legalBasis: 'Legitimate interest',
+    },
+    {
+      dataType: 'messages',
+      retentionPeriod: '2 years',
+      legalBasis: 'Customer service',
+    },
     { dataType: 'cookies', retentionPeriod: '1 year', legalBasis: 'Consent' },
-    { dataType: 'kyc', retentionPeriod: '5 years', legalBasis: 'Regulatory compliance' },
+    {
+      dataType: 'kyc',
+      retentionPeriod: '5 years',
+      legalBasis: 'Regulatory compliance',
+    },
     { dataType: 'logs', retentionPeriod: '3 years', legalBasis: 'Security' },
   ];
 }

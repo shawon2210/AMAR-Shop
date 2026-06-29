@@ -25,11 +25,19 @@ export class AIService {
 
   constructor(private configService: ConfigService) {
     this.config = {
-      provider: (configService.get<string>('AI_PROVIDER') as AIServiceConfig['provider']) || 'none',
+      provider:
+        (configService.get<string>(
+          'AI_PROVIDER',
+        ) as AIServiceConfig['provider']) || 'none',
       apiKey: configService.get<string>('AI_API_KEY'),
       model: configService.get<string>('AI_MODEL') || 'gpt-4o-mini',
-      maxTokens: parseInt(configService.get<string>('AI_MAX_TOKENS') || '1024', 10),
-      temperature: parseFloat(configService.get<string>('AI_TEMPERATURE') || '0.7'),
+      maxTokens: parseInt(
+        configService.get<string>('AI_MAX_TOKENS') || '1024',
+        10,
+      ),
+      temperature: parseFloat(
+        configService.get<string>('AI_TEMPERATURE') || '0.7',
+      ),
       fallbackToMock: true,
     };
 
@@ -38,7 +46,9 @@ export class AIService {
     }
   }
 
-  async generateProductDescription(request: ProductDescriptionRequest): Promise<string> {
+  async generateProductDescription(
+    request: ProductDescriptionRequest,
+  ): Promise<string> {
     try {
       if (this.openai) {
         const prompt = this.buildDescriptionPrompt(request);
@@ -48,7 +58,10 @@ export class AIService {
           max_tokens: this.config.maxTokens,
           temperature: this.config.temperature,
         });
-        return response.choices[0]?.message?.content || this.fallbackDescription(request);
+        return (
+          response.choices[0]?.message?.content ||
+          this.fallbackDescription(request)
+        );
       }
       return this.fallbackDescription(request);
     } catch (error) {
@@ -61,17 +74,24 @@ export class AIService {
     try {
       if (this.openai && request.reviews.length > 0) {
         const reviewsText = request.reviews
-          .map(r => `Rating: ${r.rating}/5 - "${r.comment}"`)
+          .map((r) => `Rating: ${r.rating}/5 - "${r.comment}"`)
           .join('\n');
         const response = await this.openai.chat.completions.create({
           model: this.config.model!,
           messages: [
-            { role: 'system', content: 'Summarize these product reviews concisely. Highlight common praises and complaints.' },
+            {
+              role: 'system',
+              content:
+                'Summarize these product reviews concisely. Highlight common praises and complaints.',
+            },
             { role: 'user', content: reviewsText },
           ],
           max_tokens: request.maxLength || 300,
         });
-        return response.choices[0]?.message?.content || this.fallbackReviewSummary(request);
+        return (
+          response.choices[0]?.message?.content ||
+          this.fallbackReviewSummary(request)
+        );
       }
       return this.fallbackReviewSummary(request);
     } catch (error) {
@@ -90,7 +110,10 @@ export class AIService {
           max_tokens: this.config.maxTokens,
           temperature: 0.8,
         });
-        return response.choices[0]?.message?.content || this.fallbackCampaignCopy(request);
+        return (
+          response.choices[0]?.message?.content ||
+          this.fallbackCampaignCopy(request)
+        );
       }
       return this.fallbackCampaignCopy(request);
     } catch (error) {
@@ -105,7 +128,11 @@ export class AIService {
         const response = await this.openai.chat.completions.create({
           model: this.config.model!,
           messages: [
-            { role: 'system', content: 'Analyze this order for fraud indicators. Return JSON with score (0-1), risk level, factors, and recommended action.' },
+            {
+              role: 'system',
+              content:
+                'Analyze this order for fraud indicators. Return JSON with score (0-1), risk level, factors, and recommended action.',
+            },
             { role: 'user', content: JSON.stringify(order) },
           ],
           response_format: { type: 'json_object' },
@@ -133,7 +160,11 @@ export class AIService {
         const response = await this.openai.chat.completions.create({
           model: this.config.model!,
           messages: [
-            { role: 'system', content: 'Segment this ecommerce user. Return JSON with segment name, confidence, characteristics, and recommended actions.' },
+            {
+              role: 'system',
+              content:
+                'Segment this ecommerce user. Return JSON with segment name, confidence, characteristics, and recommended actions.',
+            },
             { role: 'user', content: JSON.stringify(user) },
           ],
           response_format: { type: 'json_object' },
@@ -155,7 +186,10 @@ export class AIService {
     }
   }
 
-  async forecastDemand(productId: string, days: number): Promise<DemandForecast> {
+  async forecastDemand(
+    productId: string,
+    days: number,
+  ): Promise<DemandForecast> {
     return {
       productId,
       forecast: Array.from({ length: days }, (_, i) => ({
@@ -232,12 +266,23 @@ export class AIService {
     };
   }
 
-  async chatWithAssistant(userId: string, message: string, history?: Array<{ role: string; content: string }>): Promise<ChatResponse> {
+  async chatWithAssistant(
+    userId: string,
+    message: string,
+    history?: Array<{ role: string; content: string }>,
+  ): Promise<ChatResponse> {
     try {
       if (this.openai) {
         const messages = [
-          { role: 'system', content: 'You are a helpful shopping assistant for AmarShop, a Bangladeshi ecommerce marketplace. Help users find products, answer questions about orders, and provide shopping advice. Keep responses concise and friendly.' },
-          ...(history || []).map(h => ({ role: h.role as 'user' | 'assistant', content: h.content })),
+          {
+            role: 'system',
+            content:
+              'You are a helpful shopping assistant for AmarShop, a Bangladeshi ecommerce marketplace. Help users find products, answer questions about orders, and provide shopping advice. Keep responses concise and friendly.',
+          },
+          ...(history || []).map((h) => ({
+            role: h.role as 'user' | 'assistant',
+            content: h.content,
+          })),
           { role: 'user', content: message } as const,
         ];
 
@@ -248,32 +293,63 @@ export class AIService {
           temperature: 0.7,
         });
 
-        const reply = response.choices[0]?.message?.content || this.fallbackChatResponse(message);
-        return { message: reply, suggestions: this.getChatSuggestions(message) };
+        const reply =
+          response.choices[0]?.message?.content ||
+          this.fallbackChatResponse(message);
+        return {
+          message: reply,
+          suggestions: this.getChatSuggestions(message),
+        };
       }
-      return { message: this.fallbackChatResponse(message), suggestions: this.getChatSuggestions(message) };
+      return {
+        message: this.fallbackChatResponse(message),
+        suggestions: this.getChatSuggestions(message),
+      };
     } catch {
-      return { message: this.fallbackChatResponse(message), suggestions: this.getChatSuggestions(message) };
+      return {
+        message: this.fallbackChatResponse(message),
+        suggestions: this.getChatSuggestions(message),
+      };
     }
   }
 
-  async semanticMatch(query: string, products: any[]): Promise<SemanticMatchResult[]> {
+  async semanticMatch(
+    query: string,
+    products: any[],
+  ): Promise<SemanticMatchResult[]> {
     const queryLower = query.toLowerCase();
-    return products.map(product => {
-      const nameScore = product.name?.toLowerCase().includes(queryLower) ? 0.9 : 0;
-      const descScore = product.description?.toLowerCase().includes(queryLower) ? 0.6 : 0;
-      const categoryScore = product.category?.name?.toLowerCase().includes(queryLower) ? 0.7 : 0;
-      const brandScore = product.brand?.name?.toLowerCase().includes(queryLower) ? 0.8 : 0;
+    return products
+      .map((product) => {
+        const nameScore = product.name?.toLowerCase().includes(queryLower)
+          ? 0.9
+          : 0;
+        const descScore = product.description
+          ?.toLowerCase()
+          .includes(queryLower)
+          ? 0.6
+          : 0;
+        const categoryScore = product.category?.name
+          ?.toLowerCase()
+          .includes(queryLower)
+          ? 0.7
+          : 0;
+        const brandScore = product.brand?.name
+          ?.toLowerCase()
+          .includes(queryLower)
+          ? 0.8
+          : 0;
 
-      const score = Math.max(nameScore, descScore, categoryScore, brandScore);
-      const matchedOn: string[] = [];
-      if (nameScore > 0) matchedOn.push('name');
-      if (descScore > 0) matchedOn.push('description');
-      if (categoryScore > 0) matchedOn.push('category');
-      if (brandScore > 0) matchedOn.push('brand');
+        const score = Math.max(nameScore, descScore, categoryScore, brandScore);
+        const matchedOn: string[] = [];
+        if (nameScore > 0) matchedOn.push('name');
+        if (descScore > 0) matchedOn.push('description');
+        if (categoryScore > 0) matchedOn.push('category');
+        if (brandScore > 0) matchedOn.push('brand');
 
-      return { productId: product.id, score, matchedOn };
-    }).filter(r => r.score > 0.3).sort((a, b) => b.score - a.score);
+        return { productId: product.id, score, matchedOn };
+      })
+      .filter((r) => r.score > 0.3)
+      .sort((a, b) => b.score - a.score);
   }
 
   private buildDescriptionPrompt(request: ProductDescriptionRequest): string {
@@ -303,8 +379,10 @@ Include: catchy headline, body text, and CTA. Bengali and English mix welcome.`;
   }
 
   private fallbackReviewSummary(request: ReviewSummaryRequest): string {
-    const avgRating = request.reviews.reduce((s, r) => s + r.rating, 0) / request.reviews.length;
-    const positive = request.reviews.filter(r => r.rating >= 4).length;
+    const avgRating =
+      request.reviews.reduce((s, r) => s + r.rating, 0) /
+      request.reviews.length;
+    const positive = request.reviews.filter((r) => r.rating >= 4).length;
     return `Average rating: ${avgRating.toFixed(1)}/5 from ${request.reviews.length} reviews. ${positive} customers rated 4+ stars. ${avgRating >= 4 ? 'Highly recommended by customers.' : 'Mixed feedback from customers.'}`;
   }
 
@@ -313,22 +391,35 @@ Include: catchy headline, body text, and CTA. Bengali and English mix welcome.`;
   }
 
   private fallbackFraudDetection(): FraudDetectionResult {
-    return { score: 0.05, risk: 'low', factors: ['Standard order pattern'], recommendedAction: 'allow' };
+    return {
+      score: 0.05,
+      risk: 'low',
+      factors: ['Standard order pattern'],
+      recommendedAction: 'allow',
+    };
   }
 
   private fallbackUserSegment(): UserSegment {
-    return { segment: 'General Shopper', confidence: 0.5, characteristics: ['Browsing behavior'], recommendedActions: ['Show popular products'] };
+    return {
+      segment: 'General Shopper',
+      confidence: 0.5,
+      characteristics: ['Browsing behavior'],
+      recommendedActions: ['Show popular products'],
+    };
   }
 
   private fallbackChatResponse(message: string): string {
     const greetings = ['hi', 'hello', 'hey', 'assalamu'];
-    if (greetings.some(g => message.toLowerCase().includes(g))) {
+    if (greetings.some((g) => message.toLowerCase().includes(g))) {
       return 'Assalamu Alaikum! Welcome to AmarShop. How can I help you today? You can ask me about products, orders, or any shopping related questions!';
     }
     if (message.toLowerCase().includes('order')) {
       return 'To check your order status, please go to My Orders in your account. You can track delivery, request returns, or contact support there.';
     }
-    if (message.toLowerCase().includes('return') || message.toLowerCase().includes('refund')) {
+    if (
+      message.toLowerCase().includes('return') ||
+      message.toLowerCase().includes('refund')
+    ) {
       return 'You can request a return within 7 days of delivery. Go to My Orders, select the item, and click Return. Refunds are processed within 3-5 business days.';
     }
     return 'Thank you for reaching out to AmarShop support! I can help you find products, track orders, or answer any questions. Could you please provide more details about what you need help with?';

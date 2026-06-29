@@ -1,4 +1,8 @@
-import { Injectable, BadRequestException, NotFoundException } from '@nestjs/common';
+import {
+  Injectable,
+  BadRequestException,
+  NotFoundException,
+} from '@nestjs/common';
 import * as crypto from 'crypto';
 import { PrismaService } from '../../common/prisma.service';
 
@@ -12,27 +16,77 @@ export class ComplianceService {
     checks: { name: string; passed: boolean; details: string }[];
   }> {
     const checks = [
-      { name: 'KYC Verification', passed: true, details: 'All active sellers verified' },
-      { name: 'AML Screening', passed: true, details: 'No flagged transactions in 30 days' },
-      { name: 'PCI DSS Compliance', passed: true, details: 'Card data handled securely' },
-      { name: 'GDPR Compliance', passed: true, details: 'Data retention policies active' },
-      { name: 'Cookie Consent', passed: true, details: 'Consent logs maintained' },
-      { name: 'Data Encryption', passed: true, details: 'AES-256 at rest, TLS 1.3 in transit' },
-      { name: 'Age Verification', passed: true, details: 'Restricted products gated' },
-      { name: 'Privacy Policy', passed: true, details: 'Privacy center published' },
+      {
+        name: 'KYC Verification',
+        passed: true,
+        details: 'All active sellers verified',
+      },
+      {
+        name: 'AML Screening',
+        passed: true,
+        details: 'No flagged transactions in 30 days',
+      },
+      {
+        name: 'PCI DSS Compliance',
+        passed: true,
+        details: 'Card data handled securely',
+      },
+      {
+        name: 'GDPR Compliance',
+        passed: true,
+        details: 'Data retention policies active',
+      },
+      {
+        name: 'Cookie Consent',
+        passed: true,
+        details: 'Consent logs maintained',
+      },
+      {
+        name: 'Data Encryption',
+        passed: true,
+        details: 'AES-256 at rest, TLS 1.3 in transit',
+      },
+      {
+        name: 'Age Verification',
+        passed: true,
+        details: 'Restricted products gated',
+      },
+      {
+        name: 'Privacy Policy',
+        passed: true,
+        details: 'Privacy center published',
+      },
     ];
     const passed = checks.filter((c) => c.passed).length;
     const score = Math.round((passed / checks.length) * 100);
-    const status = score >= 90 ? 'EXCELLENT' : score >= 70 ? 'GOOD' : 'NEEDS_ATTENTION';
+    const status =
+      score >= 90 ? 'EXCELLENT' : score >= 70 ? 'GOOD' : 'NEEDS_ATTENTION';
     return { score, status, checks };
   }
 
-  async runKYC(userId: string, documents: { documentType: string; documentNumber: string; imageFront: string; imageBack?: string }) {
-    const seller = await this.prisma.sellerProfile.findUnique({ where: { userId } });
+  async runKYC(
+    userId: string,
+    documents: {
+      documentType: string;
+      documentNumber: string;
+      imageFront: string;
+      imageBack?: string;
+    },
+  ) {
+    const seller = await this.prisma.sellerProfile.findUnique({
+      where: { userId },
+    });
     if (!seller) throw new NotFoundException('Seller profile not found');
 
-    const validation = await this.verifyIdentity(userId, documents.documentType, documents.documentNumber);
-    if (!validation.valid) throw new BadRequestException(`Document verification failed: ${validation.reason}`);
+    const validation = await this.verifyIdentity(
+      userId,
+      documents.documentType,
+      documents.documentNumber,
+    );
+    if (!validation.valid)
+      throw new BadRequestException(
+        `Document verification failed: ${validation.reason}`,
+      );
 
     await this.prisma.sellerProfile.update({
       where: { userId },
@@ -56,39 +110,79 @@ export class ComplianceService {
       },
     });
 
-    return { verified: true, message: 'KYC verification successful', verifiedAt: new Date() };
+    return {
+      verified: true,
+      message: 'KYC verification successful',
+      verifiedAt: new Date(),
+    };
   }
 
-  async verifyIdentity(userId: string, documentType: string, documentNumber: string): Promise<{ valid: boolean; reason?: string }> {
+  async verifyIdentity(
+    userId: string,
+    documentType: string,
+    documentNumber: string,
+  ): Promise<{ valid: boolean; reason?: string }> {
     if (!documentNumber || documentNumber.length < 6) {
       return { valid: false, reason: 'Invalid document number format' };
     }
-    const validTypes = ['NID', 'PASSPORT', 'BIRTH_CERTIFICATE', 'DRIVING_LICENSE', 'TIN'];
+    const validTypes = [
+      'NID',
+      'PASSPORT',
+      'BIRTH_CERTIFICATE',
+      'DRIVING_LICENSE',
+      'TIN',
+    ];
     if (!validTypes.includes(documentType)) {
-      return { valid: false, reason: `Unsupported document type: ${documentType}` };
+      return {
+        valid: false,
+        reason: `Unsupported document type: ${documentType}`,
+      };
     }
-    if (documentType === 'NID' && documentNumber.length !== 10 && documentNumber.length !== 17) {
+    if (
+      documentType === 'NID' &&
+      documentNumber.length !== 10 &&
+      documentNumber.length !== 17
+    ) {
       return { valid: false, reason: 'NID must be 10 or 17 digits' };
     }
     return { valid: true };
   }
 
-  async validateDocument(documentUrl: string): Promise<{ authentic: boolean; score: number; issues: string[] }> {
-    if (!documentUrl) return { authentic: false, score: 0, issues: ['No document URL provided'] };
+  async validateDocument(
+    documentUrl: string,
+  ): Promise<{ authentic: boolean; score: number; issues: string[] }> {
+    if (!documentUrl)
+      return {
+        authentic: false,
+        score: 0,
+        issues: ['No document URL provided'],
+      };
     const issues: string[] = [];
     const checks = [
       { name: 'format', pass: /\.(jpg|jpeg|png|pdf)$/i.test(documentUrl) },
       { name: 'size_ref', pass: documentUrl.length > 20 },
     ];
-    checks.forEach((c) => { if (!c.pass) issues.push(`Check failed: ${c.name}`); });
-    const score = Math.round((checks.filter((c) => c.pass).length / checks.length) * 100);
+    checks.forEach((c) => {
+      if (!c.pass) issues.push(`Check failed: ${c.name}`);
+    });
+    const score = Math.round(
+      (checks.filter((c) => c.pass).length / checks.length) * 100,
+    );
     return { authentic: score >= 50, score, issues };
   }
 
-  async checkAML(userId: string): Promise<{ flagged: boolean; risk: string; score: number; reasons: string[] }> {
+  async checkAML(userId: string): Promise<{
+    flagged: boolean;
+    risk: string;
+    score: number;
+    reasons: string[];
+  }> {
     const user = await this.prisma.user.findUnique({
       where: { id: userId },
-      include: { wallet: true, orders: { take: 50, orderBy: { createdAt: 'desc' } } },
+      include: {
+        wallet: true,
+        orders: { take: 50, orderBy: { createdAt: 'desc' } },
+      },
     });
     if (!user) throw new NotFoundException('User not found');
 
@@ -98,7 +192,9 @@ export class ComplianceService {
     const highValueOrders = user.orders.filter((o) => o.total > 100000);
     if (highValueOrders.length > 5) {
       score += 30;
-      reasons.push(`High volume of large transactions: ${highValueOrders.length}`);
+      reasons.push(
+        `High volume of large transactions: ${highValueOrders.length}`,
+      );
     }
 
     const recentOrders = user.orders.filter((o) => {
@@ -129,21 +225,59 @@ export class ComplianceService {
     };
   }
 
-  async getDataRetentionPolicy(): Promise<{
-    dataType: string;
-    retentionPeriod: string;
-    description: string;
-  }[]> {
+  async getDataRetentionPolicy(): Promise<
+    {
+      dataType: string;
+      retentionPeriod: string;
+      description: string;
+    }[]
+  > {
     return [
-      { dataType: 'Account Information', retentionPeriod: '5 years after account closure', description: 'Name, phone, email, addresses' },
-      { dataType: 'Order History', retentionPeriod: '7 years', description: 'Tax and legal compliance' },
-      { dataType: 'Payment Data', retentionPeriod: '7 years', description: 'Financial record keeping' },
-      { dataType: 'Browsing History', retentionPeriod: '90 days', description: 'Analytics and personalization' },
-      { dataType: 'Search History', retentionPeriod: '90 days', description: 'Search improvement' },
-      { dataType: 'Chat Messages', retentionPeriod: '2 years', description: 'Customer support records' },
-      { dataType: 'Cookie Data', retentionPeriod: '1 year or until withdrawn', description: 'Session management and analytics' },
-      { dataType: 'KYC Documents', retentionPeriod: '5 years after verification', description: 'Regulatory compliance' },
-      { dataType: 'Communication Logs', retentionPeriod: '3 years', description: 'Consent and preference records' },
+      {
+        dataType: 'Account Information',
+        retentionPeriod: '5 years after account closure',
+        description: 'Name, phone, email, addresses',
+      },
+      {
+        dataType: 'Order History',
+        retentionPeriod: '7 years',
+        description: 'Tax and legal compliance',
+      },
+      {
+        dataType: 'Payment Data',
+        retentionPeriod: '7 years',
+        description: 'Financial record keeping',
+      },
+      {
+        dataType: 'Browsing History',
+        retentionPeriod: '90 days',
+        description: 'Analytics and personalization',
+      },
+      {
+        dataType: 'Search History',
+        retentionPeriod: '90 days',
+        description: 'Search improvement',
+      },
+      {
+        dataType: 'Chat Messages',
+        retentionPeriod: '2 years',
+        description: 'Customer support records',
+      },
+      {
+        dataType: 'Cookie Data',
+        retentionPeriod: '1 year or until withdrawn',
+        description: 'Session management and analytics',
+      },
+      {
+        dataType: 'KYC Documents',
+        retentionPeriod: '5 years after verification',
+        description: 'Regulatory compliance',
+      },
+      {
+        dataType: 'Communication Logs',
+        retentionPeriod: '3 years',
+        description: 'Consent and preference records',
+      },
     ];
   }
 
@@ -180,7 +314,9 @@ export class ComplianceService {
     };
   }
 
-  async deleteUserData(userId: string): Promise<{ deleted: boolean; message: string }> {
+  async deleteUserData(
+    userId: string,
+  ): Promise<{ deleted: boolean; message: string }> {
     const user = await this.prisma.user.findUnique({ where: { id: userId } });
     if (!user) throw new NotFoundException('User not found');
 
@@ -208,7 +344,10 @@ export class ComplianceService {
       },
     });
 
-    return { deleted: true, message: 'All personal data has been deleted. Account anonymized.' };
+    return {
+      deleted: true,
+      message: 'All personal data has been deleted. Account anonymized.',
+    };
   }
 
   async getCookieConsent(userId: string): Promise<{
@@ -233,7 +372,11 @@ export class ComplianceService {
     };
   }
 
-  async logConsent(userId: string, consentType: string, granted: boolean): Promise<{ logged: boolean; timestamp: Date }> {
+  async logConsent(
+    userId: string,
+    consentType: string,
+    granted: boolean,
+  ): Promise<{ logged: boolean; timestamp: Date }> {
     const timestamp = new Date();
     return { logged: true, timestamp };
   }
@@ -259,7 +402,10 @@ export class ComplianceService {
       actionCounts[l.action] = (actionCounts[l.action] || 0) + 1;
     });
 
-    const summary = Object.entries(actionCounts).map(([action, count]) => ({ action, count }));
+    const summary = Object.entries(actionCounts).map(([action, count]) => ({
+      action,
+      count,
+    }));
 
     return { logs, total: logs.length, summary };
   }
@@ -269,21 +415,84 @@ export class ComplianceService {
     requirements: { id: string; name: string; status: string; notes: string }[];
   }> {
     const requirements = [
-      { id: '1.0', name: 'Install and maintain firewall configuration', status: 'PASS', notes: 'WAF active on all endpoints' },
-      { id: '2.0', name: 'Do not use vendor-default passwords', status: 'PASS', notes: 'All credentials rotated' },
-      { id: '3.0', name: 'Protect stored cardholder data', status: 'PASS', notes: 'Data encrypted at rest (AES-256)' },
-      { id: '4.0', name: 'Encrypt transmission of cardholder data', status: 'PASS', notes: 'TLS 1.3 enforced' },
-      { id: '5.0', name: 'Use and regularly update anti-virus', status: 'PASS', notes: 'Automated scanning in place' },
-      { id: '6.0', name: 'Develop and maintain secure systems', status: 'PASS', notes: 'Regular patching schedule' },
-      { id: '7.0', name: 'Restrict access to cardholder data', status: 'PASS', notes: 'RBAC implemented' },
-      { id: '8.0', name: 'Assign unique IDs to system access', status: 'PASS', notes: 'MFA for admin access' },
-      { id: '9.0', name: 'Restrict physical access', status: 'PASS', notes: 'Cloud infrastructure, access logged' },
-      { id: '10.0', name: 'Track and monitor all access', status: 'PASS', notes: 'Audit logging enabled' },
-      { id: '11.0', name: 'Regularly test security systems', status: 'PASS', notes: 'Quarterly penetration tests' },
-      { id: '12.0', name: 'Maintain information security policy', status: 'PASS', notes: 'Policy documented and enforced' },
+      {
+        id: '1.0',
+        name: 'Install and maintain firewall configuration',
+        status: 'PASS',
+        notes: 'WAF active on all endpoints',
+      },
+      {
+        id: '2.0',
+        name: 'Do not use vendor-default passwords',
+        status: 'PASS',
+        notes: 'All credentials rotated',
+      },
+      {
+        id: '3.0',
+        name: 'Protect stored cardholder data',
+        status: 'PASS',
+        notes: 'Data encrypted at rest (AES-256)',
+      },
+      {
+        id: '4.0',
+        name: 'Encrypt transmission of cardholder data',
+        status: 'PASS',
+        notes: 'TLS 1.3 enforced',
+      },
+      {
+        id: '5.0',
+        name: 'Use and regularly update anti-virus',
+        status: 'PASS',
+        notes: 'Automated scanning in place',
+      },
+      {
+        id: '6.0',
+        name: 'Develop and maintain secure systems',
+        status: 'PASS',
+        notes: 'Regular patching schedule',
+      },
+      {
+        id: '7.0',
+        name: 'Restrict access to cardholder data',
+        status: 'PASS',
+        notes: 'RBAC implemented',
+      },
+      {
+        id: '8.0',
+        name: 'Assign unique IDs to system access',
+        status: 'PASS',
+        notes: 'MFA for admin access',
+      },
+      {
+        id: '9.0',
+        name: 'Restrict physical access',
+        status: 'PASS',
+        notes: 'Cloud infrastructure, access logged',
+      },
+      {
+        id: '10.0',
+        name: 'Track and monitor all access',
+        status: 'PASS',
+        notes: 'Audit logging enabled',
+      },
+      {
+        id: '11.0',
+        name: 'Regularly test security systems',
+        status: 'PASS',
+        notes: 'Quarterly penetration tests',
+      },
+      {
+        id: '12.0',
+        name: 'Maintain information security policy',
+        status: 'PASS',
+        notes: 'Policy documented and enforced',
+      },
     ];
 
-    return { compliant: requirements.every((r) => r.status === 'PASS'), requirements };
+    return {
+      compliant: requirements.every((r) => r.status === 'PASS'),
+      requirements,
+    };
   }
 
   async getPrivacyCenter(): Promise<{
@@ -293,34 +502,65 @@ export class ComplianceService {
     return {
       policy: {
         title: 'AmarShop Privacy Policy',
-        content: 'AmarShop respects your privacy. We collect minimal data needed to provide our marketplace services. Data is processed in accordance with Bangladesh Data Protection Act and GDPR where applicable.',
+        content:
+          'AmarShop respects your privacy. We collect minimal data needed to provide our marketplace services. Data is processed in accordance with Bangladesh Data Protection Act and GDPR where applicable.',
         lastUpdated: new Date('2026-01-15'),
       },
       settings: [
-        { name: 'Data Sharing', description: 'Share data with sellers for order processing', enabled: true },
-        { name: 'Personalization', description: 'Personalized recommendations based on browsing', enabled: true },
-        { name: 'Marketing Emails', description: 'Receive promotional offers and updates', enabled: false },
-        { name: 'Analytics', description: 'Help us improve with usage analytics', enabled: true },
-        { name: 'Third-party Sharing', description: 'Share anonymized data with partners', enabled: false },
+        {
+          name: 'Data Sharing',
+          description: 'Share data with sellers for order processing',
+          enabled: true,
+        },
+        {
+          name: 'Personalization',
+          description: 'Personalized recommendations based on browsing',
+          enabled: true,
+        },
+        {
+          name: 'Marketing Emails',
+          description: 'Receive promotional offers and updates',
+          enabled: false,
+        },
+        {
+          name: 'Analytics',
+          description: 'Help us improve with usage analytics',
+          enabled: true,
+        },
+        {
+          name: 'Third-party Sharing',
+          description: 'Share anonymized data with partners',
+          enabled: false,
+        },
       ],
     };
   }
 
-  async encryptPII(data: string): Promise<{ encrypted: string; algorithm: string }> {
+  async encryptPII(
+    data: string,
+  ): Promise<{ encrypted: string; algorithm: string }> {
     const algorithm = 'aes-256-gcm';
-    const key = crypto.scryptSync(process.env.ENCRYPTION_KEY || 'amarshop-encryption-key-2026', 'salt', 32);
+    const key = crypto.scryptSync(
+      process.env.ENCRYPTION_KEY || 'amarshop-encryption-key-2026',
+      'salt',
+      32,
+    );
     const iv = crypto.randomBytes(16);
     const cipher = crypto.createCipheriv(algorithm, key, iv);
     let encrypted = cipher.update(data, 'utf8', 'hex');
     encrypted += cipher.final('hex');
     const authTag = cipher.getAuthTag().toString('hex');
-    return { encrypted: `${iv.toString('hex')}:${authTag}:${encrypted}`, algorithm };
+    return {
+      encrypted: `${iv.toString('hex')}:${authTag}:${encrypted}`,
+      algorithm,
+    };
   }
 
   async maskPII(value: string, type: string): Promise<string> {
     switch (type) {
       case 'phone': {
-        if (value.length >= 10) return value.slice(0, 3) + '****' + value.slice(-4);
+        if (value.length >= 10)
+          return value.slice(0, 3) + '****' + value.slice(-4);
         return value;
       }
       case 'email': {
@@ -329,7 +569,8 @@ export class ComplianceService {
         return value;
       }
       case 'nid': {
-        if (value.length >= 8) return value.slice(0, 2) + '********' + value.slice(-2);
+        if (value.length >= 8)
+          return value.slice(0, 2) + '********' + value.slice(-2);
         return value;
       }
       case 'bank_account': {
@@ -345,12 +586,17 @@ export class ComplianceService {
     }
   }
 
-  async validateAge(birthDate: string): Promise<{ valid: boolean; age: number; restricted: boolean }> {
+  async validateAge(
+    birthDate: string,
+  ): Promise<{ valid: boolean; age: number; restricted: boolean }> {
     const birth = new Date(birthDate);
     const today = new Date();
     let age = today.getFullYear() - birth.getFullYear();
     const monthDiff = today.getMonth() - birth.getMonth();
-    if (monthDiff < 0 || (monthDiff === 0 && today.getDate() < birth.getDate())) {
+    if (
+      monthDiff < 0 ||
+      (monthDiff === 0 && today.getDate() < birth.getDate())
+    ) {
       age--;
     }
     return { valid: age >= 18, age, restricted: age < 18 };

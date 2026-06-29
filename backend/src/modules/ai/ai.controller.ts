@@ -1,4 +1,12 @@
-import { Controller, Get, Post, Body, Query, Request, UseGuards } from '@nestjs/common';
+import {
+  Controller,
+  Get,
+  Post,
+  Body,
+  Query,
+  Request,
+  UseGuards,
+} from '@nestjs/common';
 import { AuthGuard } from '@nestjs/passport';
 import { RolesGuard } from '../../common/guards/roles.guard';
 import { Roles } from '../../common/decorators/roles.decorator';
@@ -21,18 +29,38 @@ export class AIController {
   @Roles('SELLER', 'ADMIN')
   @Post('describe-product')
   async describeProduct(@Body() body: ProductDescriptionRequest) {
-    return { description: await this.aiService.generateProductDescription(body) };
+    return {
+      description: await this.aiService.generateProductDescription(body),
+    };
   }
 
   @Post('summarize-reviews')
-  async summarizeReviews(@Body() body: { reviews: Array<{ rating: number; comment: string; date: string }> }) {
-    return { summary: await this.aiService.summarizeReviews({ reviews: body.reviews }) };
+  async summarizeReviews(
+    @Body()
+    body: {
+      reviews: Array<{ rating: number; comment: string; date: string }>;
+    },
+  ) {
+    return {
+      summary: await this.aiService.summarizeReviews({ reviews: body.reviews }),
+    };
   }
 
   @UseGuards(AuthGuard('jwt'))
   @Post('chat')
-  async chat(@Request() req: any, @Body() body: { message: string; history?: Array<{ role: string; content: string }> }) {
-    return this.aiService.chatWithAssistant(req.user.id, body.message, body.history);
+  async chat(
+    @Request() req: any,
+    @Body()
+    body: {
+      message: string;
+      history?: Array<{ role: string; content: string }>;
+    },
+  ) {
+    return this.aiService.chatWithAssistant(
+      req.user.id,
+      body.message,
+      body.history,
+    );
   }
 
   @Post('moderate')
@@ -48,28 +76,60 @@ export class AIController {
   @UseGuards(AuthGuard('jwt'))
   @Get('recommendations/feed')
   async getFeed(@Request() req: any, @Query('limit') limit?: string) {
-    return this.recommendationService.getPersonalizedFeed(req.user.id, limit ? parseInt(limit) : 20);
+    return this.recommendationService.getPersonalizedFeed(
+      req.user.id,
+      limit ? parseInt(limit) : 20,
+    );
   }
 
   @Get('recommendations/frequently-bought/:productId')
-  async getFrequentlyBought(@Query('productId') productId: string, @Query('limit') limit?: string) {
-    return this.recommendationService.getFrequentlyBoughtTogether(productId, limit ? parseInt(limit) : 6);
+  async getFrequentlyBought(
+    @Query('productId') productId: string,
+    @Query('limit') limit?: string,
+  ) {
+    return this.recommendationService.getFrequentlyBoughtTogether(
+      productId,
+      limit ? parseInt(limit) : 6,
+    );
   }
 
   @Get('recommendations/cross-sell/:productId')
-  async getCrossSell(@Query('productId') productId: string, @Query('limit') limit?: string) {
-    return this.recommendationService.getCrossSellItems(productId, limit ? parseInt(limit) : 6);
+  async getCrossSell(
+    @Query('productId') productId: string,
+    @Query('limit') limit?: string,
+  ) {
+    return this.recommendationService.getCrossSellItems(
+      productId,
+      limit ? parseInt(limit) : 6,
+    );
   }
 
   @Get('recommendations/upsell/:productId')
-  async getUpsell(@Query('productId') productId: string, @Query('limit') limit?: string) {
-    return this.recommendationService.getUpsellItems(productId, limit ? parseInt(limit) : 6);
+  async getUpsell(
+    @Query('productId') productId: string,
+    @Query('limit') limit?: string,
+  ) {
+    return this.recommendationService.getUpsellItems(
+      productId,
+      limit ? parseInt(limit) : 6,
+    );
   }
 
   @UseGuards(AuthGuard('jwt'))
   @Post('track-interaction')
-  async trackInteraction(@Request() req: any, @Body() body: { productId: string; action: 'view' | 'add_to_cart' | 'purchase' | 'wishlist' }) {
-    await this.recommendationService.trackInteraction(req.user.id, body.productId, body.action);
+  async trackInteraction(
+    @Request() req: any,
+    @Body()
+    body: {
+      productId: string;
+      action: 'view' | 'add_to_cart' | 'purchase' | 'wishlist';
+    },
+  ) {
+    await this.recommendationService.trackInteraction(
+      req.user.id,
+      body.productId,
+      body.action,
+    );
     return { success: true };
   }
 
@@ -80,7 +140,10 @@ export class AIController {
     const products = await this.prisma.product.findMany({
       where: { status: 'active' },
       take: 50,
-      include: { category: { select: { name: true } }, brand: { select: { name: true } } },
+      include: {
+        category: { select: { name: true } },
+        brand: { select: { name: true } },
+      },
     });
     return this.aiService.semanticMatch(q, products);
   }
@@ -95,6 +158,9 @@ export class AIController {
   @Post('search/vector')
   async vectorSearch(@Body() body: { text: string; limit?: number }) {
     const embedding = await this.embeddingsService.generateEmbedding(body.text);
-    return this.embeddingsService.searchSimilar(embedding.vector, body.limit || 10);
+    return this.embeddingsService.searchSimilar(
+      embedding.vector,
+      body.limit || 10,
+    );
   }
 }

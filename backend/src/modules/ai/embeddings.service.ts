@@ -22,7 +22,11 @@ export class EmbeddingsService {
     const cacheKey = `emb:${this.hashText(text)}`;
     const cached = this.cache.get(cacheKey);
     if (cached && cached.expiresAt > Date.now()) {
-      return { vector: cached.vector, dimensions: cached.vector.length, model: 'text-embedding-ada-002' };
+      return {
+        vector: cached.vector,
+        dimensions: cached.vector.length,
+        model: 'text-embedding-ada-002',
+      };
     }
 
     try {
@@ -30,7 +34,7 @@ export class EmbeddingsService {
         const response = await fetch('https://api.openai.com/v1/embeddings', {
           method: 'POST',
           headers: {
-            'Authorization': `Bearer ${this.apiKey}`,
+            Authorization: `Bearer ${this.apiKey}`,
             'Content-Type': 'application/json',
           },
           body: JSON.stringify({
@@ -40,10 +44,17 @@ export class EmbeddingsService {
         });
 
         if (response.ok) {
-          const data = await response.json() as any;
+          const data = await response.json();
           const vector = data.data[0].embedding as number[];
-          this.cache.set(cacheKey, { vector, expiresAt: Date.now() + this.cacheTtl });
-          return { vector, dimensions: vector.length, model: 'text-embedding-ada-002' };
+          this.cache.set(cacheKey, {
+            vector,
+            expiresAt: Date.now() + this.cacheTtl,
+          });
+          return {
+            vector,
+            dimensions: vector.length,
+            model: 'text-embedding-ada-002',
+          };
         }
       }
       return this.fallbackEmbedding(text);
@@ -59,14 +70,20 @@ export class EmbeddingsService {
 
     for (let i = 0; i < texts.length; i += batchSize) {
       const batch = texts.slice(i, i + batchSize);
-      const batchResults = await Promise.all(batch.map(t => this.generateEmbedding(t)));
+      const batchResults = await Promise.all(
+        batch.map((t) => this.generateEmbedding(t)),
+      );
       results.push(...batchResults);
     }
 
     return results;
   }
 
-  async searchSimilar(embedding: number[], limit = 10, threshold = 0.7): Promise<Array<{ id: string; score: number }>> {
+  async searchSimilar(
+    embedding: number[],
+    limit = 10,
+    threshold = 0.7,
+  ): Promise<Array<{ id: string; score: number }>> {
     return [];
   }
 
@@ -87,7 +104,7 @@ export class EmbeddingsService {
     let hash = 0;
     for (let i = 0; i < text.length; i++) {
       const char = text.charCodeAt(i);
-      hash = ((hash << 5) - hash) + char;
+      hash = (hash << 5) - hash + char;
       hash = hash & hash;
     }
     return hash.toString(36);
@@ -97,7 +114,8 @@ export class EmbeddingsService {
     const dims = 128;
     const seed = this.hashText(text);
     const vector = Array.from({ length: dims }, (_, i) => {
-      const val = Math.sin((i + 1) * seed.charCodeAt(i % seed.length) || 1) * 0.5 + 0.5;
+      const val =
+        Math.sin((i + 1) * seed.charCodeAt(i % seed.length) || 1) * 0.5 + 0.5;
       return parseFloat(val.toFixed(6));
     });
     return { vector, dimensions: dims, model: 'fallback-tf-idf' };

@@ -26,7 +26,11 @@ export class PaymentsService {
     };
   }
 
-  async initiateSSLCommerzPayment(orderId: string, amount: number, customer: any) {
+  async initiateSSLCommerzPayment(
+    orderId: string,
+    amount: number,
+    customer: any,
+  ) {
     // Placeholder: In production, integrate with SSLCommerz
     return {
       success: true,
@@ -47,7 +51,9 @@ export class PaymentsService {
   }
 
   async processCodOrder(orderId: string) {
-    const order = await this.prisma.order.findUnique({ where: { id: orderId } });
+    const order = await this.prisma.order.findUnique({
+      where: { id: orderId },
+    });
     if (!order) throw new BadRequestException('Order not found');
 
     await this.prisma.order.update({

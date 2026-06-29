@@ -7,7 +7,13 @@ export class SearchAnalyticsService {
 
   constructor(private prisma: PrismaService) {}
 
-  async logSearch(query: string, userId: string | null, resultsCount: number, clicks: number, filters: Record<string, any> = {}): Promise<string> {
+  async logSearch(
+    query: string,
+    userId: string | null,
+    resultsCount: number,
+    clicks: number,
+    filters: Record<string, any> = {},
+  ): Promise<string> {
     const sessionId = `session-${Date.now()}-${Math.random().toString(36).slice(2, 8)}`;
 
     if (userId) {
@@ -23,17 +29,30 @@ export class SearchAnalyticsService {
     return sessionId;
   }
 
-  async logClick(searchSessionId: string, productId: string, position: number): Promise<void> {
-    this.logger.debug(`Click logged: search=${searchSessionId} product=${productId} pos=${position}`);
+  async logClick(
+    searchSessionId: string,
+    productId: string,
+    position: number,
+  ): Promise<void> {
+    this.logger.debug(
+      `Click logged: search=${searchSessionId} product=${productId} pos=${position}`,
+    );
   }
 
-  async getPopularSearches(timeframe: 'today' | 'week' | 'month' | 'all' = 'week', limit = 20): Promise<Array<{ query: string; count: number }>> {
+  async getPopularSearches(
+    timeframe: 'today' | 'week' | 'month' | 'all' = 'week',
+    limit = 20,
+  ): Promise<Array<{ query: string; count: number }>> {
     const dateFilter: Record<string, Date | undefined> = {};
     const now = new Date();
 
     switch (timeframe) {
       case 'today':
-        dateFilter.gte = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+        dateFilter.gte = new Date(
+          now.getFullYear(),
+          now.getMonth(),
+          now.getDate(),
+        );
         break;
       case 'week':
         dateFilter.gte = new Date(now.getTime() - 7 * 86400000);
@@ -46,15 +65,20 @@ export class SearchAnalyticsService {
     const searches = await this.prisma.searchHistory.groupBy({
       by: ['query'],
       _count: { query: true },
-      where: Object.keys(dateFilter).length > 0 ? { createdAt: dateFilter as any } : undefined,
+      where:
+        Object.keys(dateFilter).length > 0
+          ? { createdAt: dateFilter as any }
+          : undefined,
       orderBy: { _count: { query: 'desc' } },
       take: limit,
     });
 
-    return searches.map(s => ({ query: s.query, count: s._count.query }));
+    return searches.map((s) => ({ query: s.query, count: s._count.query }));
   }
 
-  async getZeroResultSearches(limit = 50): Promise<Array<{ query: string; count: number; lastSearched: Date }>> {
+  async getZeroResultSearches(
+    limit = 50,
+  ): Promise<Array<{ query: string; count: number; lastSearched: Date }>> {
     const searches = await this.prisma.searchHistory.groupBy({
       by: ['query'],
       where: { results: 0 },
@@ -64,14 +88,18 @@ export class SearchAnalyticsService {
       take: limit,
     });
 
-    return searches.map(s => ({
+    return searches.map((s) => ({
       query: s.query,
       count: s._count.query,
       lastSearched: s._max.createdAt || new Date(),
     }));
   }
 
-  async getSearchConversionRate(): Promise<{ total: number; withPurchase: number; rate: number }> {
+  async getSearchConversionRate(): Promise<{
+    total: number;
+    withPurchase: number;
+    rate: number;
+  }> {
     const searches = await this.prisma.searchHistory.count();
     const buyers = await this.prisma.userActivity.groupBy({
       by: ['userId'],
@@ -86,7 +114,9 @@ export class SearchAnalyticsService {
     };
   }
 
-  async getTopSearchCategories(limit = 10): Promise<Array<{ category: string; count: number }>> {
+  async getTopSearchCategories(
+    limit = 10,
+  ): Promise<Array<{ category: string; count: number }>> {
     const recentSearches = await this.prisma.searchHistory.findMany({
       where: { query: { not: '' } },
       orderBy: { createdAt: 'desc' },
@@ -94,17 +124,25 @@ export class SearchAnalyticsService {
     });
 
     const categoryKeywords: Record<string, string[]> = {
-      'Electronics': ['phone', 'laptop', 'camera', 'tv', 'tablet', 'headphone', 'charger'],
-      'Fashion': ['shirt', 'dress', 'shoe', 'watch', 'bag', 'jewelry', 'fashion'],
+      Electronics: [
+        'phone',
+        'laptop',
+        'camera',
+        'tv',
+        'tablet',
+        'headphone',
+        'charger',
+      ],
+      Fashion: ['shirt', 'dress', 'shoe', 'watch', 'bag', 'jewelry', 'fashion'],
       'Home & Kitchen': ['furniture', 'kitchen', 'home', 'decor', 'appliance'],
-      'Beauty': ['beauty', 'cosmetic', 'skin care', 'hair', 'perfume'],
-      'Sports': ['sport', 'gym', 'fitness', 'cycle', 'football'],
+      Beauty: ['beauty', 'cosmetic', 'skin care', 'hair', 'perfume'],
+      Sports: ['sport', 'gym', 'fitness', 'cycle', 'football'],
     };
 
     const categoryCounts: Record<string, number> = {};
     for (const search of recentSearches) {
       for (const [category, keywords] of Object.entries(categoryKeywords)) {
-        if (keywords.some(k => search.query.toLowerCase().includes(k))) {
+        if (keywords.some((k) => search.query.toLowerCase().includes(k))) {
           categoryCounts[category] = (categoryCounts[category] || 0) + 1;
         }
       }
@@ -116,7 +154,9 @@ export class SearchAnalyticsService {
       .map(([category, count]) => ({ category, count }));
   }
 
-  async getSearchTrends(days = 30): Promise<Array<{ date: string; total: number; unique: number }>> {
+  async getSearchTrends(
+    days = 30,
+  ): Promise<Array<{ date: string; total: number; unique: number }>> {
     const startDate = new Date(Date.now() - days * 86400000);
 
     const searches = await this.prisma.searchHistory.findMany({

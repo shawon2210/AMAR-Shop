@@ -24,7 +24,10 @@ import { WmsModule } from './modules/wms/wms.module';
 import { FulfillmentModule } from './modules/fulfillment/fulfillment.module';
 import { FinanceModule } from './modules/finance/finance.module';
 import { BiModule } from './modules/bi/bi.module';
-import { HealthController, DependencyChecker } from './common/health.controller';
+import {
+  HealthController,
+  DependencyChecker,
+} from './common/health.controller';
 import { PrismaService } from './common/prisma.service';
 
 @Module({

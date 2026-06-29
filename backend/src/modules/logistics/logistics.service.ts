@@ -1,4 +1,8 @@
-import { Injectable, NotFoundException, BadRequestException } from '@nestjs/common';
+import {
+  Injectable,
+  NotFoundException,
+  BadRequestException,
+} from '@nestjs/common';
 import { PrismaService } from '../../common/prisma.service';
 
 @Injectable()
@@ -18,10 +22,16 @@ export class LogisticsService {
 
     if (!courier) throw new NotFoundException('No active courier found');
 
-    const totalWeight = order.items.reduce((sum, item) => sum + (item.product.weight || 0.5) * item.quantity, 0);
-    const shippingFee = courier.baseRate + (totalWeight * courier.perKgRate);
+    const totalWeight = order.items.reduce(
+      (sum, item) => sum + (item.product.weight || 0.5) * item.quantity,
+      0,
+    );
+    const shippingFee = courier.baseRate + totalWeight * courier.perKgRate;
 
-    const trackingId = 'AMR' + Date.now().toString(36).toUpperCase() + Math.random().toString(36).substring(2, 6).toUpperCase();
+    const trackingId =
+      'AMR' +
+      Date.now().toString(36).toUpperCase() +
+      Math.random().toString(36).substring(2, 6).toUpperCase();
 
     const shipment = await this.prisma.shipment.create({
       data: {
@@ -55,7 +65,16 @@ export class LogisticsService {
   async getCouriers() {
     return this.prisma.courier.findMany({
       where: { isActive: true },
-      select: { id: true, name: true, slug: true, baseRate: true, perKgRate: true, codFee: true, deliveryDays: true, logo: true },
+      select: {
+        id: true,
+        name: true,
+        slug: true,
+        baseRate: true,
+        perKgRate: true,
+        codFee: true,
+        deliveryDays: true,
+        logo: true,
+      },
     });
   }
 
@@ -66,7 +85,9 @@ export class LogisticsService {
   }
 
   async calculateShipping(weight: number, district: string, courierId: string) {
-    const courier = await this.prisma.courier.findUnique({ where: { id: courierId } });
+    const courier = await this.prisma.courier.findUnique({
+      where: { id: courierId },
+    });
     if (!courier) throw new NotFoundException('Courier not found');
 
     const zone = await this.prisma.deliveryZone.findFirst({
@@ -77,7 +98,7 @@ export class LogisticsService {
     const perKgRate = courier.perKgRate;
     const codFee = zone?.codFee || courier.codFee;
 
-    const shippingFee = baseFee + (weight * perKgRate);
+    const shippingFee = baseFee + weight * perKgRate;
 
     return {
       courier: courier.name,
@@ -92,7 +113,9 @@ export class LogisticsService {
   }
 
   async updateTracking(shipmentId: string, trackingId: string) {
-    const shipment = await this.prisma.shipment.findUnique({ where: { id: shipmentId } });
+    const shipment = await this.prisma.shipment.findUnique({
+      where: { id: shipmentId },
+    });
     if (!shipment) throw new NotFoundException('Shipment not found');
 
     return this.prisma.shipment.update({
@@ -116,7 +139,9 @@ export class LogisticsService {
   }
 
   async getDeliveryTimeline(shipmentId: string) {
-    const shipment = await this.prisma.shipment.findUnique({ where: { id: shipmentId } });
+    const shipment = await this.prisma.shipment.findUnique({
+      where: { id: shipmentId },
+    });
     if (!shipment) throw new NotFoundException('Shipment not found');
 
     const timeline = await this.prisma.shipmentTimeline.findMany({
@@ -124,6 +149,11 @@ export class LogisticsService {
       orderBy: { createdAt: 'desc' },
     });
 
-    return { shipmentId, trackingId: shipment.trackingId, status: shipment.status, timeline };
+    return {
+      shipmentId,
+      trackingId: shipment.trackingId,
+      status: shipment.status,
+      timeline,
+    };
   }
 }

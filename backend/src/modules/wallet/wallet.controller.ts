@@ -1,4 +1,13 @@
-import { Controller, Get, Post, Body, Param, Query, UseGuards, Request } from '@nestjs/common';
+import {
+  Controller,
+  Get,
+  Post,
+  Body,
+  Param,
+  Query,
+  UseGuards,
+  Request,
+} from '@nestjs/common';
 import { AuthGuard } from '@nestjs/passport';
 import { WalletService } from './wallet.service';
 
@@ -27,12 +36,22 @@ export class WalletController {
   }
 
   @Post('deposit')
-  async deposit(@Request() req: any, @Body() body: { amount: number; method: string }) {
+  async deposit(
+    @Request() req: any,
+    @Body() body: { amount: number; method: string },
+  ) {
     return this.walletService.addFunds(req.user.id, body.amount, body.method);
   }
 
   @Post('payout')
-  async requestPayout(@Request() req: any, @Body() body: { amount: number; method: string }) {
-    return this.walletService.requestPayout(req.user.id, body.amount, body.method);
+  async requestPayout(
+    @Request() req: any,
+    @Body() body: { amount: number; method: string },
+  ) {
+    return this.walletService.requestPayout(
+      req.user.id,
+      body.amount,
+      body.method,
+    );
   }
 }

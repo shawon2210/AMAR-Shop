@@ -330,9 +330,8 @@ async function seedNotifications(count: number) {
     userId: users[Math.floor(Math.random() * users.length)].id,
     title: faker.lorem.sentence(6),
     body: faker.lorem.sentence(),
-    type: faker.helpers.arrayElement(['order', 'promo', 'system', 'wallet', 'review']) as any,
-    isRead: faker.datatype.boolean({ probability: 0.6 }),
-    link: '/orders',
+    type: faker.helpers.arrayElement(['ORDER_UPDATE', 'PROMOTION', 'SYSTEM', 'CHAT_MESSAGE', 'WALLET', 'FOLLOW', 'CAMPAIGN']) as any,
+    read: faker.datatype.boolean({ probability: 0.6 }),
   }));
   await prisma.notification.createMany({ data, skipDuplicates: true });
   console.log(`  notifications: ${count} done.`);

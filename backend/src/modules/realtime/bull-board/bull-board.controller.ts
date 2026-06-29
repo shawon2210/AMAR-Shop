@@ -20,14 +20,20 @@ export class BullBoardController {
   @Get('jobs')
   async getRecentJobs() {
     const queues = [
-      'order-processing', 'notification', 'email',
-      'inventory-sync', 'search-index', 'analytics', 'payout',
+      'order-processing',
+      'notification',
+      'email',
+      'inventory-sync',
+      'search-index',
+      'analytics',
+      'payout',
     ];
 
     const results: Record<string, unknown> = {};
     for (const name of queues) {
-      const queue = (this.bullQueueService as any)[`${name.replace('-', '')}Queue`] || 
-                    (this.bullQueueService as any)[`${name}Queue`];
+      const queue =
+        (this.bullQueueService as any)[`${name.replace('-', '')}Queue`] ||
+        (this.bullQueueService as any)[`${name}Queue`];
       if (queue) {
         const [waiting, active, completed, failed] = await Promise.all([
           queue.getJobs(['waiting'], 0, 10),

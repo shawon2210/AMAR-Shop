@@ -1,7 +1,10 @@
 import { NestFactory } from '@nestjs/core';
 import { ValidationPipe } from '@nestjs/common';
 import { AppModule } from './app.module';
-import { MetricsInterceptor, register } from './common/interceptors/metrics.interceptor';
+import {
+  MetricsInterceptor,
+  register,
+} from './common/interceptors/metrics.interceptor';
 import { TracingInterceptor } from './common/interceptors/tracing.interceptor';
 import { setupObservability } from './observability/opentelemetry';
 

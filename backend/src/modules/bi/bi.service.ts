@@ -8,18 +8,50 @@ export class BiService {
   async getExecutiveDashboard(dateRange: { start: string; end: string }) {
     const start = new Date(dateRange.start);
     const end = new Date(dateRange.end);
-    const prevStart = new Date(start.getFullYear(), start.getMonth() - 1, start.getDate());
-    const prevEnd = new Date(prevStart.getFullYear(), prevStart.getMonth() + 1, prevStart.getDate() - 1);
+    const prevStart = new Date(
+      start.getFullYear(),
+      start.getMonth() - 1,
+      start.getDate(),
+    );
+    const prevEnd = new Date(
+      prevStart.getFullYear(),
+      prevStart.getMonth() + 1,
+      prevStart.getDate() - 1,
+    );
 
-    const [currentOrders, prevOrders, currentUsers, totalUsers, totalSellers, products, revenue, prevRevenue] = await Promise.all([
-      this.prisma.order.findMany({ where: { createdAt: { gte: start, lte: end } } }),
-      this.prisma.order.findMany({ where: { createdAt: { gte: prevStart, lte: prevEnd } } }),
-      this.prisma.user.count({ where: { createdAt: { gte: start, lte: end } } }),
+    const [
+      currentOrders,
+      prevOrders,
+      currentUsers,
+      totalUsers,
+      totalSellers,
+      products,
+      revenue,
+      prevRevenue,
+    ] = await Promise.all([
+      this.prisma.order.findMany({
+        where: { createdAt: { gte: start, lte: end } },
+      }),
+      this.prisma.order.findMany({
+        where: { createdAt: { gte: prevStart, lte: prevEnd } },
+      }),
+      this.prisma.user.count({
+        where: { createdAt: { gte: start, lte: end } },
+      }),
       this.prisma.user.count(),
       this.prisma.store.count(),
       this.prisma.product.count(),
-      this.prisma.order.aggregate({ where: { createdAt: { gte: start, lte: end }, paymentStatus: true }, _sum: { total: true } }),
-      this.prisma.order.aggregate({ where: { createdAt: { gte: prevStart, lte: prevEnd }, paymentStatus: true }, _sum: { total: true } }),
+      this.prisma.order.aggregate({
+        where: { createdAt: { gte: start, lte: end }, paymentStatus: true },
+        _sum: { total: true },
+      }),
+      this.prisma.order.aggregate({
+        where: {
+          createdAt: { gte: prevStart, lte: prevEnd },
+          paymentStatus: true,
+        },
+        _sum: { total: true },
+      }),
     ]);
 
     const gmv = currentOrders.reduce((s, o) => s + o.total, 0);
@@ -30,16 +62,30 @@ export class BiService {
     return {
       period: dateRange,
       gmv,
-      gmvGrowth: prevGmv > 0 ? ((gmv - prevGmv) / prevGmv * 100).toFixed(1) : 0,
+      gmvGrowth:
+        prevGmv > 0 ? (((gmv - prevGmv) / prevGmv) * 100).toFixed(1) : 0,
       revenue: totalRevenue,
-      revenueGrowth: prevTotalRevenue > 0 ? ((totalRevenue - prevTotalRevenue) / prevTotalRevenue * 100).toFixed(1) : 0,
+      revenueGrowth:
+        prevTotalRevenue > 0
+          ? (
+              ((totalRevenue - prevTotalRevenue) / prevTotalRevenue) *
+              100
+            ).toFixed(1)
+          : 0,
       totalOrders: currentOrders.length,
-      orderGrowth: prevOrders.length > 0 ? ((currentOrders.length - prevOrders.length) / prevOrders.length * 100).toFixed(1) : 0,
+      orderGrowth:
+        prevOrders.length > 0
+          ? (
+              ((currentOrders.length - prevOrders.length) / prevOrders.length) *
+              100
+            ).toFixed(1)
+          : 0,
       newUsers: currentUsers,
       totalUsers,
       totalSellers,
       totalProducts: products,
-      averageOrderValue: currentOrders.length > 0 ? gmv / currentOrders.length : 0,
+      averageOrderValue:
+        currentOrders.length > 0 ? gmv / currentOrders.length : 0,
     };
   }
 
@@ -47,34 +93,65 @@ export class BiService {
     const now = new Date();
     const users = await this.prisma.user.findMany({
       where: { role: 'CUSTOMER' },
-      select: { id: true, name: true, email: true, orders: { select: { total: true, createdAt: true }, orderBy: { createdAt: 'desc' } } },
+      select: {
+        id: true,
+        name: true,
+        email: true,
+        orders: {
+          select: { total: true, createdAt: true },
+          orderBy: { createdAt: 'desc' },
+        },
+      },
     });
 
-    const segments: Record<string, any[]> = { champions: [], loyal: [], potential: [], atRisk: [], lost: [] };
+    const segments: Record<string, any[]> = {
+      champions: [],
+      loyal: [],
+      potential: [],
+      atRisk: [],
+      lost: [],
+    };
 
     for (const user of users) {
       if (!user.orders.length) continue;
       const lastOrder = user.orders[0].createdAt;
-      const recency = Math.floor((now.getTime() - lastOrder.getTime()) / (1000 * 60 * 60 * 24));
+      const recency = Math.floor(
+        (now.getTime() - lastOrder.getTime()) / (1000 * 60 * 60 * 24),
+      );
       const frequency = user.orders.length;
       const monetary = user.orders.reduce((s, o) => s + o.total, 0);
 
       let segment = 'lost';
-      if (recency <= 30 && frequency >= 5 && monetary >= 5000) segment = 'champions';
+      if (recency <= 30 && frequency >= 5 && monetary >= 5000)
+        segment = 'champions';
       else if (recency <= 60 && frequency >= 3) segment = 'loyal';
       else if (recency <= 90 && frequency >= 1) segment = 'potential';
       else if (recency <= 180) segment = 'atRisk';
       else segment = 'lost';
 
-      if (segments[segment]) segments[segment].push({ userId: user.id, name: user.name, recency, frequency, monetary, segment });
+      if (segments[segment])
+        segments[segment].push({
+          userId: user.id,
+          name: user.name,
+          recency,
+          frequency,
+          monetary,
+          segment,
+        });
     }
 
     return Object.entries(segments).map(([segment, users]) => ({
       segment: segment.charAt(0).toUpperCase() + segment.slice(1),
       userCount: users.length,
-      avgRecency: users.length ? users.reduce((s, u) => s + u.recency, 0) / users.length : 0,
-      avgFrequency: users.length ? users.reduce((s, u) => s + u.frequency, 0) / users.length : 0,
-      avgMonetary: users.length ? users.reduce((s, u) => s + u.monetary, 0) / users.length : 0,
+      avgRecency: users.length
+        ? users.reduce((s, u) => s + u.recency, 0) / users.length
+        : 0,
+      avgFrequency: users.length
+        ? users.reduce((s, u) => s + u.frequency, 0) / users.length
+        : 0,
+      avgMonetary: users.length
+        ? users.reduce((s, u) => s + u.monetary, 0) / users.length
+        : 0,
     }));
   }
 
@@ -84,23 +161,43 @@ export class BiService {
       select: { userId: true, total: true, createdAt: true },
     });
 
-    const userTotals: Record<string, { total: number; orders: number; firstDate: Date; lastDate: Date }> = {};
+    const userTotals: Record<
+      string,
+      { total: number; orders: number; firstDate: Date; lastDate: Date }
+    > = {};
     for (const o of orders) {
-      if (!userTotals[o.userId]) userTotals[o.userId] = { total: 0, orders: 0, firstDate: o.createdAt, lastDate: o.createdAt };
+      if (!userTotals[o.userId])
+        userTotals[o.userId] = {
+          total: 0,
+          orders: 0,
+          firstDate: o.createdAt,
+          lastDate: o.createdAt,
+        };
       userTotals[o.userId].total += o.total;
       userTotals[o.userId].orders += 1;
-      if (o.createdAt < userTotals[o.userId].firstDate) userTotals[o.userId].firstDate = o.createdAt;
-      if (o.createdAt > userTotals[o.userId].lastDate) userTotals[o.userId].lastDate = o.createdAt;
+      if (o.createdAt < userTotals[o.userId].firstDate)
+        userTotals[o.userId].firstDate = o.createdAt;
+      if (o.createdAt > userTotals[o.userId].lastDate)
+        userTotals[o.userId].lastDate = o.createdAt;
     }
 
     const values = Object.values(userTotals);
-    const avgLtv = values.length > 0 ? values.reduce((s, u) => s + u.total, 0) / values.length : 0;
-    const avgOrderValue = values.reduce((s, u) => s + u.total, 0) / values.reduce((s, u) => s + u.orders, 0) || 0;
+    const avgLtv =
+      values.length > 0
+        ? values.reduce((s, u) => s + u.total, 0) / values.length
+        : 0;
+    const avgOrderValue =
+      values.reduce((s, u) => s + u.total, 0) /
+        values.reduce((s, u) => s + u.orders, 0) || 0;
 
-    const cohorts: Record<string, { users: number; totalRevenue: number; totalOrders: number }> = {};
+    const cohorts: Record<
+      string,
+      { users: number; totalRevenue: number; totalOrders: number }
+    > = {};
     for (const [userId, data] of Object.entries(userTotals)) {
       const cohort = `${data.firstDate.getFullYear()}-${String(data.firstDate.getMonth() + 1).padStart(2, '0')}`;
-      if (!cohorts[cohort]) cohorts[cohort] = { users: 0, totalRevenue: 0, totalOrders: 0 };
+      if (!cohorts[cohort])
+        cohorts[cohort] = { users: 0, totalRevenue: 0, totalOrders: 0 };
       cohorts[cohort].users += 1;
       cohorts[cohort].totalRevenue += data.total;
       cohorts[cohort].totalOrders += data.orders;
@@ -130,29 +227,43 @@ export class BiService {
     });
 
     const firstPurchase: Record<string, string> = {};
-    const userOrders: Record<string, { cohortIndex: number; revenue: number }[]> = {};
+    const userOrders: Record<
+      string,
+      { cohortIndex: number; revenue: number }[]
+    > = {};
 
     for (const o of orders) {
       if (!firstPurchase[o.userId]) {
         const d = new Date(o.createdAt);
-        const periodIndex = Math.floor((d.getFullYear() - 2020) * 12 / periodMonths + d.getMonth() / periodMonths);
-        firstPurchase[o.userId] = `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}`;
+        const periodIndex = Math.floor(
+          ((d.getFullYear() - 2020) * 12) / periodMonths +
+            d.getMonth() / periodMonths,
+        );
+        firstPurchase[o.userId] =
+          `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}`;
         userOrders[o.userId] = [];
       }
       const d = new Date(o.createdAt);
       const firstDate = new Date(firstPurchase[o.userId]);
-      const monthsDiff = (d.getFullYear() - firstDate.getFullYear()) * 12 + d.getMonth() - firstDate.getMonth();
+      const monthsDiff =
+        (d.getFullYear() - firstDate.getFullYear()) * 12 +
+        d.getMonth() -
+        firstDate.getMonth();
       const cohortIndex = Math.floor(monthsDiff / periodMonths);
       if (!userOrders[o.userId]) userOrders[o.userId] = [];
       userOrders[o.userId].push({ cohortIndex, revenue: o.total });
     }
 
-    const cohortMap: Record<string, Record<number, { users: Set<string>; revenue: number }>> = {};
+    const cohortMap: Record<
+      string,
+      Record<number, { users: Set<string>; revenue: number }>
+    > = {};
     for (const [userId, cohort] of Object.entries(firstPurchase)) {
       if (!cohortMap[cohort]) cohortMap[cohort] = {};
       const orders = userOrders[userId] || [];
       for (const o of orders) {
-        if (!cohortMap[cohort][o.cohortIndex]) cohortMap[cohort][o.cohortIndex] = { users: new Set(), revenue: 0 };
+        if (!cohortMap[cohort][o.cohortIndex])
+          cohortMap[cohort][o.cohortIndex] = { users: new Set(), revenue: 0 };
         cohortMap[cohort][o.cohortIndex].users.add(userId);
         cohortMap[cohort][o.cohortIndex].revenue += o.revenue;
       }
@@ -162,7 +273,8 @@ export class BiService {
       const baseUsers = periods[0]?.users.size || 1;
       const retention: Record<string, number> = {};
       for (const [periodIdx, data] of Object.entries(periods)) {
-        retention[`period_${periodIdx}`] = Math.round(data.users.size / baseUsers * 100 * 10) / 10;
+        retention[`period_${periodIdx}`] =
+          Math.round((data.users.size / baseUsers) * 100 * 10) / 10;
       }
       return { cohort, baseUsers, retention };
     });
@@ -174,7 +286,11 @@ export class BiService {
 
     const newUsers = await this.prisma.user.findMany({
       where: { createdAt: { gte: start, lte: end } },
-      select: { id: true, createdAt: true, orders: { select: { createdAt: true } } },
+      select: {
+        id: true,
+        createdAt: true,
+        orders: { select: { createdAt: true } },
+      },
     });
 
     const report: any[] = [];
@@ -186,20 +302,46 @@ export class BiService {
       const week4 = new Date(week2.getTime() + 14 * 24 * 60 * 60 * 1000);
       const week8 = new Date(week4.getTime() + 28 * 24 * 60 * 60 * 1000);
 
-      const w1 = user.orders.some(o => o.createdAt >= week0 && o.createdAt < week1) ? 1 : 0;
-      const w2 = user.orders.some(o => o.createdAt >= week1 && o.createdAt < week2) ? 1 : 0;
-      const w4 = user.orders.some(o => o.createdAt >= week2 && o.createdAt < week4) ? 1 : 0;
-      const w8 = user.orders.some(o => o.createdAt >= week4 && o.createdAt < week8) ? 1 : 0;
-      report.push({ userId: user.id, week1: w1, week2: w2, week4: w4, week8: w8 });
+      const w1 = user.orders.some(
+        (o) => o.createdAt >= week0 && o.createdAt < week1,
+      )
+        ? 1
+        : 0;
+      const w2 = user.orders.some(
+        (o) => o.createdAt >= week1 && o.createdAt < week2,
+      )
+        ? 1
+        : 0;
+      const w4 = user.orders.some(
+        (o) => o.createdAt >= week2 && o.createdAt < week4,
+      )
+        ? 1
+        : 0;
+      const w8 = user.orders.some(
+        (o) => o.createdAt >= week4 && o.createdAt < week8,
+      )
+        ? 1
+        : 0;
+      report.push({
+        userId: user.id,
+        week1: w1,
+        week2: w2,
+        week4: w4,
+        week8: w8,
+      });
     }
 
     const total = report.length;
     return {
       totalNewUsers: total,
-      week1Retention: total > 0 ? report.filter(r => r.week1).length / total * 100 : 0,
-      week2Retention: total > 0 ? report.filter(r => r.week2).length / total * 100 : 0,
-      week4Retention: total > 0 ? report.filter(r => r.week4).length / total * 100 : 0,
-      week8Retention: total > 0 ? report.filter(r => r.week8).length / total * 100 : 0,
+      week1Retention:
+        total > 0 ? (report.filter((r) => r.week1).length / total) * 100 : 0,
+      week2Retention:
+        total > 0 ? (report.filter((r) => r.week2).length / total) * 100 : 0,
+      week4Retention:
+        total > 0 ? (report.filter((r) => r.week4).length / total) * 100 : 0,
+      week8Retention:
+        total > 0 ? (report.filter((r) => r.week8).length / total) * 100 : 0,
     };
   }
 
@@ -209,7 +351,14 @@ export class BiService {
         products: {
           include: {
             orderItems: {
-              where: { order: { createdAt: { gte: new Date(dateRange.start), lte: new Date(dateRange.end) } } },
+              where: {
+                order: {
+                  createdAt: {
+                    gte: new Date(dateRange.start),
+                    lte: new Date(dateRange.end),
+                  },
+                },
+              },
             },
           },
         },
@@ -217,52 +366,84 @@ export class BiService {
       },
     });
 
-    return stores.map(store => {
-      const totalRevenue = store.products.reduce((s, p) => s + p.orderItems.reduce((s2, oi) => s2 + oi.price * oi.quantity, 0), 0);
-      const totalOrders = store.products.reduce((s, p) => s + p.orderItems.length, 0);
-      return {
-        storeId: store.id,
-        storeName: store.name,
-        totalRevenue: Math.round(totalRevenue * 100) / 100,
-        totalOrders,
-        totalProducts: store.products.length,
-        followers: store._count.followers,
-        avgRating: 4.5,
-      };
-    }).sort((a, b) => b.totalRevenue - a.totalRevenue);
+    return stores
+      .map((store) => {
+        const totalRevenue = store.products.reduce(
+          (s, p) =>
+            s + p.orderItems.reduce((s2, oi) => s2 + oi.price * oi.quantity, 0),
+          0,
+        );
+        const totalOrders = store.products.reduce(
+          (s, p) => s + p.orderItems.length,
+          0,
+        );
+        return {
+          storeId: store.id,
+          storeName: store.name,
+          totalRevenue: Math.round(totalRevenue * 100) / 100,
+          totalOrders,
+          totalProducts: store.products.length,
+          followers: store._count.followers,
+          avgRating: 4.5,
+        };
+      })
+      .sort((a, b) => b.totalRevenue - a.totalRevenue);
   }
 
   async getProductProfitability(dateRange: { start: string; end: string }) {
     const products = await this.prisma.product.findMany({
       where: {
         orderItems: {
-          some: { order: { createdAt: { gte: new Date(dateRange.start), lte: new Date(dateRange.end) } } },
+          some: {
+            order: {
+              createdAt: {
+                gte: new Date(dateRange.start),
+                lte: new Date(dateRange.end),
+              },
+            },
+          },
         },
       },
       include: {
         orderItems: {
-          where: { order: { createdAt: { gte: new Date(dateRange.start), lte: new Date(dateRange.end) } } },
+          where: {
+            order: {
+              createdAt: {
+                gte: new Date(dateRange.start),
+                lte: new Date(dateRange.end),
+              },
+            },
+          },
           select: { quantity: true, price: true },
         },
       },
     });
 
-    return products.map(product => {
-      const revenue = product.orderItems.reduce((s, oi) => s + oi.price * oi.quantity, 0);
-      const unitsSold = product.orderItems.reduce((s, oi) => s + oi.quantity, 0);
-      const cost = product.price * 0.6;
-      const profit = revenue - (cost * unitsSold);
-      return {
-        productId: product.id,
-        productName: product.name,
-        revenue: Math.round(revenue * 100) / 100,
-        unitsSold,
-        avgPrice: unitsSold > 0 ? revenue / unitsSold : 0,
-        estimatedCost: cost * unitsSold,
-        grossProfit: Math.round(profit * 100) / 100,
-        margin: revenue > 0 ? Math.round((profit / revenue) * 100 * 10) / 10 : 0,
-      };
-    }).sort((a, b) => b.revenue - a.revenue);
+    return products
+      .map((product) => {
+        const revenue = product.orderItems.reduce(
+          (s, oi) => s + oi.price * oi.quantity,
+          0,
+        );
+        const unitsSold = product.orderItems.reduce(
+          (s, oi) => s + oi.quantity,
+          0,
+        );
+        const cost = product.price * 0.6;
+        const profit = revenue - cost * unitsSold;
+        return {
+          productId: product.id,
+          productName: product.name,
+          revenue: Math.round(revenue * 100) / 100,
+          unitsSold,
+          avgPrice: unitsSold > 0 ? revenue / unitsSold : 0,
+          estimatedCost: cost * unitsSold,
+          grossProfit: Math.round(profit * 100) / 100,
+          margin:
+            revenue > 0 ? Math.round((profit / revenue) * 100 * 10) / 10 : 0,
+        };
+      })
+      .sort((a, b) => b.revenue - a.revenue);
   }
 
   async getCampaignROI(campaignId: string) {
@@ -273,7 +454,9 @@ export class BiService {
           include: {
             product: {
               include: {
-                orderItems: { select: { quantity: true, price: true, createdAt: true } },
+                orderItems: {
+                  select: { quantity: true, price: true, createdAt: true },
+                },
               },
             },
           },
@@ -283,10 +466,20 @@ export class BiService {
     if (!campaign) throw new Error('Campaign not found');
 
     const campaignCost = 0;
-    const revenue = campaign.products.reduce((s, cp) =>
-      s + cp.product.orderItems.reduce((s2, oi) => s2 + oi.price * oi.quantity, 0), 0);
-    const unitsSold = campaign.products.reduce((s, cp) =>
-      s + cp.product.orderItems.reduce((s2, oi) => s2 + oi.quantity, 0), 0);
+    const revenue = campaign.products.reduce(
+      (s, cp) =>
+        s +
+        cp.product.orderItems.reduce(
+          (s2, oi) => s2 + oi.price * oi.quantity,
+          0,
+        ),
+      0,
+    );
+    const unitsSold = campaign.products.reduce(
+      (s, cp) =>
+        s + cp.product.orderItems.reduce((s2, oi) => s2 + oi.quantity, 0),
+      0,
+    );
 
     return {
       campaignId: campaign.id,
@@ -295,17 +488,28 @@ export class BiService {
       campaignCost,
       revenue: Math.round(revenue * 100) / 100,
       unitsSold,
-      roi: campaignCost > 0 ? ((revenue - campaignCost) / campaignCost * 100).toFixed(1) : 'N/A',
+      roi:
+        campaignCost > 0
+          ? (((revenue - campaignCost) / campaignCost) * 100).toFixed(1)
+          : 'N/A',
       roas: campaignCost > 0 ? (revenue / campaignCost).toFixed(2) : 'N/A',
     };
   }
 
   async getMarketingAttribution(dateRange: { start: string; end: string }) {
     const activities = await this.prisma.userActivity.findMany({
-      where: { createdAt: { gte: new Date(dateRange.start), lte: new Date(dateRange.end) } },
+      where: {
+        createdAt: {
+          gte: new Date(dateRange.start),
+          lte: new Date(dateRange.end),
+        },
+      },
     });
 
-    const channels: Record<string, { views: number; conversions: number; revenue: number }> = {
+    const channels: Record<
+      string,
+      { views: number; conversions: number; revenue: number }
+    > = {
       direct: { views: 0, conversions: 0, revenue: 0 },
       search: { views: 0, conversions: 0, revenue: 0 },
       social: { views: 0, conversions: 0, revenue: 0 },
@@ -324,7 +528,8 @@ export class BiService {
     return Object.entries(channels).map(([channel, data]) => ({
       channel,
       ...data,
-      conversionRate: data.views > 0 ? (data.conversions / data.views * 100).toFixed(2) : 0,
+      conversionRate:
+        data.views > 0 ? ((data.conversions / data.views) * 100).toFixed(2) : 0,
     }));
   }
 
@@ -338,11 +543,17 @@ export class BiService {
       });
 
       const stageIndex = stages.indexOf(stage);
-      const prevCount = stageIndex > 0 ? funnel[stageIndex - 1]?.count || count : count;
+      const prevCount =
+        stageIndex > 0 ? funnel[stageIndex - 1]?.count || count : count;
       funnel.push({
         stage,
         count,
-        conversionRate: stageIndex === 0 ? 100 : prevCount > 0 ? Math.round(count / prevCount * 100 * 10) / 10 : 0,
+        conversionRate:
+          stageIndex === 0
+            ? 100
+            : prevCount > 0
+              ? Math.round((count / prevCount) * 100 * 10) / 10
+              : 0,
         dropOff: stageIndex === 0 ? 0 : prevCount - count,
       });
     }
@@ -352,10 +563,15 @@ export class BiService {
 
   async getSessionAnalytics(dateRange: { start: string; end: string }) {
     const activities = await this.prisma.userActivity.findMany({
-      where: { createdAt: { gte: new Date(dateRange.start), lte: new Date(dateRange.end) } },
+      where: {
+        createdAt: {
+          gte: new Date(dateRange.start),
+          lte: new Date(dateRange.end),
+        },
+      },
     });
 
-    const uniqueUsers = new Set(activities.map(a => a.userId)).size;
+    const uniqueUsers = new Set(activities.map((a) => a.userId)).size;
     const totalSessions = activities.length;
     const actionsPerUser = uniqueUsers > 0 ? totalSessions / uniqueUsers : 0;
 
@@ -371,18 +587,28 @@ export class BiService {
 
   async getOperationalMetrics(dateRange: { start: string; end: string }) {
     const orders = await this.prisma.order.findMany({
-      where: { createdAt: { gte: new Date(dateRange.start), lte: new Date(dateRange.end) } },
+      where: {
+        createdAt: {
+          gte: new Date(dateRange.start),
+          lte: new Date(dateRange.end),
+        },
+      },
       select: { status: true, createdAt: true, total: true },
     });
 
     const shipments = await this.prisma.shipment.findMany({
-      where: { createdAt: { gte: new Date(dateRange.start), lte: new Date(dateRange.end) } },
+      where: {
+        createdAt: {
+          gte: new Date(dateRange.start),
+          lte: new Date(dateRange.end),
+        },
+      },
       select: { status: true, createdAt: true },
     });
 
-    const delivered = shipments.filter(s => s.status === 'DELIVERED').length;
-    const failed = shipments.filter(s => s.status === 'FAILED').length;
-    const cancelled = orders.filter(o => o.status === 'CANCELLED').length;
+    const delivered = shipments.filter((s) => s.status === 'DELIVERED').length;
+    const failed = shipments.filter((s) => s.status === 'FAILED').length;
+    const cancelled = orders.filter((o) => o.status === 'CANCELLED').length;
 
     return {
       period: dateRange,
@@ -390,11 +616,16 @@ export class BiService {
       deliveredOrders: delivered,
       failedDeliveries: failed,
       cancelledOrders: cancelled,
-      deliveryRate: orders.length > 0 ? (delivered / orders.length * 100).toFixed(1) : 0,
-      cancellationRate: orders.length > 0 ? (cancelled / orders.length * 100).toFixed(1) : 0,
-      avgOrderValue: orders.length > 0
-        ? Math.round(orders.reduce((s, o) => s + o.total, 0) / orders.length * 100) / 100
-        : 0,
+      deliveryRate:
+        orders.length > 0 ? ((delivered / orders.length) * 100).toFixed(1) : 0,
+      cancellationRate:
+        orders.length > 0 ? ((cancelled / orders.length) * 100).toFixed(1) : 0,
+      avgOrderValue:
+        orders.length > 0
+          ? Math.round(
+              (orders.reduce((s, o) => s + o.total, 0) / orders.length) * 100,
+            ) / 100
+          : 0,
     };
   }
 
@@ -411,14 +642,19 @@ export class BiService {
 
       for (const o of orders) {
         const key = o.createdAt.toISOString().substring(0, 7);
-        if (metric === 'orders') historicalData[key] = (historicalData[key] || 0) + 1;
+        if (metric === 'orders')
+          historicalData[key] = (historicalData[key] || 0) + 1;
         else historicalData[key] = (historicalData[key] || 0) + o.total;
       }
     }
 
     const values = Object.values(historicalData);
-    const avg = values.length > 0 ? values.reduce((s, v) => s + v, 0) / values.length : 0;
-    const trend = values.length >= 2 ? (values[values.length - 1] - values[0]) / values[0] : 0.02;
+    const avg =
+      values.length > 0 ? values.reduce((s, v) => s + v, 0) / values.length : 0;
+    const trend =
+      values.length >= 2
+        ? (values[values.length - 1] - values[0]) / values[0]
+        : 0.02;
 
     const forecast: any[] = [];
     for (let i = 1; i <= months; i++) {
@@ -442,28 +678,61 @@ export class BiService {
     };
   }
 
-  async generateCustomReport(config: { name: string; metrics: string[]; dateRange: { start: string; end: string }; groupBy?: string }) {
-    const report: any = { name: config.name, generatedAt: new Date(), dateRange: config.dateRange, data: {} };
+  async generateCustomReport(config: {
+    name: string;
+    metrics: string[];
+    dateRange: { start: string; end: string };
+    groupBy?: string;
+  }) {
+    const report: any = {
+      name: config.name,
+      generatedAt: new Date(),
+      dateRange: config.dateRange,
+      data: {},
+    };
 
     if (config.metrics.includes('revenue')) {
       const orders = await this.prisma.order.findMany({
-        where: { createdAt: { gte: new Date(config.dateRange.start), lte: new Date(config.dateRange.end) }, paymentStatus: true },
+        where: {
+          createdAt: {
+            gte: new Date(config.dateRange.start),
+            lte: new Date(config.dateRange.end),
+          },
+          paymentStatus: true,
+        },
       });
       report.data.revenue = orders.reduce((s, o) => s + o.total, 0);
     }
     if (config.metrics.includes('orders')) {
       report.data.orders = await this.prisma.order.count({
-        where: { createdAt: { gte: new Date(config.dateRange.start), lte: new Date(config.dateRange.end) } },
+        where: {
+          createdAt: {
+            gte: new Date(config.dateRange.start),
+            lte: new Date(config.dateRange.end),
+          },
+        },
       });
     }
     if (config.metrics.includes('users')) {
       report.data.newUsers = await this.prisma.user.count({
-        where: { createdAt: { gte: new Date(config.dateRange.start), lte: new Date(config.dateRange.end) } },
+        where: {
+          createdAt: {
+            gte: new Date(config.dateRange.start),
+            lte: new Date(config.dateRange.end),
+          },
+        },
       });
     }
     if (config.metrics.includes('products')) {
       report.data.productsSold = await this.prisma.orderItem.count({
-        where: { order: { createdAt: { gte: new Date(config.dateRange.start), lte: new Date(config.dateRange.end) } } },
+        where: {
+          order: {
+            createdAt: {
+              gte: new Date(config.dateRange.start),
+              lte: new Date(config.dateRange.end),
+            },
+          },
+        },
       });
     }
 
@@ -471,43 +740,101 @@ export class BiService {
   }
 
   async scheduleReport(reportId: string, cron: string, email: string[]) {
-    const report = await this.prisma.scheduledReport.findUnique({ where: { id: reportId } });
+    const report = await this.prisma.scheduledReport.findUnique({
+      where: { id: reportId },
+    });
     if (!report) throw new Error('Report not found');
 
     return this.prisma.scheduledReport.update({
       where: { id: reportId },
-      data: { cron, recipients: email, isActive: true, nextRunAt: this.calculateNextRun(cron) },
+      data: {
+        cron,
+        recipients: email,
+        isActive: true,
+        nextRunAt: this.calculateNextRun(cron),
+      },
     });
   }
 
   async exportToPdf(reportId: string) {
-    const report = await this.prisma.scheduledReport.findUnique({ where: { id: reportId } });
+    const report = await this.prisma.scheduledReport.findUnique({
+      where: { id: reportId },
+    });
     if (!report) throw new Error('Report not found');
-    return { url: `/api/bi/reports/${reportId}/export/pdf`, format: 'PDF', generatedAt: new Date() };
+    return {
+      url: `/api/bi/reports/${reportId}/export/pdf`,
+      format: 'PDF',
+      generatedAt: new Date(),
+    };
   }
 
   async exportToExcel(reportId: string) {
-    const report = await this.prisma.scheduledReport.findUnique({ where: { id: reportId } });
+    const report = await this.prisma.scheduledReport.findUnique({
+      where: { id: reportId },
+    });
     if (!report) throw new Error('Report not found');
-    return { url: `/api/bi/reports/${reportId}/export/excel`, format: 'EXCEL', generatedAt: new Date() };
+    return {
+      url: `/api/bi/reports/${reportId}/export/excel`,
+      format: 'EXCEL',
+      generatedAt: new Date(),
+    };
   }
 
   async getDataSources() {
     return [
-      { name: 'Orders', type: 'transactional', tables: ['orders', 'order_items'], lastSync: new Date() },
-      { name: 'Users', type: 'master', tables: ['users'], lastSync: new Date() },
-      { name: 'Products', type: 'master', tables: ['products', 'categories'], lastSync: new Date() },
-      { name: 'Sellers', type: 'master', tables: ['stores', 'seller_profiles'], lastSync: new Date() },
-      { name: 'Payments', type: 'transactional', tables: ['payment_transactions'], lastSync: new Date() },
-      { name: 'Shipments', type: 'transactional', tables: ['shipments', 'shipment_timelines'], lastSync: new Date() },
+      {
+        name: 'Orders',
+        type: 'transactional',
+        tables: ['orders', 'order_items'],
+        lastSync: new Date(),
+      },
+      {
+        name: 'Users',
+        type: 'master',
+        tables: ['users'],
+        lastSync: new Date(),
+      },
+      {
+        name: 'Products',
+        type: 'master',
+        tables: ['products', 'categories'],
+        lastSync: new Date(),
+      },
+      {
+        name: 'Sellers',
+        type: 'master',
+        tables: ['stores', 'seller_profiles'],
+        lastSync: new Date(),
+      },
+      {
+        name: 'Payments',
+        type: 'transactional',
+        tables: ['payment_transactions'],
+        lastSync: new Date(),
+      },
+      {
+        name: 'Shipments',
+        type: 'transactional',
+        tables: ['shipments', 'shipment_timelines'],
+        lastSync: new Date(),
+      },
     ];
   }
 
   async listScheduledReports() {
-    return this.prisma.scheduledReport.findMany({ orderBy: { createdAt: 'desc' } });
+    return this.prisma.scheduledReport.findMany({
+      orderBy: { createdAt: 'desc' },
+    });
   }
 
-  async createScheduledReport(data: { name: string; type: string; config: any; cron: string; recipients: string[]; format?: string }) {
+  async createScheduledReport(data: {
+    name: string;
+    type: string;
+    config: any;
+    cron: string;
+    recipients: string[];
+    format?: string;
+  }) {
     return this.prisma.scheduledReport.create({
       data: {
         name: data.name,

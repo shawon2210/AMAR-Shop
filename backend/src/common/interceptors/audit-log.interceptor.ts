@@ -1,4 +1,9 @@
-import { Injectable, NestInterceptor, ExecutionContext, CallHandler } from '@nestjs/common';
+import {
+  Injectable,
+  NestInterceptor,
+  ExecutionContext,
+  CallHandler,
+} from '@nestjs/common';
 import { Observable, tap } from 'rxjs';
 
 @Injectable()
@@ -16,15 +21,17 @@ export class AuditLogInterceptor implements NestInterceptor {
 
     return next.handle().pipe(
       tap(() => {
-        this.prisma.adminLog.create({
-          data: {
-            userId: user.id,
-            method,
-            path,
-            body: body ? JSON.stringify(body) : null,
-            createdAt: new Date(),
-          },
-        }).catch(() => {});
+        this.prisma.adminLog
+          .create({
+            data: {
+              userId: user.id,
+              method,
+              path,
+              body: body ? JSON.stringify(body) : null,
+              createdAt: new Date(),
+            },
+          })
+          .catch(() => {});
       }),
     );
   }

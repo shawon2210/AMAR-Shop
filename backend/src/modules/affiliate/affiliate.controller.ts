@@ -1,4 +1,15 @@
-import { Controller, Get, Post, Body, Param, Query, UseGuards, Request, Res, NotFoundException } from '@nestjs/common';
+import {
+  Controller,
+  Get,
+  Post,
+  Body,
+  Param,
+  Query,
+  UseGuards,
+  Request,
+  Res,
+  NotFoundException,
+} from '@nestjs/common';
 import { AuthGuard } from '@nestjs/passport';
 import type { Response } from 'express';
 import { AffiliateService } from './affiliate.service';
@@ -15,7 +26,11 @@ export class AffiliateController {
 
   @UseGuards(AuthGuard('jwt'))
   @Post('api/affiliate/register')
-  async register(@Request() req: any, @Body() body: { bio?: string; socialLinks?: string[]; promoMethods?: string[] }) {
+  async register(
+    @Request() req: any,
+    @Body()
+    body: { bio?: string; socialLinks?: string[]; promoMethods?: string[] },
+  ) {
     return this.affiliateService.registerAffiliate(req.user.id, body);
   }
 
@@ -33,7 +48,11 @@ export class AffiliateController {
     @Body() body: { productId: string; campaign?: string },
   ) {
     const profile = await this.getAffiliateProfile(req.user.id);
-    return this.affiliateService.generateTrackingLink(body.productId, profile.id, body.campaign);
+    return this.affiliateService.generateTrackingLink(
+      body.productId,
+      profile.id,
+      body.campaign,
+    );
   }
 
   @UseGuards(AuthGuard('jwt'))
@@ -44,7 +63,10 @@ export class AffiliateController {
     @Query('end') end: string,
   ) {
     const profile = await this.getAffiliateProfile(req.user.id);
-    return this.affiliateService.getAffiliateAnalytics(profile.id, { start, end });
+    return this.affiliateService.getAffiliateAnalytics(profile.id, {
+      start,
+      end,
+    });
   }
 
   @UseGuards(AuthGuard('jwt'))
@@ -62,7 +84,10 @@ export class AffiliateController {
   }
 
   @Get('api/affiliate/top')
-  async getTopAffiliates(@Query('start') start: string, @Query('end') end: string) {
+  async getTopAffiliates(
+    @Query('start') start: string,
+    @Query('end') end: string,
+  ) {
     return this.affiliateService.getTopAffiliates({ start, end });
   }
 
@@ -74,7 +99,11 @@ export class AffiliateController {
   }
 
   @Get('t/:shortCode')
-  async redirectTracking(@Param('shortCode') shortCode: string, @Res() res: Response, @Query() query: any) {
+  async redirectTracking(
+    @Param('shortCode') shortCode: string,
+    @Res() res: Response,
+    @Query() query: any,
+  ) {
     const result = await this.affiliateService.validateTracking(shortCode);
     if (!result.valid || !result.link) {
       return res.redirect(302, '/');
@@ -89,9 +118,13 @@ export class AffiliateController {
   }
 
   private async getAffiliateProfile(userId: string) {
-    const profile = await this.prisma.affiliateProfile.findUnique({ where: { userId } });
+    const profile = await this.prisma.affiliateProfile.findUnique({
+      where: { userId },
+    });
     if (!profile) {
-      throw new NotFoundException('Affiliate profile not found. Please register first.');
+      throw new NotFoundException(
+        'Affiliate profile not found. Please register first.',
+      );
     }
     return profile;
   }
