@@ -65,7 +65,7 @@ export default function RootLayout({
           href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap"
           rel="stylesheet"
         />
-        <link rel="manifest" href="/manifest" />
+        <link rel="manifest" href="/manifest.webmanifest" />
         <meta name="theme-color" content="#a63600" />
       </head>
       <body className="min-h-screen bg-background text-on-background font-sans antialiased pb-16">
