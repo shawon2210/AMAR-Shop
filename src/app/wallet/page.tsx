@@ -1,0 +1,179 @@
+'use client';
+
+import { useState } from 'react';
+
+const transactionData = [
+  { id: '1', date: '2026-06-28', description: 'bKash Deposit', amount: 5000, type: 'DEPOSIT', balance: 15000 },
+  { id: '2', date: '2026-06-27', description: 'Order #ORD-20260627-001', amount: -2499, type: 'PURCHASE', balance: 10000 },
+  { id: '3', date: '2026-06-25', description: 'Cashback - Flash Sale', amount: 150, type: 'CASHBACK', balance: 12499 },
+  { id: '4', date: '2026-06-24', description: 'Refund - Order cancelled', amount: 1299, type: 'REFUND', balance: 12349 },
+  { id: '5', date: '2026-06-22', description: 'Withdrawal to bKash', amount: -3000, type: 'WITHDRAWAL', balance: 11050 },
+  { id: '6', date: '2026-06-20', description: 'SSLCommerz Deposit', amount: 8000, type: 'DEPOSIT', balance: 14050 },
+  { id: '7', date: '2026-06-18', description: 'Order #ORD-20260618-003', amount: -1599, type: 'PURCHASE', balance: 6050 },
+  { id: '8', date: '2026-06-15', description: 'Nagad Deposit', amount: 3000, type: 'DEPOSIT', balance: 7649 },
+];
+
+const tabs = ['All', 'Deposit', 'Withdrawal', 'Purchase', 'Refund', 'Cashback'] as const;
+
+const typeColors: Record<string, string> = {
+  DEPOSIT: 'text-green-600',
+  WITHDRAWAL: 'text-error',
+  PURCHASE: 'text-secondary',
+  REFUND: 'text-tertiary',
+  CASHBACK: 'text-amber-600',
+};
+
+const typeIcons: Record<string, string> = {
+  DEPOSIT: 'add_circle',
+  WITHDRAWAL: 'remove_circle',
+  PURCHASE: 'shopping_bag',
+  REFUND: 'undo',
+  CASHBACK: 'redeem',
+};
+
+export default function WalletPage() {
+  const [showBalance, setShowBalance] = useState(true);
+  const [activeTab, setActiveTab] = useState('All');
+
+  const balance = 12349;
+  const totalEarned = 17500;
+  const totalSpent = 5151;
+  const monthEarned = 3200;
+  const monthSpent = 4098;
+
+  const filteredTxns = activeTab === 'All'
+    ? transactionData
+    : transactionData.filter(t => t.type === activeTab.toUpperCase());
+
+  return (
+    <div className="px-container-margin pt-md space-y-md pb-24">
+      {/* Balance Card */}
+      <div className="bg-primary rounded-2xl p-md text-on-primary">
+        <div className="flex items-center justify-between">
+          <span className="text-sm opacity-80">Available Balance</span>
+          <button
+            onClick={() => setShowBalance(!showBalance)}
+            className="p-1 rounded-full hover:bg-white/20 transition-colors"
+          >
+            <span className="material-symbols-outlined text-lg">
+              {showBalance ? 'visibility' : 'visibility_off'}
+            </span>
+          </button>
+        </div>
+        <div className="font-display-lg text-display-lg mt-1 tracking-tight">
+          {showBalance ? `৳${balance.toLocaleString('en-BD')}` : '৳•••••'}
+        </div>
+        <div className="flex gap-md mt-md text-sm">
+          <div>
+            <span className="opacity-80">Total Earned</span>
+            <p className="font-title-sm text-title-sm">৳{totalEarned.toLocaleString('en-BD')}</p>
+          </div>
+          <div>
+            <span className="opacity-80">Total Spent</span>
+            <p className="font-title-sm text-title-sm">৳{totalSpent.toLocaleString('en-BD')}</p>
+          </div>
+        </div>
+      </div>
+
+      {/* Quick Actions */}
+      <div className="grid grid-cols-3 gap-md">
+        <button className="flex flex-col items-center gap-1.5 bg-surface-container-lowest rounded-xl py-md shadow-sm hover:shadow-md transition-shadow">
+          <div className="w-10 h-10 rounded-full bg-primary/10 flex items-center justify-center">
+            <span className="material-symbols-outlined text-primary">add</span>
+          </div>
+          <span className="font-label-bold text-xs">Top Up</span>
+        </button>
+        <button className="flex flex-col items-center gap-1.5 bg-surface-container-lowest rounded-xl py-md shadow-sm hover:shadow-md transition-shadow">
+          <div className="w-10 h-10 rounded-full bg-error/10 flex items-center justify-center">
+            <span className="material-symbols-outlined text-error">output</span>
+          </div>
+          <span className="font-label-bold text-xs">Withdraw</span>
+        </button>
+        <button className="flex flex-col items-center gap-1.5 bg-surface-container-lowest rounded-xl py-md shadow-sm hover:shadow-md transition-shadow">
+          <div className="w-10 h-10 rounded-full bg-tertiary/10 flex items-center justify-center">
+            <span className="material-symbols-outlined text-tertiary">send_money</span>
+          </div>
+          <span className="font-label-bold text-xs">Send</span>
+        </button>
+      </div>
+
+      {/* Month Summary */}
+      <div className="bg-surface-container-lowest rounded-xl p-md shadow-sm">
+        <div className="flex items-center justify-between mb-2">
+          <span className="font-title-sm text-title-sm">This Month</span>
+          <span className="text-xs text-secondary">June 2026</span>
+        </div>
+        <div className="flex gap-md">
+          <div className="flex items-center gap-2">
+            <span className="material-symbols-outlined text-green-600 text-lg">trending_up</span>
+            <div>
+              <span className="text-xs text-secondary">Earned</span>
+              <p className="font-label-bold text-green-600">+৳{monthEarned.toLocaleString('en-BD')}</p>
+            </div>
+          </div>
+          <div className="flex items-center gap-2">
+            <span className="material-symbols-outlined text-error text-lg">trending_down</span>
+            <div>
+              <span className="text-xs text-secondary">Spent</span>
+              <p className="font-label-bold text-error">-৳{monthSpent.toLocaleString('en-BD')}</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      {/* Transactions */}
+      <div>
+        {/* Tab Filter */}
+        <div className="flex overflow-x-auto hide-scrollbar gap-1 -mx-container-margin px-container-margin">
+          {tabs.map(tab => (
+            <button
+              key={tab}
+              onClick={() => setActiveTab(tab)}
+              className={`whitespace-nowrap px-3 py-1.5 font-label-bold text-xs rounded-full transition-colors ${
+                activeTab === tab
+                  ? 'bg-primary text-on-primary'
+                  : 'bg-surface-container-high text-secondary hover:bg-surface-container-highest'
+              }`}
+            >
+              {tab}
+            </button>
+          ))}
+        </div>
+
+        {/* Transaction List */}
+        <div className="mt-md space-y-1">
+          {filteredTxns.length === 0 ? (
+            <div className="flex flex-col items-center justify-center py-16">
+              <span className="material-symbols-outlined text-5xl text-secondary mb-3">receipt_long</span>
+              <p className="text-secondary font-body-md">No transactions found</p>
+            </div>
+          ) : (
+            filteredTxns.map((txn, i) => (
+              <div
+                key={txn.id}
+                className="flex items-center gap-3 bg-surface-container-lowest rounded-xl px-md py-3 shadow-sm animate-fade-in-up"
+                style={{ animationDelay: `${i * 30}ms` }}
+              >
+                <div className={`w-9 h-9 rounded-full flex items-center justify-center ${txn.amount > 0 ? 'bg-green-50' : 'bg-surface-container-highest'}`}>
+                  <span className={`material-symbols-outlined text-lg ${typeColors[txn.type]}`}>
+                    {typeIcons[txn.type]}
+                  </span>
+                </div>
+                <div className="flex-1 min-w-0">
+                  <p className="font-label-bold text-sm truncate">{txn.description}</p>
+                  <p className="text-xs text-secondary">{txn.date}</p>
+                </div>
+                <div className="text-right">
+                  <p className={`font-label-bold text-sm ${txn.amount > 0 ? 'text-green-600' : 'text-on-surface'}`}>
+                    {txn.amount > 0 ? '+' : ''}{txn.amount.toLocaleString('en-BD')}
+                  </p>
+                  <p className="text-[10px] text-secondary">৳{txn.balance.toLocaleString('en-BD')}</p>
+                </div>
+              </div>
+            ))
+          )}
+        </div>
+      </div>
+    </div>
+  );
+}

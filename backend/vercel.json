@@ -1,0 +1,6 @@
+{
+  "buildCommand": "npx nest build",
+  "outputDirectory": "dist",
+  "installCommand": "npm install",
+  "regions": ["sin1"]
+}

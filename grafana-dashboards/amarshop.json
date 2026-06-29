@@ -1,0 +1,148 @@
+{
+  "title": "AmarShop - Production Overview",
+  "uid": "amarshop-prod",
+  "version": 1,
+  "panels": [
+    {
+      "title": "API Request Rate (QPS)",
+      "type": "graph",
+      "gridPos": { "h": 8, "w": 6, "x": 0, "y": 0 },
+      "targets": [
+        {
+          "expr": "rate(http_requests_total[1m])",
+          "legendFormat": "{{method}} {{path}}"
+        }
+      ]
+    },
+    {
+      "title": "P99/P95/P50 Latency",
+      "type": "graph",
+      "gridPos": { "h": 8, "w": 6, "x": 6, "y": 0 },
+      "targets": [
+        {
+          "expr": "histogram_quantile(0.99, rate(http_request_duration_ms_bucket[5m]))",
+          "legendFormat": "P99"
+        },
+        {
+          "expr": "histogram_quantile(0.95, rate(http_request_duration_ms_bucket[5m]))",
+          "legendFormat": "P95"
+        },
+        {
+          "expr": "histogram_quantile(0.50, rate(http_request_duration_ms_bucket[5m]))",
+          "legendFormat": "P50"
+        }
+      ]
+    },
+    {
+      "title": "Error Rate (%)",
+      "type": "graph",
+      "gridPos": { "h": 8, "w": 4, "x": 12, "y": 0 },
+      "targets": [
+        {
+          "expr": "sum(rate(http_requests_total{status=~'5..'}[5m])) / sum(rate(http_requests_total[5m])) * 100",
+          "legendFormat": "Error Rate"
+        }
+      ]
+    },
+    {
+      "title": "Active Users",
+      "type": "graph",
+      "gridPos": { "h": 8, "w": 4, "x": 16, "y": 0 },
+      "targets": [
+        {
+          "expr": "sum(http_active_requests)",
+          "legendFormat": "Active Requests"
+        }
+      ]
+    },
+    {
+      "title": "Order Processing Rate",
+      "type": "graph",
+      "gridPos": { "h": 8, "w": 6, "x": 0, "y": 8 },
+      "targets": [
+        {
+          "expr": "rate(order_created_total[5m])",
+          "legendFormat": "Orders/sec"
+        }
+      ]
+    },
+    {
+      "title": "Revenue (daily)",
+      "type": "graph",
+      "gridPos": { "h": 8, "w": 6, "x": 6, "y": 8 },
+      "targets": [
+        {
+          "expr": "sum(increase(revenue_total[24h]))",
+          "legendFormat": "Revenue (BDT)"
+        }
+      ]
+    },
+    {
+      "title": "Database Query Duration",
+      "type": "graph",
+      "gridPos": { "h": 8, "w": 4, "x": 12, "y": 8 },
+      "targets": [
+        {
+          "expr": "rate(pg_stat_database_tup_fetched[1m])",
+          "legendFormat": "DB Fetches/sec"
+        }
+      ]
+    },
+    {
+      "title": "Cache Hit Rate",
+      "type": "graph",
+      "gridPos": { "h": 8, "w": 4, "x": 16, "y": 8 },
+      "targets": [
+        {
+          "expr": "rate(cache_hits_total[5m]) / (rate(cache_hits_total[5m]) + rate(cache_misses_total[5m])) * 100",
+          "legendFormat": "Hit Rate %"
+        }
+      ]
+    },
+    {
+      "title": "Queue Depth (BullMQ)",
+      "type": "graph",
+      "gridPos": { "h": 8, "w": 6, "x": 0, "y": 16 },
+      "targets": [
+        {
+          "expr": "bullmq_queue_depth",
+          "legendFormat": "{{queue}}"
+        }
+      ]
+    },
+    {
+      "title": "System Resources - CPU",
+      "type": "graph",
+      "gridPos": { "h": 8, "w": 4, "x": 6, "y": 16 },
+      "targets": [
+        {
+          "expr": "100 - (avg by(instance)(rate(node_cpu_seconds_total{mode='idle'}[5m])) * 100)",
+          "legendFormat": "CPU Usage %"
+        }
+      ]
+    },
+    {
+      "title": "System Resources - Memory",
+      "type": "graph",
+      "gridPos": { "h": 8, "w": 4, "x": 10, "y": 16 },
+      "targets": [
+        {
+          "expr": "node_memory_MemTotal_bytes - node_memory_MemAvailable_bytes",
+          "legendFormat": "Memory Used"
+        }
+      ]
+    },
+    {
+      "title": "System Resources - Disk",
+      "type": "graph",
+      "gridPos": { "h": 8, "w": 4, "x": 14, "y": 16 },
+      "targets": [
+        {
+          "expr": "100 - (node_filesystem_avail_bytes / node_filesystem_size_bytes * 100)",
+          "legendFormat": "Disk Usage %"
+        }
+      ]
+    }
+  ],
+  "schemaVersion": 38
+}

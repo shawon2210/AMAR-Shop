@@ -1,0 +1,39 @@
+apiVersion: argoproj.io/v1alpha1
+kind: AppProject
+metadata:
+  name: amarshop
+  namespace: argocd
+spec:
+  description: AmarShop E-Commerce Platform
+  sourceRepos:
+    - 'https://github.com/amarshop/infrastructure.git'
+  destinations:
+    - namespace: amarshop
+      server: https://kubernetes.default.svc
+    - namespace: amarshop-us-east
+      server: https://kubernetes.default.svc
+    - namespace: amarshop-ap-southeast-1
+      server: https://kubernetes.default.svc
+    - namespace: amarshop-ap-south-1
+      server: https://kubernetes.default.svc
+  clusterResourceWhitelist:
+    - group: '*'
+      kind: '*'
+  orphanedResources:
+    warn: false
+---
+apiVersion: argoproj.io/v1alpha1
+kind: AppProject
+metadata:
+  name: amarshop-infra
+  namespace: argocd
+spec:
+  description: AmarShop Infrastructure Components
+  sourceRepos:
+    - 'https://github.com/amarshop/infrastructure.git'
+  destinations:
+    - namespace: amarshop
+      server: https://kubernetes.default.svc
+  clusterResourceWhitelist:
+    - group: '*'
+      kind: '*'

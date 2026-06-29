@@ -1,0 +1,74 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: backend
+  namespace: amarshop-ap-south-1
+  labels:
+    app: backend
+    region: ap-south-1
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: backend
+      region: ap-south-1
+  template:
+    metadata:
+      labels:
+        app: backend
+        region: ap-south-1
+    spec:
+      containers:
+        - name: backend
+          image: amarshop/backend:latest
+          ports:
+            - containerPort: 4000
+          env:
+            - name: REGION
+              value: "ap-south-1"
+            - name: DATABASE_URL
+              valueFrom:
+                secretKeyRef:
+                  name: region-secrets
+                  key: DATABASE_URL_AP_SOUTH_1
+            - name: REDIS_URL
+              value: "redis://redis-service.ap-south-1:6379"
+          resources:
+            requests:
+              cpu: "300m"
+              memory: "384Mi"
+            limits:
+              cpu: "1"
+              memory: "1Gi"
+      affinity:
+        podAntiAffinity:
+          preferredDuringSchedulingIgnoredDuringExecution:
+            - weight: 100
+              podAffinityTerm:
+                labelSelector:
+                  matchExpressions:
+                    - key: app
+                      operator: In
+                      values:
+                        - backend
+                topologyKey: topology.kubernetes.io/zone
+---
+apiVersion: autoscaling/v2
+kind: HorizontalPodAutoscaler
+metadata:
+  name: backend-hpa
+  namespace: amarshop-ap-south-1
+spec:
+  scaleTargetRef:
+    apiVersion: apps/v1
+    kind: Deployment
+    name: backend
+  minReplicas: 2
+  maxReplicas: 10
+  metrics:
+    - type: Resource
+      resource:
+        name: cpu
+        target:
+          type: Utilization
+          averageUtilization: 75

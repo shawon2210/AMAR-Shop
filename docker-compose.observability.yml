@@ -1,0 +1,86 @@
+version: '3.8'
+
+services:
+  prometheus:
+    image: prom/prometheus:latest
+    container_name: amarshop-prometheus
+    ports:
+      - '9090:9090'
+    volumes:
+      - ./prometheus.yml:/etc/prometheus/prometheus.yml
+      - prometheus-data:/prometheus
+    command:
+      - '--config.file=/etc/prometheus/prometheus.yml'
+      - '--storage.tsdb.path=/prometheus'
+    networks:
+      - amarshop-monitoring
+
+  grafana:
+    image: grafana/grafana:latest
+    container_name: amarshop-grafana
+    ports:
+      - '3001:3000'
+    environment:
+      GF_SECURITY_ADMIN_USER: admin
+      GF_SECURITY_ADMIN_PASSWORD: amarshop2026
+      GF_INSTALL_PLUGINS: grafana-piechart-panel
+    volumes:
+      - grafana-data:/var/lib/grafana
+      - ./grafana-dashboards:/etc/grafana/provisioning/dashboards
+    depends_on:
+      - prometheus
+      - loki
+      - jaeger
+    networks:
+      - amarshop-monitoring
+
+  loki:
+    image: grafana/loki:latest
+    container_name: amarshop-loki
+    ports:
+      - '3100:3100'
+    volumes:
+      - loki-data:/loki
+    command: -config.file=/etc/loki/local-config.yaml
+    networks:
+      - amarshop-monitoring
+
+  jaeger:
+    image: jaegertracing/all-in-one:latest
+    container_name: amarshop-jaeger
+    ports:
+      - '4318:4318'
+      - '16686:16686'
+    environment:
+      COLLECTOR_OTLP_ENABLED: 'true'
+    networks:
+      - amarshop-monitoring
+
+  postgres-exporter:
+    image: prometheuscommunity/postgres-exporter:latest
+    container_name: amarshop-pg-exporter
+    ports:
+      - '9187:9187'
+    environment:
+      DATA_SOURCE_NAME: 'postgresql://postgres:postgres@postgres:5432/amarshop?sslmode=disable'
+    depends_on:
+      - postgres
+    networks:
+      - amarshop-monitoring
+
+  node-exporter:
+    image: prom/node-exporter:latest
+    container_name: amarshop-node-exporter
+    ports:
+      - '9100:9100'
+    networks:
+      - amarshop-monitoring
+
+volumes:
+  prometheus-data:
+  grafana-data:
+  loki-data:
+
+networks:
+  amarshop-monitoring:
+    driver: bridge
