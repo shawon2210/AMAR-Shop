@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect, useCallback } from 'react';
+import { useState } from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 
@@ -139,7 +139,7 @@ function Sidebar({
         <nav className="flex-1 overflow-y-auto py-4 px-3 space-y-6">
           {navSections.map((section) => (
             <div key={section.title}>
-              <p className="text-[11px] font-semibold tracking-[0.1em] text-white/40 px-3 mb-2 uppercase">
+              <p className="text-[11px] font-semibold tracking-widest text-white/40 px-3 mb-2 uppercase">
                 {section.title}
               </p>
               <div className="space-y-0.5">

@@ -14,7 +14,7 @@ const menuItems = [
 
 export default function AccountPage() {
   return (
-    <div className="px-container-margin pt-md space-y-md">
+    <div className="px-container-margin pt-md space-y-md pb-24">
       {/* Profile Card */}
       <div className="bg-surface-container-lowest rounded-xl p-md flex items-center gap-md shadow-sm">
         <div className="w-16 h-16 rounded-full bg-primary-fixed flex items-center justify-center text-primary">

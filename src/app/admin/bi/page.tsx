@@ -66,12 +66,15 @@ export default function BiDashboardPage() {
         <div className="bg-surface rounded-xl border border-outline-variant p-5">
           <h2 className="text-title-sm text-on-surface font-semibold mb-4">Revenue Trend</h2>
           <div className="flex items-end gap-2 h-44">
-            {['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'].map((m, i) => (
-              <div key={i} className="flex-1 flex flex-col items-center gap-1">
-                <div className="w-full bg-primary/30 rounded-t" style={{ height: `${30 + Math.random() * 80}px` }} />
-                <span className="text-label-bold text-on-surface-variant text-[10px]">{m}</span>
-              </div>
-            ))}
+            {['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'].map((m, i) => {
+              const h = 30 + ((i * 6271 + 111) % 81);
+              return (
+                <div key={i} className="flex-1 flex flex-col items-center gap-1">
+                  <div className="w-full bg-primary/30 rounded-t" style={{ height: `${h}px` }} />
+                  <span className="text-label-bold text-on-surface-variant text-[10px]">{m}</span>
+                </div>
+              );
+            })}
           </div>
         </div>
 

@@ -31,7 +31,7 @@ export default function CategoryPage() {
   }
 
   return (
-    <div className="px-container-margin pt-md space-y-md">
+    <div className="px-container-margin pt-md space-y-md pb-24">
       {/* Breadcrumb */}
       <nav className="flex items-center gap-1 text-xs text-secondary">
         <Link href="/" className="hover:text-primary">Home</Link>
@@ -50,7 +50,7 @@ export default function CategoryPage() {
           <p className="text-secondary">No products in this category yet</p>
         </div>
       ) : (
-        <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-grid-gutter">
+        <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 xl:grid-cols-6 gap-grid-gutter">
           {categoryProducts.map(product => (
             <ProductCard key={product.id} product={product} variant="compact" />
           ))}

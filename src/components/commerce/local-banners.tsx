@@ -1,6 +1,6 @@
 export function LocalBanners() {
   return (
-    <section className="mt-lg px-container-margin grid grid-cols-2 gap-md">
+    <section className="mt-lg px-container-margin grid grid-cols-1 sm:grid-cols-2 gap-md">
       <div className="bg-tertiary-container text-white p-md rounded-xl flex items-center justify-between overflow-hidden relative cursor-pointer active:scale-95 transition-transform">
         <div>
           <h4 className="font-title-sm text-title-sm">ফ্রি শিপিং</h4>

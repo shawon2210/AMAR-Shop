@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import Link from 'next/link';
 
 interface Dashboard {
@@ -40,7 +40,7 @@ const defaultDashboard: Dashboard = {
 };
 
 export default function WarehousePage() {
-  const [dashboard, setDashboard] = useState<Dashboard>(defaultDashboard);
+  const [dashboard] = useState<Dashboard>(defaultDashboard);
 
   const statCards = [
     { label: 'Total Stock', value: dashboard.totalStock.toLocaleString(), icon: 'inventory_2', color: 'text-primary' },

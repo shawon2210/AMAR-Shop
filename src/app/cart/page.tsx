@@ -95,7 +95,7 @@ export default function CartPage() {
       </section>
 
       {/* Checkout Summary Bar - fixed bottom */}
-      <div className="fixed left-0 right-0 z-40 bg-surface-container-lowest shadow-[0px_-4px_12px_rgba(0,0,0,0.08)]" style={{ bottom: '56px' }}>
+      <div className="fixed left-0 right-0 z-40 bg-surface-container-lowest shadow-[0px_-4px_12px_rgba(0,0,0,0.08)] bottom-14">
         <div className="max-w-7xl mx-auto flex items-center justify-between px-md py-sm">
           <div className="flex items-center gap-sm">
             <input

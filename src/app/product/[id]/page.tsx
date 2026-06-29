@@ -52,7 +52,7 @@ export default function ProductDetailPage() {
   };
 
   return (
-    <div className="px-container-margin pt-md space-y-lg">
+    <div className="px-container-margin pt-md space-y-lg pb-24">
       {/* Breadcrumb */}
       <nav className="flex items-center gap-1 text-xs text-secondary">
         <Link href="/" className="hover:text-primary">Home</Link>

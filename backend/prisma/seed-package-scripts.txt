@@ -1,0 +1,2 @@
+"seed": "npx tsc prisma/seed.ts --outDir prisma/dist --module commonjs --target es2020 --moduleResolution node --esModuleInterop --skipLibCheck && cross-env DATABASE_URL='postgresql://postgres:shawon12@localhost:5433/amarshop' node prisma/dist/seed.js",
+"seed:reset": "DATABASE_URL='postgresql://postgres:shawon12@localhost:5433/amarshop' node prisma/dist/seed.js"

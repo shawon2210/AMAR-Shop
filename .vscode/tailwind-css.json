@@ -1,0 +1,15 @@
+[
+  {
+    "version": 1.1,
+    "directives": [
+      {
+        "name": "@theme",
+        "description": "Tailwind CSS v4 theme directive. Defines custom theme variables."
+      },
+      {
+        "name": "@theme inline",
+        "description": "Tailwind CSS v4 theme directive with inline option. Inlines theme variables into CSS custom properties."
+      }
+    ]
+  }
+]

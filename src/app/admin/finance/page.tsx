@@ -56,15 +56,19 @@ export default function FinancePage() {
         <div className="bg-surface rounded-xl border border-outline-variant p-5">
           <h2 className="text-title-sm text-on-surface font-semibold mb-4">Revenue vs Expenses</h2>
           <div className="flex items-end gap-3 h-40">
-            {['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun'].map((m, i) => (
-              <div key={i} className="flex-1 flex flex-col items-center gap-1">
-                <div className="w-full flex flex-col items-center gap-0.5">
-                  <div className="w-full bg-primary/30 rounded-t" style={{ height: `${40 + Math.random() * 60}px` }} />
-                  <div className="w-full bg-error/30 rounded-t" style={{ height: `${20 + Math.random() * 30}px` }} />
+            {['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun'].map((m, i) => {
+              const primaryH = 40 + ((i * 7919 + 123) % 41) / 41 * 60;
+              const errorH = 20 + ((i * 6271 + 456) % 31) / 31 * 30;
+              return (
+                <div key={i} className="flex-1 flex flex-col items-center gap-1">
+                  <div className="w-full flex flex-col items-center gap-0.5">
+                    <div className="w-full bg-primary/30 rounded-t" style={{ height: `${primaryH}px` }} />
+                    <div className="w-full bg-error/30 rounded-t" style={{ height: `${errorH}px` }} />
+                  </div>
+                  <span className="text-label-bold text-on-surface-variant">{m}</span>
                 </div>
-                <span className="text-label-bold text-on-surface-variant">{m}</span>
-              </div>
-            ))}
+              );
+            })}
           </div>
           <div className="flex items-center gap-4 mt-3 text-body-sm">
             <div className="flex items-center gap-2"><div className="w-3 h-3 rounded bg-primary/30" /> Revenue</div>

@@ -7,12 +7,12 @@ import { products } from '@/lib/data/products';
 
 export default function HomePage() {
   return (
-    <>
+    <div className="pb-24">
       <HeroSlider />
       <CategoryGrid />
       <FlashSaleSection />
       <LocalBanners />
-      <ProductGrid products={products} title="Just For You" />
-    </>
+      <ProductGrid products={products} title="Just For You" columns={4} />
+    </div>
   );
 }

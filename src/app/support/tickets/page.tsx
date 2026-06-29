@@ -91,7 +91,7 @@ export default function TicketsPage() {
     setReplyText('');
   };
 
-  const handleSendReply = (ticketId: string) => {
+  const handleSendReply = () => {
     if (!replyText.trim()) return;
     setReplyText('');
   };
@@ -191,7 +191,7 @@ export default function TicketsPage() {
                           className="flex-1 px-3 py-2 border border-outline-variant rounded-lg text-sm bg-transparent outline-none focus:ring-2 focus:ring-primary resize-none"
                         />
                         <button
-                          onClick={() => handleSendReply(ticket.id)}
+                          onClick={handleSendReply}
                           disabled={!replyText.trim()}
                           className="p-2.5 bg-primary text-on-primary rounded-lg disabled:opacity-50 hover:brightness-110 transition-all"
                         >

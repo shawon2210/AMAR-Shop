@@ -34,6 +34,7 @@ export default function AIAssistantPage() {
   const [isLoading, setIsLoading] = useState(false);
   const [isTyping, setIsTyping] = useState(false);
   const messagesEndRef = useRef<HTMLDivElement>(null);
+  const idCounterRef = useRef(0);
 
   useEffect(() => {
     messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
@@ -43,7 +44,7 @@ export default function AIAssistantPage() {
     if (!content.trim() || isLoading) return;
 
     const userMessage: ChatMessage = {
-      id: `user-${Date.now()}`,
+      id: `user-${++idCounterRef.current}`,
       role: 'user',
       content: content.trim(),
       timestamp: new Date(),
@@ -71,7 +72,7 @@ export default function AIAssistantPage() {
       const data = await res.json();
 
       const assistantMessage: ChatMessage = {
-        id: `assistant-${Date.now()}`,
+        id: `assistant-${++idCounterRef.current}`,
         role: 'assistant',
         content: data.message || 'Sorry, I couldn\'t process that. Please try again.',
         suggestions: data.suggestions,
@@ -82,7 +83,7 @@ export default function AIAssistantPage() {
       setMessages(prev => [...prev, assistantMessage]);
     } catch {
       setMessages(prev => [...prev, {
-        id: `assistant-${Date.now()}`,
+        id: `assistant-${++idCounterRef.current}`,
         role: 'assistant',
         content: 'Sorry, I\'m having trouble connecting. Please try again later.',
         timestamp: new Date(),

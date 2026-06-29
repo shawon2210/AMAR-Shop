@@ -40,7 +40,7 @@ export default function OrdersPage() {
   const [activeTab, setActiveTab] = useState('All');
 
   return (
-    <div className="px-container-margin pt-md">
+    <div className="px-container-margin pt-md pb-24">
       <h1 className="font-headline-md text-headline-md mb-md">My Orders</h1>
 
       {/* Tabs */}

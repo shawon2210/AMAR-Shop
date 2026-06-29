@@ -6,7 +6,6 @@ import { ProductCard } from '@/components/commerce/product-card';
 import { flashSaleProducts } from '@/lib/data/products';
 
 const FLASH_SALE_END = '2026-06-30T23:59:59Z';
-const UPCOMING_SALE_START = '2026-07-01T12:00:00Z';
 
 const categories = [
   'All Products',
@@ -32,7 +31,7 @@ export default function FlashSalePage() {
       <FlashSaleBanner endDate={FLASH_SALE_END} />
 
       {/* Phase Selector Tabs */}
-      <nav className="sticky top-[56px] z-40 bg-surface border-b border-outline-variant">
+      <nav className="sticky top-14 z-40 bg-surface border-b border-outline-variant">
         <div className="max-w-7xl mx-auto flex">
           <button
             onClick={() => setActiveTab('active')}
@@ -60,7 +59,7 @@ export default function FlashSalePage() {
       </nav>
 
       {/* Filter Bar */}
-      <section className="bg-surface py-sm px-container-margin shadow-sm overflow-x-auto whitespace-nowrap scrollbar-hide">
+      <section className="bg-surface py-sm px-container-margin shadow-sm overflow-x-auto whitespace-nowrap hide-scrollbar">
         <div className="max-w-7xl mx-auto flex gap-sm">
           {categories.map(cat => (
             <button
@@ -79,7 +78,7 @@ export default function FlashSalePage() {
       </section>
 
       {/* Product Grid */}
-      <main className="max-w-7xl mx-auto px-container-margin py-md">
+      <main className="max-w-7xl mx-auto px-container-margin py-md pb-24">
         {activeTab === 'active' ? (
           <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-5 gap-grid-gutter">
             {filteredProducts.map(product => (

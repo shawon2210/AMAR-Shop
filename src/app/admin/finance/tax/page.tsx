@@ -68,12 +68,12 @@ export default function TaxPage() {
             </thead>
             <tbody>
               {['January', 'February', 'March'].map((m, i) => {
-                const rev = 400000 + Math.random() * 100000;
+                const rev = 400000 + ((i * 6271 + 789) % 100001);
                 return (
                   <tr key={i} className="border-t border-outline-variant/50">
                     <td className="py-2.5 px-4 text-on-surface">{m}</td>
-                    <td className="py-2.5 px-4 text-right text-on-surface">৳{Math.round(rev).toLocaleString()}</td>
-                    <td className="py-2.5 px-4 text-right text-on-surface">৳{Math.round(rev).toLocaleString()}</td>
+                    <td className="py-2.5 px-4 text-right text-on-surface">৳{rev.toLocaleString()}</td>
+                    <td className="py-2.5 px-4 text-right text-on-surface">৳{rev.toLocaleString()}</td>
                     <td className="py-2.5 px-4 text-right text-on-surface font-semibold">৳{Math.round(rev * 0.15).toLocaleString()}</td>
                   </tr>
                 );

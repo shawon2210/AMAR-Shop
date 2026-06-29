@@ -1,4 +1,5 @@
 @import "tailwindcss";
+/* stylelint-disable at-rule-no-unknown */
 
 @theme inline {
   --color-on-tertiary-fixed-variant: #004d63;

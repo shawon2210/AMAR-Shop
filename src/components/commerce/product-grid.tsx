@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect, useRef } from 'react';
+import { useState, useEffect, useRef, useMemo } from 'react';
 import { Product } from '@/types';
 import { ProductCard } from '@/components/commerce/product-card';
 
@@ -13,27 +13,24 @@ interface ProductGridProps {
 
 const columnClasses: Record<number, string> = {
   2: 'grid-cols-2',
-  3: 'grid-cols-2 md:grid-cols-3',
-  4: 'grid-cols-2 md:grid-cols-4',
-  5: 'grid-cols-2 md:grid-cols-4 lg:grid-cols-5',
-  6: 'grid-cols-2 md:grid-cols-4 lg:grid-cols-6',
+  3: 'grid-cols-2 sm:grid-cols-3',
+  4: 'grid-cols-2 sm:grid-cols-3 lg:grid-cols-4',
+  5: 'grid-cols-2 sm:grid-cols-3 md:grid-cols-4 xl:grid-cols-5',
+  6: 'grid-cols-2 sm:grid-cols-3 md:grid-cols-4 xl:grid-cols-6',
 };
 
 export function ProductGrid({
   products,
   title,
-  columns = 6,
+  columns = 4,
   showLoadMore = true,
 }: ProductGridProps) {
-  const [visibleProducts, setVisibleProducts] = useState<Product[]>([]);
   const [page, setPage] = useState(1);
   const [isVisible, setIsVisible] = useState(false);
   const gridRef = useRef<HTMLDivElement>(null);
   const ITEMS_PER_PAGE = 12;
 
-  useEffect(() => {
-    setVisibleProducts(products.slice(0, ITEMS_PER_PAGE));
-  }, [products]);
+  const visibleProducts = useMemo(() => products.slice(0, page * ITEMS_PER_PAGE), [products, page]);
 
   useEffect(() => {
     const observer = new IntersectionObserver(
@@ -54,9 +51,7 @@ export function ProductGrid({
   }, []);
 
   const loadMore = () => {
-    const nextPage = page + 1;
-    setVisibleProducts(products.slice(0, nextPage * ITEMS_PER_PAGE));
-    setPage(nextPage);
+    setPage(page + 1);
   };
 
   const hasMore = visibleProducts.length < products.length;

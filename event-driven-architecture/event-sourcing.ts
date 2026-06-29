@@ -82,7 +82,7 @@ export async function replayEvents<T>(
 ): Promise<T> {
   const snapshot = await getSnapshot(streamId);
   let state = snapshot ? (snapshot.state as T) : initialState;
-  let fromVersion = snapshot ? snapshot.version + 1 : 1;
+  const fromVersion = snapshot ? snapshot.version + 1 : 1;
 
   const events = await getEvents(streamId, { fromVersion });
 

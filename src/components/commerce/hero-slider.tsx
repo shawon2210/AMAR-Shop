@@ -1,3 +1,5 @@
+import Image from 'next/image';
+
 interface HeroSlide {
   image: string;
   title: string;
@@ -31,25 +33,29 @@ const slides: HeroSlide[] = [
 export function HeroSlider() {
   return (
     <section className="px-container-margin md:mt-md overflow-hidden">
-      <div className="relative w-full h-48 md:h-[400px] rounded-xl overflow-hidden shadow-lg">
+      <div className="relative w-full h-56 sm:h-64 md:h-105 lg:h-130 rounded-xl overflow-hidden shadow-lg bg-gray-100">
         <div className="flex animate-slider w-[300%] h-full">
           {slides.map((slide, index) => (
             <div key={index} className="w-full h-full relative shrink-0">
-              <div
-                className="w-full h-full bg-cover bg-center"
-                style={{ backgroundImage: `url('${slide.image}')` }}
+              <Image
+                src={slide.image}
+                alt={slide.title}
+                fill
+                className="object-cover object-center"
+                priority={index === 0}
+                {...(index !== 0 && { loading: 'lazy' })}
               />
-              <div className="absolute inset-0 bg-gradient-to-r from-black/60 to-transparent flex flex-col justify-center p-lg">
+              <div className="absolute inset-0 bg-linear-to-r from-black/60 via-black/30 to-transparent flex flex-col justify-center p-sm sm:p-md md:p-lg">
                 {slide.badge && (
                   <span className={`${slide.badgeColor} text-white text-xs font-bold px-sm py-0.5 w-fit rounded-full mb-2`}>
                     {slide.badge}
                   </span>
                 )}
-                <h2 className="text-white font-display-lg-mobile text-display-lg-mobile md:text-display-lg max-w-xs md:max-w-md leading-tight">
+                <h2 className="text-white font-display-lg-mobile text-display-lg-mobile md:text-display-lg max-w-[85%] sm:max-w-xs md:max-w-md leading-tight">
                   {slide.title}
                 </h2>
                 {slide.subtitle && (
-                  <p className="text-white/80 text-sm mt-1 max-w-xs">{slide.subtitle}</p>
+                  <p className="text-white/80 text-xs sm:text-sm mt-1 max-w-[85%] sm:max-w-xs">{slide.subtitle}</p>
                 )}
               </div>
             </div>

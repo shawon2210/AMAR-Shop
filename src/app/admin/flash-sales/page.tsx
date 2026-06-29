@@ -1,4 +1,4 @@
-'use client';
+    'use client';
 
 import { useState } from 'react';
 
@@ -71,7 +71,7 @@ export default function FlashSalesPage() {
               <label className="block text-sm text-[#666] mb-1">Select Products</label>
               <select multiple className="w-full border border-[#ddd] rounded-lg px-3 py-2 text-sm outline-none h-24">
                 <option>Samsung Galaxy S24 Ultra</option>
-                <option>Men's Cotton Panjabi</option>
+                <option>Mens Cotton Panjabi</option>
                 <option>Wireless Bluetooth Earbuds</option>
                 <option>Handcrafted Wooden Showpiece</option>
                 <option>Organic Green Tea (100 Pack)</option>

@@ -2,15 +2,19 @@
 
 import { useState, useEffect } from 'react';
 
-export default function RealtimePage() {
-  const [metrics, setMetrics] = useState({
+function randomMetric() {
+  return {
     activeUsers: Math.floor(Math.random() * 150) + 50,
     ordersPerMin: Math.floor(Math.random() * 20) + 5,
     revenueToday: Math.floor(Math.random() * 500000) + 200000,
     systemHealth: 99.8,
     apiLatency: Math.floor(Math.random() * 200) + 50,
     errorRate: 0.12,
-  });
+  };
+}
+
+export default function RealtimePage() {
+  const [metrics, setMetrics] = useState(randomMetric);
 
   const [recentActivity, setRecentActivity] = useState([
     { id: 1, user: 'Rahim M.', action: 'placed order', target: '#ORD-1245', time: 'Just now', amount: '৳1,250' },
@@ -151,12 +155,15 @@ export default function RealtimePage() {
       <div className="bg-surface rounded-xl border border-outline-variant p-5">
         <h2 className="text-title-sm text-on-surface font-semibold mb-4">Orders Per Minute (Last 30 min)</h2>
         <div className="flex items-end gap-1 h-32">
-          {Array.from({ length: 30 }, (_, i) => (
-            <div key={i} className="flex-1 flex flex-col items-center">
-              <div className={`w-full rounded-t ${i === 29 ? 'bg-primary' : 'bg-primary/30'}`}
-                style={{ height: `${10 + Math.random() * 50}px` }} />
-            </div>
-          ))}
+          {Array.from({ length: 30 }, (_, i) => {
+            const height = 10 + (i * 7919 % 41) / 41 * 50;
+            return (
+              <div key={i} className="flex-1 flex flex-col items-center">
+                <div className={`w-full rounded-t ${i === 29 ? 'bg-primary' : 'bg-primary/30'}`}
+                  style={{ height: `${height}px` }} />
+              </div>
+            );
+          })}
         </div>
       </div>
     </div>

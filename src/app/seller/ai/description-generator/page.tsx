@@ -2,11 +2,13 @@
 
 import { useState } from 'react';
 
+type Tone = 'professional' | 'casual' | 'luxury' | 'budget';
+
 export default function AIDescriptionGeneratorPage() {
   const [name, setName] = useState('');
   const [category, setCategory] = useState('');
   const [featuresText, setFeaturesText] = useState('');
-  const [tone, setTone] = useState<string>('professional');
+  const [tone, setTone] = useState<Tone>('professional');
   const [audience, setAudience] = useState('');
   const [description, setDescription] = useState('');
   const [loading, setLoading] = useState(false);
@@ -24,7 +26,7 @@ export default function AIDescriptionGeneratorPage() {
           name: name.trim(),
           category: category.trim(),
           features: featuresText.split('\n').filter(f => f.trim()),
-          tone: tone as any,
+          tone,
           targetAudience: audience.trim() || undefined,
         }),
       });
@@ -95,7 +97,7 @@ export default function AIDescriptionGeneratorPage() {
             <label className="block text-sm font-medium text-on-surface mb-1">Tone</label>
             <select
               value={tone}
-              onChange={e => setTone(e.target.value)}
+              onChange={e => setTone(e.target.value as Tone)}
               className="w-full px-3 py-2.5 rounded-lg border border-outline-variant bg-surface text-on-surface focus:outline-none focus:border-primary transition-colors"
             >
               <option value="professional">Professional</option>
@@ -150,11 +152,11 @@ export default function AIDescriptionGeneratorPage() {
           </div>
 
           {description ? (
-            <div className="bg-surface-container-low rounded-lg p-4 min-h-[300px]">
+            <div className="bg-surface-container-low rounded-lg p-4 min-h-75">
               <p className="text-body-md text-on-surface whitespace-pre-wrap">{description}</p>
             </div>
           ) : (
-            <div className="bg-surface-container-low rounded-lg p-4 min-h-[300px] flex items-center justify-center">
+            <div className="bg-surface-container-low rounded-lg p-4 min-h-75 flex items-center justify-center">
               <div className="text-center text-on-surface-variant">
                 <span className="material-symbols-outlined text-4xl mb-2">description</span>
                 <p className="text-body-md">Your generated description will appear here</p>

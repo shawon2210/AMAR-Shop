@@ -13,7 +13,6 @@ export function Header() {
       <div className="flex items-center justify-between px-container-margin py-sm w-full max-w-7xl mx-auto gap-md">
         <div className="flex items-center gap-sm">
           <Link href="/" className="flex items-center gap-sm">
-            <span className="material-symbols-outlined text-primary cursor-pointer md:hidden">menu</span>
             <h1 className="font-display-lg-mobile text-display-lg-mobile text-primary tracking-tight leading-none">
               AmarShop
             </h1>

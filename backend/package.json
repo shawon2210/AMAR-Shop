@@ -20,11 +20,14 @@
     "test:unit": "jest --config ./test/jest-unit.json",
     "test:e2e": "jest --config ./test/jest-e2e.json",
     "test:load": "jest --config ./test/jest-load.json",
-    "test:contract": "jest --config ./test/jest-contract.json"
+    "test:contract": "jest --config ./test/jest-contract.json",
+    "seed": "npx tsc prisma/seed.ts --outDir prisma/dist --module commonjs --target es2020 --moduleResolution node --esModuleInterop --skipLibCheck && node prisma/dist/seed.js",
+    "seed:reset": "node prisma/dist/seed.js"
   },
   "dependencies": {
     "@bull-board/express": "^8.0.1",
     "@bull-board/nestjs": "^8.0.1",
+    "@faker-js/faker": "^10.5.0",
     "@nestjs/bull": "^11.0.4",
     "@nestjs/bullmq": "^11.0.4",
     "@nestjs/common": "^11.0.1",
