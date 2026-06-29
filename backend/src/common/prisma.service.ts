@@ -1,32 +1,24 @@
 import { Injectable, OnModuleInit, OnModuleDestroy } from '@nestjs/common';
-import { PrismaClient, PrismaClientOptions } from '@prisma/client';
+import { PrismaClient } from '@prisma/client';
+import { PrismaPg } from '@prisma/adapter-pg';
+import { Pool } from 'pg';
 import { ConfigService } from '@nestjs/config';
 
 @Injectable()
-export class PrismaService implements OnModuleInit, OnModuleDestroy {
-  private prisma: PrismaClient;
-
+export class PrismaService extends PrismaClient implements OnModuleInit, OnModuleDestroy {
   constructor(private configService: ConfigService) {
-    const databaseUrl = this.configService.get('DATABASE_URL');
-    
-    // Prisma 7 requires proper constructor options
-    this.prisma = new PrismaClient({
-      datasources: {
-        db: { url: databaseUrl }
-      }
-    } as PrismaClientOptions);
+    const databaseUrl = configService.get<string>('DATABASE_URL');
+    const pool = new Pool({ connectionString: databaseUrl });
+    const adapter = new PrismaPg(pool);
+
+    super({ adapter });
   }
 
   async onModuleInit() {
-    await this.prisma.$connect();
+    await this.$connect();
   }
 
   async onModuleDestroy() {
-    await this.prisma.$disconnect();
-  }
-
-  // Helper method to access the Prisma client
-  get client(): PrismaClient {
-    return this.prisma;
+    await this.$disconnect();
   }
 }

@@ -13,8 +13,8 @@ export default function PlaygroundPage() {
       const res = await fetch(endpoint, { method });
       const data = await res.json();
       setResponse(JSON.stringify(data, null, 2));
-    } catch (err) {
-      setResponse(`Error: ${err.message}`);
+    } catch (err: any) {
+      setResponse(`Error: ${err?.message ?? String(err)}`);
     }
   };
 

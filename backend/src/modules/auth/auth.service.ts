@@ -15,7 +15,7 @@ export class AuthService {
     private prismaService: PrismaService,
     private jwtService: JwtService,
   ) {
-    this.prisma = this.prismaService.client;
+    this.prisma = this.prismaService;
   }
 
   async register(data: { name: string; phone: string; password: string }) {
