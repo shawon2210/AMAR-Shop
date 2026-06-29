@@ -31,7 +31,7 @@ async function migrateProducts(sourceUrl: string, targetUrl: string, region: str
 
   try {
     while (true) {
-      const products = await source.product.findMany({
+      const products = await source.product.findMany<any>({
         take: batchSize,
         ...(cursor ? { skip: 1, cursor: { id: cursor } } : {}),
         orderBy: { id: 'asc' },
