@@ -98,36 +98,37 @@ async function seedProducts(count: number) {
 async function seedUsers(count: number, role: string) {
   console.log(`Seeding ${count} ${role.toLowerCase()}s...`);
   const bcrypt = require('bcrypt');
-  const pass = await bcrypt.hash('password123', 10);
+  const pass = await bcrypt.hash('password123', 10); // hash once, reuse
   let done = 0;
   
   for (let i = 0; i < count; i += CHUNK.users) {
     const batch = Math.min(CHUNK.users, count - i);
+    const data = [];
     for (let j = 0; j < batch; j++) {
-      try {
-        await prisma.user.create({
-          data: {
-            name: faker.person.fullName(),
-            phone: '01' + faker.string.numeric(9),
-            email: faker.internet.email().toLowerCase(),
-            password: pass,
-            role: role as any,
-            isVerified: faker.datatype.boolean({ probability: 0.7 }),
-            isActive: true,
-            avatar: faker.datatype.boolean({ probability: 0.3 }) ? `https://picsum.photos/seed/u${faker.string.numeric(6)}/100/100` : null,
-            ...(role === 'SELLER' ? {
-              sellerProfile: {
-                create: {
-                  businessName: faker.company.name(),
-                  businessType: faker.helpers.arrayElement(['sole_proprietorship', 'partnership', 'ltd']),
-                  nidNumber: faker.string.numeric(10),
-                },
-              },
-            } : {}),
-          },
-        });
-        done++;
-      } catch { /* skip dups */ }
+      data.push({
+        name: faker.person.fullName(),
+        phone: '01' + faker.string.numeric(9),
+        email: faker.internet.email().toLowerCase(),
+        password: pass,
+        role: role as any,
+        isVerified: faker.datatype.boolean({ probability: 0.7 }),
+        isActive: true,
+        avatar: faker.datatype.boolean({ probability: 0.3 }) ? `https://picsum.photos/seed/u${faker.string.numeric(6)}/100/100` : null,
+      });
+    }
+    // For sellers, need nested create — do one-by-one
+    if (role === 'SELLER') {
+      for (const d of data) {
+        try {
+          await prisma.user.create({
+            data: { ...d, sellerProfile: { create: { businessName: faker.company.name(), businessType: 'sole_proprietorship', nidNumber: faker.string.numeric(10) } } },
+          });
+          done++;
+        } catch {}
+      }
+    } else {
+      const result = await prisma.user.createMany({ data, skipDuplicates: true });
+      done += result.count;
     }
     process.stdout.write(`  ${role.toLowerCase()}s: ${done}/${count}\r`);
   }
@@ -152,8 +153,6 @@ async function seedReviews(count: number) {
         productId: products[Math.floor(Math.random() * products.length)].id,
         rating: faker.number.int({ min: 1, max: 5 }),
         comment: faker.lorem.sentence(),
-        verified: faker.datatype.boolean({ probability: 0.4 }),
-        helpfulCount: faker.number.int({ min: 0, max: 50 }),
       });
     }
     const result = await prisma.review.createMany({ data, skipDuplicates: true });
@@ -231,10 +230,10 @@ async function seedShipments(count: number) {
     for (let j = 0; j < batch; j++) {
       data.push({
         orderId: orders[Math.floor(Math.random() * orders.length)].id,
-        trackingNumber: 'AM' + faker.string.alphanumeric(12).toUpperCase(),
+        trackingId: 'AM' + faker.string.alphanumeric(12).toUpperCase(),
         status: faker.helpers.arrayElement(['PENDING', 'PICKUP_SCHEDULED', 'PICKED_UP', 'IN_TRANSIT', 'OUT_FOR_DELIVERY', 'DELIVERED', 'FAILED', 'RETURNED']) as any,
-        estimatedDelivery: faker.date.future(),
-        actualDelivery: faker.datatype.boolean({ probability: 0.6 }) ? faker.date.recent() : null,
+        estimatedDays: String(faker.number.int({ min: 1, max: 7 })),
+        deliveredAt: faker.datatype.boolean({ probability: 0.6 }) ? faker.date.recent() : null,
       });
     }
     await prisma.shipment.createMany({ data, skipDuplicates: true });
@@ -314,14 +313,13 @@ async function seedBanners() {
   const data = Array.from({ length: 10 }, () => ({
     title: faker.commerce.productAdjective() + ' ' + faker.commerce.product(),
     image: `https://picsum.photos/seed/ban-${faker.string.numeric(6)}/1200/400`,
-    link: faker.internet.url(),
-    position: faker.helpers.arrayElement(['home_hero', 'category_top', 'flash_sale']) as any,
+    link: '/category/electronics',
+    position: faker.helpers.arrayElement(['HOME_TOP', 'HOME_MID', 'CATEGORY', 'SIDEBAR']) as any,
+    sortOrder: faker.number.int({ min: 0, max: 10 }),
     isActive: true,
-    startsAt: new Date(),
-    endsAt: faker.date.soon({ days: 30 }),
   }));
   await prisma.banner.createMany({ data, skipDuplicates: true });
-  console.log(`  banners: 10 done.`);
+  console.log('  banners: 10 done.');
 }
 
 async function seedNotifications(count: number) {
