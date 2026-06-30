@@ -181,7 +181,7 @@ export class AffiliateService {
     });
     if (!click) throw new NotFoundException('Invalid tracking reference');
 
-    const commission = await this.calculateCommission(order.total);
+    const commission = this.calculateCommission(order.total);
     const conversion = await this.prisma.affiliateConversion.create({
       data: {
         affiliateId: click.affiliateId,
@@ -208,9 +208,7 @@ export class AffiliateService {
     return { recorded: true, conversion, commission: commission.amount };
   }
 
-  async calculateCommission(
-    amount: number,
-  ): Promise<{ amount: number; rate: number }> {
+  calculateCommission(amount: number): { amount: number; rate: number } {
     const rate = parseFloat(process.env.AFFILIATE_COMMISSION_RATE || '5.0');
     const commission = (amount * rate) / 100;
     return { amount: Math.round(commission * 100) / 100, rate };
@@ -361,7 +359,7 @@ export class AffiliateService {
     return { created: true, campaign };
   }
 
-  async getAvailableProducts(affiliateId: string): Promise<any[]> {
+  async getAvailableProducts(_affiliateId: string): Promise<any[]> {
     const products = await this.prisma.product.findMany({
       where: { status: 'active', inStock: true },
       take: 100,

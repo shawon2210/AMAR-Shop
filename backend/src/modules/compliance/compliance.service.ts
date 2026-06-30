@@ -10,11 +10,11 @@ import { PrismaService } from '../../common/prisma.service';
 export class ComplianceService {
   constructor(private prisma: PrismaService) {}
 
-  async getComplianceStatus(): Promise<{
+  getComplianceStatus(): {
     score: number;
     status: string;
     checks: { name: string; passed: boolean; details: string }[];
-  }> {
+  } {
     const checks = [
       {
         name: 'KYC Verification',
@@ -78,7 +78,7 @@ export class ComplianceService {
     });
     if (!seller) throw new NotFoundException('Seller profile not found');
 
-    const validation = await this.verifyIdentity(
+    const validation = this.verifyIdentity(
       userId,
       documents.documentType,
       documents.documentNumber,
@@ -117,11 +117,11 @@ export class ComplianceService {
     };
   }
 
-  async verifyIdentity(
+  verifyIdentity(
     userId: string,
     documentType: string,
     documentNumber: string,
-  ): Promise<{ valid: boolean; reason?: string }> {
+  ): { valid: boolean; reason?: string } {
     if (!documentNumber || documentNumber.length < 6) {
       return { valid: false, reason: 'Invalid document number format' };
     }
@@ -148,9 +148,11 @@ export class ComplianceService {
     return { valid: true };
   }
 
-  async validateDocument(
-    documentUrl: string,
-  ): Promise<{ authentic: boolean; score: number; issues: string[] }> {
+  validateDocument(documentUrl: string): {
+    authentic: boolean;
+    score: number;
+    issues: string[];
+  } {
     if (!documentUrl)
       return {
         authentic: false,
@@ -225,13 +227,11 @@ export class ComplianceService {
     };
   }
 
-  async getDataRetentionPolicy(): Promise<
-    {
-      dataType: string;
-      retentionPeriod: string;
-      description: string;
-    }[]
-  > {
+  getDataRetentionPolicy(): {
+    dataType: string;
+    retentionPeriod: string;
+    description: string;
+  }[] {
     return [
       {
         dataType: 'Account Information',
@@ -301,7 +301,7 @@ export class ComplianceService {
     });
     if (!user) throw new NotFoundException('User not found');
 
-    const { password, twoFactorSecret, deviceTokens, ...safeUser } = user;
+    const { ...safeUser } = user;
 
     return {
       user: safeUser,
@@ -372,11 +372,7 @@ export class ComplianceService {
     };
   }
 
-  async logConsent(
-    userId: string,
-    consentType: string,
-    granted: boolean,
-  ): Promise<{ logged: boolean; timestamp: Date }> {
+  logConsent(): { logged: boolean; timestamp: Date } {
     const timestamp = new Date();
     return { logged: true, timestamp };
   }
@@ -410,10 +406,10 @@ export class ComplianceService {
     return { logs, total: logs.length, summary };
   }
 
-  async checkPCIDSS(): Promise<{
+  checkPCIDSS(): {
     compliant: boolean;
     requirements: { id: string; name: string; status: string; notes: string }[];
-  }> {
+  } {
     const requirements = [
       {
         id: '1.0',
@@ -495,10 +491,10 @@ export class ComplianceService {
     };
   }
 
-  async getPrivacyCenter(): Promise<{
+  getPrivacyCenter(): {
     policy: { title: string; content: string; lastUpdated: Date };
     settings: { name: string; description: string; enabled: boolean }[];
-  }> {
+  } {
     return {
       policy: {
         title: 'AmarShop Privacy Policy',
@@ -536,9 +532,7 @@ export class ComplianceService {
     };
   }
 
-  async encryptPII(
-    data: string,
-  ): Promise<{ encrypted: string; algorithm: string }> {
+  encryptPII(data: string): { encrypted: string; algorithm: string } {
     const algorithm = 'aes-256-gcm';
     const key = crypto.scryptSync(
       process.env.ENCRYPTION_KEY || 'amarshop-encryption-key-2026',
@@ -556,7 +550,7 @@ export class ComplianceService {
     };
   }
 
-  async maskPII(value: string, type: string): Promise<string> {
+  maskPII(value: string, type: string): string {
     switch (type) {
       case 'phone': {
         if (value.length >= 10)
@@ -586,9 +580,11 @@ export class ComplianceService {
     }
   }
 
-  async validateAge(
-    birthDate: string,
-  ): Promise<{ valid: boolean; age: number; restricted: boolean }> {
+  validateAge(birthDate: string): {
+    valid: boolean;
+    age: number;
+    restricted: boolean;
+  } {
     const birth = new Date(birthDate);
     const today = new Date();
     let age = today.getFullYear() - birth.getFullYear();

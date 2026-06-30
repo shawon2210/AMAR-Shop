@@ -47,4 +47,4 @@ async function bootstrap() {
   console.log(`🚀 AmarShop API running on http://localhost:${port}/api/v1`);
 }
 
-bootstrap();
+void bootstrap();

@@ -247,16 +247,6 @@ export class WmsService {
 
     if (!orders.length) throw new NotFoundException('No pickable orders found');
 
-    const warehouseId = orders[0].shipments[0]?.id
-      ? (
-          await this.prisma.shipment.findUnique({
-            where: { id: orders[0].shipments[0].id },
-            include: { courier: true },
-          })
-        )?.courierId
-      : (await this.prisma.warehouse.findFirst({ where: { isActive: true } }))
-          ?.id;
-
     const wh = await this.prisma.warehouse.findFirst({
       where: { isActive: true },
     });

@@ -72,18 +72,15 @@ export function HeroSlider() {
 
   const next = () => setCurrent((prev) => (prev + 1) % slides.length);
 
-  const prev = () =>
-    setCurrent((prev) => (prev - 1 + slides.length) % slides.length);
-
   return (
     <section className="px-container-margin md:mt-md">
       <div
-        className="relative overflow-hidden rounded-2xl shadow-xl bg-surface-container-high h-64 sm:h-80 md:h-[420px] lg:h-[520px]"
+        className="relative overflow-hidden rounded-2xl shadow-xl bg-surface-container-high w-full aspect-video sm:aspect-2/1 md:aspect-21/9 lg:aspect-3/1"
         onMouseEnter={() => { paused.current = true; }}
         onMouseLeave={() => { paused.current = false; }}
       >
         <div
-          className="flex h-full transition-transform duration-700 ease-in-out will-change-transform"
+          className="flex h-full transition-[transform] duration-700 ease-in-out will-change-transform transform-gpu"
           style={{
             transform: `translateX(-${current * 100}%)`,
           }}
@@ -97,12 +94,13 @@ export function HeroSlider() {
                 src={slide.image}
                 alt={slide.title}
                 loading="eager"
-                className="absolute inset-0 h-full w-full object-cover"
+                decoding="async"
+                className="absolute inset-0 h-full w-full object-cover object-center"
               />
 
               <div className="absolute inset-0 bg-linear-to-r from-black/80 via-black/40 to-transparent" />
 
-              <div className="relative z-10 flex h-full flex-col justify-center px-6 sm:px-10 lg:px-14">
+              <div className="relative z-10 flex h-full flex-col justify-center px-5 sm:px-8 md:px-10 lg:px-14">
                 {slide.badge && (
                   <span
                     className={`${slide.badgeColor} mb-3 w-fit rounded-full px-3 py-1 text-xs font-semibold tracking-wide text-white`}
@@ -111,12 +109,12 @@ export function HeroSlider() {
                   </span>
                 )}
 
-                <h2 className="max-w-xl text-2xl font-bold text-white sm:text-3xl md:text-5xl">
+                <h2 className="max-w-[90%] sm:max-w-[80%] lg:max-w-[70%] xl:max-w-[60%] text-[20px] sm:text-[24px] md:text-[28px] lg:text-[32px] font-bold leading-[1.15] tracking-tight text-white">
                   {slide.title}
                 </h2>
 
                 {slide.subtitle && (
-                  <p className="mt-4 max-w-lg text-sm leading-relaxed text-white/90 sm:text-base">
+                  <p className="mt-3 max-w-[90%] sm:max-w-[75%] lg:max-w-[60%] text-[13px] sm:text-[15px] md:text-[16px] lg:text-[17px] leading-relaxed text-white/90">
                     {slide.subtitle}
                   </p>
                 )}
@@ -125,22 +123,13 @@ export function HeroSlider() {
           ))}
         </div>
 
-        {/* Previous */}
-        <button
-          onClick={prev}
-          aria-label="Previous Slide"
-          className="absolute left-4 top-1/2 -translate-y-1/2 rounded-full bg-black/40 p-3 text-white backdrop-blur transition hover:bg-black/60"
-        >
-          ←
-        </button>
-
         {/* Next */}
         <button
           onClick={next}
           aria-label="Next Slide"
-          className="absolute right-4 top-1/2 -translate-y-1/2 rounded-full bg-black/40 p-3 text-white backdrop-blur transition hover:bg-black/60"
+          className="absolute right-2 sm:right-4 top-1/2 -translate-y-1/2 rounded-full bg-black/40 p-2 sm:p-3 text-white backdrop-blur transition hover:bg-black/60"
         >
-          →
+          <span className="material-symbols-outlined text-xl sm:text-2xl">chevron_right</span>
         </button>
 
         {/* Indicators */}

@@ -14,8 +14,6 @@ import { AuthGuard } from '@nestjs/passport';
 import type { Response } from 'express';
 import { AffiliateService } from './affiliate.service';
 import { PrismaService } from '../../common/prisma.service';
-import { RolesGuard } from '../../common/guards/roles.guard';
-import { Roles } from '../../common/decorators/roles.decorator';
 
 @Controller()
 export class AffiliateController {

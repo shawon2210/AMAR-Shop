@@ -11,14 +11,14 @@ export function anonymizeUser(user: any): any {
   return anonymized;
 }
 
-export async function exportUserData(userId: string): Promise<{
+export function exportUserData(userId: string): {
   account: any;
   orders: any[];
   addresses: any[];
   reviews: any[];
   activities: any[];
   exportDate: string;
-}> {
+} {
   return {
     account: { id: userId, exportedAt: new Date().toISOString() },
     orders: [],

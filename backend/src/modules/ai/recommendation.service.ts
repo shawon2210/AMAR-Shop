@@ -9,12 +9,6 @@ interface Interaction {
   weight: number;
 }
 
-interface UserProductMatrix {
-  userId: string;
-  productId: string;
-  score: number;
-}
-
 interface UserFactors {
   userId: string;
   factors: number[];

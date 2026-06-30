@@ -16,19 +16,19 @@ export class PaymentsController {
 
   @UseGuards(AuthGuard('jwt'))
   @Post('bkash/initiate')
-  async initiateBkash(@Body() body: { orderId: string; amount: number }) {
+  initiateBkash(@Body() body: { orderId: string; amount: number }) {
     return this.paymentsService.initiateBkashPayment(body.orderId, body.amount);
   }
 
   @UseGuards(AuthGuard('jwt'))
   @Post('nagad/initiate')
-  async initiateNagad(@Body() body: { orderId: string; amount: number }) {
+  initiateNagad(@Body() body: { orderId: string; amount: number }) {
     return this.paymentsService.initiateNagadPayment(body.orderId, body.amount);
   }
 
   @UseGuards(AuthGuard('jwt'))
   @Post('sslcommerz/initiate')
-  async initiateSSLCommerz(
+  initiateSSLCommerz(
     @Body() body: { orderId: string; amount: number; customer: any },
   ) {
     return this.paymentsService.initiateSSLCommerzPayment(
@@ -45,7 +45,7 @@ export class PaymentsController {
   }
 
   @Get('verify/:provider/:transactionId')
-  async verifyPayment(
+  verifyPayment(
     @Param('provider') provider: string,
     @Param('transactionId') transactionId: string,
   ) {

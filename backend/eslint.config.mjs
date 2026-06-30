@@ -6,7 +6,16 @@ import tseslint from 'typescript-eslint';
 
 export default tseslint.config(
   {
-    ignores: ['eslint.config.mjs', 'test/**/*.ts', 'prisma/**/*.ts'],
+    ignores: [
+      'eslint.config.mjs',
+      'dist/**',
+      'test/**',
+      'prisma/**',
+      'prisma.config.ts',
+      'sentry.config.ts',
+      'test-prisma.ts',
+      'test-prisma.cjs',
+    ],
   },
   eslint.configs.recommended,
   ...tseslint.configs.recommendedTypeChecked,
@@ -33,7 +42,7 @@ export default tseslint.config(
       '@typescript-eslint/no-unsafe-member-access': 'off',
       '@typescript-eslint/no-unsafe-call': 'off',
       '@typescript-eslint/no-unsafe-return': 'off',
-      '@typescript-eslint/no-unused-vars': 'warn',
+      '@typescript-eslint/no-unused-vars': ['warn', { argsIgnorePattern: '^_' }],
       'no-empty': 'warn',
       '@typescript-eslint/require-await': 'warn',
       "prettier/prettier": ["error", { endOfLine: "auto" }],

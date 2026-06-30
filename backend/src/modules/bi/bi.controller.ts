@@ -154,7 +154,7 @@ export class BiController {
   }
 
   @Get('data-sources')
-  async getDataSources() {
+  getDataSources() {
     return this.bi.getDataSources();
   }
 

@@ -69,7 +69,7 @@ export class AIController {
   }
 
   @Post('forecast')
-  async forecast(@Body() body: { productId: string; days?: number }) {
+  forecast(@Body() body: { productId: string; days?: number }) {
     return this.aiService.forecastDemand(body.productId, body.days || 30);
   }
 

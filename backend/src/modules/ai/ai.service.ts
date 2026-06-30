@@ -186,10 +186,7 @@ export class AIService {
     }
   }
 
-  async forecastDemand(
-    productId: string,
-    days: number,
-  ): Promise<DemandForecast> {
+  forecastDemand(productId: string, days: number): DemandForecast {
     return {
       productId,
       forecast: Array.from({ length: days }, (_, i) => ({
@@ -203,7 +200,7 @@ export class AIService {
     };
   }
 
-  async suggestPrice(product: any): Promise<PriceSuggestion> {
+  suggestPrice(product: any): PriceSuggestion {
     try {
       const basePrice = product.price || 100;
       const competitorAvg = basePrice * (0.8 + Math.random() * 0.4);
@@ -231,7 +228,7 @@ export class AIService {
     }
   }
 
-  async generateBanner(request: BannerGenerationRequest): Promise<string> {
+  generateBanner(request: BannerGenerationRequest): string {
     this.logger.log(`Banner generation requested: ${request.prompt}`);
     return `https://placehold.co/1200x400/ff6b35/ffffff?text=${encodeURIComponent(request.text || request.prompt)}`;
   }
@@ -258,7 +255,7 @@ export class AIService {
     }
   }
 
-  async detectDuplicate(product: any): Promise<DuplicateResult> {
+  detectDuplicate(): DuplicateResult {
     return {
       isDuplicate: false,
       similarityScore: 0,
@@ -313,10 +310,7 @@ export class AIService {
     }
   }
 
-  async semanticMatch(
-    query: string,
-    products: any[],
-  ): Promise<SemanticMatchResult[]> {
+  semanticMatch(query: string, products: any[]): SemanticMatchResult[] {
     const queryLower = query.toLowerCase();
     return products
       .map((product) => {
@@ -425,7 +419,7 @@ Include: catchy headline, body text, and CTA. Bengali and English mix welcome.`;
     return 'Thank you for reaching out to AmarShop support! I can help you find products, track orders, or answer any questions. Could you please provide more details about what you need help with?';
   }
 
-  private getChatSuggestions(message: string): string[] {
+  private getChatSuggestions(_message: string): string[] {
     return [
       'Track my order',
       'Find products',

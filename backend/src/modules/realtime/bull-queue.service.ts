@@ -177,7 +177,7 @@ export class BullQueueService implements OnModuleDestroy {
             await this.handleOrderProcessing(job.data);
             break;
           case 'ship':
-            await this.handleOrderShipping(job.data);
+            this.handleOrderShipping(job.data);
             break;
           case 'deliver':
             await this.handleOrderDelivery(job.data);
@@ -211,7 +211,7 @@ export class BullQueueService implements OnModuleDestroy {
     });
   }
 
-  private async handleOrderShipping(data: OrderJobData): Promise<void> {
+  private handleOrderShipping(data: OrderJobData): void {
     this.logger.debug(`Shipping order ${data.orderId}`);
   }
 

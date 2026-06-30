@@ -8,7 +8,7 @@ import {
   WsException,
 } from '@nestjs/websockets';
 import { Server, Socket } from 'socket.io';
-import { Injectable, Logger, UseGuards } from '@nestjs/common';
+import { Injectable, Logger } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import { realtimeConfig } from './realtime.config';
 import {
@@ -47,7 +47,7 @@ export class RealtimeGateway
 
   constructor(private jwtService: JwtService) {}
 
-  afterInit(server: Server): void {
+  afterInit(_server: Server): void {
     this.logger.log('Realtime Gateway initialized');
   }
 
@@ -77,7 +77,7 @@ export class RealtimeGateway
       }
       this.userSockets.get(user.userId)!.add(client.id);
 
-      this.joinNamespacedRooms(client, user);
+      await this.joinNamespacedRooms(client, user);
 
       this.updatePresence(user.userId, 'online', client.id);
 
@@ -110,22 +110,22 @@ export class RealtimeGateway
   }
 
   @SubscribeMessage('join:order')
-  handleJoinOrder(client: Socket, orderId: string): void {
+  async handleJoinOrder(client: Socket, orderId: string): Promise<void> {
     const user = this.socketUserMap.get(client.id);
     if (!user) throw new WsException('Not authenticated');
-    client.join(`order:${orderId}`);
+    await client.join(`order:${orderId}`);
   }
 
   @SubscribeMessage('leave:order')
-  handleLeaveOrder(client: Socket, orderId: string): void {
-    client.leave(`order:${orderId}`);
+  async handleLeaveOrder(client: Socket, orderId: string): Promise<void> {
+    await client.leave(`order:${orderId}`);
   }
 
   @SubscribeMessage('join:seller')
-  handleJoinSeller(client: Socket): void {
+  async handleJoinSeller(client: Socket): Promise<void> {
     const user = this.socketUserMap.get(client.id);
     if (!user || !user.sellerId) throw new WsException('Not a seller');
-    client.join(`seller:${user.sellerId}`);
+    await client.join(`seller:${user.sellerId}`);
   }
 
   @SubscribeMessage('chat:typing')
@@ -234,15 +234,18 @@ export class RealtimeGateway
     );
   }
 
-  private joinNamespacedRooms(client: Socket, user: SocketUser): void {
-    client.join(`user:${user.userId}`);
+  private async joinNamespacedRooms(
+    client: Socket,
+    user: SocketUser,
+  ): Promise<void> {
+    await client.join(`user:${user.userId}`);
 
     if (user.role === 'SELLER' || user.role === 'ADMIN') {
-      if (user.sellerId) client.join(`seller:${user.sellerId}`);
+      if (user.sellerId) await client.join(`seller:${user.sellerId}`);
     }
 
     if (user.role === 'ADMIN') {
-      client.join('admin');
+      await client.join('admin');
     }
   }
 

@@ -11,8 +11,6 @@ export class SearchAnalyticsService {
     query: string,
     userId: string | null,
     resultsCount: number,
-    clicks: number,
-    filters: Record<string, any> = {},
   ): Promise<string> {
     const sessionId = `session-${Date.now()}-${Math.random().toString(36).slice(2, 8)}`;
 
@@ -29,11 +27,7 @@ export class SearchAnalyticsService {
     return sessionId;
   }
 
-  async logClick(
-    searchSessionId: string,
-    productId: string,
-    position: number,
-  ): Promise<void> {
+  logClick(searchSessionId: string, productId: string, position: number): void {
     this.logger.debug(
       `Click logged: search=${searchSessionId} product=${productId} pos=${position}`,
     );

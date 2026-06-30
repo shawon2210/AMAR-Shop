@@ -5,7 +5,7 @@ import { PrismaService } from '../../common/prisma.service';
 export class PaymentsService {
   constructor(private prisma: PrismaService) {}
 
-  async initiateBkashPayment(orderId: string, amount: number) {
+  initiateBkashPayment(orderId: string, amount: number) {
     // Placeholder: In production, integrate with bKash API
     // const response = await bkashApi.createPayment({ amount, orderId, ... });
     return {
@@ -16,7 +16,7 @@ export class PaymentsService {
     };
   }
 
-  async initiateNagadPayment(orderId: string, amount: number) {
+  initiateNagadPayment(orderId: string, amount: number) {
     // Placeholder: In production, integrate with Nagad API
     return {
       success: true,
@@ -26,11 +26,7 @@ export class PaymentsService {
     };
   }
 
-  async initiateSSLCommerzPayment(
-    orderId: string,
-    amount: number,
-    customer: any,
-  ) {
+  initiateSSLCommerzPayment(orderId: string, _amount: number, _customer: any) {
     // Placeholder: In production, integrate with SSLCommerz
     return {
       success: true,
@@ -40,7 +36,7 @@ export class PaymentsService {
     };
   }
 
-  async verifyPayment(provider: string, transactionId: string) {
+  verifyPayment(provider: string, transactionId: string) {
     // Placeholder: verify payment status with provider
     return {
       verified: true,

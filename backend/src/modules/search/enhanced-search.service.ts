@@ -26,7 +26,7 @@ export class EnhancedSearchService {
   async vectorSearch(query: string, filters: SearchFilters): Promise<any> {
     try {
       const embedding = await this.embeddingsService.generateEmbedding(query);
-      const similar = await this.embeddingsService.searchSimilar(
+      const similar = this.embeddingsService.searchSimilar(
         embedding.vector,
         50,
       );
@@ -149,7 +149,7 @@ export class EnhancedSearchService {
     return this.searchService.getTrendingProducts(20);
   }
 
-  async voiceSearch(audioBuffer: Buffer): Promise<any> {
+  voiceSearch(_audioBuffer: Buffer): any {
     this.logger.log('Voice search requested - text extraction not available');
     return { transcript: '', results: [] };
   }
@@ -314,13 +314,14 @@ export class EnhancedSearchService {
 
     if (suggestions.length < 5) {
       try {
-        const aiSuggestions = await this.aiService.semanticMatch(query, []);
         suggestions.push({
           text: `${query} products`,
           type: 'ai-enhanced',
           score: 0.3,
         });
-      } catch {}
+      } catch {
+        // ignore
+      }
     }
 
     return suggestions.slice(0, 8);

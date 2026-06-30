@@ -1,4 +1,4 @@
-import { Module, OnModuleInit } from '@nestjs/common';
+import { Module } from '@nestjs/common';
 import { JwtModule } from '@nestjs/jwt';
 import { RealtimeGateway } from './realtime.gateway';
 import { RealtimeService } from './realtime.service';

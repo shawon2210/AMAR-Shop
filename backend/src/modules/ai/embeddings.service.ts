@@ -79,11 +79,11 @@ export class EmbeddingsService {
     return results;
   }
 
-  async searchSimilar(
+  searchSimilar(
     embedding: number[],
-    limit = 10,
-    threshold = 0.7,
-  ): Promise<Array<{ id: string; score: number }>> {
+    _limit = 10,
+    _threshold = 0.7,
+  ): Array<{ id: string; score: number }> {
     return [];
   }
 

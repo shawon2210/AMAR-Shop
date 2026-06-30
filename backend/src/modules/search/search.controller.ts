@@ -6,7 +6,6 @@ import {
   Query,
   Request,
   UseGuards,
-  Param,
 } from '@nestjs/common';
 import { AuthGuard } from '@nestjs/passport';
 import { SearchService } from './search.service';
@@ -148,7 +147,6 @@ export class SearchController {
       body.query,
       req.user.id,
       body.resultsCount,
-      0,
     );
   }
 
@@ -164,7 +162,7 @@ export class SearchController {
 
   @UseGuards(AuthGuard('jwt'))
   @Post('ltr-signal')
-  async collectLtrSignal(@Body() body: any) {
+  collectLtrSignal(@Body() body: any) {
     this.enhancedSearchService.collectLtrSignal(body);
     return { success: true };
   }

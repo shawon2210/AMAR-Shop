@@ -1,7 +1,7 @@
 'use client';
 
 import { useState } from 'react';
-import { useParams } from 'next/navigation';
+import { useParams, useRouter } from 'next/navigation';
 import Link from 'next/link';
 import { getProductById, getRelatedProducts } from '@/lib/data/products';
 import { PriceDisplay, DiscountBadge } from '@/components/ui/price-display';
@@ -13,6 +13,7 @@ import { useUIStore } from '@/stores/ui-store';
 
 export default function ProductDetailPage() {
   const params = useParams();
+  const router = useRouter();
   const [selectedImage, setSelectedImage] = useState(0);
   const [quantity, setQuantity] = useState(1);
   const addItem = useCartStore(s => s.addItem);
@@ -48,7 +49,7 @@ export default function ProductDetailPage() {
 
   const handleBuyNow = () => {
     addItem(product, quantity);
-    addToast('Redirecting to checkout...');
+    router.push('/checkout');
   };
 
   return (

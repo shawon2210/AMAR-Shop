@@ -194,7 +194,7 @@ export class BiService {
       string,
       { users: number; totalRevenue: number; totalOrders: number }
     > = {};
-    for (const [userId, data] of Object.entries(userTotals)) {
+    for (const data of Object.values(userTotals)) {
       const cohort = `${data.firstDate.getFullYear()}-${String(data.firstDate.getMonth() + 1).padStart(2, '0')}`;
       if (!cohorts[cohort])
         cohorts[cohort] = { users: 0, totalRevenue: 0, totalOrders: 0 };
@@ -235,10 +235,6 @@ export class BiService {
     for (const o of orders) {
       if (!firstPurchase[o.userId]) {
         const d = new Date(o.createdAt);
-        const periodIndex = Math.floor(
-          ((d.getFullYear() - 2020) * 12) / periodMonths +
-            d.getMonth() / periodMonths,
-        );
         firstPurchase[o.userId] =
           `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}`;
         userOrders[o.userId] = [];
@@ -533,7 +529,7 @@ export class BiService {
     }));
   }
 
-  async getUserFunnels(startEvent: string, endEvent: string) {
+  async getUserFunnels(_startEvent: string, _endEvent: string) {
     const stages = ['VIEW_PRODUCT', 'ADD_TO_CART', 'CHECKOUT', 'PURCHASE'];
     const funnel: any[] = [];
 
@@ -780,7 +776,7 @@ export class BiService {
     };
   }
 
-  async getDataSources() {
+  getDataSources() {
     return [
       {
         name: 'Orders',
@@ -848,7 +844,7 @@ export class BiService {
     });
   }
 
-  private calculateNextRun(cron: string): Date {
+  private calculateNextRun(_cron: string): Date {
     const next = new Date();
     next.setHours(next.getHours() + 1);
     return next;

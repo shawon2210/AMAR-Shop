@@ -26,10 +26,7 @@ export class CategoriesService {
     });
   }
 
-  async getProductsByCategory(
-    slug: string,
-    _params: { skip?: number; take?: number; sort?: string },
-  ) {
+  async getProductsByCategory(slug: string) {
     const category = await this.findBySlug(slug);
     if (!category) return null;
     return { category };

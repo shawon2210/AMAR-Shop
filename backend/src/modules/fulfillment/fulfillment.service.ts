@@ -199,7 +199,7 @@ export class FulfillmentService {
   }
 
   async calculateSLA(fromWarehouse: string, toAddress: string) {
-    const { city, district, division } = await this.parseAddress(toAddress);
+    const { city, district } = this.parseAddress(toAddress);
     const couriers = await this.prisma.courier.findMany({
       where: { isActive: true },
       include: {
@@ -228,10 +228,6 @@ export class FulfillmentService {
     const warehouses = await this.prisma.warehouse.count({
       where: { isActive: true },
     });
-    const couriers = await this.prisma.courier.count({
-      where: { isActive: true },
-    });
-
     return {
       fbl: {
         available: warehouses > 0,
@@ -343,7 +339,7 @@ export class FulfillmentService {
     };
   }
 
-  private async parseAddress(address: string) {
+  private parseAddress(address: string) {
     const parts = address.split(',').map((s) => s.trim());
     return {
       street: parts[0] || '',

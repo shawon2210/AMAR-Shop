@@ -5,7 +5,6 @@ import {
   Put,
   Delete,
   Body,
-  Param,
   Query,
   UseGuards,
   Request,
@@ -22,7 +21,7 @@ export class ComplianceController {
   @UseGuards(AuthGuard('jwt'), RolesGuard)
   @Roles('ADMIN')
   @Get('status')
-  async getStatus() {
+  getStatus() {
     return this.complianceService.getComplianceStatus();
   }
 
@@ -43,7 +42,7 @@ export class ComplianceController {
 
   @UseGuards(AuthGuard('jwt'))
   @Get('kyc/status')
-  async getKYCStatus(@Request() req: any) {
+  getKYCStatus() {
     return { status: 'pending' };
   }
 
@@ -60,18 +59,12 @@ export class ComplianceController {
   }
 
   @Put('cookie-consent')
-  async updateCookieConsent(
-    @Body() body: { userId: string; consentType: string; granted: boolean },
-  ) {
-    return this.complianceService.logConsent(
-      body.userId,
-      body.consentType,
-      body.granted,
-    );
+  updateCookieConsent() {
+    return this.complianceService.logConsent();
   }
 
   @Get('privacy')
-  async getPrivacy() {
+  getPrivacy() {
     return this.complianceService.getPrivacyCenter();
   }
 

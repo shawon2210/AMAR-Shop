@@ -1,7 +1,11 @@
 'use client';
 
 import { useState } from 'react';
+import { useRouter } from 'next/navigation';
 import Link from 'next/link';
+import { useCartStore } from '@/stores/cart-store';
+import { useUIStore } from '@/stores/ui-store';
+import { api } from '@/services/api';
 
 const paymentMethods = [
   { id: 'bkash', name: 'bKash', icon: 'https://cdn-icons-png.flaticon.com/128/196/196578.png' },
@@ -34,18 +38,71 @@ const addresses = [
 ];
 
 export default function CheckoutPage() {
-  const [selectedAddress, setSelectedAddress] = useState(addresses[0].id);
-  const [selectedPayment, setSelectedPayment] = useState('bkash');
+  const router = useRouter();
+  const items = useCartStore(s => s.getSelectedItems());
+  const subtotal = useCartStore(s => s.getSelectedTotal());
+  const clearCart = useCartStore(s => s.clearCart);
+  const addToast = useUIStore(s => s.addToast);
+
+  const [selectedAddress, setSelectedAddress] = useState(addresses[0]?.id || '');
+  const [selectedPayment, setSelectedPayment] = useState('cod');
   const [orderNote, setOrderNote] = useState('');
   const [isProcessing, setIsProcessing] = useState(false);
 
+  const shipping = subtotal >= 2000 ? 0 : 60;
+  const discount = 0;
+  const total = subtotal + shipping - discount;
+
   const handlePlaceOrder = async () => {
+    if (items.length === 0) {
+      addToast('Your cart is empty!', 'error');
+      return;
+    }
+    if (!selectedAddress) {
+      addToast('Please select a shipping address', 'error');
+      return;
+    }
+
     setIsProcessing(true);
-    // Simulate API call
-    await new Promise(resolve => setTimeout(resolve, 2000));
-    setIsProcessing(false);
-    // Redirect to success page
+
+    try {
+      const order = await api.post<any>('/orders', {
+        addressId: selectedAddress,
+        paymentMethod: selectedPayment.toUpperCase(),
+        note: orderNote || undefined,
+        items: items.map(item => ({
+          productId: item.product.id,
+          quantity: item.quantity,
+          price: item.product.price,
+        })),
+        subtotal,
+        shipping,
+        discount,
+        total,
+      });
+
+      clearCart();
+      addToast('Order placed successfully!', 'success');
+      router.push(`/orders`);
+    } catch (err: any) {
+      addToast(err.message || 'Failed to place order. Please try again.', 'error');
+    } finally {
+      setIsProcessing(false);
+    }
   };
+
+  if (items.length === 0) {
+    return (
+      <div className="px-container-margin pt-md space-y-md pb-24">
+        <h1 className="font-headline-md text-headline-md">Checkout</h1>
+        <div className="flex flex-col items-center justify-center py-20 gap-4">
+          <span className="material-symbols-outlined text-5xl text-secondary">shopping_cart</span>
+          <p className="text-secondary">No items selected for checkout</p>
+          <Link href="/cart" className="text-primary font-label-bold">Go to Cart</Link>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="px-container-margin pt-md space-y-md pb-24">
@@ -58,7 +115,6 @@ export default function CheckoutPage() {
             <span className="material-symbols-outlined text-secondary">location_on</span>
             <span className="font-title-sm text-title-sm">Shipping Address</span>
           </div>
-          <button className="text-primary font-label-bold text-xs">Change</button>
         </div>
         <div className="p-md space-y-2">
           {addresses.map(addr => (
@@ -96,25 +152,29 @@ export default function CheckoutPage() {
         <div className="px-md py-sm bg-surface-container-low flex items-center justify-between">
           <div className="flex items-center gap-2">
             <span className="material-symbols-outlined text-secondary">shopping_bag</span>
-            <span className="font-title-sm text-title-sm">Order Items</span>
+            <span className="font-title-sm text-title-sm">Order Items ({items.length})</span>
           </div>
           <Link href="/cart" className="text-primary font-label-bold text-xs">Edit</Link>
         </div>
         <div className="p-md space-y-3">
-          <div className="flex items-center gap-3">
-            <div className="w-12 h-12 bg-surface-container rounded-lg overflow-hidden flex-shrink-0">
-              <img
-                className="w-full h-full object-cover"
-                src="https://lh3.googleusercontent.com/aida-public/AB6AXuDD-D_n1BtPTJ-wZiQJqzsG6JT-a5SFFmFH24Somtcsod7etEs9LVWYLD5fhkwfvzXPm8L6_paVkdzbrcmH_pQv7tW9XshZcvZ2ms3k9WF_LCfO40AsQ4YuEcTzi_rGHBku71LCC4q2PUiR6vzKZvhodxqdQmxEexsT2vMjKXni0p_yg836pOCYt-fD-KjOz-W86BowILONAgdLMgAyyIQvHB0FW3U7LdfuI3B39oyYtirSeBEzjDkazarLqGTsxSOWeXk7t1lRSg"
-                alt="Product"
-              />
+          {items.map(item => (
+            <div key={item.id} className="flex items-center gap-3">
+              <div className="w-12 h-12 bg-surface-container rounded-lg overflow-hidden flex-shrink-0">
+                <img
+                  className="w-full h-full object-cover"
+                  src={item.product.images?.[0] || '/placeholder.png'}
+                  alt={item.product.name}
+                />
+              </div>
+              <div className="flex-1 min-w-0">
+                <p className="text-sm truncate">{item.product.name}</p>
+                <p className="text-xs text-secondary">Qty: {item.quantity}</p>
+              </div>
+              <span className="text-sm text-primary font-medium">
+                ৳{(item.product.price * item.quantity).toLocaleString()}
+              </span>
             </div>
-            <div className="flex-1 min-w-0">
-              <p className="text-sm truncate">Premium Smartphone 5G - Midnight Black</p>
-              <p className="text-xs text-secondary">Qty: 1</p>
-            </div>
-            <span className="font-price-lg text-sm text-primary">৳14,999</span>
-          </div>
+          ))}
         </div>
       </section>
 
@@ -170,20 +230,24 @@ export default function CheckoutPage() {
       <section className="bg-surface-container-lowest rounded-xl overflow-hidden shadow-sm">
         <div className="p-md space-y-2 text-sm">
           <div className="flex justify-between">
-            <span className="text-secondary">Subtotal</span>
-            <span>৳14,999</span>
+            <span className="text-secondary">Subtotal ({items.length} items)</span>
+            <span>৳{subtotal.toLocaleString()}</span>
           </div>
           <div className="flex justify-between">
             <span className="text-secondary">Shipping</span>
-            <span className="text-green-600 font-medium">Free</span>
+            <span className={shipping === 0 ? 'text-green-600 font-medium' : ''}>
+              {shipping === 0 ? 'Free' : `৳${shipping}`}
+            </span>
           </div>
-          <div className="flex justify-between">
-            <span className="text-secondary">Voucher Discount</span>
-            <span className="text-error">-৳0</span>
-          </div>
+          {discount > 0 && (
+            <div className="flex justify-between">
+              <span className="text-secondary">Voucher Discount</span>
+              <span className="text-error">-৳{discount.toLocaleString()}</span>
+            </div>
+          )}
           <div className="flex justify-between font-title-sm text-title-sm border-t border-outline-variant pt-2">
             <span>Total</span>
-            <span className="text-primary">৳14,999</span>
+            <span className="text-primary">৳{total.toLocaleString()}</span>
           </div>
         </div>
       </section>
@@ -202,7 +266,7 @@ export default function CheckoutPage() {
         ) : (
           <>
             <span className="material-symbols-outlined text-base">lock</span>
-            Place Order — ৳14,999
+            Place Order — ৳{total.toLocaleString()}
           </>
         )}
       </button>

@@ -301,7 +301,7 @@ export class SearchService {
     return { indexed: true, product };
   }
 
-  async removeFromIndex(productId: string) {
+  removeFromIndex(productId: string) {
     return { removed: true, productId };
   }
 
