@@ -25,15 +25,15 @@ export default function CartPage() {
 
   if (items.length === 0) {
     return (
-      <div className="flex flex-col items-center justify-center py-32 px-container-margin">
-        <span className="material-symbols-outlined text-6xl text-secondary mb-4">shopping_cart</span>
-        <h2 className="font-headline-md text-headline-md mb-2">Your Cart is Empty</h2>
-        <p className="text-secondary mb-6 text-center max-w-sm">
+      <div className="flex flex-col justify-center min-h-[calc(100dvh-10rem)] px-container-margin">
+        <span className="material-symbols-outlined text-5xl sm:text-6xl text-secondary mb-4 self-center">shopping_cart</span>
+        <h2 className="font-headline-md text-headline-md mb-2 text-center">Your Cart is Empty</h2>
+        <p className="text-body-md text-secondary mb-6 text-center max-w-prose mx-auto">
           Looks like you haven&apos;t added anything yet. Browse our deals and find something you love!
         </p>
         <Link
           href="/"
-          className="bg-primary text-on-primary px-lg py-md rounded-lg font-label-bold hover:brightness-110 transition-all"
+          className="bg-primary text-on-primary px-lg py-md rounded-lg font-label-bold hover:brightness-110 transition-all text-center self-center w-full sm:w-auto"
         >
           Start Shopping
         </Link>

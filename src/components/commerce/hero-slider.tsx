@@ -1,4 +1,6 @@
-import Image from 'next/image';
+"use client";
+
+import { useEffect, useRef, useState } from "react";
 
 interface HeroSlide {
   image: string;
@@ -10,55 +12,150 @@ interface HeroSlide {
 
 const slides: HeroSlide[] = [
   {
-    image: 'https://lh3.googleusercontent.com/aida-public/AB6AXuBCB2MRK87nCDmLoRM2FBNh5JgB9X-lUh2nRsIVMFk4UXD_YLyHu9rzcRVdAkHzQEPzazAHDIAzArDKksCMAXo1jXKiv9-1aN0nGQaF1aMO7Upki9y0DQYv9Tm3IPk0gusTja1Ura7xsx27kIVSIr-C1_SwZ4bLhuNR13HQoJ4tvwVvswhyMA8S1TQ03JnvrNoI_7FDra46NcvXHwuzvrOQM_LbuI-e77MLX-QeolS1ULRVRWaGJFdrMQRCRAr3AcKOgaL7JrBiMQ',
-    title: 'Upgrade Your Lifestyle with 50% Off',
-    badge: 'MEGA DEALS',
-    badgeColor: 'bg-primary',
-    subtitle: 'Premium electronics, fashion & more',
+    image: "https://images.unsplash.com/photo-1511707171634-5f897ff02aa9",
+    title: "Top Electronics & Gadgets",
+    badge: "ELECTRONICS",
+    badgeColor: "bg-primary",
+    subtitle: "Smartphones, laptops & accessories — up to 40% off",
   },
   {
-    image: 'https://lh3.googleusercontent.com/aida-public/AB6AXuBc5Yk87AmtdO32wrh2pVuatkuCgkfmgbJ9PJNvc2_9aX000noDLkF6TX7IzeBHBtrHJcF4xffViBuPUYu0e4AyQOC3EIXQL8N5UymsyUu_u1QkHwfMgxoekcgkPKGONmJWLO67ijFzY6JdFzuyq0PpeaRSJPMevssjYI-lbjVosvapMQVAizWsNwMjvvZv36H5q25TXF4gr7YpVB3nWD3Oh7f8vN73gyVP8C8yyKkK2ex8RBqnx1DFlOCh-7FwApd-BUxxaVgYXQ',
-    title: 'Organic & Natural — Healthy You',
-    badge: 'HEALTH HUB',
-    badgeColor: 'bg-tertiary-container',
+    image: "https://images.unsplash.com/photo-1483985988355-763728e1935b",
+    title: "Curated Fashion for Every Style",
+    badge: "FASHION",
+    badgeColor: "bg-primary",
+    subtitle: "Premium clothing & accessories collection",
   },
   {
-    image: 'https://lh3.googleusercontent.com/aida-public/AB6AXuD42ic0Trx42bTodLsf2VXp4floaNnJiy4gSmMnUH7kcPymzUVsxy9_dqAod4DSOdh74GTDzP5TNrVZ7LPrc2rX5FWyWVsNqRyW9MV7OJFRV_c_32vfZBnu6oB2708Hzh3ruDjvxRQ3CnGV6Cd5407S9-1RLtES-uzi9QA0XwGuU0G2S38LXxKGOg4pRVA6JM6XnwlYLqQaH-C9ji_M_7WoeK4ldA4KnExRkwI0shXBzTsiN4r-5iYhMgzzQ6DJ6sfSnPKu07FnYg',
-    title: 'Fashion Week — Traditional Meets Modern',
-    badge: 'FASHION',
-    badgeColor: 'bg-primary',
+    image: "https://images.unsplash.com/photo-1542838132-92c53300491e",
+    title: "Farm-Fresh Groceries Daily",
+    badge: "GROCERY",
+    badgeColor: "bg-tertiary-container",
+    subtitle: "Organic produce & essentials delivered to you",
+  },
+  {
+    image: "https://images.unsplash.com/photo-1505693416388-ac5ce068fe85",
+    title: "Make Your Home Truly Comfortable",
+    badge: "HOME & LIVING",
+    badgeColor: "bg-primary",
+    subtitle: "Furniture, decor & kitchen essentials",
+  },
+  {
+    image: "https://images.unsplash.com/photo-1522335789203-aabd1fc54bc9",
+    title: "Beauty & Self-Care Essentials",
+    badge: "BEAUTY",
+    badgeColor: "bg-tertiary-container",
+    subtitle: "Skincare, makeup & wellness must-haves",
+  },
+  {
+    image: "https://images.unsplash.com/photo-1520607162513-77705c0f0d4a",
+    title: "Mega Sale — Everything You Need",
+    badge: "MEGA SALE",
+    badgeColor: "bg-primary",
+    subtitle: "Exclusive deals across all categories",
   },
 ];
 
+const AUTO_PLAY = 5000;
+
 export function HeroSlider() {
+  const [current, setCurrent] = useState(0);
+  const paused = useRef(false);
+
+  useEffect(() => {
+    const timer = setInterval(() => {
+      if (!paused.current) {
+        setCurrent((prev) => (prev + 1) % slides.length);
+      }
+    }, AUTO_PLAY);
+    return () => clearInterval(timer);
+  }, []);
+
+  const next = () => setCurrent((prev) => (prev + 1) % slides.length);
+
+  const prev = () =>
+    setCurrent((prev) => (prev - 1 + slides.length) % slides.length);
+
   return (
-    <section className="px-container-margin md:mt-md overflow-hidden">
-      <div className="relative w-full h-56 sm:h-64 md:h-105 lg:h-130 rounded-xl overflow-hidden shadow-lg bg-gray-100">
-        <div className="flex animate-slider w-[300%] h-full">
-          {slides.map((slide, index) => (
-            <div key={index} className="w-full h-full relative shrink-0">
-              <Image
+    <section className="px-container-margin md:mt-md">
+      <div
+        className="relative overflow-hidden rounded-2xl shadow-xl bg-surface-container-high h-64 sm:h-80 md:h-[420px] lg:h-[520px]"
+        onMouseEnter={() => { paused.current = true; }}
+        onMouseLeave={() => { paused.current = false; }}
+      >
+        <div
+          className="flex h-full transition-transform duration-700 ease-in-out will-change-transform"
+          style={{
+            transform: `translateX(-${current * 100}%)`,
+          }}
+        >
+          {slides.map((slide) => (
+            <div
+              key={slide.title}
+              className="relative w-full shrink-0 h-full"
+            >
+              <img
                 src={slide.image}
                 alt={slide.title}
-                fill
-                className="object-cover object-center"
-                priority={index === 0}
-                {...(index !== 0 && { loading: 'lazy' })}
+                loading="eager"
+                className="absolute inset-0 h-full w-full object-cover"
               />
-              <div className="absolute inset-0 bg-linear-to-r from-black/60 via-black/30 to-transparent flex flex-col justify-center p-sm sm:p-md md:p-lg">
+
+              <div className="absolute inset-0 bg-linear-to-r from-black/80 via-black/40 to-transparent" />
+
+              <div className="relative z-10 flex h-full flex-col justify-center px-6 sm:px-10 lg:px-14">
                 {slide.badge && (
-                  <span className={`${slide.badgeColor} text-white text-xs font-bold px-sm py-0.5 w-fit rounded-full mb-2`}>
+                  <span
+                    className={`${slide.badgeColor} mb-3 w-fit rounded-full px-3 py-1 text-xs font-semibold tracking-wide text-white`}
+                  >
                     {slide.badge}
                   </span>
                 )}
-                <h2 className="text-white font-display-lg-mobile text-display-lg-mobile md:text-display-lg max-w-[85%] sm:max-w-xs md:max-w-md leading-tight">
+
+                <h2 className="max-w-xl text-2xl font-bold text-white sm:text-3xl md:text-5xl">
                   {slide.title}
                 </h2>
+
                 {slide.subtitle && (
-                  <p className="text-white/80 text-xs sm:text-sm mt-1 max-w-[85%] sm:max-w-xs">{slide.subtitle}</p>
+                  <p className="mt-4 max-w-lg text-sm leading-relaxed text-white/90 sm:text-base">
+                    {slide.subtitle}
+                  </p>
                 )}
               </div>
             </div>
+          ))}
+        </div>
+
+        {/* Previous */}
+        <button
+          onClick={prev}
+          aria-label="Previous Slide"
+          className="absolute left-4 top-1/2 -translate-y-1/2 rounded-full bg-black/40 p-3 text-white backdrop-blur transition hover:bg-black/60"
+        >
+          ←
+        </button>
+
+        {/* Next */}
+        <button
+          onClick={next}
+          aria-label="Next Slide"
+          className="absolute right-4 top-1/2 -translate-y-1/2 rounded-full bg-black/40 p-3 text-white backdrop-blur transition hover:bg-black/60"
+        >
+          →
+        </button>
+
+        {/* Indicators */}
+        <div className="absolute bottom-6 left-1/2 flex -translate-x-1/2 gap-2">
+          {slides.map((_, index) => (
+            <button
+              key={index}
+              aria-label={`Slide ${index + 1}`}
+              onClick={() => setCurrent(index)}
+              className={`h-2 rounded-full transition-all duration-300 ${
+                current === index
+                  ? "w-8 bg-white"
+                  : "w-2 bg-white/40"
+              }`}
+            />
           ))}
         </div>
       </div>
