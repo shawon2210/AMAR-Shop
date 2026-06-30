@@ -10,13 +10,11 @@ export class WalletService {
   constructor(private prisma: PrismaService) {}
 
   private async ensureWallet(userId: string) {
-    let wallet = await this.prisma.wallet.findUnique({ where: { userId } });
-    if (!wallet) {
-      wallet = await this.prisma.wallet.create({
-        data: { userId },
-      });
-    }
-    return wallet;
+    return this.prisma.wallet.upsert({
+      where: { userId },
+      create: { userId },
+      update: {},
+    });
   }
 
   async getBalance(userId: string) {

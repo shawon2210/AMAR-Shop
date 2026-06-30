@@ -314,8 +314,15 @@ export class WmsService {
     if (item.status === 'PICKED')
       throw new BadRequestException('Already picked');
 
+    const inventory = await this.prisma.inventory.findFirst({
+      where: { productId: item.productId },
+    });
+    if (!inventory) throw new BadRequestException('No inventory record found');
+
     const inventoryBin = await this.prisma.inventoryBin.findUnique({
-      where: { inventoryId_binId: { inventoryId: binId, binId } },
+      where: {
+        inventoryId_binId: { inventoryId: inventory.id, binId },
+      },
     });
     if (!inventoryBin || inventoryBin.quantity < item.quantity) {
       throw new BadRequestException('Insufficient stock in bin');
@@ -327,7 +334,7 @@ export class WmsService {
         data: { quantity: { decrement: item.quantity } },
       }),
       this.prisma.inventory.update({
-        where: { id: inventoryBin.inventoryId },
+        where: { id: inventory.id },
         data: { quantity: { decrement: item.quantity } },
       }),
       this.prisma.pickListItem.update({

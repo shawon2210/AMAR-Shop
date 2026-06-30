@@ -1,4 +1,10 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import crypto from 'node:crypto';
+import {
+  Injectable,
+  NotFoundException,
+  BadRequestException,
+  ForbiddenException,
+} from '@nestjs/common';
 import { PrismaService } from '../../common/prisma.service';
 
 @Injectable()
@@ -10,10 +16,8 @@ export class OrdersService {
     const y = date.getFullYear().toString().slice(-2);
     const m = (date.getMonth() + 1).toString().padStart(2, '0');
     const d = date.getDate().toString().padStart(2, '0');
-    const rand = Math.floor(Math.random() * 9999)
-      .toString()
-      .padStart(4, '0');
-    return `AMR-${y}${m}${d}-${rand}`;
+    const uid = crypto.randomUUID().split('-').slice(0, 2).join('');
+    return `AMR-${y}${m}${d}-${uid}`;
   }
 
   async create(
@@ -29,6 +33,37 @@ export class OrdersService {
       total: number;
     },
   ) {
+    if (!data.items || data.items.length === 0) {
+      throw new BadRequestException('Order must contain at least one item');
+    }
+
+    const address = await this.prisma.address.findUnique({
+      where: { id: data.addressId },
+    });
+    if (!address) throw new BadRequestException('Shipping address not found');
+    if (address.userId !== userId) {
+      throw new ForbiddenException('Shipping address does not belong to you');
+    }
+
+    const productIds = data.items.map((i) => i.productId);
+    const products = await this.prisma.product.findMany({
+      where: { id: { in: productIds } },
+      select: { id: true, price: true, stockCount: true, inStock: true },
+    });
+    const productMap = new Map(products.map((p) => [p.id, p]));
+
+    for (const item of data.items) {
+      const product = productMap.get(item.productId);
+      if (!product) {
+        throw new BadRequestException(`Product ${item.productId} not found`);
+      }
+      if (!product.inStock || product.stockCount < item.quantity) {
+        throw new BadRequestException(
+          `Product ${item.productId} is out of stock or has insufficient stock`,
+        );
+      }
+    }
+
     const order = await this.prisma.order.create({
       data: {
         orderNumber: this.generateOrderNumber(),
@@ -59,11 +94,10 @@ export class OrdersService {
       },
     });
 
-    // Clear cart items that were ordered
     await this.prisma.cartItem.deleteMany({
       where: {
         userId,
-        productId: { in: data.items.map((i) => i.productId) },
+        productId: { in: productIds },
       },
     });
 
@@ -97,9 +131,12 @@ export class OrdersService {
     return { orders, total, skip, take };
   }
 
-  async findById(id: string) {
-    const order = await this.prisma.order.findUnique({
-      where: { id },
+  async findById(id: string, userId?: string) {
+    const where: any = { id };
+    if (userId) where.userId = userId;
+
+    const order = await this.prisma.order.findFirst({
+      where,
       include: {
         items: {
           include: {

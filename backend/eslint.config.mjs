@@ -9,8 +9,10 @@ export default tseslint.config(
     ignores: [
       'eslint.config.mjs',
       'dist/**',
-      'test/**',
-      'prisma/**',
+      'test/**/*.ts',
+      'test/**/*.js',
+      'prisma/**/*.ts',
+      'prisma/**/*.js',
       'prisma.config.ts',
       'sentry.config.ts',
       'test-prisma.ts',
@@ -45,7 +47,7 @@ export default tseslint.config(
       '@typescript-eslint/no-unused-vars': ['warn', { argsIgnorePattern: '^_' }],
       'no-empty': 'warn',
       '@typescript-eslint/require-await': 'warn',
-      "prettier/prettier": ["error", { endOfLine: "auto" }],
+      'prettier/prettier': ['error', { endOfLine: 'auto' }],
     },
   },
 );
