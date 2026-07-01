@@ -1,87 +1,106 @@
 'use client';
 
 import { useState } from 'react';
+import { useAdminData } from '@/lib/api/hooks';
+import { fetchTaxReport } from '@/lib/api/admin';
 
-export default function TaxPage() {
-  const [quarter, setQuarter] = useState('1');
-  const [year, setYear] = useState('2026');
+function formatBDT(v: number): string {
+  return `৳${Math.round(v).toLocaleString('en-IN')}`;
+}
+
+export default function TaxReportPage() {
+  const [quarter, setQuarter] = useState(String(Math.ceil((new Date().getMonth() + 1) / 3)));
+  const [year, setYear] = useState(String(new Date().getFullYear()));
+  const { data, loading, error } = useAdminData(
+    () => fetchTaxReport(quarter, year),
+    [quarter, year],
+  );
 
   return (
     <div className="space-y-6">
       <div className="flex items-center justify-between">
-        <h1 className="text-headline-md text-on-surface">Tax Reports</h1>
-        <button className="flex items-center gap-1.5 px-3 py-2 border border-outline text-on-surface rounded-lg text-body-sm font-medium">
-          <span className="material-symbols-outlined text-[18px]">download</span>
-          Export PDF
-        </button>
+        <h1 className="text-2xl font-bold text-[#222]">Tax Reports</h1>
+        <a href="/admin/finance" className="flex items-center gap-1.5 px-3 py-2 border border-[#ddd] text-[#666] rounded-lg text-sm font-medium hover:bg-[#f5f5f5]">
+          <span className="material-symbols-outlined text-[18px]">arrow_back</span>
+          Back to Finance
+        </a>
       </div>
 
-      <div className="flex gap-3 items-end">
-        <div>
-          <label className="text-label-bold text-on-surface-variant block mb-1">Quarter</label>
-          <select value={quarter} onChange={e => setQuarter(e.target.value)} className="px-3 py-2 rounded-lg border border-outline-variant bg-surface text-on-surface text-body-sm">
-            <option value="1">Q1 (Jan-Mar)</option>
-            <option value="2">Q2 (Apr-Jun)</option>
-            <option value="3">Q3 (Jul-Sep)</option>
-            <option value="4">Q4 (Oct-Dec)</option>
-          </select>
-        </div>
-        <div>
-          <label className="text-label-bold text-on-surface-variant block mb-1">Year</label>
-          <select value={year} onChange={e => setYear(e.target.value)} className="px-3 py-2 rounded-lg border border-outline-variant bg-surface text-on-surface text-body-sm">
-            <option>2025</option>
-            <option>2026</option>
-          </select>
-        </div>
-        <button className="px-4 py-2 bg-primary text-on-primary rounded-lg text-body-sm font-medium">Generate Report</button>
-      </div>
-
-      <div className="bg-surface rounded-xl border border-outline-variant p-6 space-y-6">
-        <div className="text-center pb-4 border-b border-outline-variant">
-          <p className="text-label-bold text-on-surface-variant uppercase">VAT / Tax Report</p>
-          <p className="text-headline-md text-on-surface font-bold">Q{quarter} {year}</p>
-        </div>
-
-        <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
-          {[
-            { label: 'Total Revenue', value: '৳12,45,000' },
-            { label: 'VAT Rate', value: '15%' },
-            { label: 'Total VAT', value: '৳1,86,750' },
-            { label: 'Total Orders', value: '1,234' },
-          ].map((item, i) => (
-            <div key={i} className="text-center p-3 bg-surface-container-low rounded-lg">
-              <p className="text-label-bold text-on-surface-variant">{item.label}</p>
-              <p className="text-title-sm text-on-surface font-semibold mt-1">{item.value}</p>
-            </div>
+      <div className="flex items-center gap-3">
+        <span className="text-sm text-[#666]">Period:</span>
+        <select value={quarter} onChange={(e) => setQuarter(e.target.value)}
+          className="px-3 py-1.5 border border-[#ddd] rounded-lg text-sm bg-white">
+          <option value="1">Q1 (Jan-Mar)</option>
+          <option value="2">Q2 (Apr-Jun)</option>
+          <option value="3">Q3 (Jul-Sep)</option>
+          <option value="4">Q4 (Oct-Dec)</option>
+        </select>
+        <select value={year} onChange={(e) => setYear(e.target.value)}
+          className="px-3 py-1.5 border border-[#ddd] rounded-lg text-sm bg-white">
+          {[2024, 2025, 2026, 2027].map((y) => (
+            <option key={y} value={y}>{y}</option>
           ))}
-        </div>
-
-        <div className="border border-outline-variant rounded-lg overflow-hidden">
-          <table className="w-full text-body-sm">
-            <thead>
-              <tr className="bg-surface-container-low">
-                <th className="text-left py-2.5 px-4 text-on-surface-variant font-medium">Month</th>
-                <th className="text-right py-2.5 px-4 text-on-surface-variant font-medium">Revenue</th>
-                <th className="text-right py-2.5 px-4 text-on-surface-variant font-medium">Taxable</th>
-                <th className="text-right py-2.5 px-4 text-on-surface-variant font-medium">VAT (15%)</th>
-              </tr>
-            </thead>
-            <tbody>
-              {['January', 'February', 'March'].map((m, i) => {
-                const rev = 400000 + ((i * 6271 + 789) % 100001);
-                return (
-                  <tr key={i} className="border-t border-outline-variant/50">
-                    <td className="py-2.5 px-4 text-on-surface">{m}</td>
-                    <td className="py-2.5 px-4 text-right text-on-surface">৳{rev.toLocaleString()}</td>
-                    <td className="py-2.5 px-4 text-right text-on-surface">৳{rev.toLocaleString()}</td>
-                    <td className="py-2.5 px-4 text-right text-on-surface font-semibold">৳{Math.round(rev * 0.15).toLocaleString()}</td>
-                  </tr>
-                );
-              })}
-            </tbody>
-          </table>
-        </div>
+        </select>
       </div>
+
+      {error && (
+        <div className="bg-red-50 text-red-600 rounded-lg p-3 text-sm border border-red-200">{error}</div>
+      )}
+
+      {loading ? (
+        <div className="bg-white rounded-xl border border-[#eee] p-8 text-center text-[#888]">
+          <span className="material-symbols-outlined animate-spin align-middle mr-2">progress_activity</span>Loading...
+        </div>
+      ) : !data ? (
+        <div className="bg-white rounded-xl border border-[#eee] p-8 text-center text-[#888]">No tax data available</div>
+      ) : (
+        <>
+          <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+            <div className="bg-white rounded-xl border border-[#eee] p-5">
+              <p className="text-sm text-[#888] mb-1">Total Revenue</p>
+              <p className="text-2xl font-bold text-[#222]">{formatBDT(data.totalRevenue)}</p>
+            </div>
+            <div className="bg-white rounded-xl border border-[#eee] p-5">
+              <p className="text-sm text-[#888] mb-1">VAT Collected ({data.vatRate}%)</p>
+              <p className="text-2xl font-bold text-[#222]">{formatBDT(data.totalVat)}</p>
+            </div>
+            <div className="bg-white rounded-xl border border-[#eee] p-5">
+              <p className="text-sm text-[#888] mb-1">Total Orders</p>
+              <p className="text-2xl font-bold text-[#222]">{data.totalOrders}</p>
+            </div>
+          </div>
+
+          <div className="bg-white rounded-xl border border-[#eee] overflow-hidden">
+            <div className="p-4 border-b border-[#eee] flex items-center justify-between">
+              <h2 className="font-semibold text-[#222]">Monthly Breakdown</h2>
+              <span className="text-xs text-[#888]">{data.period.from} - {data.period.to}</span>
+            </div>
+            <table className="w-full text-sm">
+              <thead>
+                <tr className="border-b border-[#eee] bg-[#fafafa]">
+                  <th className="text-left py-3 px-4 text-[#888] font-medium">Month</th>
+                  <th className="text-right py-3 px-4 text-[#888] font-medium">Revenue</th>
+                  <th className="text-right py-3 px-4 text-[#888] font-medium">Taxable Amount</th>
+                  <th className="text-right py-3 px-4 text-[#888] font-medium">VAT</th>
+                </tr>
+              </thead>
+              <tbody>
+                {data.monthly.map((m: any, i: number) => (
+                  <tr key={i} className="border-b border-[#eee]/50 hover:bg-[#fafafa]">
+                    <td className="py-3 px-4 font-medium text-[#333]">{m.month}</td>
+                    <td className="py-3 px-4 text-right">{formatBDT(m.revenue)}</td>
+                    <td className="py-3 px-4 text-right">{formatBDT(m.taxable)}</td>
+                    <td className="py-3 px-4 text-right font-semibold">{formatBDT(m.vat)}</td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+            {(!data.monthly || data.monthly.length === 0) && (
+              <p className="p-8 text-center text-[#888]">No monthly data for this period</p>
+            )}
+          </div>
+        </>
+      )}
     </div>
   );
 }

@@ -1,63 +1,29 @@
 'use client';
 
-const transactions = [
-  { id: '#TXN-8932', order: '#ORD-28471', amount: '৳2,450', method: 'bKash', status: 'Completed', date: '28 Jun 2026' },
-  { id: '#TXN-8931', order: '#ORD-28470', amount: '৳5,200', method: 'Nagad', status: 'Completed', date: '28 Jun 2026' },
-  { id: '#TXN-8930', order: '#ORD-28469', amount: '৳890', method: 'COD', status: 'Pending', date: '27 Jun 2026' },
-  { id: '#TXN-8929', order: '#ORD-28468', amount: '৳12,400', method: 'SSLCommerz', status: 'Completed', date: '27 Jun 2026' },
-  { id: '#TXN-8928', order: '#ORD-28467', amount: '৳3,600', method: 'bKash', status: 'Refunded', date: '26 Jun 2026' },
-  { id: '#TXN-8927', order: '#ORD-28466', amount: '৳8,750', method: 'Nagad', status: 'Completed', date: '26 Jun 2026' },
-  { id: '#TXN-8926', order: '#ORD-28465', amount: '৳1,200', method: 'COD', status: 'Completed', date: '25 Jun 2026' },
-  { id: '#TXN-8925', order: '#ORD-28464', amount: '৳15,000', method: 'bKash', status: 'Pending', date: '25 Jun 2026' },
-  { id: '#TXN-8924', order: '#ORD-28463', amount: '৳4,300', method: 'SSLCommerz', status: 'Completed', date: '24 Jun 2026' },
-  { id: '#TXN-8923', order: '#ORD-28462', amount: '৳980', method: 'Nagad', status: 'Completed', date: '24 Jun 2026' },
-];
+import { useAdminData } from '@/lib/api/hooks';
+import { fetchPayments, fetchFinanceDashboard } from '@/lib/api/admin';
 
 const statusStyles: Record<string, string> = {
-  Completed: 'bg-green-100 text-green-700',
-  Pending: 'bg-amber-100 text-amber-700',
-  Refunded: 'bg-red-100 text-red-700',
-  Failed: 'bg-red-100 text-red-700',
+  COMPLETED: 'bg-green-100 text-green-700',
+  PENDING: 'bg-amber-100 text-amber-700',
+  REFUNDED: 'bg-red-100 text-red-700',
+  FAILED: 'bg-red-100 text-red-700',
 };
 
-function PaymentBreakdownChart() {
-  const data = [
-    { label: 'bKash', value: 45, color: '#a63600' },
-    { label: 'Nagad', value: 25, color: '#cf4500' },
-    { label: 'COD', value: 18, color: '#007f9f' },
-    { label: 'SSLCommerz', value: 12, color: '#5f5e5e' },
-  ];
-  const total = data.reduce((s, d) => s + d.value, 0);
-  let cumulative = 0;
-  const arcs = data.map((d) => {
-    const startAngle = (cumulative / total) * 360;
-    cumulative += d.value;
-    const endAngle = (cumulative / total) * 360;
-    return { ...d, startAngle, endAngle };
-  });
+function formatBDT(v: number): string {
+  return `৳${Math.round(v).toLocaleString('en-IN')}`;
+}
 
-  const cx = 120, cy = 120, r = 90;
-  const toRad = (deg: number) => (deg - 90) * (Math.PI / 180);
-  const arcPath = (start: number, end: number) => {
-    const s = toRad(start), e = toRad(end);
-    const x1 = cx + r * Math.cos(s), y1 = cy + r * Math.sin(s);
-    const x2 = cx + r * Math.cos(e), y2 = cy + r * Math.sin(e);
-    const large = end - start > 180 ? 1 : 0;
-    return `M${cx},${cy} L${x1},${y1} A${r},${r} 0 ${large} 1 ${x2},${y2} Z`;
-  };
-
-  return (
-    <svg viewBox="0 0 240 240" className="w-48 h-48 mx-auto">
-      {arcs.map((d) => (
-        <path key={d.label} d={arcPath(d.startAngle, d.endAngle)} fill={d.color} stroke="white" strokeWidth="2" />
-      ))}
-      <text x={cx} y={cy - 4} textAnchor="middle" className="fill-[#333] text-sm font-bold">Total</text>
-      <text x={cx} y={cy + 14} textAnchor="middle" className="fill-[#333] text-lg font-bold">100%</text>
-    </svg>
-  );
+function formatDate(d: string): string {
+  return new Date(d).toLocaleDateString('en-GB', { day: '2-digit', month: 'short', year: 'numeric' });
 }
 
 export default function PaymentsPage() {
+  const { data: payments, loading, error } = useAdminData(() =>
+    fetchPayments({ page: 1, limit: 50 }),
+  );
+  const { data: finance } = useAdminData(fetchFinanceDashboard);
+
   return (
     <div className="space-y-5">
       <h1 className="text-2xl font-bold text-[#222]">Payments</h1>
@@ -67,64 +33,73 @@ export default function PaymentsPage() {
           <h2 className="text-lg font-semibold text-[#222] mb-4">Settlement Summary</h2>
           <div className="space-y-3 text-sm">
             {[
-              { label: 'Total Received', value: '৳2,84,90,000' },
-              { label: 'Pending Clearance', value: '৳18,40,000' },
-              { label: 'Total Refunded', value: '৳3,20,000' },
-              { label: 'Platform Fee', value: '৳28,50,000' },
-              { label: 'Net Payable', value: '৳2,53,20,000', bold: true },
+              { label: 'Total Revenue', value: formatBDT(finance?.totalRevenue || 0) },
+              { label: 'Pending Clearance', value: formatBDT(finance?.pendingSettlementAmount || 0) },
+              { label: 'Total Commission', value: formatBDT(finance?.totalCommission || 0) },
+              { label: 'Net Cash Flow', value: formatBDT(finance?.netCashFlow || 0), bold: true },
             ].map((s) => (
               <div key={s.label} className="flex justify-between">
                 <span className="text-[#888]">{s.label}</span>
-                <span className={`font-medium ${s.bold ? 'text-lg text-[#222]' : 'text-[#444]'}`}>{s.value}</span>
+                <span className={`font-medium ${(s as any).bold ? 'text-lg text-[#222]' : 'text-[#444]'}`}>{s.value}</span>
               </div>
             ))}
           </div>
         </div>
 
         <div className="bg-white rounded-xl border border-[#eee] p-5">
-          <h2 className="text-lg font-semibold text-[#222] mb-4">Payment Method Breakdown</h2>
-          <PaymentBreakdownChart />
-          <div className="mt-3 space-y-1 text-sm">
+          <h2 className="text-lg font-semibold text-[#222] mb-4">Payment Methods</h2>
+          <div className="space-y-3 text-sm">
             {[
-              { label: 'bKash', color: 'bg-[#a63600]', value: '45%' },
-              { label: 'Nagad', color: 'bg-[#cf4500]', value: '25%' },
-              { label: 'COD', color: 'bg-[#007f9f]', value: '18%' },
-              { label: 'SSLCommerz', color: 'bg-[#5f5e5e]', value: '12%' },
-            ].map((d) => (
-              <div key={d.label} className="flex items-center gap-2">
-                <div className={`w-3 h-3 rounded-full ${d.color}`} />
-                <span className="text-[#666]">{d.label}</span>
-                <span className="ml-auto font-medium">{d.value}</span>
-              </div>
-            ))}
+              { label: 'bKash', count: 0, color: 'bg-[#a63600]' },
+              { label: 'Nagad', count: 0, color: 'bg-[#cf4500]' },
+              { label: 'COD', count: 0, color: 'bg-[#007f9f]' },
+              { label: 'SSLCommerz', count: 0, color: 'bg-[#5f5e5e]' },
+            ].map((d) => {
+              const methodCount = payments?.payments?.filter((p: any) => p.method === d.label.toUpperCase()).length || 0;
+              const total = payments?.payments?.length || 1;
+              const pct = Math.round((methodCount / total) * 100);
+              return (
+                <div key={d.label} className="flex items-center gap-2">
+                  <div className={`w-3 h-3 rounded-full ${d.color}`} />
+                  <span className="text-[#666]">{d.label}</span>
+                  <span className="ml-auto font-medium">{pct}%</span>
+                </div>
+              );
+            })}
           </div>
+          {(!payments?.payments || payments.payments.length === 0) && (
+            <p className="text-xs text-[#888] mt-2">No transaction data yet</p>
+          )}
         </div>
 
         <div className="bg-white rounded-xl border border-[#eee] p-5">
-          <h2 className="text-lg font-semibold text-[#222] mb-4">Refund Management</h2>
+          <h2 className="text-lg font-semibold text-[#222] mb-4">Pending Settlements</h2>
           <div className="space-y-3">
-            {[
-              { order: '#ORD-28467', amount: '৳3,600', reason: 'Item damaged', status: 'Completed' },
-              { order: '#ORD-28455', amount: '৳1,200', reason: 'Wrong item', status: 'Pending' },
-              { order: '#ORD-28442', amount: '৳5,000', reason: 'Customer request', status: 'Processing' },
-            ].map((r) => (
-              <div key={r.order} className="flex items-center justify-between p-3 bg-[#fafafa] rounded-lg text-sm">
-                <div>
-                  <p className="font-medium text-[#333]">{r.order}</p>
-                  <p className="text-[#888] text-xs">{r.reason}</p>
+            {finance?.pendingSettlements && finance.pendingSettlements.length > 0 ? (
+              finance.pendingSettlements.slice(0, 3).map((s: any) => (
+                <div key={s.id} className="flex items-center justify-between p-3 bg-[#fafafa] rounded-lg text-sm">
+                  <div>
+                    <p className="font-medium text-[#333]">{s.seller?.name || 'Seller'}</p>
+                    <p className="text-[#888] text-xs">{s.settlementNumber}</p>
+                  </div>
+                  <div className="text-right">
+                    <p className="font-medium">{formatBDT(s.netAmount)}</p>
+                    <span className={`text-[10px] font-semibold px-1.5 py-0.5 rounded-full ${
+                      s.status === 'PROCESSING' ? 'bg-blue-100 text-blue-700' : 'bg-amber-100 text-amber-700'
+                    }`}>{s.status}</span>
+                  </div>
                 </div>
-                <div className="text-right">
-                  <p className="font-medium">{r.amount}</p>
-                  <span className={`text-[10px] font-semibold px-1.5 py-0.5 rounded-full ${
-                    r.status === 'Completed' ? 'bg-green-100 text-green-700' :
-                    r.status === 'Pending' ? 'bg-amber-100 text-amber-700' : 'bg-blue-100 text-blue-700'
-                  }`}>{r.status}</span>
-                </div>
-              </div>
-            ))}
+              ))
+            ) : (
+              <p className="text-sm text-[#888] text-center py-4">No pending settlements</p>
+            )}
           </div>
         </div>
       </div>
+
+      {error && (
+        <div className="bg-red-50 text-red-600 rounded-lg p-3 text-sm border border-red-200">{error}</div>
+      )}
 
       <div className="bg-white rounded-xl border border-[#eee] overflow-x-auto">
         <table className="w-full text-sm">
@@ -139,18 +114,28 @@ export default function PaymentsPage() {
             </tr>
           </thead>
           <tbody>
-            {transactions.map((t) => (
-              <tr key={t.id} className="border-b border-[#f5f5f5] hover:bg-[#fafafa]">
-                <td className="p-3 font-medium text-[#333]">{t.id}</td>
-                <td className="p-3 text-[#555]">{t.order}</td>
-                <td className="p-3 font-medium">{t.amount}</td>
-                <td className="p-3 text-[#666]">{t.method}</td>
-                <td className="p-3">
-                  <span className={`text-[11px] font-semibold px-2 py-0.5 rounded-full ${statusStyles[t.status]}`}>{t.status}</span>
-                </td>
-                <td className="p-3 text-[#888]">{t.date}</td>
-              </tr>
-            ))}
+            {loading ? (
+              <tr><td colSpan={6} className="p-8 text-center text-[#888]">
+                <span className="material-symbols-outlined animate-spin align-middle mr-2">progress_activity</span>Loading...
+              </td></tr>
+            ) : !payments?.payments || payments.payments.length === 0 ? (
+              <tr><td colSpan={6} className="p-8 text-center text-[#888]">No transactions found</td></tr>
+            ) : (
+              payments.payments.map((t: any) => (
+                <tr key={t.id} className="border-b border-[#f5f5f5] hover:bg-[#fafafa]">
+                  <td className="p-3 font-mono text-xs font-medium text-[#333]">{t.id.slice(0, 8)}...</td>
+                  <td className="p-3 text-[#555]">#{t.order?.orderNumber || t.orderId?.slice(-6) || 'N/A'}</td>
+                  <td className="p-3 font-medium">{formatBDT(t.amount)}</td>
+                  <td className="p-3 text-[#666]">{t.method || 'N/A'}</td>
+                  <td className="p-3">
+                    <span className={`text-[11px] font-semibold px-2 py-0.5 rounded-full ${statusStyles[t.status] || 'bg-gray-100 text-gray-700'}`}>
+                      {t.status || 'N/A'}
+                    </span>
+                  </td>
+                  <td className="p-3 text-[#888]">{formatDate(t.createdAt)}</td>
+                </tr>
+              ))
+            )}
           </tbody>
         </table>
       </div>

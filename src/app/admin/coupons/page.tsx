@@ -1,22 +1,89 @@
 'use client';
 
 import { useState } from 'react';
-
-const mockCoupons = [
-  { code: 'EID50', type: 'Percentage', value: '50%', min: '৳500', uses: 1240, maxUses: 2000, perUser: 1, start: '20 Jun 2026', end: '30 Jun 2026', status: 'Active', revenue: '৳4,50,000' },
-  { code: 'FREESHIP', type: 'Free Shipping', value: '—', min: '৳1,000', uses: 3400, maxUses: 5000, perUser: 2, start: '01 Jun 2026', end: '31 Jul 2026', status: 'Active', revenue: '৳12,00,000' },
-  { code: 'WELCOME200', type: 'Fixed', value: '৳200', min: '৳1,000', uses: 890, maxUses: 1000, perUser: 1, start: '01 Jan 2026', end: '31 Dec 2026', status: 'Active', revenue: '৳1,78,000' },
-  { code: 'SUMMER15', type: 'Percentage', value: '15%', min: '৳2,000', uses: 560, maxUses: 500, perUser: 1, start: '15 May 2026', end: '15 Jun 2026', status: 'Expired', revenue: '৳2,10,000' },
-  { code: 'SPLASH30', type: 'Percentage', value: '30%', min: '৳3,000', uses: 0, maxUses: 300, perUser: 1, start: '01 Jul 2026', end: '10 Jul 2026', status: 'Upcoming', revenue: '৳0' },
-];
+import { useAdminData } from '@/lib/api/hooks';
+import { fetchCoupons, createCoupon, updateCoupon, deleteCoupon } from '@/lib/api/admin';
+import type { AdminCoupon } from '@/lib/api/admin';
 
 const tabs = ['Active', 'Upcoming', 'Expired'] as const;
+
+function getStatus(c: AdminCoupon): string {
+  const now = new Date();
+  if (c.expiresAt && new Date(c.expiresAt) < now) return 'Expired';
+  if (c.startsAt && new Date(c.startsAt) > now) return 'Upcoming';
+  if (!c.isActive) return 'Inactive';
+  return 'Active';
+}
+
+function formatDate(d: string | null): string {
+  if (!d) return '—';
+  return new Date(d).toLocaleDateString('en-GB', { day: '2-digit', month: 'short', year: 'numeric' });
+}
+
+function formatBDT(v: number): string {
+  return `৳${v.toLocaleString('en-IN')}`;
+}
 
 export default function CouponsPage() {
   const [activeTab, setActiveTab] = useState<string>('All');
   const [showCreate, setShowCreate] = useState(false);
+  const [form, setForm] = useState({
+    code: '', type: 'PERCENTAGE', value: '', minPurchase: '', maxUses: '', maxPerUser: '1',
+    startsAt: '', expiresAt: '',
+  });
+  const [submitting, setSubmitting] = useState(false);
 
-  const filtered = activeTab === 'All' ? mockCoupons : mockCoupons.filter((c) => c.status === activeTab);
+  const { data, loading, error, refetch } = useAdminData(() =>
+    fetchCoupons({ page: 1, limit: 100 }),
+  );
+
+  const filtered = !data ? [] : activeTab === 'All'
+    ? data.coupons
+    : data.coupons.filter((c) => getStatus(c) === activeTab);
+
+  const handleCreate = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!form.code.trim()) return;
+    setSubmitting(true);
+    try {
+      await createCoupon({
+        code: form.code,
+        type: form.type,
+        value: form.value,
+        minPurchase: form.minPurchase || '0',
+        maxUses: form.maxUses || null,
+        maxPerUser: form.maxPerUser || '1',
+        startsAt: form.startsAt || undefined,
+        expiresAt: form.expiresAt || undefined,
+      });
+      setShowCreate(false);
+      setForm({ code: '', type: 'PERCENTAGE', value: '', minPurchase: '', maxUses: '', maxPerUser: '1', startsAt: '', expiresAt: '' });
+      refetch();
+    } catch (err: any) {
+      alert(err.message || 'Failed to create coupon');
+    } finally {
+      setSubmitting(false);
+    }
+  };
+
+  const handleToggleActive = async (c: AdminCoupon) => {
+    try {
+      await updateCoupon(c.id, { isActive: !c.isActive });
+      refetch();
+    } catch (err: any) {
+      alert(err.message || 'Failed to update coupon');
+    }
+  };
+
+  const handleDelete = async (id: string) => {
+    if (!confirm('Delete this coupon?')) return;
+    try {
+      await deleteCoupon(id);
+      refetch();
+    } catch (err: any) {
+      alert(err.message || 'Failed to delete coupon');
+    }
+  };
 
   return (
     <div className="space-y-5">
@@ -27,58 +94,73 @@ export default function CouponsPage() {
 
       <div className="flex gap-2 flex-wrap">
         {[{ label: 'All', value: 'All' }, ...tabs.map((t) => ({ label: t, value: t }))].map((tab) => (
-          <button key={tab.value} onClick={() => setActiveTab(tab.value)} className={`text-sm px-4 py-1.5 rounded-lg font-medium transition-colors ${activeTab === tab.value ? 'bg-primary text-white' : 'bg-white text-[#666] border border-[#ddd] hover:bg-[#f5f5f5]'}`}>
+          <button key={tab.value} onClick={() => setActiveTab(tab.value)}
+            className={`text-sm px-4 py-1.5 rounded-lg font-medium transition-colors ${activeTab === tab.value ? 'bg-primary text-white' : 'bg-white text-[#666] border border-[#ddd] hover:bg-[#f5f5f5]'}`}>
             {tab.label}
           </button>
         ))}
       </div>
 
+      {error && (
+        <div className="bg-red-50 text-red-600 rounded-lg p-3 text-sm border border-red-200">{error}</div>
+      )}
+
       {showCreate && (
-        <div className="bg-white rounded-xl border border-[#eee] p-5">
+        <form onSubmit={handleCreate} className="bg-white rounded-xl border border-[#eee] p-5">
           <h2 className="text-lg font-semibold text-[#222] mb-4">Create Coupon</h2>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
             <div>
-              <label className="block text-sm text-[#666] mb-1">Code</label>
-              <input type="text" className="w-full border border-[#ddd] rounded-lg px-3 py-2 text-sm outline-none uppercase" placeholder="e.g. SAVE50" />
+              <label className="block text-sm text-[#666] mb-1">Code *</label>
+              <input value={form.code} onChange={(e) => setForm((f) => ({ ...f, code: e.target.value.toUpperCase() }))}
+                className="w-full border border-[#ddd] rounded-lg px-3 py-2 text-sm outline-none uppercase" placeholder="e.g. SAVE50" required />
             </div>
             <div>
               <label className="block text-sm text-[#666] mb-1">Type</label>
-              <select className="w-full border border-[#ddd] rounded-lg px-3 py-2 text-sm outline-none">
-                <option>Percentage</option>
-                <option>Fixed</option>
-                <option>Free Shipping</option>
+              <select value={form.type} onChange={(e) => setForm((f) => ({ ...f, type: e.target.value }))}
+                className="w-full border border-[#ddd] rounded-lg px-3 py-2 text-sm outline-none">
+                <option value="PERCENTAGE">Percentage</option>
+                <option value="FIXED">Fixed</option>
+                <option value="FREE_SHIPPING">Free Shipping</option>
               </select>
             </div>
             <div>
-              <label className="block text-sm text-[#666] mb-1">Value</label>
-              <input type="text" className="w-full border border-[#ddd] rounded-lg px-3 py-2 text-sm outline-none" placeholder="50 or ৳200" />
+              <label className="block text-sm text-[#666] mb-1">Value *</label>
+              <input value={form.value} onChange={(e) => setForm((f) => ({ ...f, value: e.target.value }))}
+                className="w-full border border-[#ddd] rounded-lg px-3 py-2 text-sm outline-none" placeholder="50" required />
             </div>
             <div>
               <label className="block text-sm text-[#666] mb-1">Min Purchase</label>
-              <input type="text" className="w-full border border-[#ddd] rounded-lg px-3 py-2 text-sm outline-none" placeholder="৳500" />
+              <input value={form.minPurchase} onChange={(e) => setForm((f) => ({ ...f, minPurchase: e.target.value }))}
+                className="w-full border border-[#ddd] rounded-lg px-3 py-2 text-sm outline-none" placeholder="500" />
             </div>
             <div>
               <label className="block text-sm text-[#666] mb-1">Max Uses</label>
-              <input type="number" className="w-full border border-[#ddd] rounded-lg px-3 py-2 text-sm outline-none" placeholder="1000" />
+              <input type="number" value={form.maxUses} onChange={(e) => setForm((f) => ({ ...f, maxUses: e.target.value }))}
+                className="w-full border border-[#ddd] rounded-lg px-3 py-2 text-sm outline-none" placeholder="1000" />
             </div>
             <div>
               <label className="block text-sm text-[#666] mb-1">Max Per User</label>
-              <input type="number" className="w-full border border-[#ddd] rounded-lg px-3 py-2 text-sm outline-none" placeholder="1" />
+              <input type="number" value={form.maxPerUser} onChange={(e) => setForm((f) => ({ ...f, maxPerUser: e.target.value }))}
+                className="w-full border border-[#ddd] rounded-lg px-3 py-2 text-sm outline-none" placeholder="1" />
             </div>
             <div>
               <label className="block text-sm text-[#666] mb-1">Start Date</label>
-              <input type="date" className="w-full border border-[#ddd] rounded-lg px-3 py-2 text-sm outline-none" />
+              <input type="date" value={form.startsAt} onChange={(e) => setForm((f) => ({ ...f, startsAt: e.target.value }))}
+                className="w-full border border-[#ddd] rounded-lg px-3 py-2 text-sm outline-none" />
             </div>
             <div>
               <label className="block text-sm text-[#666] mb-1">End Date</label>
-              <input type="date" className="w-full border border-[#ddd] rounded-lg px-3 py-2 text-sm outline-none" />
+              <input type="date" value={form.expiresAt} onChange={(e) => setForm((f) => ({ ...f, expiresAt: e.target.value }))}
+                className="w-full border border-[#ddd] rounded-lg px-3 py-2 text-sm outline-none" />
             </div>
           </div>
           <div className="flex justify-end gap-3 mt-4">
-            <button onClick={() => setShowCreate(false)} className="px-4 py-2 text-sm text-[#666] hover:bg-[#f5f5f5] rounded-lg">Cancel</button>
-            <button className="px-4 py-2 text-sm bg-primary text-white rounded-lg hover:bg-primary/90">Create Coupon</button>
+            <button type="button" onClick={() => setShowCreate(false)} className="px-4 py-2 text-sm text-[#666] hover:bg-[#f5f5f5] rounded-lg">Cancel</button>
+            <button type="submit" disabled={submitting} className="px-4 py-2 text-sm bg-primary text-white rounded-lg hover:bg-primary/90 disabled:opacity-50">
+              {submitting ? 'Creating...' : 'Create Coupon'}
+            </button>
           </div>
-        </div>
+        </form>
       )}
 
       <div className="bg-white rounded-xl border border-[#eee] overflow-x-auto">
@@ -91,42 +173,59 @@ export default function CouponsPage() {
               <th className="p-3">Min Purchase</th>
               <th className="p-3">Uses</th>
               <th className="p-3">Expiry</th>
-              <th className="p-3">Revenue</th>
               <th className="p-3">Status</th>
               <th className="p-3">Actions</th>
             </tr>
           </thead>
           <tbody>
-            {filtered.map((c) => (
-              <tr key={c.code} className="border-b border-[#f5f5f5] hover:bg-[#fafafa]">
-                <td className="p-3 font-mono font-bold text-[#333]">{c.code}</td>
-                <td className="p-3 text-[#666]">{c.type}</td>
-                <td className="p-3 font-medium">{c.value}</td>
-                <td className="p-3 text-[#666]">{c.min}</td>
-                <td className="p-3">
-                  <div className="flex items-center gap-2">
-                    <span>{c.uses.toLocaleString()}</span>
-                    <div className="w-16 h-1.5 bg-[#eee] rounded-full overflow-hidden">
-                      <div className="h-full bg-primary rounded-full" style={{ width: `${(c.uses / c.maxUses) * 100}%` }} />
-                    </div>
-                  </div>
-                </td>
-                <td className="p-3 text-[#888] text-xs">{c.end}</td>
-                <td className="p-3 font-medium">{c.revenue}</td>
-                <td className="p-3">
-                  <span className={`text-[11px] font-semibold px-2 py-0.5 rounded-full ${
-                    c.status === 'Active' ? 'bg-green-100 text-green-700' :
-                    c.status === 'Upcoming' ? 'bg-blue-100 text-blue-700' : 'bg-gray-100 text-gray-700'
-                  }`}>{c.status}</span>
-                </td>
-                <td className="p-3">
-                  <div className="flex gap-1">
-                    <button className="p-1.5 rounded-lg hover:bg-[#f5f5f5]"><span className="material-symbols-outlined text-[18px] text-[#666]">edit</span></button>
-                    <button className="p-1.5 rounded-lg hover:bg-[#f5f5f5]"><span className="material-symbols-outlined text-[18px] text-[#666]">delete</span></button>
-                  </div>
-                </td>
-              </tr>
-            ))}
+            {loading ? (
+              <tr><td colSpan={8} className="p-8 text-center text-[#888]">
+                <span className="material-symbols-outlined animate-spin align-middle mr-2">progress_activity</span>Loading...
+              </td></tr>
+            ) : filtered.length === 0 ? (
+              <tr><td colSpan={8} className="p-8 text-center text-[#888]">No coupons found</td></tr>
+            ) : (
+              filtered.map((c) => {
+                const status = getStatus(c);
+                const usagePct = c.maxUses ? Math.min(100, (c as any).usedCount || 0 / c.maxUses * 100) : 0;
+                return (
+                  <tr key={c.id} className="border-b border-[#f5f5f5] hover:bg-[#fafafa]">
+                    <td className="p-3 font-mono font-bold text-[#333]">{c.code}</td>
+                    <td className="p-3 text-[#666]">{c.type}</td>
+                    <td className="p-3 font-medium">{c.type === 'PERCENTAGE' ? `${c.value}%` : formatBDT(c.value)}</td>
+                    <td className="p-3 text-[#666]">{c.minPurchase > 0 ? formatBDT(c.minPurchase) : '—'}</td>
+                    <td className="p-3">
+                      <div className="flex items-center gap-2">
+                        <span>{(c as any).usedCount || 0}/{c.maxUses || '∞'}</span>
+                        {c.maxUses && (
+                          <div className="w-16 h-1.5 bg-[#eee] rounded-full overflow-hidden">
+                            <div className="h-full bg-primary rounded-full" style={{ width: `${usagePct}%` }} />
+                          </div>
+                        )}
+                      </div>
+                    </td>
+                    <td className="p-3 text-[#888] text-xs">{formatDate(c.expiresAt)}</td>
+                    <td className="p-3">
+                      <span className={`text-[11px] font-semibold px-2 py-0.5 rounded-full ${
+                        status === 'Active' ? 'bg-green-100 text-green-700' :
+                        status === 'Upcoming' ? 'bg-blue-100 text-blue-700' :
+                        status === 'Expired' ? 'bg-gray-100 text-gray-700' : 'bg-gray-100 text-gray-700'
+                      }`}>{status}</span>
+                    </td>
+                    <td className="p-3">
+                      <div className="flex gap-1">
+                        <button onClick={() => handleToggleActive(c)} className="p-1.5 rounded-lg hover:bg-[#f5f5f5]" title={c.isActive ? 'Deactivate' : 'Activate'}>
+                          <span className="material-symbols-outlined text-[18px] text-[#666]">{c.isActive ? 'toggle_on' : 'toggle_off'}</span>
+                        </button>
+                        <button onClick={() => handleDelete(c.id)} className="p-1.5 rounded-lg hover:bg-[#f5f5f5]" title="Delete">
+                          <span className="material-symbols-outlined text-[18px] text-[#666]">delete</span>
+                        </button>
+                      </div>
+                    </td>
+                  </tr>
+                );
+              })
+            )}
           </tbody>
         </table>
       </div>

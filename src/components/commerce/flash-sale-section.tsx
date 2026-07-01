@@ -1,14 +1,20 @@
 'use client';
 
+import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { CountdownTimer } from '@/components/ui/countdown-timer';
 import { ProductCard } from '@/components/commerce/product-card';
-import { flashSaleProducts } from '@/lib/data/products';
+import { getFlashSaleProducts } from '@/services/products';
+import type { Product } from '@/types';
 
 const FLASH_SALE_END = '2026-06-30T23:59:59Z';
 
 export function FlashSaleSection() {
-  const displayProducts = flashSaleProducts.slice(0, 8);
+  const [displayProducts, setDisplayProducts] = useState<Product[]>([]);
+
+  useEffect(() => {
+    getFlashSaleProducts().then(all => setDisplayProducts(all.slice(0, 8)));
+  }, []);
 
   return (
     <section className="mt-xl px-container-margin">

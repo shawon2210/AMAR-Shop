@@ -1,8 +1,9 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import Link from 'next/link';
-import { usePathname } from 'next/navigation';
+import { usePathname, useRouter } from 'next/navigation';
+import { useAuthStore, useAuthHydrated } from '@/stores/auth-store';
 
 interface NavItem {
   label: string;
@@ -186,8 +187,38 @@ export default function AdminLayout({
 }: {
   children: React.ReactNode;
 }) {
+  const router = useRouter();
+  const pathname = usePathname();
+  const token = useAuthStore((s) => s.token);
+  const user = useAuthStore((s) => s.user);
+  const hydrated = useAuthHydrated();
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
+
+  useEffect(() => {
+    if (!hydrated) return;
+    if (pathname.startsWith('/admin/login')) return;
+    if (!token || !user) {
+      router.replace('/admin/login');
+    } else if (user.role !== 'ADMIN') {
+      router.replace('/');
+    }
+  }, [hydrated, token, user, pathname, router]);
+
+  if (!hydrated || pathname.startsWith('/admin/login')) {
+    return <>{children}</>;
+  }
+
+  if (!token || !user || user.role !== 'ADMIN') {
+    return (
+      <div className="min-h-screen flex items-center justify-center bg-[#f5f5f5]">
+        <div className="text-center">
+          <span className="material-symbols-outlined animate-spin text-primary text-3xl">progress_activity</span>
+          <p className="text-sm text-[#888] mt-3">Verifying access...</p>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="min-h-screen flex bg-[#f5f5f5]">
@@ -222,13 +253,23 @@ export default function AdminLayout({
             </button>
 
             <div className="flex items-center gap-2 pl-3 border-l border-[#e5e5e5]">
-              <div className="w-8 h-8 rounded-full bg-primary flex items-center justify-center text-white text-sm font-bold">
-                A
+              <div className="w-8 h-8 rounded-full bg-primary flex items-center justify-center text-white text-sm font-bold uppercase">
+                {user?.name?.charAt(0) || 'A'}
               </div>
               <div className="hidden md:block">
-                <p className="text-sm font-medium text-[#333] leading-tight">Admin</p>
-                <p className="text-xs text-[#888]">admin@amarshop.com</p>
+                <p className="text-sm font-medium text-[#333] leading-tight">{user?.name || 'Admin'}</p>
+                <p className="text-xs text-[#888]">{user?.phone || ''}</p>
               </div>
+              <button
+                onClick={() => {
+                  useAuthStore.getState().logout();
+                  router.push('/admin/login');
+                }}
+                className="ml-2 p-1.5 rounded-lg hover:bg-[#fee2e2] text-[#888] hover:text-error transition-colors"
+                title="Logout"
+              >
+                <span className="material-symbols-outlined text-[18px]">logout</span>
+              </button>
             </div>
           </div>
         </header>

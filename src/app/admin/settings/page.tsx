@@ -1,11 +1,28 @@
 'use client';
 
 import { useState } from 'react';
+import { updateSettings } from '@/lib/api/admin';
 
 type SettingsTab = 'general' | 'commission' | 'shipping' | 'payment' | 'email' | 'seo' | 'security';
 
 export default function SettingsPage() {
   const [tab, setTab] = useState<SettingsTab>('general');
+  const [commissionRate, setCommissionRate] = useState('5');
+  const [saving, setSaving] = useState(false);
+  const [message, setMessage] = useState<{ type: 'success' | 'error'; text: string } | null>(null);
+
+  const handleSaveCommission = async () => {
+    setSaving(true);
+    setMessage(null);
+    try {
+      await updateSettings({ commissionRate: parseFloat(commissionRate) });
+      setMessage({ type: 'success', text: 'Commission rate updated successfully.' });
+    } catch (err: any) {
+      setMessage({ type: 'error', text: err.message || 'Failed to update settings' });
+    } finally {
+      setSaving(false);
+    }
+  };
 
   const tabs: { key: SettingsTab; label: string; icon: string }[] = [
     { key: 'general', label: 'General', icon: 'settings' },
@@ -20,6 +37,12 @@ export default function SettingsPage() {
   return (
     <div className="space-y-5">
       <h1 className="text-2xl font-bold text-[#222]">Settings</h1>
+
+      {message && (
+        <div className={`rounded-lg p-3 text-sm border ${message.type === 'success' ? 'bg-green-50 text-green-700 border-green-200' : 'bg-red-50 text-red-600 border-red-200'}`}>
+          {message.text}
+        </div>
+      )}
 
       <div className="flex gap-2 flex-wrap">
         {tabs.map((t) => (
@@ -51,14 +74,14 @@ export default function SettingsPage() {
             <div className="grid grid-cols-2 gap-4">
               <div>
                 <label className="block text-sm text-[#666] mb-1">Currency</label>
-                <select defaultValue="BDT" className="w-full border border-[#ddd] rounded-lg px-3 py-2 text-sm outline-none">
+                <select defaultValue="BDT" className="w-full border border-[#ddd] rounded-lg px-3 py-2 text-sm outline-none bg-white">
                   <option value="BDT">BDT (৳)</option>
                   <option value="USD">USD ($)</option>
                 </select>
               </div>
               <div>
                 <label className="block text-sm text-[#666] mb-1">Timezone</label>
-                <select defaultValue="Asia/Dhaka" className="w-full border border-[#ddd] rounded-lg px-3 py-2 text-sm outline-none">
+                <select defaultValue="Asia/Dhaka" className="w-full border border-[#ddd] rounded-lg px-3 py-2 text-sm outline-none bg-white">
                   <option value="Asia/Dhaka">Asia/Dhaka (UTC+6)</option>
                   <option value="UTC">UTC</option>
                 </select>
@@ -73,10 +96,19 @@ export default function SettingsPage() {
             <h2 className="text-lg font-semibold text-[#222] mb-4">Commission Settings</h2>
             <div>
               <label className="block text-sm text-[#666] mb-1">Default Commission Rate (%)</label>
-              <input type="number" defaultValue="5" className="w-full border border-[#ddd] rounded-lg px-3 py-2 text-sm outline-none" />
+              <input
+                type="number"
+                value={commissionRate}
+                onChange={(e) => setCommissionRate(e.target.value)}
+                min="0"
+                max="100"
+                step="0.1"
+                className="w-full border border-[#ddd] rounded-lg px-3 py-2 text-sm outline-none"
+              />
             </div>
             <div>
               <label className="block text-sm text-[#666] mb-2">Category-Specific Rates</label>
+              <p className="text-xs text-[#888] mb-3">Category-specific rates are not yet configurable via this panel.</p>
               <div className="space-y-2">
                 {[
                   { category: 'Electronics', rate: '3%' },
@@ -87,12 +119,18 @@ export default function SettingsPage() {
                 ].map((c) => (
                   <div key={c.category} className="flex items-center gap-3">
                     <span className="text-sm text-[#444] w-32">{c.category}</span>
-                    <input type="text" defaultValue={c.rate} className="border border-[#ddd] rounded-lg px-3 py-1.5 text-sm outline-none w-24" />
+                    <input type="text" defaultValue={c.rate} className="border border-[#ddd] rounded-lg px-3 py-1.5 text-sm outline-none w-24 bg-gray-50" disabled />
                   </div>
                 ))}
               </div>
             </div>
-            <button className="px-6 py-2 bg-primary text-white text-sm rounded-lg hover:bg-primary/90">Save Changes</button>
+            <button
+              onClick={handleSaveCommission}
+              disabled={saving}
+              className="px-6 py-2 bg-primary text-white text-sm rounded-lg hover:bg-primary/90 disabled:opacity-50"
+            >
+              {saving ? 'Saving...' : 'Save Changes'}
+            </button>
           </div>
         )}
 
@@ -105,7 +143,7 @@ export default function SettingsPage() {
             </div>
             <div>
               <label className="block text-sm text-[#666] mb-1">Default Courier</label>
-              <select className="w-full border border-[#ddd] rounded-lg px-3 py-2 text-sm outline-none">
+              <select className="w-full border border-[#ddd] rounded-lg px-3 py-2 text-sm outline-none bg-white">
                 <option>SA Paribahan</option>
                 <option>Sundarban Courier</option>
                 <option>Pathao</option>
@@ -123,49 +161,23 @@ export default function SettingsPage() {
         {tab === 'payment' && (
           <div className="max-w-2xl space-y-6">
             <h2 className="text-lg font-semibold text-[#222] mb-4">Payment Configuration</h2>
-
-            <div className="border border-[#eee] rounded-lg p-4 space-y-3">
-              <h3 className="font-medium text-[#333]">bKash</h3>
-              <div className="grid grid-cols-2 gap-3">
-                <div>
-                  <label className="block text-xs text-[#888] mb-1">Merchant Number</label>
-                  <input type="text" defaultValue="01XXXXXXXXX" className="w-full border border-[#ddd] rounded-lg px-3 py-2 text-sm outline-none" />
-                </div>
-                <div>
-                  <label className="block text-xs text-[#888] mb-1">API Key</label>
-                  <input type="password" defaultValue="********" className="w-full border border-[#ddd] rounded-lg px-3 py-2 text-sm outline-none" />
-                </div>
-              </div>
-            </div>
-
-            <div className="border border-[#eee] rounded-lg p-4 space-y-3">
-              <h3 className="font-medium text-[#333]">Nagad</h3>
-              <div className="grid grid-cols-2 gap-3">
-                <div>
-                  <label className="block text-xs text-[#888] mb-1">Merchant Number</label>
-                  <input type="text" defaultValue="01XXXXXXXXX" className="w-full border border-[#ddd] rounded-lg px-3 py-2 text-sm outline-none" />
-                </div>
-                <div>
-                  <label className="block text-xs text-[#888] mb-1">API Key</label>
-                  <input type="password" defaultValue="********" className="w-full border border-[#ddd] rounded-lg px-3 py-2 text-sm outline-none" />
+            {[
+              { title: 'bKash', fields: [{ label: 'Merchant Number', val: '01XXXXXXXXX' }, { label: 'API Key', val: '********' }] },
+              { title: 'Nagad', fields: [{ label: 'Merchant Number', val: '01XXXXXXXXX' }, { label: 'API Key', val: '********' }] },
+              { title: 'SSLCommerz', fields: [{ label: 'Store ID', val: 'abc123' }, { label: 'Store Password', val: '********' }] },
+            ].map((gw) => (
+              <div key={gw.title} className="border border-[#eee] rounded-lg p-4 space-y-3">
+                <h3 className="font-medium text-[#333]">{gw.title}</h3>
+                <div className="grid grid-cols-2 gap-3">
+                  {gw.fields.map((f) => (
+                    <div key={f.label}>
+                      <label className="block text-xs text-[#888] mb-1">{f.label}</label>
+                      <input type="text" defaultValue={f.val} className="w-full border border-[#ddd] rounded-lg px-3 py-2 text-sm outline-none" />
+                    </div>
+                  ))}
                 </div>
               </div>
-            </div>
-
-            <div className="border border-[#eee] rounded-lg p-4 space-y-3">
-              <h3 className="font-medium text-[#333]">SSLCommerz</h3>
-              <div className="grid grid-cols-2 gap-3">
-                <div>
-                  <label className="block text-xs text-[#888] mb-1">Store ID</label>
-                  <input type="text" defaultValue="abc123" className="w-full border border-[#ddd] rounded-lg px-3 py-2 text-sm outline-none" />
-                </div>
-                <div>
-                  <label className="block text-xs text-[#888] mb-1">Store Password</label>
-                  <input type="password" defaultValue="********" className="w-full border border-[#ddd] rounded-lg px-3 py-2 text-sm outline-none" />
-                </div>
-              </div>
-            </div>
-
+            ))}
             <button className="px-6 py-2 bg-primary text-white text-sm rounded-lg hover:bg-primary/90">Save Changes</button>
           </div>
         )}
@@ -174,22 +186,17 @@ export default function SettingsPage() {
           <div className="max-w-2xl space-y-4">
             <h2 className="text-lg font-semibold text-[#222] mb-4">Email Settings</h2>
             <div className="grid grid-cols-2 gap-4">
-              <div>
-                <label className="block text-sm text-[#666] mb-1">SMTP Host</label>
-                <input type="text" defaultValue="smtp.gmail.com" className="w-full border border-[#ddd] rounded-lg px-3 py-2 text-sm outline-none" />
-              </div>
-              <div>
-                <label className="block text-sm text-[#666] mb-1">SMTP Port</label>
-                <input type="number" defaultValue="587" className="w-full border border-[#ddd] rounded-lg px-3 py-2 text-sm outline-none" />
-              </div>
-              <div>
-                <label className="block text-sm text-[#666] mb-1">SMTP Username</label>
-                <input type="text" defaultValue="noreply@amarshop.com" className="w-full border border-[#ddd] rounded-lg px-3 py-2 text-sm outline-none" />
-              </div>
-              <div>
-                <label className="block text-sm text-[#666] mb-1">SMTP Password</label>
-                <input type="password" defaultValue="********" className="w-full border border-[#ddd] rounded-lg px-3 py-2 text-sm outline-none" />
-              </div>
+              {[
+                { label: 'SMTP Host', val: 'smtp.gmail.com' },
+                { label: 'SMTP Port', val: '587' },
+                { label: 'SMTP Username', val: 'noreply@amarshop.com' },
+                { label: 'SMTP Password', val: '********' },
+              ].map((f) => (
+                <div key={f.label}>
+                  <label className="block text-sm text-[#666] mb-1">{f.label}</label>
+                  <input type={f.label.includes('Password') ? 'password' : 'text'} defaultValue={f.val} className="w-full border border-[#ddd] rounded-lg px-3 py-2 text-sm outline-none" />
+                </div>
+              ))}
             </div>
             <div>
               <label className="block text-sm text-[#666] mb-1">Notification Emails (comma separated)</label>

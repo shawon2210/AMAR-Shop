@@ -3,9 +3,11 @@ import { CategoryGrid } from '@/components/commerce/category-grid';
 import { FlashSaleSection } from '@/components/commerce/flash-sale-section';
 import { LocalBanners } from '@/components/commerce/local-banners';
 import { ProductGrid } from '@/components/commerce/product-grid';
-import { products } from '@/lib/data/products';
+import { getProducts } from '@/services/products';
 
-export default function HomePage() {
+export default async function HomePage() {
+  const products = await getProducts(0, 16);
+
   return (
     <div className="pb-24">
       <HeroSlider />

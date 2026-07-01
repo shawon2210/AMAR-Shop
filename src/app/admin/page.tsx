@@ -1,26 +1,7 @@
 'use client';
 
-
-const stats = [
-  { label: 'Total Revenue', value: '৳4,52,80,490', icon: 'payments', change: '+12.5%', color: 'text-green-600' },
-  { label: 'Total Orders', value: '24,890', icon: 'receipt_long', change: '+8.2%', color: 'text-green-600' },
-  { label: 'Total Users', value: '1,42,567', icon: 'group', change: '+5.7%', color: 'text-green-600' },
-  { label: 'Total Sellers', value: '3,420', icon: 'store', change: '+3.1%', color: 'text-green-600' },
-  { label: 'Total Products', value: '1,28,934', icon: 'inventory_2', change: '+9.4%', color: 'text-green-600' },
-];
-
-const recentOrders = [
-  { id: '#ORD-28471', customer: 'Rahima Begum', amount: '৳2,450', status: 'Delivered', date: '28 Jun 2026' },
-  { id: '#ORD-28472', customer: 'Karim Hossain', amount: '৳5,200', status: 'Processing', date: '28 Jun 2026' },
-  { id: '#ORD-28473', customer: 'Fatima Akhter', amount: '৳890', status: 'Shipped', date: '27 Jun 2026' },
-  { id: '#ORD-28474', customer: 'Nurul Islam', amount: '৳12,400', status: 'Pending', date: '27 Jun 2026' },
-  { id: '#ORD-28475', customer: 'Sharmin Sultana', amount: '৳3,600', status: 'Delivered', date: '26 Jun 2026' },
-  { id: '#ORD-28476', customer: 'Jahid Hasan', amount: '৳8,750', status: 'Cancelled', date: '26 Jun 2026' },
-  { id: '#ORD-28477', customer: 'Morshed Alam', amount: '৳1,200', status: 'Delivered', date: '25 Jun 2026' },
-  { id: '#ORD-28478', customer: 'Parvin Akhter', amount: '৳15,000', status: 'Processing', date: '25 Jun 2026' },
-  { id: '#ORD-28479', customer: 'Shahidul Islam', amount: '৳4,300', status: 'Shipped', date: '24 Jun 2026' },
-  { id: '#ORD-28480', customer: 'Taslima Nasrin', amount: '৳980', status: 'Pending', date: '24 Jun 2026' },
-];
+import { useAdminData } from '@/lib/api/hooks';
+import { fetchDashboard } from '@/lib/api/admin';
 
 const statusColors: Record<string, string> = {
   Delivered: 'bg-green-100 text-green-700',
@@ -30,18 +11,29 @@ const statusColors: Record<string, string> = {
   Cancelled: 'bg-red-100 text-red-700',
 };
 
-const revenueData = [
-  28000, 32000, 27000, 35000, 29000, 38000, 41000, 36000, 42000, 39000,
-  45000, 41000, 48000, 44000, 52000, 49000, 55000, 51000, 58000, 54000,
-  61000, 57000, 64000, 59000, 67000, 62000, 70000, 66000, 73000, 69000,
-];
+const statusStyles: Record<string, string> = {
+  delivered: 'bg-green-100 text-green-700',
+  processing: 'bg-blue-100 text-blue-700',
+  shipped: 'bg-purple-100 text-purple-700',
+  pending: 'bg-amber-100 text-amber-700',
+  cancelled: 'bg-red-100 text-red-700',
+};
 
-function RevenueChart() {
-  const max = Math.max(...revenueData);
+function formatBDT(amount: number): string {
+  const num = Math.round(amount);
+  if (num >= 10000000) return `৳${(num / 10000000).toFixed(1)}Cr`;
+  if (num >= 100000) return `৳${(num / 100000).toFixed(1)}L`;
+  if (num >= 1000) return `৳${num.toLocaleString('en-IN')}`;
+  return `৳${num}`;
+}
+
+function RevenueChart({ data }: { data: { date: string; revenue: number }[] }) {
+  if (!data || data.length === 0) return <div className="h-48 flex items-center justify-center text-[#888] text-sm">No revenue data</div>;
+  const max = Math.max(...data.map((d) => d.revenue), 1);
   const w = 600;
   const h = 200;
-  const points = revenueData
-    .map((v, i) => `${(i / (revenueData.length - 1)) * w},${h - (v / max) * h * 0.85 - 10}`)
+  const points = data
+    .map((d, i) => `${(i / (data.length - 1)) * w},${h - (d.revenue / max) * h * 0.85 - 10}`)
     .join(' ');
   const area = `M0,${h} ${points} ${w},${h}Z`;
 
@@ -54,23 +46,10 @@ function RevenueChart() {
         </linearGradient>
       </defs>
       <path d={area} fill="url(#revGrad)" />
-      <polyline
-        points={points}
-        fill="none"
-        stroke="#a63600"
-        strokeWidth="2"
-        strokeLinecap="round"
-        strokeLinejoin="round"
-      />
-      {[0, 7, 14, 21, 29].map((i) => (
-        <text
-          key={i}
-          x={(i / 29) * w}
-          y={h - 4}
-          textAnchor="middle"
-          className="fill-[#999] text-[10px]"
-        >
-          {`Day ${i + 1}`}
+      <polyline points={points} fill="none" stroke="#a63600" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+      {[0, 7, 14, 21, 29].filter((i) => i < data.length).map((i) => (
+        <text key={i} x={(i / Math.max(data.length - 1, 1)) * w} y={h - 4} textAnchor="middle" className="fill-[#999] text-[10px]">
+          {data[i]?.date?.slice(5) || `Day ${i + 1}`}
         </text>
       ))}
     </svg>
@@ -78,6 +57,35 @@ function RevenueChart() {
 }
 
 export default function AdminDashboard() {
+  const { data, loading, error } = useAdminData(fetchDashboard);
+
+  if (loading) {
+    return (
+      <div className="flex items-center justify-center h-64">
+        <span className="material-symbols-outlined animate-spin text-primary text-3xl">progress_activity</span>
+      </div>
+    );
+  }
+
+  if (error) {
+    return (
+      <div className="bg-red-50 text-red-600 rounded-xl p-6 border border-red-200">
+        <h2 className="font-semibold mb-1">Failed to load dashboard</h2>
+        <p className="text-sm">{error}</p>
+      </div>
+    );
+  }
+
+  if (!data) return null;
+
+  const stats = [
+    { label: 'Total Revenue', value: formatBDT(data.totalRevenue), icon: 'payments', change: 'Today', color: 'text-green-600' },
+    { label: 'Total Orders', value: data.totalOrders.toLocaleString('en-IN'), icon: 'receipt_long', change: 'All time', color: 'text-blue-600' },
+    { label: 'Total Users', value: data.totalUsers.toLocaleString('en-IN'), icon: 'group', change: 'Registered', color: 'text-green-600' },
+    { label: 'Total Sellers', value: data.totalSellers.toLocaleString('en-IN'), icon: 'store', change: 'Active sellers', color: 'text-purple-600' },
+    { label: 'Total Products', value: data.totalProducts.toLocaleString('en-IN'), icon: 'inventory_2', change: 'Listed', color: 'text-amber-600' },
+  ];
+
   return (
     <div className="space-y-6">
       <h1 className="text-2xl font-bold text-[#222]">Dashboard</h1>
@@ -98,7 +106,7 @@ export default function AdminDashboard() {
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
         <div className="lg:col-span-2 bg-white rounded-xl border border-[#eee] p-5">
           <h2 className="text-lg font-semibold text-[#222] mb-4">Revenue (Last 30 Days)</h2>
-          <RevenueChart />
+          <RevenueChart data={data.revenueChart} />
         </div>
 
         <div className="bg-white rounded-xl border border-[#eee] p-5">
@@ -107,16 +115,16 @@ export default function AdminDashboard() {
             <div className="flex items-center justify-between p-3 bg-amber-50 rounded-lg border border-amber-200">
               <div>
                 <p className="text-sm font-medium text-amber-800">Pending Approvals</p>
-                <p className="text-xs text-amber-600">12 sellers need KYC review</p>
+                <p className="text-xs text-amber-600">{data.pendingSellerApprovals} sellers need KYC review</p>
               </div>
-              <span className="bg-amber-500 text-white text-xs font-bold px-2 py-1 rounded-full">12</span>
+              <span className="bg-amber-500 text-white text-xs font-bold px-2 py-1 rounded-full">{data.pendingSellerApprovals}</span>
             </div>
             <div className="flex items-center justify-between p-3 bg-blue-50 rounded-lg border border-blue-200">
               <div>
                 <p className="text-sm font-medium text-blue-800">Product Moderation</p>
-                <p className="text-xs text-blue-600">48 products pending review</p>
+                <p className="text-xs text-blue-600">Low stock alerts</p>
               </div>
-              <span className="bg-blue-500 text-white text-xs font-bold px-2 py-1 rounded-full">48</span>
+              <span className="bg-blue-500 text-white text-xs font-bold px-2 py-1 rounded-full">{data.lowStockAlerts}</span>
             </div>
             <div className="flex items-center justify-between p-3 bg-green-50 rounded-lg border border-green-200">
               <div>
@@ -133,7 +141,7 @@ export default function AdminDashboard() {
         <div className="lg:col-span-2 bg-white rounded-xl border border-[#eee]">
           <div className="p-5 border-b border-[#eee] flex items-center justify-between">
             <h2 className="text-lg font-semibold text-[#222]">Recent Orders</h2>
-            <button className="text-sm text-primary font-medium hover:underline">View All</button>
+            <a href="/admin/orders" className="text-sm text-primary font-medium hover:underline">View All</a>
           </div>
           <div className="overflow-x-auto">
             <table className="w-full text-sm">
@@ -147,19 +155,22 @@ export default function AdminDashboard() {
                 </tr>
               </thead>
               <tbody>
-                {recentOrders.map((o) => (
+                {(data.recentOrders as any[])?.slice(0, 10).map((o: any) => (
                   <tr key={o.id} className="border-b border-[#f5f5f5] hover:bg-[#fafafa]">
-                    <td className="p-3 font-medium text-[#333]">{o.id}</td>
-                    <td className="p-3 text-[#555]">{o.customer}</td>
-                    <td className="p-3 font-medium">{o.amount}</td>
+                    <td className="p-3 font-medium text-[#333]">#{o.orderNumber || o.id.slice(-6)}</td>
+                    <td className="p-3 text-[#555]">{o.user?.name || 'N/A'}</td>
+                    <td className="p-3 font-medium">{formatBDT(o.total)}</td>
                     <td className="p-3">
-                      <span className={`text-[11px] font-semibold px-2 py-0.5 rounded-full ${statusColors[o.status]}`}>
-                        {o.status}
+                      <span className={`text-[11px] font-semibold px-2 py-0.5 rounded-full ${statusStyles[o.status?.toLowerCase()] || 'bg-gray-100 text-gray-700'}`}>
+                        {o.status || 'N/A'}
                       </span>
                     </td>
-                    <td className="p-3 text-[#888]">{o.date}</td>
+                    <td className="p-3 text-[#888]">{o.createdAt ? new Date(o.createdAt).toLocaleDateString('en-GB', { day: '2-digit', month: 'short', year: 'numeric' }) : 'N/A'}</td>
                   </tr>
                 ))}
+                {(!data.recentOrders || (data.recentOrders as any[]).length === 0) && (
+                  <tr><td colSpan={5} className="p-6 text-center text-[#888] text-sm">No recent orders</td></tr>
+                )}
               </tbody>
             </table>
           </div>
@@ -169,44 +180,50 @@ export default function AdminDashboard() {
           <div className="bg-white rounded-xl border border-[#eee] p-5">
             <h2 className="text-lg font-semibold text-[#222] mb-4">Top Sellers</h2>
             <div className="space-y-3">
-              {[
-                { name: 'TechHaven BD', revenue: '৳28,40,000' },
-                { name: 'Fashion Hub', revenue: '৳21,60,000' },
-                { name: 'Gadget Pro', revenue: '৳18,90,000' },
-                { name: 'Home Decor Ltd', revenue: '৳15,20,000' },
-                { name: 'Book Nook', revenue: '৳12,70,000' },
-              ].map((s, i) => (
-                <div key={s.name} className="flex items-center justify-between">
+              {(data.recentOrders as any[])?.slice(0, 5).map((o: any, i: number) => (
+                <div key={o.id} className="flex items-center justify-between">
                   <div className="flex items-center gap-3">
-                    <span className="w-5 h-5 rounded-full bg-[#eee] flex items-center justify-center text-[10px] font-bold text-[#888]">
-                      {i + 1}
-                    </span>
-                    <span className="text-sm text-[#444]">{s.name}</span>
+                    <span className="w-5 h-5 rounded-full bg-[#eee] flex items-center justify-center text-[10px] font-bold text-[#888]">{i + 1}</span>
+                    <span className="text-sm text-[#444]">{o.user?.name || 'Store'}</span>
                   </div>
-                  <span className="text-sm font-semibold">{s.revenue}</span>
+                  <span className="text-sm font-semibold">{formatBDT(o.total)}</span>
                 </div>
               ))}
+              {(!data.recentOrders || (data.recentOrders as any[]).length === 0) && (
+                <p className="text-sm text-[#888] text-center py-4">No seller data</p>
+              )}
             </div>
           </div>
 
           <div className="bg-white rounded-xl border border-[#eee] p-5">
             <h2 className="text-lg font-semibold text-[#222] mb-4">System Health</h2>
             <div className="space-y-2 text-sm">
-              {[
-                { label: 'Server Uptime', value: '99.98%', good: true },
-                { label: 'API Response', value: '142ms', good: true },
-                { label: 'Database', value: 'Connected', good: true },
-                { label: 'Redis Cache', value: 'Operational', good: true },
-                { label: 'CDN', value: 'Active', good: true },
-              ].map((h) => (
-                <div key={h.label} className="flex items-center justify-between">
-                  <span className="text-[#666]">{h.label}</span>
-                  <div className="flex items-center gap-2">
-                    <span className="font-medium text-[#333]">{h.value}</span>
-                    {h.good && <span className="material-symbols-outlined text-green-500 text-[16px]">check_circle</span>}
-                  </div>
+              <div className="flex items-center justify-between">
+                <span className="text-[#666]">Server Status</span>
+                <div className="flex items-center gap-2">
+                  <span className="font-medium text-[#333]">Online</span>
+                  <span className="material-symbols-outlined text-green-500 text-[16px]">check_circle</span>
                 </div>
-              ))}
+              </div>
+              <div className="flex items-center justify-between">
+                <span className="text-[#666]">Database</span>
+                <div className="flex items-center gap-2">
+                  <span className="font-medium text-[#333]">Connected</span>
+                  <span className="material-symbols-outlined text-green-500 text-[16px]">check_circle</span>
+                </div>
+              </div>
+              <div className="flex items-center justify-between">
+                <span className="text-[#666]">Total Revenue</span>
+                <div className="flex items-center gap-2">
+                  <span className="font-medium text-[#333]">{formatBDT(data.totalRevenue)}</span>
+                </div>
+              </div>
+              <div className="flex items-center justify-between">
+                <span className="text-[#666]">Sellers Pending KYC</span>
+                <div className="flex items-center gap-2">
+                  <span className="font-medium text-[#333]">{data.pendingSellerApprovals}</span>
+                </div>
+              </div>
             </div>
           </div>
         </div>

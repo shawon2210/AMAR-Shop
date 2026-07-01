@@ -103,6 +103,8 @@ model Review {
   user      User     @relation(fields: [userId], references: [id])
   productId String
   product   Product  @relation(fields: [productId], references: [id])
+  status    String   @default("PENDING") // APPROVED | PENDING | HIDDEN
+  reported  Boolean  @default(false)
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 

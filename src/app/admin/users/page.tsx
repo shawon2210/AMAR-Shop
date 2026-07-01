@@ -1,33 +1,47 @@
 'use client';
 
 import { useState } from 'react';
+import { useAdminData } from '@/lib/api/hooks';
+import { fetchUsers, updateUser } from '@/lib/api/admin';
 
-const mockUsers = [
-  { id: '#USR-001', name: 'Rahima Begum', email: 'rahima@email.com', phone: '+8801712345601', role: 'Customer', status: 'Active', orders: 24, joined: '12 Jan 2024', addresses: 'Dhaka, Mirpur 12', totalSpent: '৳45,200', lastLogin: '28 Jun 2026 10:23 AM' },
-  { id: '#USR-002', name: 'Karim Hossain', email: 'karim@email.com', phone: '+8801712345602', role: 'Seller', status: 'Active', orders: 8, joined: '03 Mar 2024', addresses: 'Chittagong, Agrabad', totalSpent: '৳12,800', lastLogin: '28 Jun 2026 09:15 AM' },
-  { id: '#USR-003', name: 'Fatima Akhter', email: 'fatima@email.com', phone: '+8801712345603', role: 'Customer', status: 'Active', orders: 56, joined: '22 May 2023', addresses: 'Sylhet, Zindabazar', totalSpent: '৳89,500', lastLogin: '27 Jun 2026 06:45 PM' },
-  { id: '#USR-004', name: 'Nurul Islam', email: 'nurul@email.com', phone: '+8801712345604', role: 'Customer', status: 'Banned', orders: 2, joined: '15 Aug 2024', addresses: 'Rajshahi, Shaheb Bazar', totalSpent: '৳3,200', lastLogin: '10 May 2026 02:30 PM' },
-  { id: '#USR-005', name: 'Sharmin Sultana', email: 'sharmin@email.com', phone: '+8801712345605', role: 'Seller', status: 'Active', orders: 0, joined: '01 Feb 2025', addresses: 'Khulna, Sonadanga', totalSpent: '৳0', lastLogin: '25 Jun 2026 11:00 AM' },
-  { id: '#USR-006', name: 'Jahid Hasan', email: 'jahid@email.com', phone: '+8801712345606', role: 'Admin', status: 'Active', orders: 12, joined: '10 Nov 2023', addresses: 'Dhaka, Gulshan 2', totalSpent: '৳34,100', lastLogin: '28 Jun 2026 08:00 AM' },
-  { id: '#USR-007', name: 'Morshed Alam', email: 'morshed@email.com', phone: '+8801712345607', role: 'Customer', status: 'Active', orders: 3, joined: '05 Jul 2024', addresses: 'Barisal, Sadar Road', totalSpent: '৳5,600', lastLogin: '20 Jun 2026 03:15 PM' },
-  { id: '#USR-008', name: 'Parvin Akhter', email: 'parvin@email.com', phone: '+8801712345608', role: 'Customer', status: 'Banned', orders: 1, joined: '18 Sep 2024', addresses: 'Rangpur, Station Road', totalSpent: '৳890', lastLogin: '02 Apr 2026 01:00 PM' },
-  { id: '#USR-009', name: 'Shahidul Islam', email: 'shahidul@email.com', phone: '+8801712345609', role: 'Seller', status: 'Active', orders: 15, joined: '20 Dec 2023', addresses: 'Mymensingh, Kewatkhali', totalSpent: '৳67,300', lastLogin: '27 Jun 2026 07:30 PM' },
-  { id: '#USR-010', name: 'Taslima Nasrin', email: 'taslima@email.com', phone: '+8801712345610', role: 'Customer', status: 'Active', orders: 31, joined: '14 Apr 2024', addresses: 'Dhaka, Uttara Sector 7', totalSpent: '৳52,100', lastLogin: '28 Jun 2026 12:00 PM' },
-];
+const roleBadge: Record<string, string> = {
+  ADMIN: 'bg-purple-100 text-purple-700',
+  SELLER: 'bg-blue-100 text-blue-700',
+  CUSTOMER: 'bg-gray-100 text-gray-700',
+  MODERATOR: 'bg-teal-100 text-teal-700',
+  LOGISTICS: 'bg-cyan-100 text-cyan-700',
+};
+
+function formatDate(d: string): string {
+  return new Date(d).toLocaleDateString('en-GB', { day: '2-digit', month: 'short', year: 'numeric' });
+}
 
 export default function UsersPage() {
   const [search, setSearch] = useState('');
   const [roleFilter, setRoleFilter] = useState('All');
+  const [page, setPage] = useState(1);
   const [expandedRow, setExpandedRow] = useState<string | null>(null);
+  const limit = 15;
 
-  const filtered = mockUsers.filter((u) => {
-    const matchSearch =
-      u.name.toLowerCase().includes(search.toLowerCase()) ||
-      u.email.toLowerCase().includes(search.toLowerCase()) ||
-      u.id.toLowerCase().includes(search.toLowerCase());
-    const matchRole = roleFilter === 'All' || u.role === roleFilter;
-    return matchSearch && matchRole;
-  });
+  const { data, loading, error, refetch } = useAdminData(
+    () =>
+      fetchUsers({
+        page,
+        limit,
+        search: search || undefined,
+        role: roleFilter !== 'All' ? roleFilter : undefined,
+      }),
+    [page, search, roleFilter],
+  );
+
+  const handleToggleBan = async (userId: string, currentlyActive: boolean) => {
+    try {
+      await updateUser(userId, { isActive: !currentlyActive });
+      refetch();
+    } catch (err: any) {
+      alert(err.message || 'Failed to update user');
+    }
+  };
 
   return (
     <div className="space-y-5">
@@ -41,103 +55,152 @@ export default function UsersPage() {
               type="text"
               placeholder="Search users..."
               value={search}
-              onChange={(e) => setSearch(e.target.value)}
+              onChange={(e) => { setSearch(e.target.value); setPage(1); }}
               className="bg-transparent border-none outline-none text-sm flex-1"
             />
           </div>
           <select
             value={roleFilter}
-            onChange={(e) => setRoleFilter(e.target.value)}
+            onChange={(e) => { setRoleFilter(e.target.value); setPage(1); }}
             className="bg-white border border-[#ddd] rounded-lg px-3 py-2 text-sm outline-none"
           >
             <option value="All">All Roles</option>
-            <option value="Customer">Customer</option>
-            <option value="Seller">Seller</option>
-            <option value="Admin">Admin</option>
+            <option value="ADMIN">Admin</option>
+            <option value="SELLER">Seller</option>
+            <option value="CUSTOMER">Customer</option>
+            <option value="MODERATOR">Moderator</option>
+            <option value="LOGISTICS">Logistics</option>
           </select>
         </div>
-        <span className="text-sm text-[#888]">{filtered.length} users</span>
+        {data && (
+          <span className="text-sm text-[#888]">{data.total} users</span>
+        )}
       </div>
+
+      {error && (
+        <div className="bg-red-50 text-red-600 rounded-lg p-3 text-sm border border-red-200">{error}</div>
+      )}
 
       <div className="bg-white rounded-xl border border-[#eee] overflow-x-auto">
         <table className="w-full text-sm">
           <thead>
             <tr className="text-left text-[#888] text-xs uppercase tracking-wider bg-[#fafafa] border-b border-[#eee]">
-              <th className="p-3">ID</th>
               <th className="p-3">Name</th>
               <th className="p-3">Email</th>
               <th className="p-3">Phone</th>
               <th className="p-3">Role</th>
               <th className="p-3">Status</th>
-              <th className="p-3">Orders</th>
               <th className="p-3">Joined</th>
               <th className="p-3">Actions</th>
             </tr>
           </thead>
           <tbody>
-            {filtered.map((u) => (
-              <>
-                <tr
-                  key={u.id}
-                  className="border-b border-[#f5f5f5] hover:bg-[#fafafa] cursor-pointer"
-                  onClick={() => setExpandedRow(expandedRow === u.id ? null : u.id)}
-                >
-                  <td className="p-3 font-medium text-[#333]">{u.id}</td>
-                  <td className="p-3 text-[#444]">{u.name}</td>
-                  <td className="p-3 text-[#666]">{u.email}</td>
-                  <td className="p-3 text-[#666]">{u.phone}</td>
-                  <td className="p-3">
-                    <span className={`text-[11px] font-semibold px-2 py-0.5 rounded-full ${
-                      u.role === 'Admin' ? 'bg-purple-100 text-purple-700' :
-                      u.role === 'Seller' ? 'bg-blue-100 text-blue-700' :
-                      'bg-gray-100 text-gray-700'
-                    }`}>{u.role}</span>
-                  </td>
-                  <td className="p-3">
-                    <span className={`text-[11px] font-semibold px-2 py-0.5 rounded-full ${
-                      u.status === 'Active' ? 'bg-green-100 text-green-700' : 'bg-red-100 text-red-700'
-                    }`}>{u.status}</span>
-                  </td>
-                  <td className="p-3 text-[#666]">{u.orders}</td>
-                  <td className="p-3 text-[#888]">{u.joined}</td>
-                  <td className="p-3">
-                    <div className="flex items-center gap-1">
-                      <button className="p-1.5 rounded-lg hover:bg-[#f5f5f5]" title={u.status === 'Active' ? 'Ban User' : 'Unban User'}>
-                        <span className="material-symbols-outlined text-[18px] text-[#666]">
-                          {u.status === 'Active' ? 'block' : 'check_circle'}
-                        </span>
-                      </button>
-                      <button className="p-1.5 rounded-lg hover:bg-[#f5f5f5]" title="Edit">
-                        <span className="material-symbols-outlined text-[18px] text-[#666]">edit</span>
-                      </button>
-                    </div>
-                  </td>
-                </tr>
-                {expandedRow === u.id && (
-                  <tr key={`${u.id}-detail`}>
-                    <td colSpan={9} className="p-4 bg-[#fafafa] border-b border-[#f0f0f0]">
-                      <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 text-sm">
-                        <div>
-                          <p className="text-[#888] text-xs mb-1">Addresses</p>
-                          <p className="text-[#444]">{u.addresses}</p>
+            {loading ? (
+              <tr>
+                <td colSpan={7} className="p-8 text-center text-[#888]">
+                  <span className="material-symbols-outlined animate-spin align-middle mr-2">progress_activity</span>
+                  Loading...
+                </td>
+              </tr>
+            ) : !data || data.users.length === 0 ? (
+              <tr>
+                <td colSpan={7} className="p-8 text-center text-[#888]">No users found</td>
+              </tr>
+            ) : (
+              data.users.map((u) => (
+                <>
+                  <tr
+                    key={u.id}
+                    className="border-b border-[#f5f5f5] hover:bg-[#fafafa] cursor-pointer"
+                    onClick={() => setExpandedRow(expandedRow === u.id ? null : u.id)}
+                  >
+                    <td className="p-3">
+                      <div className="flex items-center gap-2">
+                        <div className="w-8 h-8 rounded-full bg-primary/20 flex items-center justify-center text-primary text-xs font-bold uppercase">
+                          {u.name?.charAt(0) || '?'}
                         </div>
-                        <div>
-                          <p className="text-[#888] text-xs mb-1">Total Spent</p>
-                          <p className="text-[#444] font-semibold">{u.totalSpent}</p>
-                        </div>
-                        <div>
-                          <p className="text-[#888] text-xs mb-1">Last Login</p>
-                          <p className="text-[#444]">{u.lastLogin}</p>
-                        </div>
+                        <span className="font-medium text-[#333]">{u.name}</span>
+                      </div>
+                    </td>
+                    <td className="p-3 text-[#666]">{u.email || '—'}</td>
+                    <td className="p-3 text-[#666]">{u.phone}</td>
+                    <td className="p-3">
+                      <span className={`text-[11px] font-semibold px-2 py-0.5 rounded-full ${roleBadge[u.role] || 'bg-gray-100 text-gray-700'}`}>
+                        {u.role}
+                      </span>
+                    </td>
+                    <td className="p-3">
+                      <span className={`text-[11px] font-semibold px-2 py-0.5 rounded-full ${
+                        u.isActive ? 'bg-green-100 text-green-700' : 'bg-red-100 text-red-700'
+                      }`}>
+                        {u.isActive ? 'Active' : 'Banned'}
+                      </span>
+                    </td>
+                    <td className="p-3 text-[#888]">{formatDate(u.createdAt)}</td>
+                    <td className="p-3" onClick={(e) => e.stopPropagation()}>
+                      <div className="flex items-center gap-1">
+                        <button
+                          onClick={() => handleToggleBan(u.id, u.isActive)}
+                          className={`p-1.5 rounded-lg hover:bg-[#f5f5f5]`}
+                          title={u.isActive ? 'Ban User' : 'Unban User'}
+                        >
+                          <span className="material-symbols-outlined text-[18px] text-[#666]">
+                            {u.isActive ? 'block' : 'check_circle'}
+                          </span>
+                        </button>
                       </div>
                     </td>
                   </tr>
-                )}
-              </>
-            ))}
+                  {expandedRow === u.id && (
+                    <tr key={`${u.id}-detail`}>
+                      <td colSpan={7} className="p-4 bg-[#fafafa] border-b border-[#f0f0f0]">
+                        <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 text-sm">
+                          <div>
+                            <p className="text-[#888] text-xs mb-1">User ID</p>
+                            <p className="text-[#444] font-mono text-xs">{u.id}</p>
+                          </div>
+                          <div>
+                            <p className="text-[#888] text-xs mb-1">Verified</p>
+                            <p className="text-[#444]">{u.isVerified ? 'Yes' : 'No'}</p>
+                          </div>
+                          <div>
+                            <p className="text-[#888] text-xs mb-1">Last Login</p>
+                            <p className="text-[#444]">{u.lastLoginAt ? formatDate(u.lastLoginAt) : 'Never'}</p>
+                          </div>
+                        </div>
+                      </td>
+                    </tr>
+                  )}
+                </>
+              ))
+            )}
           </tbody>
         </table>
       </div>
+
+      {data && data.totalPages > 1 && (
+        <div className="flex items-center justify-between text-sm">
+          <span className="text-[#888]">
+            Page {data.page} of {data.totalPages} ({data.total} total)
+          </span>
+          <div className="flex gap-2">
+            <button
+              disabled={page <= 1}
+              onClick={() => setPage((p) => Math.max(1, p - 1))}
+              className="px-3 py-1.5 bg-white border border-[#ddd] rounded-lg disabled:opacity-50 hover:bg-[#f5f5f5]"
+            >
+              Previous
+            </button>
+            <button
+              disabled={page >= data.totalPages}
+              onClick={() => setPage((p) => p + 1)}
+              className="px-3 py-1.5 bg-white border border-[#ddd] rounded-lg disabled:opacity-50 hover:bg-[#f5f5f5]"
+            >
+              Next
+            </button>
+          </div>
+        </div>
+      )}
     </div>
   );
 }
