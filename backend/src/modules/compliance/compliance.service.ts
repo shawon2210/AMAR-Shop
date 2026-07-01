@@ -8,7 +8,11 @@ import { PrismaService } from '../../common/prisma.service';
 
 @Injectable()
 export class ComplianceService {
-  constructor(private prisma: PrismaService) {}
+  private prisma: PrismaService;
+
+  constructor(private prismaService: PrismaService) {
+    this.prisma = this.prismaService;
+  }
 
   getComplianceStatus(): {
     score: number;

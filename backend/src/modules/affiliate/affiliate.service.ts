@@ -8,7 +8,11 @@ import { PrismaService } from '../../common/prisma.service';
 
 @Injectable()
 export class AffiliateService {
-  constructor(private prisma: PrismaService) {}
+  private prisma: any;
+
+  constructor(private prismaService: PrismaService) {
+    this.prisma = this.prismaService;
+  }
 
   async registerAffiliate(
     userId: string,

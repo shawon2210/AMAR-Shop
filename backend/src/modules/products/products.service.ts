@@ -3,7 +3,11 @@ import { PrismaService } from '../../common/prisma.service';
 
 @Injectable()
 export class ProductsService {
-  constructor(private prisma: PrismaService) {}
+  private prisma: PrismaService;
+
+  constructor(private prismaService: PrismaService) {
+    this.prisma = this.prismaService;
+  }
 
   async findAll(params: {
     skip?: number;

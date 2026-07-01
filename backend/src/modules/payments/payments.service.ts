@@ -3,7 +3,11 @@ import { PrismaService } from '../../common/prisma.service';
 
 @Injectable()
 export class PaymentsService {
-  constructor(private prisma: PrismaService) {}
+  private prisma: PrismaService;
+
+  constructor(private prismaService: PrismaService) {
+    this.prisma = this.prismaService;
+  }
 
   initiateBkashPayment(orderId: string, amount: number) {
     // Placeholder: In production, integrate with bKash API

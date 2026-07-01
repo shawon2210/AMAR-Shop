@@ -1,32 +1,21 @@
-'use client';
-
-import Link from 'next/link';
 import { categories } from '@/lib/data/categories';
+import Link from 'next/link';
 
 export default function CategoriesPage() {
   return (
-    <div className="px-container-margin pt-md space-y-md pb-24">
-      <h1 className="font-headline-md text-headline-md">All Categories</h1>
-
-      <div className="space-y-xs">
-        {categories.map(cat => (
+    <div className="max-w-7xl mx-auto p-4">
+      <h1 className="text-2xl font-bold mb-6">Categories</h1>
+      <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
+        {categories.map((category) => (
           <Link
-            key={cat.id}
-            href={`/category/${cat.slug}`}
-            className="flex items-center gap-md p-md bg-surface-container-lowest rounded-xl shadow-sm hover:brightness-95 transition-all active:scale-[0.99]"
+            key={category.slug}
+            href={`/category/${category.slug}`}
+            className="flex flex-col items-center p-4 bg-surface rounded-lg shadow hover:shadow-md transition-shadow"
           >
-            <div className="w-12 h-12 bg-primary-fixed rounded-full flex items-center justify-center text-primary shrink-0">
-              <span className="material-symbols-outlined text-2xl">{cat.icon}</span>
-            </div>
-            <div className="flex-1 min-w-0">
-              <p className="font-title-sm text-title-sm">{cat.bnName}</p>
-              <p className="text-body-sm text-secondary truncate">{cat.name}</p>
-            </div>
-            <div className="text-right shrink-0">
-              <p className="font-label-bold text-primary">{(cat.productCount / 1000).toFixed(1)}K+</p>
-              <p className="text-[10px] text-secondary">products</p>
-            </div>
-            <span className="material-symbols-outlined text-secondary">chevron_right</span>
+            <span className="material-symbols-outlined text-4xl mb-2 text-primary">
+              {category.icon}
+            </span>
+            <span className="font-medium text-center">{category.name}</span>
           </Link>
         ))}
       </div>

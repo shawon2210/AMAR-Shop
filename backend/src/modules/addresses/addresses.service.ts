@@ -3,7 +3,11 @@ import { PrismaService } from '../../common/prisma.service';
 
 @Injectable()
 export class AddressesService {
-  constructor(private prisma: PrismaService) {}
+  private prisma: PrismaService;
+
+  constructor(private prismaService: PrismaService) {
+    this.prisma = this.prismaService;
+  }
 
   async findByUser(userId: string) {
     return this.prisma.address.findMany({

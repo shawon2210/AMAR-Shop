@@ -7,7 +7,11 @@ import { PrismaService } from '../../common/prisma.service';
 
 @Injectable()
 export class WalletService {
-  constructor(private prisma: PrismaService) {}
+  private prisma: PrismaService;
+
+  constructor(private prismaService: PrismaService) {
+    this.prisma = this.prismaService;
+  }
 
   private async ensureWallet(userId: string) {
     return this.prisma.wallet.upsert({

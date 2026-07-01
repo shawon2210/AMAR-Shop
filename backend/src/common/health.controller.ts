@@ -3,7 +3,11 @@ import { PrismaService } from './prisma.service';
 
 @Injectable()
 export class DependencyChecker {
-  constructor(private prisma: PrismaService) {}
+  private prisma: PrismaService;
+
+  constructor(private prismaService: PrismaService) {
+    this.prisma = this.prismaService;
+  }
 
   async checkDatabase() {
     try {
@@ -33,7 +37,7 @@ export class DependencyChecker {
 @Controller('health')
 export class HealthController {
   constructor(
-    private prisma: PrismaService,
+    private prismaService: PrismaService,
     private checker: DependencyChecker,
   ) {}
 

@@ -3,7 +3,11 @@ import { PrismaService } from '../../common/prisma.service';
 
 @Injectable()
 export class BiService {
-  constructor(private prisma: PrismaService) {}
+  private prisma: PrismaService;
+
+  constructor(private prismaService: PrismaService) {
+    this.prisma = this.prismaService;
+  }
 
   async getExecutiveDashboard(dateRange: { start: string; end: string }) {
     const start = new Date(dateRange.start);
