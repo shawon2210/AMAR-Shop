@@ -13,7 +13,7 @@ import { AuthGuard } from '@nestjs/passport';
 import { AdminService } from './admin.service';
 
 @UseGuards(AuthGuard('jwt'))
-@Controller('api/admin')
+@Controller('admin')
 export class AdminController {
   constructor(private readonly adminService: AdminService) {}
 

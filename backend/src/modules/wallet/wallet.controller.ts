@@ -11,7 +11,7 @@ import { AuthGuard } from '@nestjs/passport';
 import { WalletService } from './wallet.service';
 
 @UseGuards(AuthGuard('jwt'))
-@Controller('api/wallet')
+@Controller('wallet')
 export class WalletController {
   constructor(private readonly walletService: WalletService) {}
 

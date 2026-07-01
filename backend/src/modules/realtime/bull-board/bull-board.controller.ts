@@ -4,7 +4,7 @@ import { RolesGuard } from '../../../common/guards/roles.guard';
 import { Roles } from '../../../common/decorators/roles.decorator';
 import { BullQueueService } from '../bull-queue.service';
 
-@Controller('api/admin/queues')
+@Controller('admin/queues')
 export class BullBoardController {
   constructor(private readonly bullQueueService: BullQueueService) {}
 

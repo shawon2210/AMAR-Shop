@@ -1,11 +1,13 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { useCartStore } from '@/stores/cart-store';
 
 export function Header() {
   const [mobileSearchOpen, setMobileSearchOpen] = useState(false);
+  const [hydrated, setHydrated] = useState(false);
+  useEffect(() => { setHydrated(true); }, []);
   const itemCount = useCartStore(s => s.getItemCount());
 
   return (
@@ -46,7 +48,7 @@ export function Header() {
 
           <Link href="/cart" className="relative p-1 hover:bg-surface-container-high rounded-full transition-colors">
             <span className="material-symbols-outlined text-primary">shopping_cart</span>
-            {itemCount > 0 && (
+            {hydrated && itemCount > 0 && (
               <span className="absolute -top-0.5 -right-0.5 bg-primary text-white text-[10px] rounded-full w-4 h-4 flex items-center justify-center">
                 {itemCount > 9 ? '9+' : itemCount}
               </span>

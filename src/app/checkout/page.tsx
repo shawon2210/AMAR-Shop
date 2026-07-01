@@ -4,6 +4,7 @@ import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import { useCartStore } from '@/stores/cart-store';
+import { useAuthStore } from '@/stores/auth-store';
 import { useUIStore } from '@/stores/ui-store';
 import { api } from '@/services/api';
 
@@ -39,10 +40,12 @@ const addresses = [
 
 export default function CheckoutPage() {
   const router = useRouter();
-  const items = useCartStore(s => s.getSelectedItems());
-  const subtotal = useCartStore(s => s.getSelectedTotal());
+  const allItems = useCartStore(s => s.items);
   const clearCart = useCartStore(s => s.clearCart);
   const addToast = useUIStore(s => s.addToast);
+  const token = useAuthStore(s => s.token);
+  const items = allItems.filter(item => item.selected);
+  const subtotal = items.reduce((sum, item) => sum + item.product.price * item.quantity, 0);
 
   const [selectedAddress, setSelectedAddress] = useState(addresses[0]?.id || '');
   const [selectedPayment, setSelectedPayment] = useState('cod');
@@ -54,6 +57,10 @@ export default function CheckoutPage() {
   const total = subtotal + shipping - discount;
 
   const handlePlaceOrder = async () => {
+    if (!token) {
+      router.push('/auth/login?redirect=/checkout');
+      return;
+    }
     if (items.length === 0) {
       addToast('Your cart is empty!', 'error');
       return;

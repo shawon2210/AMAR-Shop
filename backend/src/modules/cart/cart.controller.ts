@@ -13,7 +13,7 @@ import { AuthGuard } from '@nestjs/passport';
 import { CartService } from './cart.service';
 
 @UseGuards(AuthGuard('jwt'))
-@Controller('api/cart')
+@Controller('cart')
 export class CartController {
   constructor(private readonly cartService: CartService) {}
 

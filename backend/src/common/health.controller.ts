@@ -30,7 +30,7 @@ export class DependencyChecker {
   }
 }
 
-@Controller('api/health')
+@Controller('health')
 export class HealthController {
   constructor(
     private prisma: PrismaService,

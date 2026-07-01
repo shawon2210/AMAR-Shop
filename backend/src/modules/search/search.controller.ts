@@ -12,7 +12,7 @@ import { SearchService } from './search.service';
 import { EnhancedSearchService } from './enhanced-search.service';
 import { SearchAnalyticsService } from './search-analytics.service';
 
-@Controller('api/search')
+@Controller('search')
 export class SearchController {
   constructor(
     private readonly searchService: SearchService,

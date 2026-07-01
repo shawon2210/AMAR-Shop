@@ -11,7 +11,7 @@ import { AuthGuard } from '@nestjs/passport';
 import { BiService } from './bi.service';
 
 @UseGuards(AuthGuard('jwt'))
-@Controller('api/bi')
+@Controller('bi')
 export class BiController {
   constructor(private readonly bi: BiService) {}
 

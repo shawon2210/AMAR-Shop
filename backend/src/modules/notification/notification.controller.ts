@@ -11,7 +11,7 @@ import { AuthGuard } from '@nestjs/passport';
 import { NotificationService } from './notification.service';
 
 @UseGuards(AuthGuard('jwt'))
-@Controller('api/notifications')
+@Controller('notifications')
 export class NotificationController {
   constructor(private readonly notificationService: NotificationService) {}
 

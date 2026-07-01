@@ -12,7 +12,7 @@ import { AuthGuard } from '@nestjs/passport';
 import { WmsService } from './wms.service';
 
 @UseGuards(AuthGuard('jwt'))
-@Controller('api/wms')
+@Controller('wms')
 export class WmsController {
   constructor(private readonly wms: WmsService) {}
 

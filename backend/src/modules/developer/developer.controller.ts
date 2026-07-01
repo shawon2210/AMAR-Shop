@@ -12,7 +12,7 @@ import {
 import { AuthGuard } from '@nestjs/passport';
 import { DeveloperService } from './developer.service';
 
-@Controller('api/developer')
+@Controller('developer')
 export class DeveloperController {
   constructor(private readonly developerService: DeveloperService) {}
 

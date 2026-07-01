@@ -31,6 +31,12 @@ async function request<T>(
   });
 
   if (!res.ok) {
+    if (res.status === 401 && typeof window !== 'undefined' && !path.startsWith('/auth/')) {
+      localStorage.removeItem('amarshop-auth');
+      const currentPath = window.location.pathname + window.location.search;
+      window.location.href = `/auth/login?redirect=${encodeURIComponent(currentPath)}`;
+      throw new Error('Session expired. Redirecting to login...');
+    }
     const body = await res.json().catch(() => ({}));
     throw new Error(body.message || `Request failed: ${res.status}`);
   }

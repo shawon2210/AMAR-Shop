@@ -16,7 +16,7 @@ import { EmbeddingsService } from './embeddings.service';
 import { PrismaService } from '../../common/prisma.service';
 import type { ProductDescriptionRequest } from './interfaces/ai.interface';
 
-@Controller('api/ai')
+@Controller('ai')
 export class AIController {
   constructor(
     private readonly aiService: AIService,

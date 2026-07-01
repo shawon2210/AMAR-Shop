@@ -1,5 +1,6 @@
 'use client';
 
+import { useEffect, useState } from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { useCartStore } from '@/stores/cart-store';
@@ -14,6 +15,8 @@ const navItems = [
 
 export function BottomNav() {
   const pathname = usePathname();
+  const [hydrated, setHydrated] = useState(false);
+  useEffect(() => { setHydrated(true); }, []);
   const itemCount = useCartStore(s => s.getItemCount());
 
   return (
@@ -32,7 +35,7 @@ export function BottomNav() {
                 : 'text-secondary hover:text-primary-container'
             }`}
           >
-            {isCart && itemCount > 0 ? (
+            {isCart && hydrated && itemCount > 0 ? (
               <span className="material-symbols-outlined">{item.icon}</span>
             ) : (
               <span
@@ -43,7 +46,7 @@ export function BottomNav() {
               </span>
             )}
             <span className="font-label-bold">{item.label}</span>
-            {isCart && itemCount > 0 && (
+            {isCart && hydrated && itemCount > 0 && (
               <span className="absolute -top-0.5 right-0 bg-error text-white text-[8px] rounded-full w-3.5 h-3.5 flex items-center justify-center font-bold">
                 {itemCount > 9 ? '9+' : itemCount}
               </span>

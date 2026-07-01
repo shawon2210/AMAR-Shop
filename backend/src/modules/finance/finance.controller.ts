@@ -3,7 +3,7 @@ import { AuthGuard } from '@nestjs/passport';
 import { FinanceService } from './finance.service';
 
 @UseGuards(AuthGuard('jwt'))
-@Controller('api/finance')
+@Controller('finance')
 export class FinanceController {
   constructor(private readonly finance: FinanceService) {}
 

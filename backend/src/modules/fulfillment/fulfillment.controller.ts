@@ -12,7 +12,7 @@ import { AuthGuard } from '@nestjs/passport';
 import { FulfillmentService } from './fulfillment.service';
 
 @UseGuards(AuthGuard('jwt'))
-@Controller('api/fulfillment')
+@Controller('fulfillment')
 export class FulfillmentController {
   constructor(private readonly fulfillment: FulfillmentService) {}
 

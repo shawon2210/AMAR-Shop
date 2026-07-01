@@ -13,7 +13,7 @@ import { AuthGuard } from '@nestjs/passport';
 import { SupportService } from './support.service';
 
 @UseGuards(AuthGuard('jwt'))
-@Controller('api/support')
+@Controller('support')
 export class SupportController {
   constructor(private readonly supportService: SupportService) {}
 

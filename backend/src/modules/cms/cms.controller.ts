@@ -11,7 +11,7 @@ import {
 import { AuthGuard } from '@nestjs/passport';
 import { CmsService } from './cms.service';
 
-@Controller('api/cms')
+@Controller('cms')
 export class CmsController {
   constructor(private readonly cmsService: CmsService) {}
 
