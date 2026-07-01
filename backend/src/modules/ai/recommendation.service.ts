@@ -33,8 +33,11 @@ export class RecommendationService {
   private productFactorsMap = new Map<string, ProductFactors>();
   private interactionCache = new Map<string, Interaction[]>();
   private modelTrained = false;
+  private prisma: PrismaService;
 
-  constructor(private prisma: PrismaService) {}
+  constructor(private prismaService: PrismaService) {
+    this.prisma = this.prismaService;
+  }
 
   async getPersonalizedFeed(userId: string, limit = 20): Promise<any[]> {
     try {

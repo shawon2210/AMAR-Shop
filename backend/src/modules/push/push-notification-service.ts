@@ -9,7 +9,11 @@ interface PushPayload {
 
 @Injectable()
 export class PushNotificationService {
-  constructor(private prisma: PrismaService) {}
+  private prisma: PrismaService;
+
+  constructor(private prismaService: PrismaService) {
+    this.prisma = this.prismaService;
+  }
 
   async registerDevice(
     userId: string,

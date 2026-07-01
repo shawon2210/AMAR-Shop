@@ -70,8 +70,10 @@ export class BullQueueService implements OnModuleDestroy {
   public readonly analyticsQueueEvents: QueueEvents;
 
   private readonly workers: Worker[] = [];
+  private prisma: PrismaService;
 
-  constructor(private prisma: PrismaService) {
+  constructor(private prismaService: PrismaService) {
+    this.prisma = this.prismaService;
     const connection = {
       host: realtimeConfig.redis.host,
       port: realtimeConfig.redis.port,

@@ -4,8 +4,11 @@ import { PrismaService } from '../../common/prisma.service';
 @Injectable()
 export class SearchAnalyticsService {
   private readonly logger = new Logger(SearchAnalyticsService.name);
+  private prisma: PrismaService;
 
-  constructor(private prisma: PrismaService) {}
+  constructor(private prismaService: PrismaService) {
+    this.prisma = this.prismaService;
+  }
 
   async logSearch(
     query: string,

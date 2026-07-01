@@ -3,7 +3,11 @@ import { PrismaService } from '../../common/prisma.service';
 
 @Injectable()
 export class CartService {
-  constructor(private prisma: PrismaService) {}
+  private prisma: PrismaService;
+
+  constructor(private prismaService: PrismaService) {
+    this.prisma = this.prismaService;
+  }
 
   async getCart(userId: string) {
     const items = await this.prisma.cartItem.findMany({
