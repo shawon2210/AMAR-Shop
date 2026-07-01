@@ -50,7 +50,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" className={`${inter.variable}`}>
+    <html lang="en" className={`${inter.variable}`} data-scroll-behavior="smooth">
       <head>
         <link rel="manifest" href="/manifest.webmanifest" />
         <meta name="theme-color" content="#a63600" />
@@ -61,7 +61,7 @@ export default function RootLayout({
           rel="stylesheet"
         />
       </head>
-      <body className="min-h-screen bg-background text-on-background font-sans antialiased pb-16">
+      <body className="min-h-screen bg-background text-on-background font-sans antialiased pb-16" suppressHydrationWarning>
         <Header />
         <main className="max-w-7xl mx-auto pb-8">{children}</main>
         <BottomNav />

@@ -1,41 +1,19 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import { useCartStore } from '@/stores/cart-store';
-import { useAuthStore } from '@/stores/auth-store';
+import { useAuthStore, useAuthHydrated } from '@/stores/auth-store';
 import { useUIStore } from '@/stores/ui-store';
 import { api } from '@/services/api';
+import type { Address } from '@/types';
 
 const paymentMethods = [
   { id: 'bkash', name: 'bKash', icon: 'https://cdn-icons-png.flaticon.com/128/196/196578.png' },
   { id: 'nagad', name: 'Nagad', icon: 'https://cdn-icons-png.flaticon.com/128/196/196578.png' },
   { id: 'cod', name: 'Cash on Delivery', icon: 'payments' },
   { id: 'sslcommerz', name: 'SSLCommerz', icon: 'credit_card' },
-];
-
-const addresses = [
-  {
-    id: 'addr-1',
-    label: 'Home',
-    fullName: 'Shawon Ahmed',
-    phone: '017XXXXXXXX',
-    street: '123, Mirpur Road',
-    city: 'Dhaka',
-    area: 'Mirpur-1',
-    isDefault: true,
-  },
-  {
-    id: 'addr-2',
-    label: 'Office',
-    fullName: 'Shawon Ahmed',
-    phone: '018XXXXXXXX',
-    street: '456, Gulshan Avenue',
-    city: 'Dhaka',
-    area: 'Gulshan-2',
-    isDefault: false,
-  },
 ];
 
 export default function CheckoutPage() {
@@ -47,16 +25,71 @@ export default function CheckoutPage() {
   const items = allItems.filter(item => item.selected);
   const subtotal = items.reduce((sum, item) => sum + item.product.price * item.quantity, 0);
 
-  const [selectedAddress, setSelectedAddress] = useState(addresses[0]?.id || '');
+  const [addresses, setAddresses] = useState<Address[]>([]);
+  const [loadingAddresses, setLoadingAddresses] = useState(true);
+  const [selectedAddress, setSelectedAddress] = useState('');
   const [selectedPayment, setSelectedPayment] = useState('cod');
   const [orderNote, setOrderNote] = useState('');
   const [isProcessing, setIsProcessing] = useState(false);
+  const hydrated = useAuthHydrated();
+  const [showAddressForm, setShowAddressForm] = useState(false);
+  const [newAddress, setNewAddress] = useState({
+    label: '',
+    fullName: '',
+    phone: '',
+    street: '',
+    city: 'Dhaka',
+    area: '',
+  });
+  const [savingAddress, setSavingAddress] = useState(false);
+
+  useEffect(() => {
+    if (!hydrated || !token) {
+      setLoadingAddresses(false);
+      return;
+    }
+    api.get<Address[]>('/addresses')
+      .then(data => {
+        setAddresses(data);
+        if (data.length > 0) setSelectedAddress(data[0].id);
+      })
+      .catch(() => addToast('Failed to load addresses', 'error'))
+      .finally(() => setLoadingAddresses(false));
+  }, [hydrated, token, addToast]);
+
+  const handleAddAddress = async () => {
+    if (!newAddress.fullName || !newAddress.phone || !newAddress.street || !newAddress.area) {
+      addToast('Please fill in all required fields', 'error');
+      return;
+    }
+    setSavingAddress(true);
+    try {
+      const addr = await api.post<Address>('/addresses', {
+        label: newAddress.label || 'Home',
+        fullName: newAddress.fullName,
+        phone: newAddress.phone,
+        street: newAddress.street,
+        city: newAddress.city,
+        area: newAddress.area,
+      });
+      setAddresses(prev => [...prev, addr]);
+      setSelectedAddress(addr.id);
+      setShowAddressForm(false);
+      setNewAddress({ label: '', fullName: '', phone: '', street: '', city: 'Dhaka', area: '' });
+      addToast('Address added successfully', 'success');
+    } catch (err: any) {
+      addToast(err.message || 'Failed to add address', 'error');
+    } finally {
+      setSavingAddress(false);
+    }
+  };
 
   const shipping = subtotal >= 2000 ? 0 : 60;
   const discount = 0;
   const total = subtotal + shipping - discount;
 
   const handlePlaceOrder = async () => {
+    if (!hydrated) return; // wait for zustand persist rehydration
     if (!token) {
       router.push('/auth/login?redirect=/checkout');
       return;
@@ -90,7 +123,7 @@ export default function CheckoutPage() {
 
       clearCart();
       addToast('Order placed successfully!', 'success');
-      router.push(`/orders`);
+      router.push(`/orders/${order.id}`);
     } catch (err: any) {
       addToast(err.message || 'Failed to place order. Please try again.', 'error');
     } finally {
@@ -122,35 +155,123 @@ export default function CheckoutPage() {
             <span className="material-symbols-outlined text-secondary">location_on</span>
             <span className="font-title-sm text-title-sm">Shipping Address</span>
           </div>
+          {!showAddressForm && addresses.length > 0 && (
+            <button
+              onClick={() => setShowAddressForm(true)}
+              className="text-primary font-label-bold text-xs"
+            >
+              + Add New
+            </button>
+          )}
         </div>
         <div className="p-md space-y-2">
-          {addresses.map(addr => (
-            <label
-              key={addr.id}
-              className={`flex items-start gap-3 p-3 rounded-lg border-2 cursor-pointer transition-colors ${
-                selectedAddress === addr.id
-                  ? 'border-primary bg-primary-fixed/20'
-                  : 'border-outline-variant hover:border-outline'
-              }`}
-            >
+          {loadingAddresses ? (
+            <div className="flex items-center justify-center py-6">
+              <span className="material-symbols-outlined animate-spin text-secondary">progress_activity</span>
+            </div>
+          ) : showAddressForm || addresses.length === 0 ? (
+            <div className="space-y-3">
               <input
-                type="radio"
-                name="address"
-                value={addr.id}
-                checked={selectedAddress === addr.id}
-                onChange={() => setSelectedAddress(addr.id)}
-                className="mt-0.5"
+                type="text"
+                value={newAddress.fullName}
+                onChange={e => setNewAddress(p => ({ ...p, fullName: e.target.value }))}
+                className="w-full px-3 py-2 border border-outline rounded-lg bg-transparent outline-none focus:ring-2 focus:ring-primary text-sm"
+                placeholder="Full Name *"
+                disabled={savingAddress}
               />
-              <div>
-                <div className="flex items-center gap-1.5">
-                  <span className="font-label-bold">{addr.fullName}</span>
-                  <span className="text-xs bg-surface-container px-1.5 py-0.5 rounded">{addr.label}</span>
-                </div>
-                <p className="text-sm text-secondary mt-0.5">{addr.street}, {addr.area}, {addr.city}</p>
-                <p className="text-sm text-secondary">{addr.phone}</p>
+              <input
+                type="tel"
+                value={newAddress.phone}
+                onChange={e => setNewAddress(p => ({ ...p, phone: e.target.value }))}
+                className="w-full px-3 py-2 border border-outline rounded-lg bg-transparent outline-none focus:ring-2 focus:ring-primary text-sm"
+                placeholder="Phone Number *"
+                disabled={savingAddress}
+              />
+              <input
+                type="text"
+                value={newAddress.street}
+                onChange={e => setNewAddress(p => ({ ...p, street: e.target.value }))}
+                className="w-full px-3 py-2 border border-outline rounded-lg bg-transparent outline-none focus:ring-2 focus:ring-primary text-sm"
+                placeholder="Street / Area *"
+                disabled={savingAddress}
+              />
+              <div className="grid grid-cols-2 gap-2">
+                <input
+                  type="text"
+                  value={newAddress.area}
+                  onChange={e => setNewAddress(p => ({ ...p, area: e.target.value }))}
+                  className="w-full px-3 py-2 border border-outline rounded-lg bg-transparent outline-none focus:ring-2 focus:ring-primary text-sm"
+                  placeholder="Area / Thana *"
+                  disabled={savingAddress}
+                />
+                <input
+                  type="text"
+                  value={newAddress.city}
+                  onChange={e => setNewAddress(p => ({ ...p, city: e.target.value }))}
+                  className="w-full px-3 py-2 border border-outline rounded-lg bg-transparent outline-none focus:ring-2 focus:ring-primary text-sm"
+                  placeholder="City"
+                  disabled={savingAddress}
+                />
               </div>
-            </label>
-          ))}
+              <input
+                type="text"
+                value={newAddress.label}
+                onChange={e => setNewAddress(p => ({ ...p, label: e.target.value }))}
+                className="w-full px-3 py-2 border border-outline rounded-lg bg-transparent outline-none focus:ring-2 focus:ring-primary text-sm"
+                placeholder="Label (e.g. Home, Office)"
+                disabled={savingAddress}
+              />
+              <div className="flex gap-2">
+                <button
+                  onClick={handleAddAddress}
+                  disabled={savingAddress}
+                  className="flex-1 py-2.5 bg-primary text-on-primary font-label-bold text-sm rounded-lg hover:brightness-110 transition-all disabled:opacity-70 flex items-center justify-center gap-2"
+                >
+                  {savingAddress ? (
+                    <span className="material-symbols-outlined animate-spin text-base">progress_activity</span>
+                  ) : 'Save Address'}
+                </button>
+                {addresses.length > 0 && (
+                  <button
+                    onClick={() => setShowAddressForm(false)}
+                    className="py-2.5 px-4 border border-outline rounded-lg text-sm text-secondary hover:bg-surface-container transition-colors"
+                  >
+                    Cancel
+                  </button>
+                )}
+              </div>
+            </div>
+          ) : (
+            addresses.map(addr => (
+              <label
+                key={addr.id}
+                className={`flex items-start gap-3 p-3 rounded-lg border-2 cursor-pointer transition-colors ${
+                  selectedAddress === addr.id
+                    ? 'border-primary bg-primary-fixed/20'
+                    : 'border-outline-variant hover:border-outline'
+                }`}
+              >
+                <input
+                  type="radio"
+                  name="address"
+                  value={addr.id}
+                  checked={selectedAddress === addr.id}
+                  onChange={() => setSelectedAddress(addr.id)}
+                  className="mt-0.5"
+                />
+                <div>
+                  <div className="flex items-center gap-1.5">
+                    <span className="font-label-bold">{addr.fullName}</span>
+                    {addr.label && (
+                      <span className="text-xs bg-surface-container px-1.5 py-0.5 rounded">{addr.label}</span>
+                    )}
+                  </div>
+                  <p className="text-sm text-secondary mt-0.5">{addr.street}, {addr.area}, {addr.city}</p>
+                  <p className="text-sm text-secondary">{addr.phone}</p>
+                </div>
+              </label>
+            ))
+          )}
         </div>
       </section>
 

@@ -1,5 +1,6 @@
 'use client';
 
+import { useState, useEffect } from 'react';
 import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
 import { api } from '@/services/api';
@@ -41,3 +42,19 @@ export const useAuthStore = create<AuthState>()(
     { name: 'amarshop-auth' },
   ),
 );
+
+/** Returns true once Zustand persist has finished rehydrating from localStorage.
+ *  Returns false during SSR (window is not defined). */
+export function useAuthHydrated(): boolean {
+  const [hydrated, setHydrated] = useState(() => {
+    if (typeof window === 'undefined') return false;
+    return useAuthStore.persist?.hasHydrated() ?? false;
+  });
+  useEffect(() => {
+    if (typeof window === 'undefined') return;
+    const unsub = useAuthStore.persist?.onFinishHydration(() => setHydrated(true));
+    if (useAuthStore.persist?.hasHydrated()) setHydrated(true);
+    return unsub;
+  }, []);
+  return hydrated;
+}
