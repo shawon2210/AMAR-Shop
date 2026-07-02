@@ -23,7 +23,9 @@ export class AddressesService {
       area?: string;
     },
   ) {
-    const existingCount = await this.prismaService.address.count({ where: { userId } });
+    const existingCount = await this.prismaService.address.count({
+      where: { userId },
+    });
     return this.prismaService.address.create({
       data: {
         ...data,

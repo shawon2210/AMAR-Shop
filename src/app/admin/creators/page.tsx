@@ -23,40 +23,60 @@ export default function CreatorsPage() {
         <div className="bg-red-50 text-red-600 rounded-lg p-3 text-sm border border-red-200">{error}</div>
       )}
 
-      <div className="bg-white rounded-xl border border-[#eee] overflow-x-auto">
-        <table className="w-full text-sm">
-          <thead>
-            <tr className="text-left text-[#888] text-xs uppercase tracking-wider bg-[#fafafa] border-b border-[#eee]">
-              <th className="p-3">Name</th>
-              <th className="p-3">Email</th>
-              <th className="p-3">Phone</th>
-              <th className="p-3">Reviews</th>
-              <th className="p-3">Followers</th>
-              <th className="p-3">Joined</th>
-            </tr>
-          </thead>
-          <tbody>
-            {loading ? (
-              <tr><td colSpan={6} className="p-8 text-center text-[#888]">
-                <span className="material-symbols-outlined animate-spin align-middle mr-2">progress_activity</span>Loading...
-              </td></tr>
-            ) : !data?.creators || data.creators.length === 0 ? (
-              <tr><td colSpan={6} className="p-8 text-center text-[#888]">No creators found</td></tr>
-            ) : (
-              data.creators.map((c) => (
-                <tr key={c.id} className="border-b border-[#f5f5f5] hover:bg-[#fafafa]">
-                  <td className="p-3 font-medium text-[#333]">{c.name}</td>
-                  <td className="p-3 text-[#555]">{c.email}</td>
-                  <td className="p-3 text-[#555]">{c.phone || '—'}</td>
-                  <td className="p-3 text-[#555]">{c._count.reviews}</td>
-                  <td className="p-3 text-[#555]">{c._count.storeFollowers}</td>
-                  <td className="p-3 text-[#888] text-xs">{formatDate(c.createdAt)}</td>
+      {loading ? (
+        <div className="bg-white rounded-xl border border-[#eee] p-8 text-center text-[#888]">
+          <span className="material-symbols-outlined animate-spin align-middle mr-2">progress_activity</span>Loading...
+        </div>
+      ) : !data?.creators || data.creators.length === 0 ? (
+        <div className="bg-white rounded-xl border border-[#eee] p-8 text-center text-[#888]">No creators found</div>
+      ) : (
+        <>
+          {/* Desktop Table */}
+          <div className="hidden sm:block bg-white rounded-xl border border-[#eee] overflow-x-auto">
+            <table className="w-full text-sm">
+              <thead>
+                <tr className="text-left text-[#888] text-xs uppercase tracking-wider bg-[#fafafa] border-b border-[#eee]">
+                  <th className="p-3">Name</th>
+                  <th className="p-3">Email</th>
+                  <th className="p-3">Phone</th>
+                  <th className="p-3">Reviews</th>
+                  <th className="p-3">Followers</th>
+                  <th className="p-3">Joined</th>
                 </tr>
-              ))
-            )}
-          </tbody>
-        </table>
-      </div>
+              </thead>
+              <tbody>
+                {data.creators.map((c) => (
+                  <tr key={c.id} className="border-b border-[#f5f5f5] hover:bg-[#fafafa]">
+                    <td className="p-3 font-medium text-[#333]">{c.name}</td>
+                    <td className="p-3 text-[#555]">{c.email}</td>
+                    <td className="p-3 text-[#555]">{c.phone || '—'}</td>
+                    <td className="p-3 text-[#555]">{c._count.reviews}</td>
+                    <td className="p-3 text-[#555]">{c._count.storeFollowers}</td>
+                    <td className="p-3 text-[#888] text-xs">{formatDate(c.createdAt)}</td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+
+          {/* Mobile Cards */}
+          <div className="sm:hidden space-y-3">
+            {data.creators.map((c) => (
+              <div key={c.id} className="bg-white rounded-xl border border-[#eee] p-3 space-y-1">
+                <p className="font-medium text-sm text-[#333]">{c.name}</p>
+                <div className="flex items-center justify-between text-xs text-[#666]">
+                  <span>{c.email}</span>
+                  <span>{c.phone || '—'}</span>
+                </div>
+                <div className="flex items-center justify-between text-[10px] text-[#888]">
+                  <span>{c._count.reviews} reviews · {c._count.storeFollowers} followers</span>
+                  <span>{formatDate(c.createdAt)}</span>
+                </div>
+              </div>
+            ))}
+          </div>
+        </>
+      )}
 
       {data && data.totalPages > 1 && (
         <div className="flex items-center justify-between text-sm">

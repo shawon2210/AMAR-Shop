@@ -104,52 +104,66 @@ function PagesSection({ onError }: { onError: (msg: string) => void }) {
         </form>
       )}
 
-      <div className="bg-white rounded-xl border border-[#eee] overflow-x-auto">
-        <table className="w-full text-sm">
-          <thead>
-            <tr className="text-left text-[#888] text-xs uppercase tracking-wider bg-[#fafafa] border-b border-[#eee]">
-              <th className="p-3">Title</th>
-              <th className="p-3">Slug</th>
-              <th className="p-3">Status</th>
-              <th className="p-3">Last Updated</th>
-              <th className="p-3">Actions</th>
-            </tr>
-          </thead>
-          <tbody>
-            {loading ? (
-              <tr><td colSpan={5} className="p-8 text-center text-[#888]"><span className="material-symbols-outlined animate-spin align-middle mr-2">progress_activity</span>Loading...</td></tr>
-            ) : !pages || pages.length === 0 ? (
-              <tr><td colSpan={5} className="p-8 text-center text-[#888]">No pages found</td></tr>
-            ) : (
-              pages.map((p) => (
-                <tr key={p.id} className="border-b border-[#f5f5f5] hover:bg-[#fafafa]">
-                  <td className="p-3 font-medium text-[#333]">{p.title}</td>
-                  <td className="p-3 text-[#888] font-mono text-xs">{p.slug}</td>
-                  <td className="p-3">
-                    <span className={`text-[11px] font-semibold px-2 py-0.5 rounded-full ${p.isActive ? 'bg-green-100 text-green-700' : 'bg-amber-100 text-amber-700'}`}>
-                      {p.isActive ? 'Published' : 'Draft'}
-                    </span>
-                  </td>
-                  <td className="p-3 text-[#888] text-xs">{formatDate(p.updatedAt || p.createdAt)}</td>
-                  <td className="p-3">
-                    <div className="flex gap-1">
-                      <button onClick={() => handleToggleActive(p)} className="p-1.5 rounded-lg hover:bg-[#f5f5f5]" title={p.isActive ? 'Set Draft' : 'Publish'}>
-                        <span className="material-symbols-outlined text-[18px] text-[#666]">{p.isActive ? 'toggle_on' : 'toggle_off'}</span>
-                      </button>
-                      <button onClick={() => handleEdit(p)} className="p-1.5 rounded-lg hover:bg-[#f5f5f5]" title="Edit">
-                        <span className="material-symbols-outlined text-[18px] text-[#666]">edit</span>
-                      </button>
-                      <button onClick={() => handleDelete(p.id)} className="p-1.5 rounded-lg hover:bg-[#f5f5f5]" title="Delete">
-                        <span className="material-symbols-outlined text-[18px] text-[#666]">delete</span>
-                      </button>
-                    </div>
-                  </td>
+      {loading ? (
+        <div className="bg-white rounded-xl border border-[#eee] p-8 text-center text-[#888]"><span className="material-symbols-outlined animate-spin align-middle mr-2">progress_activity</span>Loading...</div>
+      ) : !pages || pages.length === 0 ? (
+        <div className="bg-white rounded-xl border border-[#eee] p-8 text-center text-[#888]">No pages found</div>
+      ) : (
+        <>
+          {/* Desktop Table */}
+          <div className="hidden sm:block bg-white rounded-xl border border-[#eee] overflow-x-auto">
+            <table className="w-full text-sm">
+              <thead>
+                <tr className="text-left text-[#888] text-xs uppercase tracking-wider bg-[#fafafa] border-b border-[#eee]">
+                  <th className="p-3">Title</th>
+                  <th className="p-3">Slug</th>
+                  <th className="p-3">Status</th>
+                  <th className="p-3">Last Updated</th>
+                  <th className="p-3">Actions</th>
                 </tr>
-              ))
-            )}
-          </tbody>
-        </table>
-      </div>
+              </thead>
+              <tbody>
+                {pages.map((p) => (
+                  <tr key={p.id} className="border-b border-[#f5f5f5] hover:bg-[#fafafa]">
+                    <td className="p-3 font-medium text-[#333]">{p.title}</td>
+                    <td className="p-3 text-[#888] font-mono text-xs">{p.slug}</td>
+                    <td className="p-3"><span className={`text-[11px] font-semibold px-2 py-0.5 rounded-full ${p.isActive ? 'bg-green-100 text-green-700' : 'bg-amber-100 text-amber-700'}`}>{p.isActive ? 'Published' : 'Draft'}</span></td>
+                    <td className="p-3 text-[#888] text-xs">{formatDate(p.updatedAt || p.createdAt)}</td>
+                    <td className="p-3">
+                      <div className="flex gap-1">
+                        <button onClick={() => handleToggleActive(p)} className="p-1.5 rounded-lg hover:bg-[#f5f5f5]" title={p.isActive ? 'Set Draft' : 'Publish'}><span className="material-symbols-outlined text-[18px] text-[#666]">{p.isActive ? 'toggle_on' : 'toggle_off'}</span></button>
+                        <button onClick={() => handleEdit(p)} className="p-1.5 rounded-lg hover:bg-[#f5f5f5]" title="Edit"><span className="material-symbols-outlined text-[18px] text-[#666]">edit</span></button>
+                        <button onClick={() => handleDelete(p.id)} className="p-1.5 rounded-lg hover:bg-[#f5f5f5]" title="Delete"><span className="material-symbols-outlined text-[18px] text-[#666]">delete</span></button>
+                      </div>
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+
+          {/* Mobile Cards */}
+          <div className="sm:hidden space-y-3">
+            {pages.map((p) => (
+              <div key={p.id} className="bg-white rounded-xl border border-[#eee] p-3 space-y-2">
+                <div className="flex items-center justify-between">
+                  <p className="font-medium text-sm text-[#333]">{p.title}</p>
+                  <div className="flex gap-1">
+                    <button onClick={() => handleToggleActive(p)} className="p-1 rounded-lg hover:bg-[#f5f5f5]"><span className="material-symbols-outlined text-[18px] text-[#666]">{p.isActive ? 'toggle_on' : 'toggle_off'}</span></button>
+                    <button onClick={() => handleEdit(p)} className="p-1 rounded-lg hover:bg-[#f5f5f5]"><span className="material-symbols-outlined text-[18px] text-[#666]">edit</span></button>
+                    <button onClick={() => handleDelete(p.id)} className="p-1 rounded-lg hover:bg-[#f5f5f5]"><span className="material-symbols-outlined text-[18px] text-[#666]">delete</span></button>
+                  </div>
+                </div>
+                <div className="flex items-center justify-between text-xs">
+                  <span className="text-[#888] font-mono">/{p.slug}</span>
+                  <span className={`text-[10px] font-semibold px-1.5 py-0.5 rounded-full ${p.isActive ? 'bg-green-100 text-green-700' : 'bg-amber-100 text-amber-700'}`}>{p.isActive ? 'Published' : 'Draft'}</span>
+                </div>
+                <p className="text-[10px] text-[#999]">{formatDate(p.updatedAt || p.createdAt)}</p>
+              </div>
+            ))}
+          </div>
+        </>
+      )}
     </div>
   );
 }

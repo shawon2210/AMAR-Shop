@@ -75,28 +75,50 @@ export default function TaxReportPage() {
               <h2 className="font-semibold text-[#222]">Monthly Breakdown</h2>
               <span className="text-xs text-[#888]">{data.period.from} - {data.period.to}</span>
             </div>
-            <table className="w-full text-sm">
-              <thead>
-                <tr className="border-b border-[#eee] bg-[#fafafa]">
-                  <th className="text-left py-3 px-4 text-[#888] font-medium">Month</th>
-                  <th className="text-right py-3 px-4 text-[#888] font-medium">Revenue</th>
-                  <th className="text-right py-3 px-4 text-[#888] font-medium">Taxable Amount</th>
-                  <th className="text-right py-3 px-4 text-[#888] font-medium">VAT</th>
-                </tr>
-              </thead>
-              <tbody>
-                {data.monthly.map((m: any, i: number) => (
-                  <tr key={i} className="border-b border-[#eee]/50 hover:bg-[#fafafa]">
-                    <td className="py-3 px-4 font-medium text-[#333]">{m.month}</td>
-                    <td className="py-3 px-4 text-right">{formatBDT(m.revenue)}</td>
-                    <td className="py-3 px-4 text-right">{formatBDT(m.taxable)}</td>
-                    <td className="py-3 px-4 text-right font-semibold">{formatBDT(m.vat)}</td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-            {(!data.monthly || data.monthly.length === 0) && (
+            {!data.monthly || data.monthly.length === 0 ? (
               <p className="p-8 text-center text-[#888]">No monthly data for this period</p>
+            ) : (
+              <>
+                {/* Desktop Table */}
+                <div className="hidden sm:block">
+                  <table className="w-full text-sm">
+                    <thead>
+                      <tr className="border-b border-[#eee] bg-[#fafafa]">
+                        <th className="text-left py-3 px-4 text-[#888] font-medium">Month</th>
+                        <th className="text-right py-3 px-4 text-[#888] font-medium">Revenue</th>
+                        <th className="text-right py-3 px-4 text-[#888] font-medium">Taxable Amount</th>
+                        <th className="text-right py-3 px-4 text-[#888] font-medium">VAT</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {data.monthly.map((m: any, i: number) => (
+                        <tr key={i} className="border-b border-[#eee]/50 hover:bg-[#fafafa]">
+                          <td className="py-3 px-4 font-medium text-[#333]">{m.month}</td>
+                          <td className="py-3 px-4 text-right">{formatBDT(m.revenue)}</td>
+                          <td className="py-3 px-4 text-right">{formatBDT(m.taxable)}</td>
+                          <td className="py-3 px-4 text-right font-semibold">{formatBDT(m.vat)}</td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
+                </div>
+
+                {/* Mobile Cards */}
+                <div className="sm:hidden p-3 space-y-2">
+                  {data.monthly.map((m: any, i: number) => (
+                    <div key={i} className="border border-[#eee] rounded-lg p-3 flex items-center justify-between">
+                      <div>
+                        <p className="text-sm font-medium text-[#333]">{m.month}</p>
+                        <p className="text-xs text-[#888]">Revenue: {formatBDT(m.revenue)}</p>
+                      </div>
+                      <div className="text-right">
+                        <p className="text-xs text-[#888]">Taxable: {formatBDT(m.taxable)}</p>
+                        <p className="text-sm font-semibold text-[#333]">VAT: {formatBDT(m.vat)}</p>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </>
             )}
           </div>
         </>

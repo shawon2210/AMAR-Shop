@@ -101,44 +101,62 @@ export default function PaymentsPage() {
         <div className="bg-red-50 text-red-600 rounded-lg p-3 text-sm border border-red-200">{error}</div>
       )}
 
-      <div className="bg-white rounded-xl border border-[#eee] overflow-x-auto">
-        <table className="w-full text-sm">
-          <thead>
-            <tr className="text-left text-[#888] text-xs uppercase tracking-wider bg-[#fafafa] border-b border-[#eee]">
-              <th className="p-3">Transaction ID</th>
-              <th className="p-3">Order</th>
-              <th className="p-3">Amount</th>
-              <th className="p-3">Method</th>
-              <th className="p-3">Status</th>
-              <th className="p-3">Date</th>
-            </tr>
-          </thead>
-          <tbody>
-            {loading ? (
-              <tr><td colSpan={6} className="p-8 text-center text-[#888]">
-                <span className="material-symbols-outlined animate-spin align-middle mr-2">progress_activity</span>Loading...
-              </td></tr>
-            ) : !payments?.payments || payments.payments.length === 0 ? (
-              <tr><td colSpan={6} className="p-8 text-center text-[#888]">No transactions found</td></tr>
-            ) : (
-              payments.payments.map((t: any) => (
-                <tr key={t.id} className="border-b border-[#f5f5f5] hover:bg-[#fafafa]">
-                  <td className="p-3 font-mono text-xs font-medium text-[#333]">{t.id.slice(0, 8)}...</td>
-                  <td className="p-3 text-[#555]">#{t.order?.orderNumber || t.orderId?.slice(-6) || 'N/A'}</td>
-                  <td className="p-3 font-medium">{formatBDT(t.amount)}</td>
-                  <td className="p-3 text-[#666]">{t.method || 'N/A'}</td>
-                  <td className="p-3">
-                    <span className={`text-[11px] font-semibold px-2 py-0.5 rounded-full ${statusStyles[t.status] || 'bg-gray-100 text-gray-700'}`}>
-                      {t.status || 'N/A'}
-                    </span>
-                  </td>
-                  <td className="p-3 text-[#888]">{formatDate(t.createdAt)}</td>
+      {loading ? (
+        <div className="bg-white rounded-xl border border-[#eee] p-8 text-center text-[#888]">
+          <span className="material-symbols-outlined animate-spin align-middle mr-2">progress_activity</span>Loading...
+        </div>
+      ) : !payments?.payments || payments.payments.length === 0 ? (
+        <div className="bg-white rounded-xl border border-[#eee] p-8 text-center text-[#888]">No transactions found</div>
+      ) : (
+        <>
+          {/* Desktop Table */}
+          <div className="hidden sm:block bg-white rounded-xl border border-[#eee] overflow-x-auto">
+            <table className="w-full text-sm">
+              <thead>
+                <tr className="text-left text-[#888] text-xs uppercase tracking-wider bg-[#fafafa] border-b border-[#eee]">
+                  <th className="p-3">Transaction ID</th>
+                  <th className="p-3">Order</th>
+                  <th className="p-3">Amount</th>
+                  <th className="p-3">Method</th>
+                  <th className="p-3">Status</th>
+                  <th className="p-3">Date</th>
                 </tr>
-              ))
-            )}
-          </tbody>
-        </table>
-      </div>
+              </thead>
+              <tbody>
+                {payments.payments.map((t: any) => (
+                  <tr key={t.id} className="border-b border-[#f5f5f5] hover:bg-[#fafafa]">
+                    <td className="p-3 font-mono text-xs font-medium text-[#333]">{t.id.slice(0, 8)}...</td>
+                    <td className="p-3 text-[#555]">#{t.order?.orderNumber || t.orderId?.slice(-6) || 'N/A'}</td>
+                    <td className="p-3 font-medium">{formatBDT(t.amount)}</td>
+                    <td className="p-3 text-[#666]">{t.method || 'N/A'}</td>
+                    <td className="p-3">
+                      <span className={`text-[11px] font-semibold px-2 py-0.5 rounded-full ${statusStyles[t.status] || 'bg-gray-100 text-gray-700'}`}>{t.status || 'N/A'}</span>
+                    </td>
+                    <td className="p-3 text-[#888]">{formatDate(t.createdAt)}</td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+
+          {/* Mobile Cards */}
+          <div className="sm:hidden space-y-3">
+            {payments.payments.map((t: any) => (
+              <div key={t.id} className="bg-white rounded-xl border border-[#eee] p-3 space-y-2">
+                <div className="flex items-center justify-between">
+                  <span className="font-mono text-xs font-medium text-[#333]">{t.id.slice(0, 8)}...</span>
+                  <span className={`text-[10px] font-semibold px-2 py-0.5 rounded-full ${statusStyles[t.status] || 'bg-gray-100 text-gray-700'}`}>{t.status || 'N/A'}</span>
+                </div>
+                <div className="flex items-center justify-between text-xs">
+                  <span className="text-[#666]">#{t.order?.orderNumber || t.orderId?.slice(-6) || 'N/A'} · {t.method || 'N/A'}</span>
+                  <span className="font-semibold text-[#333]">{formatBDT(t.amount)}</span>
+                </div>
+                <p className="text-[10px] text-[#999]">{formatDate(t.createdAt)}</p>
+              </div>
+            ))}
+          </div>
+        </>
+      )}
     </div>
   );
 }

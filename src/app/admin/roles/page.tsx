@@ -1,135 +1,63 @@
 'use client';
 
-import { useState } from 'react';
-
-const mockRoles = [
-  { id: 'role-1', name: 'Super Admin', description: 'Full system access', users: 2, protected: true },
-  { id: 'role-2', name: 'Admin', description: 'Administrative access', users: 8, protected: true },
-  { id: 'role-3', name: 'Moderator', description: 'Content moderation access', users: 15, protected: false },
-  { id: 'role-4', name: 'Support Agent', description: 'Ticket support access', users: 12, protected: false },
-  { id: 'role-5', name: 'Seller Manager', description: 'Seller management access', users: 5, protected: false },
-];
-
-const modules = ['Dashboard', 'Products', 'Orders', 'Users', 'Sellers', 'Marketing', 'CMS', 'Settings', 'Reports'];
-
-const permissions: Record<string, Record<string, boolean>> = {
-  'Super Admin': Object.fromEntries(modules.map((m) => [m, true])),
-  'Admin': { Dashboard: true, Products: true, Orders: true, Users: true, Sellers: true, Marketing: true, CMS: true, Settings: true, Reports: true },
-  'Moderator': { Dashboard: true, Products: true, Orders: true, Users: false, Sellers: false, Marketing: false, CMS: true, Settings: false, Reports: false },
-  'Support Agent': { Dashboard: true, Products: false, Orders: true, Users: true, Sellers: false, Marketing: false, CMS: false, Settings: false, Reports: false },
-  'Seller Manager': { Dashboard: true, Products: false, Orders: false, Users: false, Sellers: true, Marketing: false, CMS: false, Settings: false, Reports: false },
-};
+import { useMemo } from 'react';
+import { useAdminData } from '@/lib/api/hooks';
+import { fetchUsers } from '@/lib/api/admin';
 
 export default function RolesPage() {
-  const [showCreate, setShowCreate] = useState(false);
+  const { data, loading, error } = useAdminData(() => fetchUsers({ limit: 1000 }));
+
+  const roleGroups = useMemo(() => {
+    if (!data?.users) return {};
+    const groups: Record<string, number> = {};
+    data.users.forEach((u) => {
+      groups[u.role] = (groups[u.role] || 0) + 1;
+    });
+    return groups;
+  }, [data]);
 
   return (
     <div className="space-y-5">
       <div className="flex items-center justify-between">
         <h1 className="text-2xl font-bold text-[#222]">Roles & Permissions</h1>
-        <button onClick={() => setShowCreate(!showCreate)} className="px-4 py-2 bg-primary text-white text-sm rounded-lg hover:bg-primary/90">+ Create Role</button>
       </div>
 
-      {showCreate && (
-        <div className="bg-white rounded-xl border border-[#eee] p-5">
-          <h2 className="text-lg font-semibold text-[#222] mb-4">Create New Role</h2>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            <div>
-              <label className="block text-sm text-[#666] mb-1">Role Name</label>
-              <input type="text" className="w-full border border-[#ddd] rounded-lg px-3 py-2 text-sm outline-none" placeholder="e.g. Editor" />
+      {error && (
+        <div className="bg-red-50 text-red-600 rounded-lg p-3 text-sm border border-red-200">{error}</div>
+      )}
+
+      {loading ? (
+        <div className="bg-white rounded-xl border border-[#eee] p-8 text-center text-[#888]">
+          <span className="material-symbols-outlined animate-spin align-middle mr-2">progress_activity</span>Loading...
+        </div>
+      ) : (
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+          {Object.entries(roleGroups).map(([role, count]) => (
+            <div key={role} className="bg-white rounded-xl border border-[#eee] p-5">
+              <div className="flex items-center gap-3 mb-3">
+                <div className="w-10 h-10 rounded-lg bg-primary/10 flex items-center justify-center">
+                  <span className="material-symbols-outlined text-primary">admin_panel_settings</span>
+                </div>
+                <div>
+                  <p className="font-semibold text-[#222]">{role}</p>
+                  <p className="text-sm text-[#888]">{count} user{count !== 1 ? 's' : ''}</p>
+                </div>
+              </div>
             </div>
-            <div>
-              <label className="block text-sm text-[#666] mb-1">Description</label>
-              <input type="text" className="w-full border border-[#ddd] rounded-lg px-3 py-2 text-sm outline-none" placeholder="Brief description" />
-            </div>
-          </div>
-          <div className="flex justify-end gap-3 mt-4">
-            <button onClick={() => setShowCreate(false)} className="px-4 py-2 text-sm text-[#666] hover:bg-[#f5f5f5] rounded-lg">Cancel</button>
-            <button className="px-4 py-2 text-sm bg-primary text-white rounded-lg hover:bg-primary/90">Create Role</button>
-          </div>
+          ))}
         </div>
       )}
 
-      <div className="bg-white rounded-xl border border-[#eee] overflow-x-auto">
-        <table className="w-full text-sm">
-          <thead>
-            <tr className="text-left text-[#888] text-xs uppercase tracking-wider bg-[#fafafa] border-b border-[#eee]">
-              <th className="p-3">Role Name</th>
-              <th className="p-3">Description</th>
-              <th className="p-3">Users</th>
-              <th className="p-3">Protected</th>
-              <th className="p-3">Actions</th>
-            </tr>
-          </thead>
-          <tbody>
-            {mockRoles.map((r) => (
-              <tr key={r.id} className="border-b border-[#f5f5f5] hover:bg-[#fafafa]">
-                <td className="p-3 font-medium text-[#333]">{r.name}</td>
-                <td className="p-3 text-[#666]">{r.description}</td>
-                <td className="p-3 text-[#666]">{r.users}</td>
-                <td className="p-3">
-                  {r.protected ? (
-                    <span className="material-symbols-outlined text-green-500 text-[18px]">shield</span>
-                  ) : (
-                    <span className="text-[#ccc]">—</span>
-                  )}
-                </td>
-                <td className="p-3">
-                  <div className="flex gap-1">
-                    {!r.protected && (
-                      <button className="p-1.5 rounded-lg hover:bg-[#f5f5f5]"><span className="material-symbols-outlined text-[18px] text-[#666]">delete</span></button>
-                    )}
-                    <button className="p-1.5 rounded-lg hover:bg-[#f5f5f5]"><span className="material-symbols-outlined text-[18px] text-[#666]">edit</span></button>
-                  </div>
-                </td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
-      </div>
-
-      <div className="bg-white rounded-xl border border-[#eee] overflow-x-auto">
-        <div className="p-5 border-b border-[#eee]">
-          <h2 className="text-lg font-semibold text-[#222]">Permission Matrix</h2>
-          <p className="text-sm text-[#888] mt-1">Configure module-level permissions for each role</p>
-        </div>
-        <div className="overflow-x-auto">
-          <table className="w-full text-sm min-w-[700px]">
-            <thead>
-              <tr className="text-left text-[#888] text-xs uppercase tracking-wider bg-[#fafafa] border-b border-[#eee]">
-                <th className="p-3 sticky left-0 bg-[#fafafa]">Module</th>
-                {mockRoles.map((r) => (
-                  <th key={r.id} className="p-3 text-center">{r.name}</th>
-                ))}
-              </tr>
-            </thead>
-            <tbody>
-              {modules.map((mod) => (
-                <tr key={mod} className="border-b border-[#f5f5f5] hover:bg-[#fafafa]">
-                  <td className="p-3 font-medium text-[#333] sticky left-0 bg-white">{mod}</td>
-                  {mockRoles.map((r) => {
-                    const checked = permissions[r.name]?.[mod] || false;
-                    return (
-                      <td key={r.id} className="p-3 text-center">
-                        {r.protected ? (
-                          <span className={`material-symbols-outlined text-[18px] ${checked ? 'text-green-500' : 'text-[#ddd]'}`}>
-                            {checked ? 'check_box' : 'check_box_outline_blank'}
-                          </span>
-                        ) : (
-                          <button className="p-1">
-                            <span className={`material-symbols-outlined text-[18px] ${checked ? 'text-green-500' : 'text-[#ddd]'}`}>
-                              {checked ? 'check_box' : 'check_box_outline_blank'}
-                            </span>
-                          </button>
-                        )}
-                      </td>
-                    );
-                  })}
-                </tr>
-              ))}
-            </tbody>
-          </table>
-        </div>
+      <div className="bg-white rounded-xl border border-[#eee] p-5">
+        <h2 className="font-semibold text-[#222] mb-4">Permission Notes</h2>
+        <ul className="space-y-2 text-sm text-[#666]">
+          <li>• <strong>SUPER_ADMIN</strong> — Full system access to all modules</li>
+          <li>• <strong>ADMIN</strong> — Administrative access to all business modules</li>
+          <li>• <strong>SELLER</strong> — Access to own store, products, and orders</li>
+          <li>• <strong>CUSTOMER</strong> — Standard customer account access</li>
+          <li>• Role-based access is enforced server-side via the <code>@Roles()</code> decorator</li>
+          <li>• To change a user's role, go to <a href="/admin/users" className="text-primary hover:underline">Users</a> and edit their profile</li>
+        </ul>
       </div>
     </div>
   );

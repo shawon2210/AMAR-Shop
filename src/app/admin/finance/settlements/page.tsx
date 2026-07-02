@@ -49,62 +49,77 @@ export default function SettlementsPage() {
         <div className="bg-red-50 text-red-600 rounded-lg p-3 text-sm border border-red-200">{error}</div>
       )}
 
-      <div className="bg-white rounded-xl border border-[#eee] overflow-hidden">
-        <table className="w-full text-sm">
-          <thead>
-            <tr className="border-b border-[#eee] bg-[#fafafa]">
-              <th className="text-left py-3 px-4 text-[#888] font-medium">Settlement #</th>
-              <th className="text-left py-3 px-4 text-[#888] font-medium">Seller</th>
-              <th className="text-left py-3 px-4 text-[#888] font-medium">Period</th>
-              <th className="text-right py-3 px-4 text-[#888] font-medium">Gross</th>
-              <th className="text-right py-3 px-4 text-[#888] font-medium">Commission</th>
-              <th className="text-right py-3 px-4 text-[#888] font-medium">Net</th>
-              <th className="text-left py-3 px-4 text-[#888] font-medium">Status</th>
-              <th className="text-left py-3 px-4 text-[#888] font-medium">Action</th>
-            </tr>
-          </thead>
-          <tbody>
-            {loading ? (
-              <tr><td colSpan={8} className="p-8 text-center text-[#888]">
-                <span className="material-symbols-outlined animate-spin align-middle mr-2">progress_activity</span>Loading...
-              </td></tr>
-            ) : !data || data.settlements.length === 0 ? (
-              <tr><td colSpan={8} className="p-8 text-center text-[#888]">No settlements found</td></tr>
-            ) : (
-              data.settlements.map((s) => (
-                <tr key={s.id} className="border-b border-[#eee]/50 hover:bg-[#fafafa]">
-                  <td className="py-3 px-4 font-medium text-[#333]">{s.settlementNumber}</td>
-                  <td className="py-3 px-4 text-[#555]">{s.seller?.name || 'N/A'}</td>
-                  <td className="py-3 px-4 text-[#666]">
-                    {formatDate(s.periodStart)} - {formatDate(s.periodEnd)}
-                  </td>
-                  <td className="py-3 px-4 text-right">{formatBDT(s.grossAmount)}</td>
-                  <td className="py-3 px-4 text-right text-red-500">-{formatBDT(s.commission)}</td>
-                  <td className="py-3 px-4 text-right font-semibold">{formatBDT(s.netAmount)}</td>
-                  <td className="py-3 px-4">
-                    <span className={`text-[11px] font-semibold px-2 py-0.5 rounded-full ${statusStyles[s.status] || 'bg-gray-100 text-gray-700'}`}>
-                      {s.status}
-                    </span>
-                  </td>
-                  <td className="py-3 px-4">
-                    {s.status === 'PENDING' && (
-                      <div className="flex gap-1">
-                        <button onClick={() => handleProcess(s.id, 'PROCESSING')} className="text-xs bg-blue-500 text-white px-2 py-1 rounded-md hover:bg-blue-600">Process</button>
-                      </div>
-                    )}
-                    {s.status === 'PROCESSING' && (
-                      <button onClick={() => handleProcess(s.id, 'COMPLETED')} className="text-xs bg-green-500 text-white px-2 py-1 rounded-md hover:bg-green-600">Complete</button>
-                    )}
-                    {(s.status === 'COMPLETED' || s.status === 'FAILED') && (
-                      <span className="text-xs text-[#888]">Done</span>
-                    )}
-                  </td>
+      {loading ? (
+        <div className="bg-white rounded-xl border border-[#eee] p-8 text-center text-[#888]">
+          <span className="material-symbols-outlined animate-spin align-middle mr-2">progress_activity</span>Loading...
+        </div>
+      ) : !data || data.settlements.length === 0 ? (
+        <div className="bg-white rounded-xl border border-[#eee] p-8 text-center text-[#888]">No settlements found</div>
+      ) : (
+        <>
+          {/* Desktop Table */}
+          <div className="hidden sm:block bg-white rounded-xl border border-[#eee] overflow-hidden">
+            <table className="w-full text-sm">
+              <thead>
+                <tr className="border-b border-[#eee] bg-[#fafafa]">
+                  <th className="text-left py-3 px-4 text-[#888] font-medium">Settlement #</th>
+                  <th className="text-left py-3 px-4 text-[#888] font-medium">Seller</th>
+                  <th className="text-left py-3 px-4 text-[#888] font-medium">Period</th>
+                  <th className="text-right py-3 px-4 text-[#888] font-medium">Gross</th>
+                  <th className="text-right py-3 px-4 text-[#888] font-medium">Commission</th>
+                  <th className="text-right py-3 px-4 text-[#888] font-medium">Net</th>
+                  <th className="text-left py-3 px-4 text-[#888] font-medium">Status</th>
+                  <th className="text-left py-3 px-4 text-[#888] font-medium">Action</th>
                 </tr>
-              ))
-            )}
-          </tbody>
-        </table>
-      </div>
+              </thead>
+              <tbody>
+                {data.settlements.map((s) => (
+                  <tr key={s.id} className="border-b border-[#eee]/50 hover:bg-[#fafafa]">
+                    <td className="py-3 px-4 font-medium text-[#333]">{s.settlementNumber}</td>
+                    <td className="py-3 px-4 text-[#555]">{s.seller?.name || 'N/A'}</td>
+                    <td className="py-3 px-4 text-[#666]">{formatDate(s.periodStart)} - {formatDate(s.periodEnd)}</td>
+                    <td className="py-3 px-4 text-right">{formatBDT(s.grossAmount)}</td>
+                    <td className="py-3 px-4 text-right text-red-500">-{formatBDT(s.commission)}</td>
+                    <td className="py-3 px-4 text-right font-semibold">{formatBDT(s.netAmount)}</td>
+                    <td className="py-3 px-4"><span className={`text-[11px] font-semibold px-2 py-0.5 rounded-full ${statusStyles[s.status] || 'bg-gray-100 text-gray-700'}`}>{s.status}</span></td>
+                    <td className="py-3 px-4">
+                      {s.status === 'PENDING' && <button onClick={() => handleProcess(s.id, 'PROCESSING')} className="text-xs bg-blue-500 text-white px-2 py-1 rounded-md hover:bg-blue-600">Process</button>}
+                      {s.status === 'PROCESSING' && <button onClick={() => handleProcess(s.id, 'COMPLETED')} className="text-xs bg-green-500 text-white px-2 py-1 rounded-md hover:bg-green-600">Complete</button>}
+                      {(s.status === 'COMPLETED' || s.status === 'FAILED') && <span className="text-xs text-[#888]">Done</span>}
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+
+          {/* Mobile Cards */}
+          <div className="sm:hidden space-y-3">
+            {data.settlements.map((s) => (
+              <div key={s.id} className="bg-white rounded-xl border border-[#eee] p-3 space-y-2">
+                <div className="flex items-center justify-between">
+                  <span className="font-medium text-sm text-[#333]">{s.settlementNumber}</span>
+                  <span className={`text-[10px] font-semibold px-1.5 py-0.5 rounded-full ${statusStyles[s.status] || 'bg-gray-100 text-gray-700'}`}>{s.status}</span>
+                </div>
+                <div className="text-xs text-[#666]">
+                  <span>{s.seller?.name || 'N/A'} · {formatDate(s.periodStart)} - {formatDate(s.periodEnd)}</span>
+                </div>
+                <div className="flex items-center justify-between text-xs">
+                  <div>
+                    <span className="text-[#888]">Gross: {formatBDT(s.grossAmount)}</span>
+                    <span className="text-red-500 ml-2">-{formatBDT(s.commission)}</span>
+                  </div>
+                  <span className="font-semibold text-[#333]">{formatBDT(s.netAmount)}</span>
+                </div>
+                <div className="flex gap-2 pt-1">
+                  {s.status === 'PENDING' && <button onClick={() => handleProcess(s.id, 'PROCESSING')} className="flex-1 text-xs bg-blue-500 text-white py-1.5 rounded-md font-medium hover:bg-blue-600">Process</button>}
+                  {s.status === 'PROCESSING' && <button onClick={() => handleProcess(s.id, 'COMPLETED')} className="flex-1 text-xs bg-green-500 text-white py-1.5 rounded-md font-medium hover:bg-green-600">Complete</button>}
+                </div>
+              </div>
+            ))}
+          </div>
+        </>
+      )}
 
       {data && data.totalPages > 1 && (
         <div className="flex items-center justify-between text-sm">

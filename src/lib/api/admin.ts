@@ -961,3 +961,103 @@ export interface ComplianceDashboard {
 export function fetchComplianceDashboard(): Promise<ComplianceDashboard> {
   return api.get<ComplianceDashboard>('/admin/compliance');
 }
+
+// ─── Warehouse / WMS ──────────────────────────────────
+
+export interface WarehouseDashboard {
+  warehouseId: string;
+  warehouseName: string;
+  totalBins: number;
+  totalInventoryItems: number;
+  totalStock: number;
+  reservedStock: number;
+  availableStock: number;
+  activePicks: number;
+  todayPicks: number;
+  todayPacks: number;
+  lowStockItems: number;
+  pickRate: number;
+  packRate: number;
+  accuracy: number;
+  throughput: number;
+}
+
+export function fetchWarehouseDashboard(warehouseId?: string): Promise<WarehouseDashboard> {
+  const id = warehouseId || 'wh-1';
+  return api.get<WarehouseDashboard>(`/wms/dashboard/${id}`);
+}
+
+export interface StockAlert {
+  id: string;
+  productName: string;
+  currentStock: number;
+  reorderPoint: number;
+  status: string;
+}
+
+export function fetchStockAlerts(warehouseId?: string): Promise<StockAlert[]> {
+  const id = warehouseId || 'wh-1';
+  return api.get<StockAlert[]>(`/wms/stock-alerts/${id}`);
+}
+
+// ─── Fulfillment / Courier ────────────────────────────
+
+export interface CourierPerformance {
+  name: string;
+  shipments: number;
+  delivered: number;
+  rate: number;
+  onTime: number;
+}
+
+export function fetchCourierPerformance(start?: string, end?: string): Promise<CourierPerformance[]> {
+  const search = new URLSearchParams();
+  if (start) search.set('start', start);
+  if (end) search.set('end', end);
+  const qs = search.toString();
+  return api.get<CourierPerformance[]>(`/fulfillment/courier-performance${qs ? `?${qs}` : ''}`);
+}
+
+export interface Shipment {
+  trackingId: string;
+  courier: string;
+  status: string;
+  estimatedDelivery: string;
+  createdAt: string;
+}
+
+export function fetchFulfillmentShipments(params?: { page?: number; limit?: number }): Promise<{ shipments: Shipment[]; total: number }> {
+  const search = new URLSearchParams();
+  if (params?.page) search.set('page', String(params.page));
+  if (params?.limit) search.set('limit', String(params.limit));
+  const qs = search.toString();
+  return api.get<{ shipments: Shipment[]; total: number }>(`/fulfillment/shipments${qs ? `?${qs}` : ''}`);
+}
+
+// ─── BI: RFM & Cohorts ───────────────────────────────
+
+export interface RFMSegment {
+  segment: string;
+  count: number;
+  avgRecency: number;
+  avgFrequency: number;
+  avgMonetary: number;
+}
+
+export function fetchRFMAnalysis(): Promise<RFMSegment[]> {
+  return api.get<RFMSegment[]>('/bi/rfm-segments');
+}
+
+export interface CohortRow {
+  cohort: string;
+  base: number;
+  period_0: number;
+  period_1: number;
+  period_2: number;
+  period_3: number;
+}
+
+export function fetchCohortAnalysis(period?: string): Promise<CohortRow[]> {
+  const qs = period ? `?period=${period}` : '';
+  return api.get<CohortRow[]>(`/bi/cohorts${qs}`);
+}

@@ -163,72 +163,107 @@ export default function CouponsPage() {
         </form>
       )}
 
-      <div className="bg-white rounded-xl border border-[#eee] overflow-x-auto">
-        <table className="w-full text-sm">
-          <thead>
-            <tr className="text-left text-[#888] text-xs uppercase tracking-wider bg-[#fafafa] border-b border-[#eee]">
-              <th className="p-3">Code</th>
-              <th className="p-3">Type</th>
-              <th className="p-3">Value</th>
-              <th className="p-3">Min Purchase</th>
-              <th className="p-3">Uses</th>
-              <th className="p-3">Expiry</th>
-              <th className="p-3">Status</th>
-              <th className="p-3">Actions</th>
-            </tr>
-          </thead>
-          <tbody>
-            {loading ? (
-              <tr><td colSpan={8} className="p-8 text-center text-[#888]">
-                <span className="material-symbols-outlined animate-spin align-middle mr-2">progress_activity</span>Loading...
-              </td></tr>
-            ) : filtered.length === 0 ? (
-              <tr><td colSpan={8} className="p-8 text-center text-[#888]">No coupons found</td></tr>
-            ) : (
-              filtered.map((c) => {
-                const status = getStatus(c);
-                const usagePct = c.maxUses ? Math.min(100, (c as any).usedCount || 0 / c.maxUses * 100) : 0;
-                return (
-                  <tr key={c.id} className="border-b border-[#f5f5f5] hover:bg-[#fafafa]">
-                    <td className="p-3 font-mono font-bold text-[#333]">{c.code}</td>
-                    <td className="p-3 text-[#666]">{c.type}</td>
-                    <td className="p-3 font-medium">{c.type === 'PERCENTAGE' ? `${c.value}%` : formatBDT(c.value)}</td>
-                    <td className="p-3 text-[#666]">{c.minPurchase > 0 ? formatBDT(c.minPurchase) : '—'}</td>
-                    <td className="p-3">
-                      <div className="flex items-center gap-2">
-                        <span>{(c as any).usedCount || 0}/{c.maxUses || '∞'}</span>
-                        {c.maxUses && (
-                          <div className="w-16 h-1.5 bg-[#eee] rounded-full overflow-hidden">
-                            <div className="h-full bg-primary rounded-full" style={{ width: `${usagePct}%` }} />
-                          </div>
-                        )}
-                      </div>
-                    </td>
-                    <td className="p-3 text-[#888] text-xs">{formatDate(c.expiresAt)}</td>
-                    <td className="p-3">
-                      <span className={`text-[11px] font-semibold px-2 py-0.5 rounded-full ${
-                        status === 'Active' ? 'bg-green-100 text-green-700' :
-                        status === 'Upcoming' ? 'bg-blue-100 text-blue-700' :
-                        status === 'Expired' ? 'bg-gray-100 text-gray-700' : 'bg-gray-100 text-gray-700'
-                      }`}>{status}</span>
-                    </td>
-                    <td className="p-3">
-                      <div className="flex gap-1">
-                        <button onClick={() => handleToggleActive(c)} className="p-1.5 rounded-lg hover:bg-[#f5f5f5]" title={c.isActive ? 'Deactivate' : 'Activate'}>
-                          <span className="material-symbols-outlined text-[18px] text-[#666]">{c.isActive ? 'toggle_on' : 'toggle_off'}</span>
-                        </button>
-                        <button onClick={() => handleDelete(c.id)} className="p-1.5 rounded-lg hover:bg-[#f5f5f5]" title="Delete">
-                          <span className="material-symbols-outlined text-[18px] text-[#666]">delete</span>
-                        </button>
-                      </div>
-                    </td>
-                  </tr>
-                );
-              })
-            )}
-          </tbody>
-        </table>
-      </div>
+      {loading ? (
+        <div className="bg-white rounded-xl border border-[#eee] p-8 text-center text-[#888]">
+          <span className="material-symbols-outlined animate-spin align-middle mr-2">progress_activity</span>Loading...
+        </div>
+      ) : filtered.length === 0 ? (
+        <div className="bg-white rounded-xl border border-[#eee] p-8 text-center text-[#888]">No coupons found</div>
+      ) : (
+        <>
+          {/* Desktop Table */}
+          <div className="hidden sm:block bg-white rounded-xl border border-[#eee] overflow-x-auto">
+            <table className="w-full text-sm">
+              <thead>
+                <tr className="text-left text-[#888] text-xs uppercase tracking-wider bg-[#fafafa] border-b border-[#eee]">
+                  <th className="p-3">Code</th>
+                  <th className="p-3">Type</th>
+                  <th className="p-3">Value</th>
+                  <th className="p-3">Min Purchase</th>
+                  <th className="p-3">Uses</th>
+                  <th className="p-3">Expiry</th>
+                  <th className="p-3">Status</th>
+                  <th className="p-3">Actions</th>
+                </tr>
+              </thead>
+              <tbody>
+                {filtered.map((c) => {
+                  const status = getStatus(c);
+                  const usagePct = c.maxUses ? Math.min(100, ((c as any).usedCount || 0) / c.maxUses * 100) : 0;
+                  return (
+                    <tr key={c.id} className="border-b border-[#f5f5f5] hover:bg-[#fafafa]">
+                      <td className="p-3 font-mono font-bold text-[#333]">{c.code}</td>
+                      <td className="p-3 text-[#666]">{c.type}</td>
+                      <td className="p-3 font-medium">{c.type === 'PERCENTAGE' ? `${c.value}%` : formatBDT(c.value)}</td>
+                      <td className="p-3 text-[#666]">{c.minPurchase > 0 ? formatBDT(c.minPurchase) : '—'}</td>
+                      <td className="p-3">
+                        <div className="flex items-center gap-2">
+                          <span>{(c as any).usedCount || 0}/{c.maxUses || '∞'}</span>
+                          {c.maxUses && (
+                            <div className="w-16 h-1.5 bg-[#eee] rounded-full overflow-hidden">
+                              <div className="h-full bg-primary rounded-full" style={{ width: `${usagePct}%` }} />
+                            </div>
+                          )}
+                        </div>
+                      </td>
+                      <td className="p-3 text-[#888] text-xs">{formatDate(c.expiresAt)}</td>
+                      <td className="p-3">
+                        <span className={`text-[11px] font-semibold px-2 py-0.5 rounded-full ${
+                          status === 'Active' ? 'bg-green-100 text-green-700' :
+                          status === 'Upcoming' ? 'bg-blue-100 text-blue-700' : 'bg-gray-100 text-gray-700'
+                        }`}>{status}</span>
+                      </td>
+                      <td className="p-3">
+                        <div className="flex gap-1">
+                          <button onClick={() => handleToggleActive(c)} className="p-1.5 rounded-lg hover:bg-[#f5f5f5]" title={c.isActive ? 'Deactivate' : 'Activate'}>
+                            <span className="material-symbols-outlined text-[18px] text-[#666]">{c.isActive ? 'toggle_on' : 'toggle_off'}</span>
+                          </button>
+                          <button onClick={() => handleDelete(c.id)} className="p-1.5 rounded-lg hover:bg-[#f5f5f5]" title="Delete">
+                            <span className="material-symbols-outlined text-[18px] text-[#666]">delete</span>
+                          </button>
+                        </div>
+                      </td>
+                    </tr>
+                  );
+                })}
+              </tbody>
+            </table>
+          </div>
+
+          {/* Mobile Cards */}
+          <div className="sm:hidden space-y-3">
+            {filtered.map((c) => {
+              const status = getStatus(c);
+              return (
+                <div key={c.id} className="bg-white rounded-xl border border-[#eee] p-3 space-y-2">
+                  <div className="flex items-center justify-between">
+                    <span className="font-mono font-bold text-sm text-[#333]">{c.code}</span>
+                    <div className="flex gap-1">
+                      <button onClick={() => handleToggleActive(c)} className="p-1 rounded-lg hover:bg-[#f5f5f5]">
+                        <span className="material-symbols-outlined text-[18px] text-[#666]">{c.isActive ? 'toggle_on' : 'toggle_off'}</span>
+                      </button>
+                      <button onClick={() => handleDelete(c.id)} className="p-1 rounded-lg hover:bg-[#f5f5f5]">
+                        <span className="material-symbols-outlined text-[18px] text-[#666]">delete</span>
+                      </button>
+                    </div>
+                  </div>
+                  <div className="flex items-center justify-between text-xs">
+                    <span className="text-[#666]">{c.type} · {c.type === 'PERCENTAGE' ? `${c.value}%` : formatBDT(c.value)}</span>
+                    <span className={`text-[10px] font-semibold px-2 py-0.5 rounded-full ${
+                      status === 'Active' ? 'bg-green-100 text-green-700' :
+                      status === 'Upcoming' ? 'bg-blue-100 text-blue-700' : 'bg-gray-100 text-gray-700'
+                    }`}>{status}</span>
+                  </div>
+                  <div className="flex items-center justify-between text-[10px] text-[#999]">
+                    <span>{(c as any).usedCount || 0}/{c.maxUses || '∞'} uses · Min: {c.minPurchase > 0 ? formatBDT(c.minPurchase) : '—'}</span>
+                    <span>{formatDate(c.expiresAt)}</span>
+                  </div>
+                </div>
+              );
+            })}
+          </div>
+        </>
+      )}
     </div>
   );
 }
