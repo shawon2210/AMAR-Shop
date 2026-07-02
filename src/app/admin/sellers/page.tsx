@@ -99,109 +99,126 @@ export default function SellersPage() {
         <div className="bg-red-50 text-red-600 rounded-lg p-3 text-sm border border-red-200">{error}</div>
       )}
 
-      <div className="bg-white rounded-xl border border-[#eee] overflow-x-auto">
-        <table className="w-full text-sm">
-          <thead>
-            <tr className="text-left text-[#888] text-xs uppercase tracking-wider bg-[#fafafa] border-b border-[#eee]">
-              <th className="p-3">Store</th>
-              <th className="p-3">Owner</th>
-              <th className="p-3">Products</th>
-              <th className="p-3">Revenue</th>
-              <th className="p-3">Rating</th>
-              <th className="p-3">KYC</th>
-              <th className="p-3">Status</th>
-              <th className="p-3">Actions</th>
-            </tr>
-          </thead>
-          <tbody>
-            {loading ? (
-              <tr>
-                <td colSpan={8} className="p-8 text-center text-[#888]">
-                  <span className="material-symbols-outlined animate-spin align-middle mr-2">progress_activity</span>
-                  Loading...
-                </td>
-              </tr>
-            ) : !data || data.sellers.length === 0 ? (
-              <tr>
-                <td colSpan={8} className="p-8 text-center text-[#888]">No sellers found</td>
-              </tr>
-            ) : (
-              data.sellers.map((s) => {
-                const kycStatus = !s.sellerProfile ? 'none' : s.sellerProfile.isKycVerified ? 'verified' : s.sellerProfile.kycSubmittedAt ? 'pending' : 'none';
-                const storeProductCount = (s.store as any)?._count?.products || 0;
+      {loading ? (
+        <div className="bg-white rounded-xl border border-[#eee] p-8 text-center text-[#888]">
+          <span className="material-symbols-outlined animate-spin align-middle mr-2">progress_activity</span>
+          Loading...
+        </div>
+      ) : !data || data.sellers.length === 0 ? (
+        <div className="bg-white rounded-xl border border-[#eee] p-8 text-center text-[#888]">No sellers found</div>
+      ) : (
+        <>
+          {/* Desktop Table */}
+          <div className="hidden sm:block bg-white rounded-xl border border-[#eee] overflow-x-auto">
+            <table className="w-full text-sm">
+              <thead>
+                <tr className="text-left text-[#888] text-xs uppercase tracking-wider bg-[#fafafa] border-b border-[#eee]">
+                  <th className="p-3">Store</th>
+                  <th className="p-3">Owner</th>
+                  <th className="p-3">Products</th>
+                  <th className="p-3">Revenue</th>
+                  <th className="p-3">Rating</th>
+                  <th className="p-3">KYC</th>
+                  <th className="p-3">Status</th>
+                  <th className="p-3">Actions</th>
+                </tr>
+              </thead>
+              <tbody>
+                {data.sellers.map((s) => {
+                  const kycStatus = !s.sellerProfile ? 'none' : s.sellerProfile.isKycVerified ? 'verified' : s.sellerProfile.kycSubmittedAt ? 'pending' : 'none';
+                  const storeProductCount = (s.store as any)?._count?.products || 0;
+                  return (
+                    <tr key={s.id} className="border-b border-[#f5f5f5] hover:bg-[#fafafa]">
+                      <td className="p-3">
+                        <div className="flex items-center gap-2">
+                          <span className="font-medium text-[#333]">{s.store?.name || 'Unnamed Store'}</span>
+                          {s.store?.rating && s.store.rating >= 4.5 && (
+                            <span className="material-symbols-outlined text-blue-500 text-[16px]" title="Top Rated">verified</span>
+                          )}
+                        </div>
+                      </td>
+                      <td className="p-3 text-[#555]">{s.name}</td>
+                      <td className="p-3 text-[#666]">{storeProductCount}</td>
+                      <td className="p-3 font-medium">{s.sellerProfile?.totalRevenue ? formatBDT(s.sellerProfile.totalRevenue) : '৳0'}</td>
+                      <td className="p-3">
+                        <div className="flex items-center gap-1">
+                          <span className="material-symbols-outlined text-amber-400 text-[16px]">star</span>
+                          <span>{s.store?.rating?.toFixed(1) || 'N/A'}</span>
+                        </div>
+                      </td>
+                      <td className="p-3">
+                        <span className={`text-[11px] font-semibold px-2 py-0.5 rounded-full ${kycStyles[kycStatus]}`}>
+                          {kycStatus.charAt(0).toUpperCase() + kycStatus.slice(1)}
+                        </span>
+                      </td>
+                      <td className="p-3">
+                        <span className={`text-[11px] font-semibold px-2 py-0.5 rounded-full ${s.isActive ? 'bg-green-100 text-green-700' : 'bg-red-100 text-red-700'}`}>
+                          {s.isActive ? 'Active' : 'Suspended'}
+                        </span>
+                      </td>
+                      <td className="p-3">
+                        <div className="flex items-center gap-1">
+                          {kycStatus === 'pending' && (
+                            <>
+                              <button onClick={() => handleApprove(s.id)} disabled={actionLoading === s.id} className="text-[11px] bg-green-500 text-white px-2 py-1 rounded-md hover:bg-green-600 disabled:opacity-50">Approve</button>
+                              <button onClick={() => setRejectModal(s.id)} disabled={actionLoading === s.id} className="text-[11px] bg-red-500 text-white px-2 py-1 rounded-md hover:bg-red-600 disabled:opacity-50">Reject</button>
+                            </>
+                          )}
+                          <button onClick={() => handleToggleStore(s.id)} disabled={actionLoading === s.id} className="p-1.5 rounded-lg hover:bg-[#f5f5f5] disabled:opacity-50" title={s.isActive ? 'Suspend Store' : 'Activate Store'}>
+                            <span className="material-symbols-outlined text-[18px] text-[#666]">{s.isActive ? 'block' : 'check_circle'}</span>
+                          </button>
+                        </div>
+                      </td>
+                    </tr>
+                  );
+                })}
+              </tbody>
+            </table>
+          </div>
 
-                return (
-                  <tr key={s.id} className="border-b border-[#f5f5f5] hover:bg-[#fafafa]">
-                    <td className="p-3">
-                      <div className="flex items-center gap-2">
-                        <span className="font-medium text-[#333]">{s.store?.name || 'Unnamed Store'}</span>
-                        {s.store?.rating && s.store.rating >= 4.5 && (
-                          <span className="material-symbols-outlined text-blue-500 text-[16px]" title="Top Rated">verified</span>
-                        )}
-                      </div>
-                    </td>
-                    <td className="p-3 text-[#555]">{s.name}</td>
-                    <td className="p-3 text-[#666]">{storeProductCount}</td>
-                    <td className="p-3 font-medium">
-                      {s.sellerProfile?.totalRevenue ? formatBDT(s.sellerProfile.totalRevenue) : '৳0'}
-                    </td>
-                    <td className="p-3">
-                      <div className="flex items-center gap-1">
-                        <span className="material-symbols-outlined text-amber-400 text-[16px]">star</span>
-                        <span>{s.store?.rating?.toFixed(1) || 'N/A'}</span>
-                      </div>
-                    </td>
-                    <td className="p-3">
-                      <span className={`text-[11px] font-semibold px-2 py-0.5 rounded-full ${kycStyles[kycStatus]}`}>
+          {/* Mobile Cards */}
+          <div className="sm:hidden space-y-3">
+            {data.sellers.map((s) => {
+              const kycStatus = !s.sellerProfile ? 'none' : s.sellerProfile.isKycVerified ? 'verified' : s.sellerProfile.kycSubmittedAt ? 'pending' : 'none';
+              return (
+                <div key={s.id} className="bg-white rounded-xl border border-[#eee] p-3 space-y-2">
+                  <div className="flex items-center justify-between">
+                    <div>
+                      <p className="font-medium text-[#333] text-sm">{s.store?.name || 'Unnamed Store'}</p>
+                      <p className="text-xs text-[#888]">{s.name}</p>
+                    </div>
+                    <div className="flex items-center gap-1">
+                      <span className="material-symbols-outlined text-amber-400 text-[16px]">star</span>
+                      <span className="text-sm">{s.store?.rating?.toFixed(1) || 'N/A'}</span>
+                    </div>
+                  </div>
+                  <div className="flex items-center justify-between text-xs">
+                    <div className="flex items-center gap-2">
+                      <span className={`text-[10px] font-semibold px-2 py-0.5 rounded-full ${kycStyles[kycStatus]}`}>
                         {kycStatus.charAt(0).toUpperCase() + kycStatus.slice(1)}
                       </span>
-                    </td>
-                    <td className="p-3">
-                      <span className={`text-[11px] font-semibold px-2 py-0.5 rounded-full ${
-                        s.isActive ? 'bg-green-100 text-green-700' : 'bg-red-100 text-red-700'
-                      }`}>
+                      <span className={s.isActive ? 'text-green-600' : 'text-red-600'}>
                         {s.isActive ? 'Active' : 'Suspended'}
                       </span>
-                    </td>
-                    <td className="p-3">
-                      <div className="flex items-center gap-1">
-                        {kycStatus === 'pending' && (
-                          <>
-                            <button
-                              onClick={() => handleApprove(s.id)}
-                              disabled={actionLoading === s.id}
-                              className="text-[11px] bg-green-500 text-white px-2 py-1 rounded-md hover:bg-green-600 disabled:opacity-50"
-                            >
-                              Approve
-                            </button>
-                            <button
-                              onClick={() => setRejectModal(s.id)}
-                              disabled={actionLoading === s.id}
-                              className="text-[11px] bg-red-500 text-white px-2 py-1 rounded-md hover:bg-red-600 disabled:opacity-50"
-                            >
-                              Reject
-                            </button>
-                          </>
-                        )}
-                        <button
-                          onClick={() => handleToggleStore(s.id)}
-                          disabled={actionLoading === s.id}
-                          className={`p-1.5 rounded-lg hover:bg-[#f5f5f5] disabled:opacity-50`}
-                          title={s.isActive ? 'Suspend Store' : 'Activate Store'}
-                        >
-                          <span className="material-symbols-outlined text-[18px] text-[#666]">
-                            {s.isActive ? 'block' : 'check_circle'}
-                          </span>
-                        </button>
-                      </div>
-                    </td>
-                  </tr>
-                );
-              })
-            )}
-          </tbody>
-        </table>
-      </div>
+                    </div>
+                    <span className="font-semibold text-[#333]">{s.sellerProfile?.totalRevenue ? formatBDT(s.sellerProfile.totalRevenue) : '৳0'}</span>
+                  </div>
+                  <div className="flex items-center justify-between text-xs text-[#888]">
+                    <span>{(s.store as any)?._count?.products || 0} products</span>
+                    <span>Followers: {s.store?.followerCount || 0}</span>
+                  </div>
+                  {kycStatus === 'pending' && (
+                    <div className="flex gap-2 pt-1">
+                      <button onClick={() => handleApprove(s.id)} disabled={actionLoading === s.id} className="flex-1 text-xs bg-green-500 text-white py-1.5 rounded-md font-medium hover:bg-green-600 disabled:opacity-50">Approve KYC</button>
+                      <button onClick={() => setRejectModal(s.id)} disabled={actionLoading === s.id} className="flex-1 text-xs bg-red-500 text-white py-1.5 rounded-md font-medium hover:bg-red-600 disabled:opacity-50">Reject</button>
+                    </div>
+                  )}
+                </div>
+              );
+            })}
+          </div>
+        </>
+      )}
 
       {data && data.totalPages > 1 && (
         <div className="flex items-center justify-between text-sm">

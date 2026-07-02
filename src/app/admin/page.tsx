@@ -1,23 +1,9 @@
 'use client';
 
+import { useMemo } from 'react';
+import Link from 'next/link';
 import { useAdminData } from '@/lib/api/hooks';
 import { fetchDashboard } from '@/lib/api/admin';
-
-const statusColors: Record<string, string> = {
-  Delivered: 'bg-green-100 text-green-700',
-  Processing: 'bg-blue-100 text-blue-700',
-  Shipped: 'bg-purple-100 text-purple-700',
-  Pending: 'bg-amber-100 text-amber-700',
-  Cancelled: 'bg-red-100 text-red-700',
-};
-
-const statusStyles: Record<string, string> = {
-  delivered: 'bg-green-100 text-green-700',
-  processing: 'bg-blue-100 text-blue-700',
-  shipped: 'bg-purple-100 text-purple-700',
-  pending: 'bg-amber-100 text-amber-700',
-  cancelled: 'bg-red-100 text-red-700',
-};
 
 function formatBDT(amount: number): string {
   const num = Math.round(amount);
@@ -27,9 +13,35 @@ function formatBDT(amount: number): string {
   return `৳${num}`;
 }
 
+const statusStyles: Record<string, string> = {
+  delivered: 'bg-green-100 text-green-700',
+  processing: 'bg-blue-100 text-blue-700',
+  shipped: 'bg-purple-100 text-purple-700',
+  pending: 'bg-amber-100 text-amber-700',
+  cancelled: 'bg-red-100 text-red-700',
+};
+
+const statIcons: Record<string, string> = {
+  'Total Revenue': 'payments',
+  'Total Orders': 'receipt_long',
+  'Total Users': 'group',
+  'Total Sellers': 'store',
+  'Total Products': 'inventory_2',
+};
+
+const statGradients: Record<string, string> = {
+  'Total Revenue': 'from-green-500 to-emerald-600',
+  'Total Orders': 'from-blue-500 to-indigo-600',
+  'Total Users': 'from-violet-500 to-purple-600',
+  'Total Sellers': 'from-orange-500 to-amber-600',
+  'Total Products': 'from-cyan-500 to-teal-600',
+};
+
 function RevenueChart({ data }: { data: { date: string; revenue: number }[] }) {
-  if (!data || data.length === 0) return <div className="h-48 flex items-center justify-center text-[#888] text-sm">No revenue data</div>;
-  const max = Math.max(...data.map((d) => d.revenue), 1);
+  if (!data || data.length === 0) {
+    return <div className="h-48 flex items-center justify-center text-[#888] text-sm">No revenue data</div>;
+  }
+  const max = Math.max(...data.map(d => d.revenue), 1);
   const w = 600;
   const h = 200;
   const points = data
@@ -38,7 +50,7 @@ function RevenueChart({ data }: { data: { date: string; revenue: number }[] }) {
   const area = `M0,${h} ${points} ${w},${h}Z`;
 
   return (
-    <svg viewBox={`0 0 ${w} ${h}`} className="w-full h-48">
+    <svg viewBox={`0 0 ${w} ${h}`} className="w-full h-44 sm:h-48" preserveAspectRatio="xMidYMid meet">
       <defs>
         <linearGradient id="revGrad" x1="0" y1="0" x2="0" y2="1">
           <stop offset="0%" stopColor="#a63600" stopOpacity="0.2" />
@@ -46,9 +58,22 @@ function RevenueChart({ data }: { data: { date: string; revenue: number }[] }) {
         </linearGradient>
       </defs>
       <path d={area} fill="url(#revGrad)" />
-      <polyline points={points} fill="none" stroke="#a63600" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
-      {[0, 7, 14, 21, 29].filter((i) => i < data.length).map((i) => (
-        <text key={i} x={(i / Math.max(data.length - 1, 1)) * w} y={h - 4} textAnchor="middle" className="fill-[#999] text-[10px]">
+      <polyline
+        points={points}
+        fill="none"
+        stroke="#a63600"
+        strokeWidth="2"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      />
+      {[0, 7, 14, 21, 29].filter(i => i < data.length).map(i => (
+        <text
+          key={i}
+          x={(i / Math.max(data.length - 1, 1)) * w}
+          y={h - 4}
+          textAnchor="middle"
+          className="fill-[#999] text-[10px]"
+        >
           {data[i]?.date?.slice(5) || `Day ${i + 1}`}
         </text>
       ))}
@@ -58,6 +83,17 @@ function RevenueChart({ data }: { data: { date: string; revenue: number }[] }) {
 
 export default function AdminDashboard() {
   const { data, loading, error } = useAdminData(fetchDashboard);
+
+  const stats = useMemo(() => {
+    if (!data) return [];
+    return [
+      { label: 'Total Revenue', value: formatBDT(data.totalRevenue), change: 'Today', color: 'text-green-600' },
+      { label: 'Total Orders', value: data.totalOrders.toLocaleString('en-IN'), change: 'All time', color: 'text-blue-600' },
+      { label: 'Total Users', value: data.totalUsers.toLocaleString('en-IN'), change: 'Registered', color: 'text-violet-600' },
+      { label: 'Total Sellers', value: data.totalSellers.toLocaleString('en-IN'), change: 'Active sellers', color: 'text-orange-600' },
+      { label: 'Total Products', value: data.totalProducts.toLocaleString('en-IN'), change: 'Listed', color: 'text-cyan-600' },
+    ];
+  }, [data]);
 
   if (loading) {
     return (
@@ -78,58 +114,105 @@ export default function AdminDashboard() {
 
   if (!data) return null;
 
-  const stats = [
-    { label: 'Total Revenue', value: formatBDT(data.totalRevenue), icon: 'payments', change: 'Today', color: 'text-green-600' },
-    { label: 'Total Orders', value: data.totalOrders.toLocaleString('en-IN'), icon: 'receipt_long', change: 'All time', color: 'text-blue-600' },
-    { label: 'Total Users', value: data.totalUsers.toLocaleString('en-IN'), icon: 'group', change: 'Registered', color: 'text-green-600' },
-    { label: 'Total Sellers', value: data.totalSellers.toLocaleString('en-IN'), icon: 'store', change: 'Active sellers', color: 'text-purple-600' },
-    { label: 'Total Products', value: data.totalProducts.toLocaleString('en-IN'), icon: 'inventory_2', change: 'Listed', color: 'text-amber-600' },
-  ];
-
   return (
-    <div className="space-y-6">
-      <h1 className="text-2xl font-bold text-[#222]">Dashboard</h1>
+    <div className="space-y-5 sm:space-y-6">
+      {/* Header */}
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
+        <div>
+          <h1 className="text-xl sm:text-2xl font-bold text-[#222]">Dashboard</h1>
+          <p className="text-sm text-[#888] mt-0.5">Welcome back, Admin</p>
+        </div>
+        <div className="flex items-center gap-2 text-xs text-[#888]">
+          <span className="material-symbols-outlined text-base">calendar_today</span>
+          <span>{new Date().toLocaleDateString('en-GB', { day: 'numeric', month: 'long', year: 'numeric' })}</span>
+        </div>
+      </div>
 
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-4">
-        {stats.map((s) => (
-          <div key={s.label} className="bg-white rounded-xl p-4 border border-[#eee]">
-            <div className="flex items-center justify-between mb-3">
-              <span className="material-symbols-outlined text-[#888]">{s.icon}</span>
-              <span className={`text-xs font-semibold ${s.color}`}>{s.change}</span>
+      {/* Stat Cards */}
+      <div className="grid grid-cols-2 xl:grid-cols-5 gap-3 sm:gap-4">
+        {stats.map(s => (
+          <div
+            key={s.label}
+            className="group bg-white rounded-xl border border-[#eee] overflow-hidden hover:shadow-md hover:border-[#ddd] transition-all duration-200"
+          >
+            <div className="p-3 sm:p-4">
+              <div className="flex items-center justify-between mb-2 sm:mb-3">
+                <div className={`w-8 h-8 sm:w-10 sm:h-10 rounded-lg bg-gradient-to-br ${statGradients[s.label]} flex items-center justify-center shadow-sm`}>
+                  <span className="material-symbols-outlined text-white text-lg sm:text-xl">{statIcons[s.label]}</span>
+                </div>
+                <span className={`text-[10px] sm:text-xs font-semibold ${s.color}`}>{s.change}</span>
+              </div>
+              <p className="text-lg sm:text-2xl font-bold text-[#222] truncate">{s.value}</p>
+              <p className="text-xs sm:text-sm text-[#888] mt-0.5">{s.label}</p>
             </div>
-            <p className="text-2xl font-bold text-[#222]">{s.value}</p>
-            <p className="text-sm text-[#888] mt-1">{s.label}</p>
           </div>
         ))}
       </div>
 
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-        <div className="lg:col-span-2 bg-white rounded-xl border border-[#eee] p-5">
-          <h2 className="text-lg font-semibold text-[#222] mb-4">Revenue (Last 30 Days)</h2>
+      {/* Chart + Quick Actions */}
+      <div className="grid grid-cols-1 xl:grid-cols-3 gap-5 sm:gap-6">
+        {/* Revenue Chart */}
+        <div className="xl:col-span-2 bg-white rounded-xl border border-[#eee] p-4 sm:p-5">
+          <div className="flex items-center justify-between mb-4">
+            <h2 className="text-base sm:text-lg font-semibold text-[#222]">Revenue (Last 30 Days)</h2>
+            <select className="text-xs border border-[#ddd] rounded-lg px-2 py-1 bg-transparent text-[#666] outline-none">
+              <option>This Month</option>
+              <option>Last Month</option>
+              <option>This Quarter</option>
+            </select>
+          </div>
           <RevenueChart data={data.revenueChart} />
         </div>
 
-        <div className="bg-white rounded-xl border border-[#eee] p-5">
-          <h2 className="text-lg font-semibold text-[#222] mb-4">Quick Actions</h2>
+        {/* Quick Actions */}
+        <div className="bg-white rounded-xl border border-[#eee] p-4 sm:p-5">
+          <h2 className="text-base sm:text-lg font-semibold text-[#222] mb-4">Quick Actions</h2>
           <div className="space-y-3">
-            <div className="flex items-center justify-between p-3 bg-amber-50 rounded-lg border border-amber-200">
-              <div>
-                <p className="text-sm font-medium text-amber-800">Pending Approvals</p>
-                <p className="text-xs text-amber-600">{data.pendingSellerApprovals} sellers need KYC review</p>
+            <Link
+              href="/admin/sellers"
+              className="flex items-center justify-between p-3 rounded-lg bg-amber-50 border border-amber-200 hover:border-amber-300 hover:shadow-sm transition-all group"
+            >
+              <div className="flex items-start gap-3">
+                <div className="w-8 h-8 rounded-full bg-amber-200 flex items-center justify-center flex-shrink-0 mt-0.5">
+                  <span className="material-symbols-outlined text-amber-700 text-lg">verified</span>
+                </div>
+                <div>
+                  <p className="text-sm font-medium text-amber-800">Pending Approvals</p>
+                  <p className="text-xs text-amber-600 mt-0.5">sellers need KYC review</p>
+                </div>
               </div>
-              <span className="bg-amber-500 text-white text-xs font-bold px-2 py-1 rounded-full">{data.pendingSellerApprovals}</span>
-            </div>
-            <div className="flex items-center justify-between p-3 bg-blue-50 rounded-lg border border-blue-200">
-              <div>
-                <p className="text-sm font-medium text-blue-800">Product Moderation</p>
-                <p className="text-xs text-blue-600">Low stock alerts</p>
+              <span className="bg-amber-500 text-white text-xs font-bold min-w-[20px] h-5 px-1.5 rounded-full flex items-center justify-center">
+                {data.pendingSellerApprovals}
+              </span>
+            </Link>
+
+            <Link
+              href="/admin/products"
+              className="flex items-center justify-between p-3 rounded-lg bg-blue-50 border border-blue-200 hover:border-blue-300 hover:shadow-sm transition-all group"
+            >
+              <div className="flex items-start gap-3">
+                <div className="w-8 h-8 rounded-full bg-blue-200 flex items-center justify-center flex-shrink-0 mt-0.5">
+                  <span className="material-symbols-outlined text-blue-700 text-lg">inventory</span>
+                </div>
+                <div>
+                  <p className="text-sm font-medium text-blue-800">Low Stock Alerts</p>
+                  <p className="text-xs text-blue-600 mt-0.5">products need restocking</p>
+                </div>
               </div>
-              <span className="bg-blue-500 text-white text-xs font-bold px-2 py-1 rounded-full">{data.lowStockAlerts}</span>
-            </div>
-            <div className="flex items-center justify-between p-3 bg-green-50 rounded-lg border border-green-200">
-              <div>
-                <p className="text-sm font-medium text-green-800">System Health</p>
-                <p className="text-xs text-green-600">All systems operational</p>
+              <span className="bg-blue-500 text-white text-xs font-bold min-w-[20px] h-5 px-1.5 rounded-full flex items-center justify-center">
+                {data.lowStockAlerts}
+              </span>
+            </Link>
+
+            <div className="flex items-center justify-between p-3 rounded-lg bg-green-50 border border-green-200 hover:border-green-300 transition-all">
+              <div className="flex items-start gap-3">
+                <div className="w-8 h-8 rounded-full bg-green-200 flex items-center justify-center flex-shrink-0 mt-0.5">
+                  <span className="material-symbols-outlined text-green-700 text-lg">check_circle</span>
+                </div>
+                <div>
+                  <p className="text-sm font-medium text-green-800">System Health</p>
+                  <p className="text-xs text-green-600 mt-0.5">All systems operational</p>
+                </div>
               </div>
               <span className="material-symbols-outlined text-green-500 text-xl">check_circle</span>
             </div>
@@ -137,27 +220,37 @@ export default function AdminDashboard() {
         </div>
       </div>
 
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-        <div className="lg:col-span-2 bg-white rounded-xl border border-[#eee]">
-          <div className="p-5 border-b border-[#eee] flex items-center justify-between">
-            <h2 className="text-lg font-semibold text-[#222]">Recent Orders</h2>
-            <a href="/admin/orders" className="text-sm text-primary font-medium hover:underline">View All</a>
+      {/* Recent Orders + Top Sellers */}
+      <div className="grid grid-cols-1 xl:grid-cols-3 gap-5 sm:gap-6">
+        {/* Recent Orders */}
+        <div className="xl:col-span-2 bg-white rounded-xl border border-[#eee] overflow-hidden">
+          <div className="p-4 sm:p-5 border-b border-[#eee] flex items-center justify-between">
+            <h2 className="text-base sm:text-lg font-semibold text-[#222]">Recent Orders</h2>
+            <Link href="/admin/orders" className="text-xs sm:text-sm text-primary font-medium hover:underline">
+              View All
+            </Link>
           </div>
-          <div className="overflow-x-auto">
+
+          {/* Desktop Table */}
+          <div className="hidden sm:block overflow-x-auto">
             <table className="w-full text-sm">
               <thead>
                 <tr className="text-left text-[#888] text-xs uppercase tracking-wider border-b border-[#eee]">
-                  <th className="p-3">ID</th>
-                  <th className="p-3">Customer</th>
-                  <th className="p-3">Amount</th>
-                  <th className="p-3">Status</th>
-                  <th className="p-3">Date</th>
+                  <th className="p-3 font-medium">Order</th>
+                  <th className="p-3 font-medium">Customer</th>
+                  <th className="p-3 font-medium">Amount</th>
+                  <th className="p-3 font-medium">Status</th>
+                  <th className="p-3 font-medium">Date</th>
                 </tr>
               </thead>
               <tbody>
                 {(data.recentOrders as any[])?.slice(0, 10).map((o: any) => (
-                  <tr key={o.id} className="border-b border-[#f5f5f5] hover:bg-[#fafafa]">
-                    <td className="p-3 font-medium text-[#333]">#{o.orderNumber || o.id.slice(-6)}</td>
+                  <tr key={o.id} className="border-b border-[#f5f5f5] hover:bg-[#fafafa] transition-colors">
+                    <td className="p-3 font-medium text-[#333]">
+                      <Link href={`/admin/orders/${o.id}`} className="hover:text-primary transition-colors">
+                        #{o.orderNumber || o.id.slice(-6)}
+                      </Link>
+                    </td>
                     <td className="p-3 text-[#555]">{o.user?.name || 'N/A'}</td>
                     <td className="p-3 font-medium">{formatBDT(o.total)}</td>
                     <td className="p-3">
@@ -165,7 +258,11 @@ export default function AdminDashboard() {
                         {o.status || 'N/A'}
                       </span>
                     </td>
-                    <td className="p-3 text-[#888]">{o.createdAt ? new Date(o.createdAt).toLocaleDateString('en-GB', { day: '2-digit', month: 'short', year: 'numeric' }) : 'N/A'}</td>
+                    <td className="p-3 text-[#888] text-xs">
+                      {o.createdAt
+                        ? new Date(o.createdAt).toLocaleDateString('en-GB', { day: '2-digit', month: 'short', year: 'numeric' })
+                        : 'N/A'}
+                    </td>
                   </tr>
                 ))}
                 {(!data.recentOrders || (data.recentOrders as any[]).length === 0) && (
@@ -174,19 +271,49 @@ export default function AdminDashboard() {
               </tbody>
             </table>
           </div>
+
+          {/* Mobile Cards */}
+          <div className="sm:hidden divide-y divide-[#f5f5f5]">
+            {(data.recentOrders as any[])?.slice(0, 5).map((o: any) => (
+              <div key={o.id} className="p-3 space-y-2">
+                <div className="flex items-center justify-between">
+                  <Link href={`/admin/orders/${o.id}`} className="font-medium text-sm text-primary">
+                    #{o.orderNumber || o.id.slice(-6)}
+                  </Link>
+                  <span className={`text-[10px] font-semibold px-2 py-0.5 rounded-full ${statusStyles[o.status?.toLowerCase()] || 'bg-gray-100 text-gray-700'}`}>
+                    {o.status || 'N/A'}
+                  </span>
+                </div>
+                <div className="flex items-center justify-between text-xs text-[#666]">
+                  <span>{o.user?.name || 'N/A'}</span>
+                  <span>{formatBDT(o.total)}</span>
+                </div>
+                <div className="text-[10px] text-[#999]">
+                  {o.createdAt ? new Date(o.createdAt).toLocaleDateString('en-GB', { day: '2-digit', month: 'short' }) : ''}
+                </div>
+              </div>
+            ))}
+            {(!data.recentOrders || (data.recentOrders as any[]).length === 0) && (
+              <div className="p-6 text-center text-[#888] text-sm">No recent orders</div>
+            )}
+          </div>
         </div>
 
-        <div className="space-y-6">
-          <div className="bg-white rounded-xl border border-[#eee] p-5">
-            <h2 className="text-lg font-semibold text-[#222] mb-4">Top Sellers</h2>
+        {/* Right Column */}
+        <div className="space-y-5 sm:space-y-6">
+          {/* Top Sellers */}
+          <div className="bg-white rounded-xl border border-[#eee] p-4 sm:p-5">
+            <h2 className="text-base sm:text-lg font-semibold text-[#222] mb-4">Top Sellers</h2>
             <div className="space-y-3">
               {(data.recentOrders as any[])?.slice(0, 5).map((o: any, i: number) => (
-                <div key={o.id} className="flex items-center justify-between">
+                <div key={o.id} className="flex items-center justify-between py-1">
                   <div className="flex items-center gap-3">
-                    <span className="w-5 h-5 rounded-full bg-[#eee] flex items-center justify-center text-[10px] font-bold text-[#888]">{i + 1}</span>
+                    <span className={`w-6 h-6 rounded-full flex items-center justify-center text-xs font-bold ${i === 0 ? 'bg-amber-100 text-amber-700' : i === 1 ? 'bg-gray-100 text-gray-600' : i === 2 ? 'bg-orange-100 text-orange-700' : 'bg-[#f5f5f5] text-[#999]'}`}>
+                      {i + 1}
+                    </span>
                     <span className="text-sm text-[#444]">{o.user?.name || 'Store'}</span>
                   </div>
-                  <span className="text-sm font-semibold">{formatBDT(o.total)}</span>
+                  <span className="text-sm font-semibold text-[#333]">{formatBDT(o.total)}</span>
                 </div>
               ))}
               {(!data.recentOrders || (data.recentOrders as any[]).length === 0) && (
@@ -195,34 +322,43 @@ export default function AdminDashboard() {
             </div>
           </div>
 
-          <div className="bg-white rounded-xl border border-[#eee] p-5">
-            <h2 className="text-lg font-semibold text-[#222] mb-4">System Health</h2>
-            <div className="space-y-2 text-sm">
-              <div className="flex items-center justify-between">
-                <span className="text-[#666]">Server Status</span>
-                <div className="flex items-center gap-2">
-                  <span className="font-medium text-[#333]">Online</span>
-                  <span className="material-symbols-outlined text-green-500 text-[16px]">check_circle</span>
+          {/* System Health */}
+          <div className="bg-white rounded-xl border border-[#eee] p-4 sm:p-5">
+            <h2 className="text-base sm:text-lg font-semibold text-[#222] mb-4">System Health</h2>
+            <div className="space-y-3 text-sm">
+              <div className="flex items-center justify-between p-2.5 rounded-lg bg-green-50">
+                <span className="text-[#555] flex items-center gap-2">
+                  <span className="material-symbols-outlined text-green-500 text-lg">dns</span>
+                  Server
+                </span>
+                <div className="flex items-center gap-1.5">
+                  <span className="font-medium text-green-700">Online</span>
+                  <span className="material-symbols-outlined text-green-500 text-base">check_circle</span>
                 </div>
               </div>
-              <div className="flex items-center justify-between">
-                <span className="text-[#666]">Database</span>
-                <div className="flex items-center gap-2">
-                  <span className="font-medium text-[#333]">Connected</span>
-                  <span className="material-symbols-outlined text-green-500 text-[16px]">check_circle</span>
+              <div className="flex items-center justify-between p-2.5 rounded-lg bg-green-50">
+                <span className="text-[#555] flex items-center gap-2">
+                  <span className="material-symbols-outlined text-green-500 text-lg">storage</span>
+                  Database
+                </span>
+                <div className="flex items-center gap-1.5">
+                  <span className="font-medium text-green-700">Connected</span>
+                  <span className="material-symbols-outlined text-green-500 text-base">check_circle</span>
                 </div>
               </div>
-              <div className="flex items-center justify-between">
-                <span className="text-[#666]">Total Revenue</span>
-                <div className="flex items-center gap-2">
-                  <span className="font-medium text-[#333]">{formatBDT(data.totalRevenue)}</span>
-                </div>
+              <div className="flex items-center justify-between p-2.5 rounded-lg bg-blue-50">
+                <span className="text-[#555] flex items-center gap-2">
+                  <span className="material-symbols-outlined text-blue-500 text-lg">payments</span>
+                  Total Revenue
+                </span>
+                <span className="font-semibold text-[#333]">{formatBDT(data.totalRevenue)}</span>
               </div>
-              <div className="flex items-center justify-between">
-                <span className="text-[#666]">Sellers Pending KYC</span>
-                <div className="flex items-center gap-2">
-                  <span className="font-medium text-[#333]">{data.pendingSellerApprovals}</span>
-                </div>
+              <div className="flex items-center justify-between p-2.5 rounded-lg bg-amber-50">
+                <span className="text-[#555] flex items-center gap-2">
+                  <span className="material-symbols-outlined text-amber-500 text-lg">verified</span>
+                  Pending KYC
+                </span>
+                <span className="font-semibold text-amber-700">{data.pendingSellerApprovals}</span>
               </div>
             </div>
           </div>

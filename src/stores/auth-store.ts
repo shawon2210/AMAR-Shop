@@ -130,14 +130,10 @@ export const useAuthStore = create<AuthState>()(
 );
 
 export function useAuthHydrated(): boolean {
-  const [hydrated, setHydrated] = useState(() => {
-    if (typeof window === 'undefined') return false;
-    return useAuthStore.persist?.hasHydrated() ?? false;
-  });
+  const [hydrated, setHydrated] = useState(false);
   useEffect(() => {
-    if (typeof window === 'undefined') return;
-    const unsub = useAuthStore.persist?.onFinishHydration(() => setHydrated(true));
     if (useAuthStore.persist?.hasHydrated()) setHydrated(true);
+    const unsub = useAuthStore.persist?.onFinishHydration(() => setHydrated(true));
     return unsub;
   }, []);
   return hydrated;

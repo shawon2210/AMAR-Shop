@@ -52,14 +52,12 @@ export default function ProductsPage() {
     }
   };
 
-  const pendingCount = data?.total || 0;
-
   return (
     <div className="space-y-5">
-      <div className="flex items-center justify-between">
-        <h1 className="text-2xl font-bold text-[#222]">Products</h1>
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
+        <h1 className="text-xl sm:text-2xl font-bold text-[#222]">Products</h1>
         {data && (
-          <span className="text-sm bg-amber-100 text-amber-700 px-3 py-1 rounded-full font-medium">
+          <span className="text-xs sm:text-sm bg-amber-100 text-amber-700 px-3 py-1 rounded-full font-medium w-fit">
             {data.total} total
           </span>
         )}
@@ -93,88 +91,116 @@ export default function ProductsPage() {
         <div className="bg-red-50 text-red-600 rounded-lg p-3 text-sm border border-red-200">{error}</div>
       )}
 
-      <div className="bg-white rounded-xl border border-[#eee] overflow-x-auto">
-        <table className="w-full text-sm">
-          <thead>
-            <tr className="text-left text-[#888] text-xs uppercase tracking-wider bg-[#fafafa] border-b border-[#eee]">
-              <th className="p-3">Product</th>
-              <th className="p-3">Store</th>
-              <th className="p-3">Category</th>
-              <th className="p-3">Price</th>
-              <th className="p-3">Stock</th>
-              <th className="p-3">Status</th>
-              <th className="p-3">Actions</th>
-            </tr>
-          </thead>
-          <tbody>
-            {loading ? (
-              <tr>
-                <td colSpan={7} className="p-8 text-center text-[#888]">
-                  <span className="material-symbols-outlined animate-spin align-middle mr-2">progress_activity</span>
-                  Loading...
-                </td>
-              </tr>
-            ) : !data || data.products.length === 0 ? (
-              <tr>
-                <td colSpan={7} className="p-8 text-center text-[#888]">No products found</td>
-              </tr>
-            ) : (
-              data.products.map((p) => (
-                <tr key={p.id} className="border-b border-[#f5f5f5] hover:bg-[#fafafa]">
-                  <td className="p-3">
-                    <div className="flex items-center gap-3">
-                      <div className="w-10 h-10 rounded-lg bg-[#f0f0f0] flex items-center justify-center overflow-hidden">
-                        {p.images?.[0] ? (
-                          <img src={p.images[0]} alt="" className="w-full h-full object-cover" />
-                        ) : (
-                          <span className="material-symbols-outlined text-[#888] text-[20px]">inventory_2</span>
-                        )}
+      {/* Loading State */}
+      {loading ? (
+        <div className="bg-white rounded-xl border border-[#eee] p-8 text-center text-[#888]">
+          <span className="material-symbols-outlined animate-spin align-middle mr-2">progress_activity</span>
+          Loading...
+        </div>
+      ) : !data || data.products.length === 0 ? (
+        <div className="bg-white rounded-xl border border-[#eee] p-8 text-center text-[#888]">No products found</div>
+      ) : (
+        <>
+          {/* Desktop Table */}
+          <div className="hidden sm:block bg-white rounded-xl border border-[#eee] overflow-x-auto">
+            <table className="w-full text-sm">
+              <thead>
+                <tr className="text-left text-[#888] text-xs uppercase tracking-wider bg-[#fafafa] border-b border-[#eee]">
+                  <th className="p-3">Product</th>
+                  <th className="p-3">Store</th>
+                  <th className="p-3">Category</th>
+                  <th className="p-3">Price</th>
+                  <th className="p-3">Stock</th>
+                  <th className="p-3">Status</th>
+                  <th className="p-3">Actions</th>
+                </tr>
+              </thead>
+              <tbody>
+                {data.products.map((p) => (
+                  <tr key={p.id} className="border-b border-[#f5f5f5] hover:bg-[#fafafa]">
+                    <td className="p-3">
+                      <div className="flex items-center gap-3">
+                        <div className="w-10 h-10 rounded-lg bg-[#f0f0f0] flex items-center justify-center overflow-hidden">
+                          {p.images?.[0] ? (
+                            <img src={p.images[0]} alt="" className="w-full h-full object-cover" />
+                          ) : (
+                            <span className="material-symbols-outlined text-[#888] text-[20px]">inventory_2</span>
+                          )}
+                        </div>
+                        <span className="font-medium text-[#333] max-w-[200px] truncate">{p.name}</span>
                       </div>
-                      <span className="font-medium text-[#333] max-w-[200px] truncate">{p.name}</span>
-                    </div>
-                  </td>
-                  <td className="p-3 text-[#555]">{p.store?.name || 'N/A'}</td>
-                  <td className="p-3 text-[#666]">{p.category?.name || 'N/A'}</td>
-                  <td className="p-3 font-medium">{formatBDT(p.price)}</td>
-                  <td className="p-3">
-                    <span className={p.stockCount === 0 ? 'text-red-500 font-medium' : 'text-[#666]'}>
-                      {p.stockCount === 0 ? 'Out of Stock' : p.stockCount}
-                    </span>
-                  </td>
-                  <td className="p-3">
+                    </td>
+                    <td className="p-3 text-[#555]">{p.store?.name || 'N/A'}</td>
+                    <td className="p-3 text-[#666]">{p.category?.name || 'N/A'}</td>
+                    <td className="p-3 font-medium">{formatBDT(p.price)}</td>
+                    <td className="p-3">
+                      <span className={p.stockCount === 0 ? 'text-red-500 font-medium' : 'text-[#666]'}>
+                        {p.stockCount === 0 ? 'Out of Stock' : p.stockCount}
+                      </span>
+                    </td>
+                    <td className="p-3">
+                      <span className={`text-[11px] font-semibold px-2 py-0.5 rounded-full ${statusStyles[p.status] || 'bg-gray-100 text-gray-700'}`}>
+                        {p.status}
+                      </span>
+                    </td>
+                    <td className="p-3">
+                      <div className="flex items-center gap-1">
+                        {p.status === 'pending' && (
+                          <>
+                            <button onClick={() => handleApprove(p.id)} className="text-[11px] bg-green-500 text-white px-2 py-1 rounded-md hover:bg-green-600">Approve</button>
+                            <button onClick={() => handleReject(p.id)} className="text-[11px] bg-red-500 text-white px-2 py-1 rounded-md hover:bg-red-600">Reject</button>
+                          </>
+                        )}
+                        <button className="p-1.5 rounded-lg hover:bg-[#f5f5f5]" title="Edit">
+                          <span className="material-symbols-outlined text-[18px] text-[#666]">edit</span>
+                        </button>
+                      </div>
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+
+          {/* Mobile Cards */}
+          <div className="sm:hidden space-y-3">
+            {data.products.map((p) => (
+              <div key={p.id} className="bg-white rounded-xl border border-[#eee] p-3 space-y-2">
+                <div className="flex items-center gap-3">
+                  <div className="w-12 h-12 rounded-lg bg-[#f0f0f0] flex items-center justify-center overflow-hidden flex-shrink-0">
+                    {p.images?.[0] ? (
+                      <img src={p.images[0]} alt="" className="w-full h-full object-cover" />
+                    ) : (
+                      <span className="material-symbols-outlined text-[#888] text-[20px]">inventory_2</span>
+                    )}
+                  </div>
+                  <div className="min-w-0 flex-1">
+                    <p className="font-medium text-[#333] text-sm truncate">{p.name}</p>
+                    <p className="text-xs text-[#888]">{p.store?.name || 'N/A'} · {p.category?.name || 'N/A'}</p>
+                  </div>
+                </div>
+                <div className="flex items-center justify-between text-sm">
+                  <span className="font-semibold">{formatBDT(p.price)}</span>
+                  <div className="flex items-center gap-2">
                     <span className={`text-[11px] font-semibold px-2 py-0.5 rounded-full ${statusStyles[p.status] || 'bg-gray-100 text-gray-700'}`}>
                       {p.status}
                     </span>
-                  </td>
-                  <td className="p-3">
-                    <div className="flex items-center gap-1">
-                      {p.status === 'pending' && (
-                        <>
-                          <button
-                            onClick={() => handleApprove(p.id)}
-                            className="text-[11px] bg-green-500 text-white px-2 py-1 rounded-md hover:bg-green-600"
-                          >
-                            Approve
-                          </button>
-                          <button
-                            onClick={() => handleReject(p.id)}
-                            className="text-[11px] bg-red-500 text-white px-2 py-1 rounded-md hover:bg-red-600"
-                          >
-                            Reject
-                          </button>
-                        </>
-                      )}
-                      <button className="p-1.5 rounded-lg hover:bg-[#f5f5f5]" title="Edit">
-                        <span className="material-symbols-outlined text-[18px] text-[#666]">edit</span>
-                      </button>
-                    </div>
-                  </td>
-                </tr>
-              ))
-            )}
-          </tbody>
-        </table>
-      </div>
+                    <span className={p.stockCount === 0 ? 'text-red-500 text-xs font-medium' : 'text-[#888] text-xs'}>
+                      {p.stockCount === 0 ? 'Out of Stock' : `${p.stockCount} in stock`}
+                    </span>
+                  </div>
+                </div>
+                {p.status === 'pending' && (
+                  <div className="flex gap-2 pt-1">
+                    <button onClick={() => handleApprove(p.id)} className="flex-1 text-xs bg-green-500 text-white py-1.5 rounded-md font-medium hover:bg-green-600">Approve</button>
+                    <button onClick={() => handleReject(p.id)} className="flex-1 text-xs bg-red-500 text-white py-1.5 rounded-md font-medium hover:bg-red-600">Reject</button>
+                  </div>
+                )}
+              </div>
+            ))}
+          </div>
+        </>
+      )}
 
       {data && data.totalPages > 1 && (
         <div className="flex items-center justify-between text-sm">

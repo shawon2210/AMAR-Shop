@@ -69,11 +69,6 @@ export default function OrdersPage() {
     }
   };
 
-  const statusCounts: Record<string, number> = {};
-  if (data) {
-    // We don't have per-status counts from the API, so approximate
-  }
-
   return (
     <div className="space-y-5">
       <h1 className="text-2xl font-bold text-[#222]">Orders</h1>
@@ -96,61 +91,76 @@ export default function OrdersPage() {
         <div className="bg-red-50 text-red-600 rounded-lg p-3 text-sm border border-red-200">{error}</div>
       )}
 
-      <div className="bg-white rounded-xl border border-[#eee] overflow-x-auto">
-        <table className="w-full text-sm">
-          <thead>
-            <tr className="text-left text-[#888] text-xs uppercase tracking-wider bg-[#fafafa] border-b border-[#eee]">
-              <th className="p-3">Order ID</th>
-              <th className="p-3">Customer</th>
-              <th className="p-3">Amount</th>
-              <th className="p-3">Items</th>
-              <th className="p-3">Status</th>
-              <th className="p-3">Date</th>
-              <th className="p-3">Actions</th>
-            </tr>
-          </thead>
-          <tbody>
-            {loading ? (
-              <tr>
-                <td colSpan={7} className="p-8 text-center text-[#888]">
-                  <span className="material-symbols-outlined animate-spin align-middle mr-2">progress_activity</span>
-                  Loading...
-                </td>
-              </tr>
-            ) : !data || data.orders.length === 0 ? (
-              <tr>
-                <td colSpan={7} className="p-8 text-center text-[#888]">No orders found</td>
-              </tr>
-            ) : (
-              data.orders.map((o: any) => (
-                <tr key={o.id} className="border-b border-[#f5f5f5] hover:bg-[#fafafa]">
-                  <td className="p-3 font-medium text-[#333]">#{o.orderNumber || o.id.slice(-6)}</td>
-                  <td className="p-3 text-[#555]">{o.user?.name || 'N/A'}</td>
-                  <td className="p-3 font-medium">{formatBDT(o.total)}</td>
-                  <td className="p-3 text-[#666]">{o.items?.length || 0}</td>
-                  <td className="p-3">
-                    <span className={`text-[11px] font-semibold px-2 py-0.5 rounded-full ${statusColors[o.status] || 'bg-gray-100 text-gray-700'}`}>
-                      {o.status}
-                    </span>
-                  </td>
-                  <td className="p-3 text-[#888]">{formatDate(o.createdAt)}</td>
-                  <td className="p-3">
-                    <div className="flex items-center gap-1">
-                      <button
-                        onClick={() => setDetailOrder(o)}
-                        className="p-1.5 rounded-lg hover:bg-[#f5f5f5]"
-                        title="View Details"
-                      >
+      {loading ? (
+        <div className="bg-white rounded-xl border border-[#eee] p-8 text-center text-[#888]">
+          <span className="material-symbols-outlined animate-spin align-middle mr-2">progress_activity</span>
+          Loading...
+        </div>
+      ) : !data || data.orders.length === 0 ? (
+        <div className="bg-white rounded-xl border border-[#eee] p-8 text-center text-[#888]">No orders found</div>
+      ) : (
+        <>
+          {/* Desktop Table */}
+          <div className="hidden sm:block bg-white rounded-xl border border-[#eee] overflow-x-auto">
+            <table className="w-full text-sm">
+              <thead>
+                <tr className="text-left text-[#888] text-xs uppercase tracking-wider bg-[#fafafa] border-b border-[#eee]">
+                  <th className="p-3">Order ID</th>
+                  <th className="p-3">Customer</th>
+                  <th className="p-3">Amount</th>
+                  <th className="p-3">Items</th>
+                  <th className="p-3">Status</th>
+                  <th className="p-3">Date</th>
+                  <th className="p-3">Actions</th>
+                </tr>
+              </thead>
+              <tbody>
+                {data.orders.map((o: any) => (
+                  <tr key={o.id} className="border-b border-[#f5f5f5] hover:bg-[#fafafa]">
+                    <td className="p-3 font-medium text-[#333]">#{o.orderNumber || o.id.slice(-6)}</td>
+                    <td className="p-3 text-[#555]">{o.user?.name || 'N/A'}</td>
+                    <td className="p-3 font-medium">{formatBDT(o.total)}</td>
+                    <td className="p-3 text-[#666]">{o.items?.length || 0}</td>
+                    <td className="p-3">
+                      <span className={`text-[11px] font-semibold px-2 py-0.5 rounded-full ${statusColors[o.status] || 'bg-gray-100 text-gray-700'}`}>
+                        {o.status}
+                      </span>
+                    </td>
+                    <td className="p-3 text-[#888]">{formatDate(o.createdAt)}</td>
+                    <td className="p-3">
+                      <button onClick={() => setDetailOrder(o)} className="p-1.5 rounded-lg hover:bg-[#f5f5f5]" title="View Details">
                         <span className="material-symbols-outlined text-[18px] text-[#666]">visibility</span>
                       </button>
-                    </div>
-                  </td>
-                </tr>
-              ))
-            )}
-          </tbody>
-        </table>
-      </div>
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+
+          {/* Mobile Cards */}
+          <div className="sm:hidden space-y-3">
+            {data.orders.map((o: any) => (
+              <div key={o.id} className="bg-white rounded-xl border border-[#eee] p-3 space-y-2">
+                <div className="flex items-center justify-between">
+                  <span className="font-mono text-sm font-medium text-[#333]">#{o.orderNumber || o.id.slice(-6)}</span>
+                  <span className={`text-[10px] font-semibold px-2 py-0.5 rounded-full ${statusColors[o.status] || 'bg-gray-100 text-gray-700'}`}>
+                    {o.status}
+                  </span>
+                </div>
+                <div className="flex items-center justify-between text-xs text-[#666]">
+                  <span>{o.user?.name || 'N/A'} · {o.items?.length || 0} items</span>
+                  <span className="font-semibold text-[#333]">{formatBDT(o.total)}</span>
+                </div>
+                <div className="flex items-center justify-between">
+                  <span className="text-[10px] text-[#999]">{formatDate(o.createdAt)}</span>
+                  <button onClick={() => setDetailOrder(o)} className="text-xs text-primary font-medium">View Details</button>
+                </div>
+              </div>
+            ))}
+          </div>
+        </>
+      )}
 
       {data && data.totalPages > 1 && (
         <div className="flex items-center justify-between text-sm">

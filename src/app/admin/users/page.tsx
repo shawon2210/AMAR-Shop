@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import React, { useState } from 'react';
 import { useAdminData } from '@/lib/api/hooks';
 import { fetchUsers, updateUser } from '@/lib/api/admin';
 
@@ -108,9 +108,8 @@ export default function UsersPage() {
               </tr>
             ) : (
               data.users.map((u) => (
-                <>
+                <React.Fragment key={u.id}>
                   <tr
-                    key={u.id}
                     className="border-b border-[#f5f5f5] hover:bg-[#fafafa] cursor-pointer"
                     onClick={() => setExpandedRow(expandedRow === u.id ? null : u.id)}
                   >
@@ -171,7 +170,7 @@ export default function UsersPage() {
                       </td>
                     </tr>
                   )}
-                </>
+                </React.Fragment>
               ))
             )}
           </tbody>
