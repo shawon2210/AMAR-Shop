@@ -90,7 +90,7 @@ export default function CheckoutPage() {
   const total = subtotal + shipping - discount;
 
   const handlePlaceOrder = async () => {
-    if (!hydrated) return; // wait for zustand persist rehydration
+    if (!hydrated) return;
     if (!token) {
       router.push('/auth/login?redirect=/checkout');
       return;
@@ -132,22 +132,20 @@ export default function CheckoutPage() {
     }
   };
 
-  if (items.length === 0) {
-    return (
-      <div className="px-container-margin pt-md space-y-md pb-24">
-        <h1 className="font-headline-md text-headline-md">Checkout</h1>
-        <div className="flex flex-col items-center justify-center py-20 gap-4">
-          <span className="material-symbols-outlined text-5xl text-secondary">shopping_cart</span>
-          <p className="text-secondary">No items selected for checkout</p>
-          <Link href="/cart" className="text-primary font-label-bold">Go to Cart</Link>
-        </div>
-      </div>
-    );
-  }
-
   return (
-    <div className="px-container-margin pt-md space-y-md pb-24">
-      <h1 className="font-headline-md text-headline-md">Checkout</h1>
+    <AuthGuard>
+      {items.length === 0 ? (
+        <div className="px-container-margin pt-md space-y-md pb-24">
+          <h1 className="font-headline-md text-headline-md">Checkout</h1>
+          <div className="flex flex-col items-center justify-center py-20 gap-4">
+            <span className="material-symbols-outlined text-5xl text-secondary">shopping_cart</span>
+            <p className="text-secondary">No items selected for checkout</p>
+            <Link href="/cart" className="text-primary font-label-bold">Go to Cart</Link>
+          </div>
+        </div>
+      ) : (
+        <div className="px-container-margin pt-md space-y-md pb-24">
+          <h1 className="font-headline-md text-headline-md">Checkout</h1>
 
       {/* Shipping Address */}
       <section className="bg-surface-container-lowest rounded-xl overflow-hidden shadow-sm">
@@ -399,6 +397,8 @@ export default function CheckoutPage() {
           </>
         )}
       </button>
-    </div>
+        </div>
+      )}
+    </AuthGuard>
   );
 }

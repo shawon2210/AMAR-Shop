@@ -148,7 +148,7 @@ function Sidebar({
                   const active = isActive(item.href);
                   return (
                     <Link
-                      key={item.href}
+                      key={`${section.title}-${item.label}`}
                       href={item.href}
                       onClick={onClose}
                       className={`

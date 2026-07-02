@@ -115,7 +115,7 @@ export function Header() {
                   <div className="py-1">
                     {isAdmin && (
                       <Link
-                        href="/admin/dashboard"
+                        href="/admin"
                         onClick={() => setMenuOpen(false)}
                         className="flex items-center gap-3 px-3 py-2 text-sm hover:bg-surface-container transition-colors"
                       >

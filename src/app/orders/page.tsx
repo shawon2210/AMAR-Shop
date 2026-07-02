@@ -6,6 +6,7 @@ import Link from 'next/link';
 import { useAuthStore, useAuthHydrated } from '@/stores/auth-store';
 import { useUIStore } from '@/stores/ui-store';
 import { api } from '@/services/api';
+import { AuthGuard } from '@/components/auth/auth-guard';
 
 interface OrderItem {
   id: string;
@@ -66,11 +67,7 @@ export default function OrdersPage() {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    if (!hydrated) return;
-    if (!token) {
-      router.push('/auth/login?redirect=/orders');
-      return;
-    }
+    if (!hydrated || !token) return;
 
     setLoading(true);
     const statusParam = activeTab === 'All' ? undefined : activeTab.toUpperCase();
@@ -90,6 +87,7 @@ export default function OrdersPage() {
   const displayOrders = filteredOrders();
 
   return (
+    <AuthGuard>
     <div className="px-container-margin pt-md pb-24">
       <h1 className="font-headline-md text-headline-md mb-md">My Orders</h1>
 
@@ -205,5 +203,6 @@ export default function OrdersPage() {
         )}
       </div>
     </div>
+    </AuthGuard>
   );
 }

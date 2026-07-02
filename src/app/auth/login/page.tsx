@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, Suspense } from 'react';
+import { useState, useEffect, Suspense } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import Link from 'next/link';
 import { useAuthStore } from '@/stores/auth-store';
@@ -18,6 +18,16 @@ function LoginForm() {
   const [rememberMe, setRememberMe] = useState(false);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
+
+  useEffect(() => {
+    if (!isAuthenticated) return;
+    const state = useAuthStore.getState();
+    if (state.user?.role === 'ADMIN' || state.user?.role === 'SUPER_ADMIN') {
+      router.push('/admin');
+    } else {
+      router.push('/account');
+    }
+  }, [isAuthenticated, router]);
 
   const isEmail = identity.includes('@');
   const identityError =
@@ -41,7 +51,7 @@ function LoginForm() {
       } else {
         const state = useAuthStore.getState();
         if (state.user?.role === 'ADMIN' || state.user?.role === 'SUPER_ADMIN') {
-          router.push('/admin/dashboard');
+          router.push('/admin');
         } else {
           router.push('/account');
         }
@@ -54,12 +64,6 @@ function LoginForm() {
   };
 
   if (typeof window !== 'undefined' && isAuthenticated) {
-    const state = useAuthStore.getState();
-    if (state.user?.role === 'ADMIN' || state.user?.role === 'SUPER_ADMIN') {
-      router.push('/admin/dashboard');
-    } else {
-      router.push('/account');
-    }
     return null;
   }
 

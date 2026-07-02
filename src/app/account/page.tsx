@@ -171,7 +171,7 @@ export default function AccountPage() {
 
       {user.role === 'ADMIN' || user.role === 'SUPER_ADMIN' ? (
         <Link
-          href="/admin/dashboard"
+          href="/admin"
           className="flex items-center gap-md px-md py-sm bg-surface-container-lowest rounded-xl shadow-sm hover:bg-surface-container transition-colors"
         >
           <span className="material-symbols-outlined text-primary">dashboard</span>

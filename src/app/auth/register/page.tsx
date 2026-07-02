@@ -71,7 +71,7 @@ function RegisterForm() {
       setTimeout(() => {
         const state = useAuthStore.getState();
         if (state.user?.role === 'ADMIN' || state.user?.role === 'SUPER_ADMIN') {
-          router.push('/admin/dashboard');
+          router.push('/admin');
         } else {
           router.push(redirectTo === '/' ? '/account' : redirectTo);
         }

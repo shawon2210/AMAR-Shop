@@ -6,6 +6,7 @@ import Link from 'next/link';
 import { useAuthStore, useAuthHydrated } from '@/stores/auth-store';
 import { useUIStore } from '@/stores/ui-store';
 import { api } from '@/services/api';
+import { AuthGuard } from '@/components/auth/auth-guard';
 
 interface OrderItem {
   id: string;
@@ -60,11 +61,7 @@ export default function OrderDetailPage() {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    if (!hydrated) return;
-    if (!token) {
-      router.push(`/auth/login?redirect=/orders/${params.id}`);
-      return;
-    }
+    if (!hydrated || !token) return;
 
     api
       .get<Order>(`/orders/${params.id}`)
@@ -78,6 +75,7 @@ export default function OrderDetailPage() {
 
   if (loading) {
     return (
+      <AuthGuard>
       <div className="px-container-margin pt-md pb-24">
         <div className="flex flex-col items-center justify-center py-20">
           <span className="material-symbols-outlined animate-spin text-3xl text-secondary mb-3">
@@ -86,14 +84,16 @@ export default function OrderDetailPage() {
           <p className="text-secondary text-sm">Loading order details...</p>
         </div>
       </div>
+      </AuthGuard>
     );
   }
 
-  if (!order) return null;
+  if (!order) return <AuthGuard>{null}</AuthGuard>;
 
   const cfg = statusConfig[order.status] || statusConfig.PENDING;
 
   return (
+    <AuthGuard>
     <div className="px-container-margin pt-md pb-24 space-y-md">
       {/* Success Banner */}
       <div className="bg-green-50 border border-green-200 rounded-xl p-md flex items-start gap-3">
@@ -243,5 +243,6 @@ export default function OrderDetailPage() {
         </Link>
       </div>
     </div>
+    </AuthGuard>
   );
 }
