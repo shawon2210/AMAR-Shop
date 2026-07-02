@@ -164,9 +164,8 @@ function Sidebar({ open, onClose }: { open: boolean; onClose: () => void }) {
           shadow-2xl shadow-black/20
           transition-all duration-300 ease-in-out
           ${open ? 'translate-x-0' : '-translate-x-full'}
-          lg:translate-x-0 lg:static lg:z-auto lg:h-auto
+          lg:translate-x-0 lg:sticky lg:top-0 lg:h-screen lg:z-auto
           ${open ? 'h-screen' : 'h-full'}
-          max-h-screen
         `}
       >
         {/* Logo */}
