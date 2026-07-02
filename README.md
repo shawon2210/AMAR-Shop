@@ -170,18 +170,214 @@ Whether you are launching a new marketplace in Bangladesh or modernising an exis
 
 ## 📸 Screenshots
 
-> _Preparing visuals — run the project locally to see all pages in action._
+> 81 screenshots covering every page of the platform — admin panel, seller center, user experience, and more. All images are JPEG at 85% quality.
 
-| Page | Highlights |
+<details>
+<summary>🏠 Home & Auth (4)</summary>
+<br />
+
+| Page | Screenshot |
 |------|-----------|
-| **Admin Dashboard** | Revenue cards, order list, low‑stock alerts, all responsive |
-| **Products** | Desktop table + mobile card layout, search, status filters |
-| **Orders** | Lifecycle management with status badges and detail drawer |
-| **Users / Sellers** | KYC verification, role management, store toggling |
-| **Finance** | Revenue, settlements, commissions, tax reports |
-| **Analytics (BI)** | RFM segments, cohort retention, revenue trend chart |
-| **Real‑Time** | Live metrics updating every 3 seconds, activity feed |
-| **Settings** | Multi‑tab configuration (general, commission, shipping, payment, email, SEO, security) |
+| Homepage | <img src="public/screenshots/home/homepage.jpg" width="240" alt="Homepage" /> |
+| Login | <img src="public/screenshots/auth/login.jpg" width="240" alt="Login" /> |
+| Register | <img src="public/screenshots/auth/register.jpg" width="240" alt="Register" /> |
+
+</details>
+
+<details>
+<summary>📦 Products & Categories (3)</summary>
+<br />
+
+| Page | Screenshot |
+|------|-----------|
+| Categories | <img src="public/screenshots/products/categories.jpg" width="240" alt="Categories" /> |
+| Category (Electronics) | <img src="public/screenshots/products/category-electronics.jpg" width="240" alt="Category" /> |
+| Product Detail | <img src="public/screenshots/products/product-detail.jpg" width="240" alt="Product Detail" /> |
+
+</details>
+
+<details>
+<summary>🛒 Cart, Checkout & Orders (3)</summary>
+<br />
+
+| Page | Screenshot |
+|------|-----------|
+| Shopping Cart | <img src="public/screenshots/cart-checkout/cart.jpg" width="240" alt="Cart" /> |
+| Checkout | <img src="public/screenshots/cart-checkout/checkout.jpg" width="240" alt="Checkout" /> |
+| Orders | <img src="public/screenshots/orders/orders.jpg" width="240" alt="Orders" /> |
+
+</details>
+
+<details>
+<summary>👤 Account & Profile (4)</summary>
+<br />
+
+| Page | Screenshot |
+|------|-----------|
+| Account Overview | <img src="public/screenshots/account/account.jpg" width="240" alt="Account" /> |
+| Addresses | <img src="public/screenshots/account/addresses.jpg" width="240" alt="Addresses" /> |
+| Wishlist | <img src="public/screenshots/account/wishlist.jpg" width="240" alt="Wishlist" /> |
+| Settings | <img src="public/screenshots/account/settings.jpg" width="240" alt="Account Settings" /> |
+
+</details>
+
+<details>
+<summary>🛠️ Admin Dashboard & CRUD (14)</summary>
+<br />
+
+| Page | Screenshot |
+|------|-----------|
+| Dashboard | <img src="public/screenshots/admin/dashboard.jpg" width="240" alt="Admin Dashboard" /> |
+| Products | <img src="public/screenshots/admin/products.jpg" width="240" alt="Admin Products" /> |
+| Orders | <img src="public/screenshots/admin/orders.jpg" width="240" alt="Admin Orders" /> |
+| Users | <img src="public/screenshots/admin/users.jpg" width="240" alt="Admin Users" /> |
+| Sellers | <img src="public/screenshots/admin/sellers.jpg" width="240" alt="Admin Sellers" /> |
+| Categories | <img src="public/screenshots/admin/categories.jpg" width="240" alt="Admin Categories" /> |
+| Payments | <img src="public/screenshots/admin/payments.jpg" width="240" alt="Admin Payments" /> |
+| Coupons | <img src="public/screenshots/admin/coupons.jpg" width="240" alt="Admin Coupons" /> |
+| Reviews | <img src="public/screenshots/admin/reviews.jpg" width="240" alt="Admin Reviews" /> |
+| Banners | <img src="public/screenshots/admin/banners.jpg" width="240" alt="Admin Banners" /> |
+| Flash Sales | <img src="public/screenshots/admin/flash-sales.jpg" width="240" alt="Admin Flash Sales" /> |
+| CMS Pages | <img src="public/screenshots/admin/cms.jpg" width="240" alt="Admin CMS" /> |
+| Affiliates | <img src="public/screenshots/admin/affiliates.jpg" width="240" alt="Admin Affiliates" /> |
+| Creators | <img src="public/screenshots/admin/creators.jpg" width="240" alt="Admin Creators" /> |
+
+</details>
+
+<details>
+<summary>📊 Admin BI & Analytics (4)</summary>
+<br />
+
+| Page | Screenshot |
+|------|-----------|
+| BI Dashboard | <img src="public/screenshots/admin-bi/bi-dashboard.jpg" width="240" alt="BI Dashboard" /> |
+| RFM Analysis | <img src="public/screenshots/admin-bi/rfm.jpg" width="240" alt="RFM Analysis" /> |
+| Cohort Analysis | <img src="public/screenshots/admin-bi/cohorts.jpg" width="240" alt="Cohort Analysis" /> |
+| Reports | <img src="public/screenshots/admin-bi/reports.jpg" width="240" alt="BI Reports" /> |
+
+</details>
+
+<details>
+<summary>💰 Admin Finance (4)</summary>
+<br />
+
+| Page | Screenshot |
+|------|-----------|
+| Finance Dashboard | <img src="public/screenshots/admin-finance/finance-dashboard.jpg" width="240" alt="Finance Dashboard" /> |
+| Settlements | <img src="public/screenshots/admin-finance/settlements.jpg" width="240" alt="Settlements" /> |
+| Tax Reports | <img src="public/screenshots/admin-finance/tax.jpg" width="240" alt="Tax Reports" /> |
+| Invoices | <img src="public/screenshots/admin-finance/invoices.jpg" width="240" alt="Invoices" /> |
+
+</details>
+
+<details>
+<summary>🏭 Admin Warehouse (4)</summary>
+<br />
+
+| Page | Screenshot |
+|------|-----------|
+| Warehouse Dashboard | <img src="public/screenshots/admin-warehouse/warehouse.jpg" width="240" alt="Warehouse" /> |
+| Inbound Orders | <img src="public/screenshots/admin-warehouse/inbound.jpg" width="240" alt="Inbound" /> |
+| Inventory | <img src="public/screenshots/admin-warehouse/inventory.jpg" width="240" alt="Inventory" /> |
+| Pick Lists | <img src="public/screenshots/admin-warehouse/pick-lists.jpg" width="240" alt="Pick Lists" /> |
+
+</details>
+
+<details>
+<summary>📦 Admin Fulfillment (4)</summary>
+<br />
+
+| Page | Screenshot |
+|------|-----------|
+| Fulfillment Dashboard | <img src="public/screenshots/admin-fulfillment/fulfillment.jpg" width="240" alt="Fulfillment" /> |
+| Courier Management | <img src="public/screenshots/admin-fulfillment/courier.jpg" width="240" alt="Courier" /> |
+| Pickup Management | <img src="public/screenshots/admin-fulfillment/pickup.jpg" width="240" alt="Pickup" /> |
+| Tracking | <img src="public/screenshots/admin-fulfillment/tracking.jpg" width="240" alt="Tracking" /> |
+
+</details>
+
+<details>
+<summary>⚙️ Admin Settings & Misc (6)</summary>
+<br />
+
+| Page | Screenshot |
+|------|-----------|
+| Real-Time Monitor | <img src="public/screenshots/admin/realtime.jpg" width="240" alt="Real-Time" /> |
+| Reports | <img src="public/screenshots/admin/reports.jpg" width="240" alt="Reports" /> |
+| Roles & Permissions | <img src="public/screenshots/admin/roles.jpg" width="240" alt="Roles" /> |
+| Settings | <img src="public/screenshots/admin/settings.jpg" width="240" alt="Admin Settings" /> |
+| Support Tickets | <img src="public/screenshots/admin/support.jpg" width="240" alt="Support" /> |
+| Compliance | <img src="public/screenshots/admin/compliance.jpg" width="240" alt="Compliance" /> |
+
+</details>
+
+<details>
+<summary>🏪 Seller Center (13)</summary>
+<br />
+
+| Page | Screenshot |
+|------|-----------|
+| Dashboard | <img src="public/screenshots/seller/dashboard.jpg" width="240" alt="Seller Dashboard" /> |
+| Products | <img src="public/screenshots/seller/products.jpg" width="240" alt="Seller Products" /> |
+| Add Product | <img src="public/screenshots/seller/products-new.jpg" width="240" alt="New Product" /> |
+| Orders | <img src="public/screenshots/seller/orders.jpg" width="240" alt="Seller Orders" /> |
+| Inventory | <img src="public/screenshots/seller/inventory.jpg" width="240" alt="Seller Inventory" /> |
+| Finance | <img src="public/screenshots/seller/finance.jpg" width="240" alt="Seller Finance" /> |
+| Analytics | <img src="public/screenshots/seller/analytics.jpg" width="240" alt="Seller Analytics" /> |
+| Store Profile | <img src="public/screenshots/seller/store.jpg" width="240" alt="Store Profile" /> |
+| Settings | <img src="public/screenshots/seller/settings.jpg" width="240" alt="Seller Settings" /> |
+| Campaigns | <img src="public/screenshots/seller/campaigns.jpg" width="240" alt="Campaigns" /> |
+| Chat | <img src="public/screenshots/seller/chat.jpg" width="240" alt="Seller Chat" /> |
+| AI Campaign Generator | <img src="public/screenshots/seller/ai-campaign-generator.jpg" width="240" alt="AI Campaign" /> |
+| AI Description Generator | <img src="public/screenshots/seller/ai-description-generator.jpg" width="240" alt="AI Description" /> |
+
+</details>
+
+<details>
+<summary>🔗 Affiliate Portal (5)</summary>
+<br />
+
+| Page | Screenshot |
+|------|-----------|
+| Dashboard | <img src="public/screenshots/affiliate/dashboard.jpg" width="240" alt="Affiliate Dashboard" /> |
+| Analytics | <img src="public/screenshots/affiliate/analytics.jpg" width="240" alt="Affiliate Analytics" /> |
+| Earnings | <img src="public/screenshots/affiliate/earnings.jpg" width="240" alt="Affiliate Earnings" /> |
+| Tracking Links | <img src="public/screenshots/affiliate/links.jpg" width="240" alt="Affiliate Links" /> |
+| Products | <img src="public/screenshots/affiliate/products.jpg" width="240" alt="Affiliate Products" /> |
+
+</details>
+
+<details>
+<summary>💻 Developer Portal (6)</summary>
+<br />
+
+| Page | Screenshot |
+|------|-----------|
+| Dashboard | <img src="public/screenshots/developer/dashboard.jpg" width="240" alt="Developer Dashboard" /> |
+| API Keys | <img src="public/screenshots/developer/api-keys.jpg" width="240" alt="API Keys" /> |
+| Documentation | <img src="public/screenshots/developer/docs.jpg" width="240" alt="Dev Docs" /> |
+| API Playground | <img src="public/screenshots/developer/playground.jpg" width="240" alt="Playground" /> |
+| Usage Analytics | <img src="public/screenshots/developer/usage.jpg" width="240" alt="Usage" /> |
+| Webhooks | <img src="public/screenshots/developer/webhooks.jpg" width="240" alt="Webhooks" /> |
+
+</details>
+
+<details>
+<summary>🔔 Other Pages (8)</summary>
+<br />
+
+| Page | Screenshot |
+|------|-----------|
+| Flash Sale | <img src="public/screenshots/other/flash-sale.jpg" width="240" alt="Flash Sale" /> |
+| Notifications | <img src="public/screenshots/other/notifications.jpg" width="240" alt="Notifications" /> |
+| Messages | <img src="public/screenshots/other/messages.jpg" width="240" alt="Messages" /> |
+| Wallet | <img src="public/screenshots/other/wallet.jpg" width="240" alt="Wallet" /> |
+| Help Center | <img src="public/screenshots/other/help.jpg" width="240" alt="Help" /> |
+| Support Tickets | <img src="public/screenshots/other/support-tickets.jpg" width="240" alt="Support Tickets" /> |
+| Live Chat | <img src="public/screenshots/other/support-chat.jpg" width="240" alt="Live Chat" /> |
+| AI Assistant | <img src="public/screenshots/other/ai-assistant.jpg" width="240" alt="AI Assistant" /> |
+
+</details>
 
 ---
 
