@@ -3,14 +3,10 @@ import { PrismaService } from '../../common/prisma.service';
 
 @Injectable()
 export class AddressesService {
-  private prisma: PrismaService;
-
-  constructor(private prismaService: PrismaService) {
-    this.prisma = this.prismaService;
-  }
+  constructor(private prismaService: PrismaService) {}
 
   async findByUser(userId: string) {
-    return this.prisma.address.findMany({
+    return this.prismaService.address.findMany({
       where: { userId },
       orderBy: { isDefault: 'desc' },
     });
@@ -27,8 +23,8 @@ export class AddressesService {
       area?: string;
     },
   ) {
-    const existingCount = await this.prisma.address.count({ where: { userId } });
-    return this.prisma.address.create({
+    const existingCount = await this.prismaService.address.count({ where: { userId } });
+    return this.prismaService.address.create({
       data: {
         ...data,
         userId,

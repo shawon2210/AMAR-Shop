@@ -9,11 +9,7 @@ import { PrismaService } from '../../common/prisma.service';
 
 @Injectable()
 export class OrdersService {
-  private prisma: PrismaService;
-
-  constructor(private prismaService: PrismaService) {
-    this.prisma = this.prismaService;
-  }
+  constructor(private prismaService: PrismaService) {}
 
   private generateOrderNumber(): string {
     const date = new Date();
@@ -41,7 +37,7 @@ export class OrdersService {
       throw new BadRequestException('Order must contain at least one item');
     }
 
-    const address = await this.prisma.address.findUnique({
+    const address = await this.prismaService.address.findUnique({
       where: { id: data.addressId },
     });
     if (!address) throw new BadRequestException('Shipping address not found');
@@ -50,7 +46,7 @@ export class OrdersService {
     }
 
     const productIds = data.items.map((i) => i.productId);
-    const products = await this.prisma.product.findMany({
+    const products = await this.prismaService.product.findMany({
       where: { id: { in: productIds } },
       select: { id: true, price: true, stockCount: true, inStock: true },
     });
@@ -68,7 +64,7 @@ export class OrdersService {
       }
     }
 
-    const order = await this.prisma.order.create({
+    const order = await this.prismaService.order.create({
       data: {
         orderNumber: this.generateOrderNumber(),
         userId,
@@ -98,7 +94,7 @@ export class OrdersService {
       },
     });
 
-    await this.prisma.cartItem.deleteMany({
+    await this.prismaService.cartItem.deleteMany({
       where: {
         userId,
         productId: { in: productIds },
@@ -115,7 +111,7 @@ export class OrdersService {
     }
 
     const [orders, total] = await Promise.all([
-      this.prisma.order.findMany({
+      this.prismaService.order.findMany({
         where,
         skip,
         take,
@@ -129,7 +125,7 @@ export class OrdersService {
           address: true,
         },
       }),
-      this.prisma.order.count({ where }),
+      this.prismaService.order.count({ where }),
     ]);
 
     return { orders, total, skip, take };
@@ -139,7 +135,7 @@ export class OrdersService {
     const where: any = { id };
     if (userId) where.userId = userId;
 
-    const order = await this.prisma.order.findFirst({
+    const order = await this.prismaService.order.findFirst({
       where,
       include: {
         items: {
@@ -155,10 +151,10 @@ export class OrdersService {
   }
 
   async updateStatus(id: string, status: any) {
-    const order = await this.prisma.order.findUnique({ where: { id } });
+    const order = await this.prismaService.order.findUnique({ where: { id } });
     if (!order) throw new NotFoundException('Order not found');
 
-    return this.prisma.order.update({
+    return this.prismaService.order.update({
       where: { id },
       data: { status },
     });

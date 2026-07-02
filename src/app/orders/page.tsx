@@ -57,7 +57,7 @@ function statusToTab(s: string): string {
 
 export default function OrdersPage() {
   const router = useRouter();
-  const token = useAuthStore(s => s.token);
+  const token = useAuthStore(s => s.accessToken);
   const addToast = useUIStore(s => s.addToast);
   const hydrated = useAuthHydrated();
 

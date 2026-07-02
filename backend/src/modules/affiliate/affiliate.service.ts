@@ -8,26 +8,24 @@ import { PrismaService } from '../../common/prisma.service';
 
 @Injectable()
 export class AffiliateService {
-  private prisma: any;
-
-  constructor(private prismaService: PrismaService) {
-    this.prisma = this.prismaService;
-  }
+  constructor(private prismaService: PrismaService) {}
 
   async registerAffiliate(
     userId: string,
     details: { bio?: string; socialLinks?: string[]; promoMethods?: string[] },
   ) {
-    const user = await this.prisma.user.findUnique({ where: { id: userId } });
+    const user = await this.prismaService.user.findUnique({
+      where: { id: userId },
+    });
     if (!user) throw new NotFoundException('User not found');
 
-    const existing = await this.prisma.affiliateProfile.findUnique({
+    const existing = await this.prismaService.affiliateProfile.findUnique({
       where: { userId },
     });
     if (existing)
       throw new BadRequestException('Already registered as affiliate');
 
-    const affiliate = await this.prisma.affiliateProfile.create({
+    const affiliate = await this.prismaService.affiliateProfile.create({
       data: {
         userId,
         referralCode: this.generateReferralCode(user.name),
@@ -57,30 +55,32 @@ export class AffiliateService {
     topProducts: any[];
     recentClicks: any[];
   }> {
-    const profile = await this.prisma.affiliateProfile.findUnique({
+    const profile = await this.prismaService.affiliateProfile.findUnique({
       where: { id: affiliateId },
     });
     if (!profile) throw new NotFoundException('Affiliate profile not found');
 
-    const clicks = await this.prisma.affiliateClick.count({
+    const clicks = await this.prismaService.affiliateClick.count({
       where: { affiliateId },
     });
-    const conversions = await this.prisma.affiliateConversion.count({
+    const conversions = await this.prismaService.affiliateConversion.count({
       where: { affiliateId },
     });
     const conversionRate = clicks > 0 ? (conversions / clicks) * 100 : 0;
 
-    const pendingCommission = await this.prisma.affiliateCommission.aggregate({
-      where: { affiliateId, status: 'PENDING' },
-      _sum: { amount: true },
-    });
+    const pendingCommission =
+      await this.prismaService.affiliateCommission.aggregate({
+        where: { affiliateId, status: 'PENDING' },
+        _sum: { amount: true },
+      });
 
-    const paidCommission = await this.prisma.affiliateCommission.aggregate({
-      where: { affiliateId, status: 'PAID' },
-      _sum: { amount: true },
-    });
+    const paidCommission =
+      await this.prismaService.affiliateCommission.aggregate({
+        where: { affiliateId, status: 'PAID' },
+        _sum: { amount: true },
+      });
 
-    const topProducts = await this.prisma.affiliateConversion.groupBy({
+    const topProducts = await this.prismaService.affiliateConversion.groupBy({
       by: ['productId'],
       where: { affiliateId },
       _count: { productId: true },
@@ -89,7 +89,7 @@ export class AffiliateService {
       take: 10,
     });
 
-    const recentClicks = await this.prisma.affiliateClick.findMany({
+    const recentClicks = await this.prismaService.affiliateClick.findMany({
       where: { affiliateId },
       orderBy: { createdAt: 'desc' },
       take: 20,
@@ -114,12 +114,12 @@ export class AffiliateService {
     affiliateId: string,
     campaign?: string,
   ): Promise<{ shortCode: string; url: string; deepLink: string }> {
-    const product = await this.prisma.product.findUnique({
+    const product = await this.prismaService.product.findUnique({
       where: { id: productId },
     });
     if (!product) throw new NotFoundException('Product not found');
 
-    const affiliate = await this.prisma.affiliateProfile.findUnique({
+    const affiliate = await this.prismaService.affiliateProfile.findUnique({
       where: { id: affiliateId },
     });
     if (!affiliate) throw new NotFoundException('Affiliate profile not found');
@@ -129,7 +129,7 @@ export class AffiliateService {
     const url = `${baseUrl}/t/${shortCode}`;
     const deepLink = `amarshop://product/${productId}?ref=${affiliate.referralCode}`;
 
-    await this.prisma.affiliateLink.create({
+    await this.prismaService.affiliateLink.create({
       data: {
         shortCode,
         affiliateId,
@@ -152,12 +152,12 @@ export class AffiliateService {
       ip?: string;
     },
   ) {
-    const link = await this.prisma.affiliateLink.findUnique({
+    const link = await this.prismaService.affiliateLink.findUnique({
       where: { shortCode: trackingId },
     });
     if (!link) throw new NotFoundException('Invalid tracking link');
 
-    const click = await this.prisma.affiliateClick.create({
+    const click = await this.prismaService.affiliateClick.create({
       data: {
         affiliateId: link.affiliateId,
         linkId: link.id,
@@ -173,20 +173,20 @@ export class AffiliateService {
   }
 
   async recordConversion(orderId: string, trackingId: string) {
-    const order = await this.prisma.order.findUnique({
+    const order = await this.prismaService.order.findUnique({
       where: { id: orderId },
       include: { items: true },
     });
     if (!order) throw new NotFoundException('Order not found');
 
-    const click = await this.prisma.affiliateClick.findFirst({
+    const click = await this.prismaService.affiliateClick.findFirst({
       where: { link: { shortCode: trackingId } },
       include: { link: true },
     });
     if (!click) throw new NotFoundException('Invalid tracking reference');
 
     const commission = this.calculateCommission(order.total);
-    const conversion = await this.prisma.affiliateConversion.create({
+    const conversion = await this.prismaService.affiliateConversion.create({
       data: {
         affiliateId: click.affiliateId,
         linkId: click.linkId,
@@ -199,7 +199,7 @@ export class AffiliateService {
       },
     });
 
-    await this.prisma.affiliateCommission.create({
+    await this.prismaService.affiliateCommission.create({
       data: {
         affiliateId: click.affiliateId,
         conversionId: conversion.id,
@@ -221,7 +221,7 @@ export class AffiliateService {
   async getAffiliatePayouts(
     affiliateId: string,
   ): Promise<{ payouts: any[]; totalPaid: number; pendingAmount: number }> {
-    const payouts = await this.prisma.affiliatePayout.findMany({
+    const payouts = await this.prismaService.affiliatePayout.findMany({
       where: { affiliateId },
       orderBy: { createdAt: 'desc' },
     });
@@ -240,18 +240,20 @@ export class AffiliateService {
     affiliateId: string,
     amount: number,
   ): Promise<{ requested: boolean; payout: any }> {
-    const pendingCommissions = await this.prisma.affiliateCommission.aggregate({
-      where: { affiliateId, status: 'PENDING' },
-      _sum: { amount: true },
-    });
+    const pendingCommissions =
+      await this.prismaService.affiliateCommission.aggregate({
+        where: { affiliateId, status: 'PENDING' },
+        _sum: { amount: true },
+      });
 
     const available = pendingCommissions._sum?.amount || 0;
+    if (amount <= 0) throw new BadRequestException('Invalid payout amount');
     if (amount > available)
       throw new BadRequestException(
         `Insufficient balance. Available: ${available}`,
       );
 
-    const payout = await this.prisma.affiliatePayout.create({
+    const payout = await this.prismaService.affiliatePayout.create({
       data: {
         affiliateId,
         amount,
@@ -272,7 +274,7 @@ export class AffiliateService {
     const end = new Date(dateRange.end);
     end.setHours(23, 59, 59, 999);
 
-    const affiliates = await this.prisma.affiliateConversion.groupBy({
+    const affiliates = await this.prismaService.affiliateConversion.groupBy({
       by: ['affiliateId'],
       where: { createdAt: { gte: start, lte: end } },
       _count: { id: true },
@@ -299,30 +301,30 @@ export class AffiliateService {
     const end = new Date(dateRange.end);
     end.setHours(23, 59, 59, 999);
 
-    const clicks = await this.prisma.affiliateClick.findMany({
+    const clicks = await this.prismaService.affiliateClick.findMany({
       where: { affiliateId, createdAt: { gte: start, lte: end } },
       orderBy: { createdAt: 'asc' },
     });
 
-    const conversions = await this.prisma.affiliateConversion.findMany({
+    const conversions = await this.prismaService.affiliateConversion.findMany({
       where: { affiliateId, createdAt: { gte: start, lte: end } },
       orderBy: { createdAt: 'asc' },
     });
 
-    const byProduct = await this.prisma.affiliateConversion.groupBy({
+    const byProduct = await this.prismaService.affiliateConversion.groupBy({
       by: ['productId'],
       where: { affiliateId, createdAt: { gte: start, lte: end } },
       _count: { id: true },
       _sum: { commission: true },
     });
 
-    const byDevice = await this.prisma.affiliateClick.groupBy({
+    const byDevice = await this.prismaService.affiliateClick.groupBy({
       by: ['device'],
       where: { affiliateId, createdAt: { gte: start, lte: end } },
       _count: { device: true },
     });
 
-    const byLocation = await this.prisma.affiliateClick.groupBy({
+    const byLocation = await this.prismaService.affiliateClick.groupBy({
       by: ['location'],
       where: { affiliateId, createdAt: { gte: start, lte: end } },
       _count: { location: true },
@@ -348,7 +350,7 @@ export class AffiliateService {
       targetProducts?: string[];
     },
   ) {
-    const campaign = await this.prisma.affiliateCampaign.create({
+    const campaign = await this.prismaService.affiliateCampaign.create({
       data: {
         affiliateId,
         name: data.name,
@@ -364,7 +366,7 @@ export class AffiliateService {
   }
 
   async getAvailableProducts(_affiliateId: string): Promise<any[]> {
-    const products = await this.prisma.product.findMany({
+    const products = await this.prismaService.product.findMany({
       where: { status: 'active', inStock: true },
       take: 100,
       include: {
@@ -391,7 +393,7 @@ export class AffiliateService {
   async validateTracking(
     code: string,
   ): Promise<{ valid: boolean; link?: any }> {
-    const link = await this.prisma.affiliateLink.findUnique({
+    const link = await this.prismaService.affiliateLink.findUnique({
       where: { shortCode: code },
       include: {
         affiliate: { include: { user: { select: { name: true } } } },

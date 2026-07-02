@@ -51,7 +51,8 @@ const statusConfig: Record<string, { label: string; color: string; icon: string 
 export default function OrderDetailPage() {
   const params = useParams();
   const router = useRouter();
-  const token = useAuthStore(s => s.token);
+  const user = useAuthStore(s => s.user);
+  const token = useAuthStore(s => s.accessToken);
   const addToast = useUIStore(s => s.addToast);
   const hydrated = useAuthHydrated();
 

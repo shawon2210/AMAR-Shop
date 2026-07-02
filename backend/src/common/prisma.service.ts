@@ -10,8 +10,10 @@ export class PrismaService
   implements OnModuleInit, OnModuleDestroy
 {
   constructor(private configService: ConfigService) {
-    const databaseUrl = configService.get<string>('DATABASE_URL') || '';
-    // Parse connection URL to handle SASL auth requirements in pg
+    const databaseUrl =
+      configService.get<string>('DATABASE_URL') ||
+      'postgresql://postgres:shawon12@localhost:5433/amarshop?schema=public';
+
     const url = new URL(databaseUrl);
     const pool = new Pool({
       user: url.username,
@@ -20,8 +22,8 @@ export class PrismaService
       port: parseInt(url.port, 10),
       database: url.pathname.replace('/', ''),
     });
-    const adapter = new PrismaPg(pool);
 
+    const adapter = new PrismaPg(pool);
     super({ adapter });
   }
 

@@ -33,11 +33,8 @@ export class RecommendationService {
   private productFactorsMap = new Map<string, ProductFactors>();
   private interactionCache = new Map<string, Interaction[]>();
   private modelTrained = false;
-  private prisma: PrismaService;
 
-  constructor(private prismaService: PrismaService) {
-    this.prisma = this.prismaService;
-  }
+  constructor(private prismaService: PrismaService) {}
 
   async getPersonalizedFeed(userId: string, limit = 20): Promise<any[]> {
     try {
@@ -52,7 +49,7 @@ export class RecommendationService {
         .map((i) => i.productId);
       const viewedCategoryIds = await this.getViewedCategoryIds(userId);
 
-      const candidates = await this.prisma.product.findMany({
+      const candidates = await this.prismaService.product.findMany({
         where: {
           status: 'active',
           id: { notIn: purchasedIds },
@@ -93,7 +90,7 @@ export class RecommendationService {
     productId: string,
     limit = 6,
   ): Promise<any[]> {
-    const ordersWithProduct = await this.prisma.orderItem.findMany({
+    const ordersWithProduct = await this.prismaService.orderItem.findMany({
       where: { productId },
       select: { orderId: true },
       take: 100,
@@ -102,7 +99,7 @@ export class RecommendationService {
     const orderIds = [...new Set(ordersWithProduct.map((o) => o.orderId))];
     if (orderIds.length === 0) return [];
 
-    const coOccurrences = await this.prisma.orderItem.groupBy({
+    const coOccurrences = await this.prismaService.orderItem.groupBy({
       by: ['productId'],
       where: {
         orderId: { in: orderIds },
@@ -116,7 +113,7 @@ export class RecommendationService {
     const productIds = coOccurrences.map((c) => c.productId);
     if (productIds.length === 0) return [];
 
-    const products = await this.prisma.product.findMany({
+    const products = await this.prismaService.product.findMany({
       where: { id: { in: productIds } },
       include: {
         store: { select: { id: true, name: true, isOfficial: true } },
@@ -131,13 +128,13 @@ export class RecommendationService {
   }
 
   async getCrossSellItems(productId: string, limit = 6): Promise<any[]> {
-    const product = await this.prisma.product.findUnique({
+    const product = await this.prismaService.product.findUnique({
       where: { id: productId },
       select: { categoryId: true, price: true },
     });
     if (!product) return [];
 
-    const crossSellProducts = await this.prisma.product.findMany({
+    const crossSellProducts = await this.prismaService.product.findMany({
       where: {
         status: 'active',
         categoryId: product.categoryId,
@@ -156,13 +153,13 @@ export class RecommendationService {
   }
 
   async getUpsellItems(productId: string, limit = 6): Promise<any[]> {
-    const product = await this.prisma.product.findUnique({
+    const product = await this.prismaService.product.findUnique({
       where: { id: productId },
       select: { categoryId: true, price: true },
     });
     if (!product) return [];
 
-    const upsellProducts = await this.prisma.product.findMany({
+    const upsellProducts = await this.prismaService.product.findMany({
       where: {
         status: 'active',
         categoryId: product.categoryId,
@@ -185,7 +182,7 @@ export class RecommendationService {
     const userProductSet = new Set(userInteractions.map((i) => i.productId));
     if (userProductSet.size === 0) return [];
 
-    const allUsers = await this.prisma.userActivity.groupBy({
+    const allUsers = await this.prismaService.userActivity.groupBy({
       by: ['userId'],
       where: {
         userId: { not: userId },
@@ -219,7 +216,7 @@ export class RecommendationService {
   }
 
   async getColdStartRecommendations(limit = 20): Promise<any[]> {
-    return this.prisma.product.findMany({
+    return this.prismaService.product.findMany({
       where: { status: 'active' },
       include: {
         store: { select: { id: true, name: true, isOfficial: true } },
@@ -243,7 +240,7 @@ export class RecommendationService {
       purchase: 1.0,
     };
 
-    await this.prisma.userActivity.create({
+    await this.prismaService.userActivity.create({
       data: {
         userId,
         action: action.toUpperCase() as any,
@@ -272,7 +269,7 @@ export class RecommendationService {
     const cached = this.interactionCache.get(cacheKey);
     if (cached) return cached.slice(0, limit);
 
-    const activities = await this.prisma.userActivity.findMany({
+    const activities = await this.prismaService.userActivity.findMany({
       where: { userId },
       orderBy: { createdAt: 'desc' },
       take: limit,
@@ -300,7 +297,7 @@ export class RecommendationService {
   }
 
   private async getViewedCategoryIds(userId: string): Promise<string[]> {
-    const history = await this.prisma.browsingHistory.findMany({
+    const history = await this.prismaService.browsingHistory.findMany({
       where: { userId },
       select: { product: { select: { categoryId: true } } },
       orderBy: { createdAt: 'desc' },

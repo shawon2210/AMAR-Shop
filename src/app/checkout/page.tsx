@@ -7,6 +7,7 @@ import { useCartStore } from '@/stores/cart-store';
 import { useAuthStore, useAuthHydrated } from '@/stores/auth-store';
 import { useUIStore } from '@/stores/ui-store';
 import { api } from '@/services/api';
+import { AuthGuard } from '@/components/auth/auth-guard';
 import type { Address } from '@/types';
 
 const paymentMethods = [
@@ -21,7 +22,7 @@ export default function CheckoutPage() {
   const allItems = useCartStore(s => s.items);
   const clearCart = useCartStore(s => s.clearCart);
   const addToast = useUIStore(s => s.addToast);
-  const token = useAuthStore(s => s.token);
+  const token = useAuthStore(s => s.accessToken);
   const items = allItems.filter(item => item.selected);
   const subtotal = items.reduce((sum, item) => sum + item.product.price * item.quantity, 0);
 

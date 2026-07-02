@@ -3,14 +3,10 @@ import { PrismaService } from '../../common/prisma.service';
 
 @Injectable()
 export class CategoriesService {
-  private prisma: PrismaService;
-
-  constructor(private prismaService: PrismaService) {
-    this.prisma = this.prismaService;
-  }
+  constructor(private prismaService: PrismaService) {}
 
   async findAll() {
-    return this.prisma.category.findMany({
+    return this.prismaService.category.findMany({
       where: { parentId: null },
       include: {
         children: true,
@@ -21,7 +17,7 @@ export class CategoriesService {
   }
 
   async findBySlug(slug: string) {
-    return this.prisma.category.findUnique({
+    return this.prismaService.category.findUnique({
       where: { slug },
       include: {
         children: true,

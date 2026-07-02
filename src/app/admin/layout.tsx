@@ -189,7 +189,7 @@ export default function AdminLayout({
 }) {
   const router = useRouter();
   const pathname = usePathname();
-  const token = useAuthStore((s) => s.token);
+  const token = useAuthStore((s) => s.accessToken);
   const user = useAuthStore((s) => s.user);
   const hydrated = useAuthHydrated();
   const [sidebarOpen, setSidebarOpen] = useState(false);

@@ -3,11 +3,7 @@ import { PrismaService } from '../../common/prisma.service';
 
 @Injectable()
 export class BiService {
-  private prisma: PrismaService;
-
-  constructor(private prismaService: PrismaService) {
-    this.prisma = this.prismaService;
-  }
+  constructor(private prismaService: PrismaService) {}
 
   async getExecutiveDashboard(dateRange: { start: string; end: string }) {
     const start = new Date(dateRange.start);
@@ -33,23 +29,23 @@ export class BiService {
       revenue,
       prevRevenue,
     ] = await Promise.all([
-      this.prisma.order.findMany({
+      this.prismaService.order.findMany({
         where: { createdAt: { gte: start, lte: end } },
       }),
-      this.prisma.order.findMany({
+      this.prismaService.order.findMany({
         where: { createdAt: { gte: prevStart, lte: prevEnd } },
       }),
-      this.prisma.user.count({
+      this.prismaService.user.count({
         where: { createdAt: { gte: start, lte: end } },
       }),
-      this.prisma.user.count(),
-      this.prisma.store.count(),
-      this.prisma.product.count(),
-      this.prisma.order.aggregate({
+      this.prismaService.user.count(),
+      this.prismaService.store.count(),
+      this.prismaService.product.count(),
+      this.prismaService.order.aggregate({
         where: { createdAt: { gte: start, lte: end }, paymentStatus: true },
         _sum: { total: true },
       }),
-      this.prisma.order.aggregate({
+      this.prismaService.order.aggregate({
         where: {
           createdAt: { gte: prevStart, lte: prevEnd },
           paymentStatus: true,
@@ -95,7 +91,7 @@ export class BiService {
 
   async getRFMAnalysis() {
     const now = new Date();
-    const users = await this.prisma.user.findMany({
+    const users = await this.prismaService.user.findMany({
       where: { role: 'CUSTOMER' },
       select: {
         id: true,
@@ -160,7 +156,7 @@ export class BiService {
   }
 
   async getCustomerLifetimeValue() {
-    const orders = await this.prisma.order.findMany({
+    const orders = await this.prismaService.order.findMany({
       where: { paymentStatus: true },
       select: { userId: true, total: true, createdAt: true },
     });
@@ -224,7 +220,7 @@ export class BiService {
   async getCohortAnalysis(period: string = 'monthly') {
     const periodMonths = period === 'quarterly' ? 3 : 1;
 
-    const orders = await this.prisma.order.findMany({
+    const orders = await this.prismaService.order.findMany({
       where: { paymentStatus: true },
       select: { userId: true, total: true, createdAt: true },
       orderBy: { createdAt: 'asc' },
@@ -284,7 +280,7 @@ export class BiService {
     const start = new Date(dateRange.start);
     const end = new Date(dateRange.end);
 
-    const newUsers = await this.prisma.user.findMany({
+    const newUsers = await this.prismaService.user.findMany({
       where: { createdAt: { gte: start, lte: end } },
       select: {
         id: true,
@@ -346,7 +342,7 @@ export class BiService {
   }
 
   async getSellerPerformance(dateRange: { start: string; end: string }) {
-    const stores = await this.prisma.store.findMany({
+    const stores = await this.prismaService.store.findMany({
       include: {
         products: {
           include: {
@@ -391,7 +387,7 @@ export class BiService {
   }
 
   async getProductProfitability(dateRange: { start: string; end: string }) {
-    const products = await this.prisma.product.findMany({
+    const products = await this.prismaService.product.findMany({
       where: {
         orderItems: {
           some: {
@@ -447,7 +443,7 @@ export class BiService {
   }
 
   async getCampaignROI(campaignId: string) {
-    const campaign = await this.prisma.campaign.findUnique({
+    const campaign = await this.prismaService.campaign.findUnique({
       where: { id: campaignId },
       include: {
         products: {
@@ -497,7 +493,7 @@ export class BiService {
   }
 
   async getMarketingAttribution(dateRange: { start: string; end: string }) {
-    const activities = await this.prisma.userActivity.findMany({
+    const activities = await this.prismaService.userActivity.findMany({
       where: {
         createdAt: {
           gte: new Date(dateRange.start),
@@ -538,7 +534,7 @@ export class BiService {
     const funnel: any[] = [];
 
     for (const stage of stages) {
-      const count = await this.prisma.userActivity.count({
+      const count = await this.prismaService.userActivity.count({
         where: { action: stage },
       });
 
@@ -562,7 +558,7 @@ export class BiService {
   }
 
   async getSessionAnalytics(dateRange: { start: string; end: string }) {
-    const activities = await this.prisma.userActivity.findMany({
+    const activities = await this.prismaService.userActivity.findMany({
       where: {
         createdAt: {
           gte: new Date(dateRange.start),
@@ -586,7 +582,7 @@ export class BiService {
   }
 
   async getOperationalMetrics(dateRange: { start: string; end: string }) {
-    const orders = await this.prisma.order.findMany({
+    const orders = await this.prismaService.order.findMany({
       where: {
         createdAt: {
           gte: new Date(dateRange.start),
@@ -596,7 +592,7 @@ export class BiService {
       select: { status: true, createdAt: true, total: true },
     });
 
-    const shipments = await this.prisma.shipment.findMany({
+    const shipments = await this.prismaService.shipment.findMany({
       where: {
         createdAt: {
           gte: new Date(dateRange.start),
@@ -635,7 +631,7 @@ export class BiService {
     const pastDate = new Date(now.getFullYear(), now.getMonth() - 12, 1);
 
     if (metric === 'orders' || metric === 'revenue') {
-      const orders = await this.prisma.order.findMany({
+      const orders = await this.prismaService.order.findMany({
         where: { createdAt: { gte: pastDate } },
         select: { total: true, createdAt: true },
       });
@@ -692,7 +688,7 @@ export class BiService {
     };
 
     if (config.metrics.includes('revenue')) {
-      const orders = await this.prisma.order.findMany({
+      const orders = await this.prismaService.order.findMany({
         where: {
           createdAt: {
             gte: new Date(config.dateRange.start),
@@ -704,7 +700,7 @@ export class BiService {
       report.data.revenue = orders.reduce((s, o) => s + o.total, 0);
     }
     if (config.metrics.includes('orders')) {
-      report.data.orders = await this.prisma.order.count({
+      report.data.orders = await this.prismaService.order.count({
         where: {
           createdAt: {
             gte: new Date(config.dateRange.start),
@@ -714,7 +710,7 @@ export class BiService {
       });
     }
     if (config.metrics.includes('users')) {
-      report.data.newUsers = await this.prisma.user.count({
+      report.data.newUsers = await this.prismaService.user.count({
         where: {
           createdAt: {
             gte: new Date(config.dateRange.start),
@@ -724,7 +720,7 @@ export class BiService {
       });
     }
     if (config.metrics.includes('products')) {
-      report.data.productsSold = await this.prisma.orderItem.count({
+      report.data.productsSold = await this.prismaService.orderItem.count({
         where: {
           order: {
             createdAt: {
@@ -740,12 +736,12 @@ export class BiService {
   }
 
   async scheduleReport(reportId: string, cron: string, email: string[]) {
-    const report = await this.prisma.scheduledReport.findUnique({
+    const report = await this.prismaService.scheduledReport.findUnique({
       where: { id: reportId },
     });
     if (!report) throw new Error('Report not found');
 
-    return this.prisma.scheduledReport.update({
+    return this.prismaService.scheduledReport.update({
       where: { id: reportId },
       data: {
         cron,
@@ -757,7 +753,7 @@ export class BiService {
   }
 
   async exportToPdf(reportId: string) {
-    const report = await this.prisma.scheduledReport.findUnique({
+    const report = await this.prismaService.scheduledReport.findUnique({
       where: { id: reportId },
     });
     if (!report) throw new Error('Report not found');
@@ -769,7 +765,7 @@ export class BiService {
   }
 
   async exportToExcel(reportId: string) {
-    const report = await this.prisma.scheduledReport.findUnique({
+    const report = await this.prismaService.scheduledReport.findUnique({
       where: { id: reportId },
     });
     if (!report) throw new Error('Report not found');
@@ -822,7 +818,7 @@ export class BiService {
   }
 
   async listScheduledReports() {
-    return this.prisma.scheduledReport.findMany({
+    return this.prismaService.scheduledReport.findMany({
       orderBy: { createdAt: 'desc' },
     });
   }
@@ -835,7 +831,7 @@ export class BiService {
     recipients: string[];
     format?: string;
   }) {
-    return this.prisma.scheduledReport.create({
+    return this.prismaService.scheduledReport.create({
       data: {
         name: data.name,
         type: data.type,
@@ -855,10 +851,10 @@ export class BiService {
   }
 
   async getRfmSegments() {
-    return this.prisma.rfmSegment.findMany({ orderBy: { avgLtv: 'desc' } });
+    return this.prismaService.rfmSegment.findMany({ orderBy: { avgLtv: 'desc' } });
   }
 
   async getCohortData() {
-    return this.prisma.cohortAnalysis.findMany({ orderBy: { cohort: 'asc' } });
+    return this.prismaService.cohortAnalysis.findMany({ orderBy: { cohort: 'asc' } });
   }
 }

@@ -172,6 +172,7 @@ model User {
   affiliateProfile  AffiliateProfile?
   pushDevices       PushDevice[]
   apiKeys           ApiKey[]
+  refreshTokens     RefreshToken[]
 }
 
 // =================== SELLER ECOSYSTEM ===================
@@ -1691,4 +1692,17 @@ model WebhookLog {
   duration     Int
   responseBody String?
   createdAt    DateTime @default(now())
+}
+
+model RefreshToken {
+  id        String   @id @default(cuid())
+  token     String   @unique
+  userId    String
+  user      User     @relation(fields: [userId], references: [id])
+  expiresAt DateTime
+  createdAt DateTime @default(now())
+  revokedAt DateTime?
+
+  @@index([userId])
+  @@index([token])
 }

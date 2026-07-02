@@ -7,38 +7,34 @@ import { PrismaService } from '../../common/prisma.service';
 
 @Injectable()
 export class FinanceService {
-  private prisma: PrismaService;
-
-  constructor(private prismaService: PrismaService) {
-    this.prisma = this.prismaService;
-  }
+  constructor(private prismaService: PrismaService) {}
 
   async createEscrow(orderId: string, amount: number) {
-    const order = await this.prisma.order.findUnique({
+    const order = await this.prismaService.order.findUnique({
       where: { id: orderId },
     });
     if (!order) throw new NotFoundException('Order not found');
 
-    const existing = await this.prisma.escrowTransaction.findUnique({
+    const existing = await this.prismaService.escrowTransaction.findUnique({
       where: { orderId },
     });
     if (existing)
       throw new BadRequestException('Escrow already exists for this order');
 
-    return this.prisma.escrowTransaction.create({
+    return this.prismaService.escrowTransaction.create({
       data: { orderId, amount, status: 'HELD' },
     });
   }
 
   async releaseEscrow(orderId: string) {
-    const escrow = await this.prisma.escrowTransaction.findUnique({
+    const escrow = await this.prismaService.escrowTransaction.findUnique({
       where: { orderId },
     });
     if (!escrow) throw new NotFoundException('Escrow not found');
     if (escrow.status !== 'HELD')
       throw new BadRequestException('Escrow not in HELD status');
 
-    const order = await this.prisma.order.findUnique({
+    const order = await this.prismaService.order.findUnique({
       where: { id: orderId },
       include: { items: true },
     });
@@ -46,12 +42,12 @@ export class FinanceService {
 
     const commission = await this.calculateCommission(orderId);
 
-    await this.prisma.$transaction([
-      this.prisma.escrowTransaction.update({
+    await this.prismaService.$transaction([
+      this.prismaService.escrowTransaction.update({
         where: { id: escrow.id },
         data: { status: 'RELEASED', releasedAt: new Date() },
       }),
-      this.prisma.accountingEntry.create({
+      this.prismaService.accountingEntry.create({
         data: {
           entryNumber: `ACC-${Date.now()}`,
           type: 'CREDIT',
@@ -63,7 +59,7 @@ export class FinanceService {
           entryDate: new Date(),
         },
       }),
-      this.prisma.accountingEntry.create({
+      this.prismaService.accountingEntry.create({
         data: {
           entryNumber: `ACC-${Date.now() + 1}`,
           type: 'DEBIT',
@@ -86,17 +82,17 @@ export class FinanceService {
   }
 
   async refundToEscrow(orderId: string, amount: number) {
-    const escrow = await this.prisma.escrowTransaction.findUnique({
+    const escrow = await this.prismaService.escrowTransaction.findUnique({
       where: { orderId },
     });
     if (!escrow) throw new NotFoundException('Escrow not found');
 
-    await this.prisma.escrowTransaction.update({
+    await this.prismaService.escrowTransaction.update({
       where: { id: escrow.id },
       data: { status: 'PARTIALLY_REFUNDED', amount: { decrement: amount } },
     });
 
-    await this.prisma.accountingEntry.create({
+    await this.prismaService.accountingEntry.create({
       data: {
         entryNumber: `ACC-${Date.now()}`,
         type: 'DEBIT',
@@ -118,13 +114,13 @@ export class FinanceService {
   }
 
   async calculateCommission(orderId: string) {
-    const order = await this.prisma.order.findUnique({
+    const order = await this.prismaService.order.findUnique({
       where: { id: orderId },
       include: { items: true },
     });
     if (!order) throw new NotFoundException('Order not found');
 
-    const items = await this.prisma.orderItem.findMany({
+    const items = await this.prismaService.orderItem.findMany({
       where: { orderId },
       include: { product: { include: { store: true } } },
     });
@@ -151,7 +147,7 @@ export class FinanceService {
     sellerId: string,
     dateRange: { start: string; end: string },
   ) {
-    const orders = await this.prisma.order.findMany({
+    const orders = await this.prismaService.order.findMany({
       where: {
         status: 'DELIVERED',
         createdAt: {
@@ -192,10 +188,10 @@ export class FinanceService {
     const fee = grossAmount * 0.01;
     const netAmount = grossAmount - totalCommission - fee;
 
-    const count = await this.prisma.sellerSettlement.count();
+    const count = await this.prismaService.sellerSettlement.count();
     const settlementNumber = `STL-${String(count + 1).padStart(6, '0')}`;
 
-    return this.prisma.sellerSettlement.create({
+    return this.prismaService.sellerSettlement.create({
       data: {
         settlementNumber,
         sellerId,
@@ -213,19 +209,19 @@ export class FinanceService {
   }
 
   async processSettlement(settlementId: string) {
-    const settlement = await this.prisma.sellerSettlement.findUnique({
+    const settlement = await this.prismaService.sellerSettlement.findUnique({
       where: { id: settlementId },
     });
     if (!settlement) throw new NotFoundException('Settlement not found');
     if (settlement.status !== 'PENDING')
       throw new BadRequestException('Settlement not in PENDING status');
 
-    await this.prisma.$transaction([
-      this.prisma.sellerSettlement.update({
+    await this.prismaService.$transaction([
+      this.prismaService.sellerSettlement.update({
         where: { id: settlementId },
         data: { status: 'COMPLETED', processedAt: new Date() },
       }),
-      this.prisma.accountingEntry.create({
+      this.prismaService.accountingEntry.create({
         data: {
           entryNumber: `ACC-${Date.now()}`,
           type: 'DEBIT',
@@ -250,7 +246,7 @@ export class FinanceService {
         lte: new Date(dateRange.end),
       };
     }
-    return this.prisma.accountingEntry.findMany({
+    return this.prismaService.accountingEntry.findMany({
       where,
       orderBy: { entryDate: 'desc' },
       take: 100,
@@ -262,7 +258,7 @@ export class FinanceService {
     const startDate = new Date(year, startMonth - 1, 1);
     const endDate = new Date(year, startMonth + 2, 0);
 
-    const orders = await this.prisma.order.findMany({
+    const orders = await this.prismaService.order.findMany({
       where: {
         createdAt: { gte: startDate, lte: endDate },
         paymentStatus: true,
@@ -286,7 +282,7 @@ export class FinanceService {
   }
 
   async createInvoice(orderId: string) {
-    const order = await this.prisma.order.findUnique({
+    const order = await this.prismaService.order.findUnique({
       where: { id: orderId },
       include: {
         items: { include: { product: true } },
@@ -296,10 +292,10 @@ export class FinanceService {
     });
     if (!order) throw new NotFoundException('Order not found');
 
-    const count = await this.prisma.invoice.count();
+    const count = await this.prismaService.invoice.count();
     const invoiceNumber = `INV-${String(count + 1).padStart(6, '0')}`;
 
-    return this.prisma.invoice.create({
+    return this.prismaService.invoice.create({
       data: {
         invoiceNumber,
         orderId,
@@ -325,20 +321,20 @@ export class FinanceService {
   }
 
   async createCreditNote(returnId: string) {
-    const returnRequest = await this.prisma.returnRequest.findUnique({
+    const returnRequest = await this.prismaService.returnRequest.findUnique({
       where: { id: returnId },
       include: { order: { include: { items: true } } },
     });
     if (!returnRequest) throw new NotFoundException('Return request not found');
 
-    const count = await this.prisma.creditNote.count();
+    const count = await this.prismaService.creditNote.count();
     const creditNoteNumber = `CN-${String(count + 1).padStart(6, '0')}`;
 
     const amount = returnRequest.order.items
       .filter((i) => i.productId === returnRequest.productId)
       .reduce((s, i) => s + i.price * returnRequest.quantity, 0);
 
-    return this.prisma.creditNote.create({
+    return this.prismaService.creditNote.create({
       data: {
         creditNoteNumber,
         returnId,
@@ -355,7 +351,7 @@ export class FinanceService {
     const nextDate = new Date(targetDate);
     nextDate.setDate(nextDate.getDate() + 1);
 
-    const txns = await this.prisma.paymentTransaction.findMany({
+    const txns = await this.prismaService.paymentTransaction.findMany({
       where: { createdAt: { gte: targetDate, lt: nextDate } },
     });
 
@@ -376,7 +372,7 @@ export class FinanceService {
   }
 
   async getCashFlow(dateRange: { start: string; end: string }) {
-    const entries = await this.prisma.accountingEntry.findMany({
+    const entries = await this.prismaService.accountingEntry.findMany({
       where: {
         entryDate: {
           gte: new Date(dateRange.start),
@@ -421,7 +417,7 @@ export class FinanceService {
     const past6Months = new Date(now.getFullYear(), now.getMonth() - 6, 1);
 
     const monthlyRevenue: Record<string, number> = {};
-    const orders = await this.prisma.order.findMany({
+    const orders = await this.prismaService.order.findMany({
       where: { createdAt: { gte: past6Months }, paymentStatus: true },
       select: { total: true, createdAt: true },
     });
@@ -461,14 +457,14 @@ export class FinanceService {
   async getBalanceSheet(date: string) {
     const asOfDate = new Date(date);
 
-    const assets = await this.prisma.accountingEntry.findMany({
+    const assets = await this.prismaService.accountingEntry.findMany({
       where: {
         entryDate: { lte: asOfDate },
         account: { in: ['CASH', 'BANK', 'ACCOUNTS_RECEIVABLE'] },
       },
     });
 
-    const liabilities = await this.prisma.accountingEntry.findMany({
+    const liabilities = await this.prismaService.accountingEntry.findMany({
       where: {
         entryDate: { lte: asOfDate },
         account: { in: ['ACCOUNTS_PAYABLE'] },
@@ -484,7 +480,7 @@ export class FinanceService {
       0,
     );
 
-    const settlements = await this.prisma.sellerSettlement.findMany({
+    const settlements = await this.prismaService.sellerSettlement.findMany({
       where: {
         status: { in: ['PENDING', 'PROCESSING'] },
         createdAt: { lte: asOfDate },
@@ -514,7 +510,7 @@ export class FinanceService {
   }
 
   async getProfitAndLoss(dateRange: { start: string; end: string }) {
-    const entries = await this.prisma.accountingEntry.findMany({
+    const entries = await this.prismaService.accountingEntry.findMany({
       where: {
         entryDate: {
           gte: new Date(dateRange.start),
@@ -559,7 +555,7 @@ export class FinanceService {
   async getEscrowStatus(orderId?: string) {
     const where: any = {};
     if (orderId) where.orderId = orderId;
-    return this.prisma.escrowTransaction.findMany({
+    return this.prismaService.escrowTransaction.findMany({
       where,
       include: { order: { select: { orderNumber: true, total: true } } },
     });
@@ -568,7 +564,7 @@ export class FinanceService {
   async listSettlements(sellerId?: string) {
     const where: any = {};
     if (sellerId) where.sellerId = sellerId;
-    return this.prisma.sellerSettlement.findMany({
+    return this.prismaService.sellerSettlement.findMany({
       where,
       include: { seller: { select: { id: true, name: true } }, items: true },
       orderBy: { createdAt: 'desc' },
@@ -579,7 +575,7 @@ export class FinanceService {
   async listInvoices(orderId?: string) {
     const where: any = {};
     if (orderId) where.orderId = orderId;
-    return this.prisma.invoice.findMany({
+    return this.prismaService.invoice.findMany({
       where,
       include: {
         items: { include: { product: { select: { id: true, name: true } } } },

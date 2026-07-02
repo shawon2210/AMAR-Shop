@@ -3,6 +3,7 @@
 import { useEffect, useState } from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
+import { useAuthStore, useAuthHydrated } from '@/stores/auth-store';
 import { useCartStore } from '@/stores/cart-store';
 
 const navItems = [
@@ -24,6 +25,7 @@ export function BottomNav() {
       {navItems.map(item => {
         const isActive = pathname === item.href;
         const isCart = item.href === '/cart';
+        const isAccount = item.href === '/account';
 
         return (
           <Link

@@ -3,22 +3,18 @@ import { PrismaService } from '../../common/prisma.service';
 
 @Injectable()
 export class LogisticsService {
-  private prisma: PrismaService;
-
-  constructor(private prismaService: PrismaService) {
-    this.prisma = this.prismaService;
-  }
+  constructor(private prismaService: PrismaService) {}
 
   async createShipment(orderId: string, courierId?: string) {
-    const order = await this.prisma.order.findUnique({
+    const order = await this.prismaService.order.findUnique({
       where: { id: orderId },
       include: { items: { include: { product: true } }, address: true },
     });
     if (!order) throw new NotFoundException('Order not found');
 
     const courier = courierId
-      ? await this.prisma.courier.findUnique({ where: { id: courierId } })
-      : await this.prisma.courier.findFirst({ where: { isActive: true } });
+      ? await this.prismaService.courier.findUnique({ where: { id: courierId } })
+      : await this.prismaService.courier.findFirst({ where: { isActive: true } });
 
     if (!courier) throw new NotFoundException('No active courier found');
 
@@ -33,7 +29,7 @@ export class LogisticsService {
       Date.now().toString(36).toUpperCase() +
       Math.random().toString(36).substring(2, 6).toUpperCase();
 
-    const shipment = await this.prisma.shipment.create({
+    const shipment = await this.prismaService.shipment.create({
       data: {
         orderId,
         courierId: courier.id,
@@ -46,7 +42,7 @@ export class LogisticsService {
       },
     });
 
-    await this.prisma.shipmentTimeline.create({
+    await this.prismaService.shipmentTimeline.create({
       data: {
         shipmentId: shipment.id,
         status: 'PENDING',
@@ -54,7 +50,7 @@ export class LogisticsService {
       },
     });
 
-    await this.prisma.order.update({
+    await this.prismaService.order.update({
       where: { id: orderId },
       data: { trackingNumber: trackingId, status: 'PROCESSING' },
     });
@@ -63,7 +59,7 @@ export class LogisticsService {
   }
 
   async getCouriers() {
-    return this.prisma.courier.findMany({
+    return this.prismaService.courier.findMany({
       where: { isActive: true },
       select: {
         id: true,
@@ -79,18 +75,18 @@ export class LogisticsService {
   }
 
   async getDeliveryZones(courierId: string) {
-    return this.prisma.deliveryZone.findMany({
+    return this.prismaService.deliveryZone.findMany({
       where: { courierId, isActive: true },
     });
   }
 
   async calculateShipping(weight: number, district: string, courierId: string) {
-    const courier = await this.prisma.courier.findUnique({
+    const courier = await this.prismaService.courier.findUnique({
       where: { id: courierId },
     });
     if (!courier) throw new NotFoundException('Courier not found');
 
-    const zone = await this.prisma.deliveryZone.findFirst({
+    const zone = await this.prismaService.deliveryZone.findFirst({
       where: { courierId, districts: { has: district }, isActive: true },
     });
 
@@ -113,19 +109,19 @@ export class LogisticsService {
   }
 
   async updateTracking(shipmentId: string, trackingId: string) {
-    const shipment = await this.prisma.shipment.findUnique({
+    const shipment = await this.prismaService.shipment.findUnique({
       where: { id: shipmentId },
     });
     if (!shipment) throw new NotFoundException('Shipment not found');
 
-    return this.prisma.shipment.update({
+    return this.prismaService.shipment.update({
       where: { id: shipmentId },
       data: { trackingId },
     });
   }
 
   async getShipmentStatus(trackingId: string) {
-    const shipment = await this.prisma.shipment.findUnique({
+    const shipment = await this.prismaService.shipment.findUnique({
       where: { trackingId },
       include: {
         courier: { select: { id: true, name: true, slug: true } },
@@ -139,12 +135,12 @@ export class LogisticsService {
   }
 
   async getDeliveryTimeline(shipmentId: string) {
-    const shipment = await this.prisma.shipment.findUnique({
+    const shipment = await this.prismaService.shipment.findUnique({
       where: { id: shipmentId },
     });
     if (!shipment) throw new NotFoundException('Shipment not found');
 
-    const timeline = await this.prisma.shipmentTimeline.findMany({
+    const timeline = await this.prismaService.shipmentTimeline.findMany({
       where: { shipmentId },
       orderBy: { createdAt: 'desc' },
     });

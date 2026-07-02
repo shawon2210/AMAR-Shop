@@ -3,48 +3,132 @@
 import { useState, useEffect } from 'react';
 import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
-import { api } from '@/services/api';
+import { request, api } from '@/services/api';
 import type { User } from '@/types';
 
 interface AuthState {
-  token: string | null;
+  accessToken: string | null;
+  refreshToken: string | null;
   user: User | null;
-  login: (phone: string, password: string) => Promise<void>;
-  register: (name: string, phone: string, password: string) => Promise<void>;
+  isAuthenticated: boolean;
+  login: (identity: string, password: string) => Promise<void>;
+  loginWithPhone: (phone: string, password: string) => Promise<void>;
+  register: (data: {
+    name: string;
+    email?: string;
+    phone: string;
+    password: string;
+  }) => Promise<void>;
   logout: () => void;
+  fetchProfile: () => Promise<void>;
+  setUser: (user: User) => void;
 }
+
+type AuthPersist = Pick<AuthState, 'accessToken' | 'refreshToken' | 'user'>;
 
 export const useAuthStore = create<AuthState>()(
   persist(
-    (set) => ({
-      token: null,
+    (set, get) => ({
+      accessToken: null,
+      refreshToken: null,
       user: null,
+      isAuthenticated: false,
 
-      login: async (phone, password) => {
-        const res = await api.post<{ token: string; user: User }>('/auth/login', {
-          phone,
-          password,
+      login: async (identity, password) => {
+        const isEmail = identity.includes('@');
+        const body = isEmail
+          ? { email: identity, password }
+          : { phone: identity, password };
+        const res = await api.post<{
+          accessToken: string;
+          refreshToken: string;
+          user: User;
+        }>('/auth/login', body);
+        set({
+          accessToken: res.accessToken,
+          refreshToken: res.refreshToken,
+          user: res.user,
+          isAuthenticated: true,
         });
-        set({ token: res.token, user: res.user });
       },
 
-      register: async (name, phone, password) => {
-        const res = await api.post<{ token: string; user: User }>('/auth/register', {
-          name,
-          phone,
-          password,
+      loginWithPhone: async (phone, password) => {
+        const res = await api.post<{
+          accessToken: string;
+          refreshToken: string;
+          user: User;
+        }>('/auth/login', { phone, password });
+        set({
+          accessToken: res.accessToken,
+          refreshToken: res.refreshToken,
+          user: res.user,
+          isAuthenticated: true,
         });
-        set({ token: res.token, user: res.user });
       },
 
-      logout: () => set({ token: null, user: null }),
+      register: async (data) => {
+        const res = await api.post<{
+          accessToken: string;
+          refreshToken: string;
+          user: User;
+        }>('/auth/register', data);
+        set({
+          accessToken: res.accessToken,
+          refreshToken: res.refreshToken,
+          user: res.user,
+          isAuthenticated: true,
+        });
+      },
+
+      logout: () => {
+        const token = get().accessToken;
+        set({
+          accessToken: null,
+          refreshToken: null,
+          user: null,
+          isAuthenticated: false,
+        });
+        if (token) {
+          request('/auth/logout', {
+            method: 'POST',
+            headers: { Authorization: `Bearer ${token}` },
+          }).catch(() => {});
+        }
+        window.dispatchEvent(new CustomEvent('amarshop-auth-logout'));
+      },
+
+      fetchProfile: async () => {
+        try {
+          const user = await api.get<User>('/auth/profile');
+          set({ user, isAuthenticated: true });
+        } catch {
+          set({ accessToken: null, refreshToken: null, user: null, isAuthenticated: false });
+        }
+      },
+
+      setUser: (user) => set({ user }),
     }),
-    { name: 'amarshop-auth' },
+    {
+      name: 'amarshop-auth',
+      partialize: (state): AuthPersist => ({
+        accessToken: state.accessToken,
+        refreshToken: state.refreshToken,
+        user: state.user,
+      }),
+      merge: (persisted, current) => {
+        const p = persisted as AuthPersist;
+        return {
+          ...current,
+          accessToken: p.accessToken ?? current.accessToken,
+          refreshToken: p.refreshToken ?? current.refreshToken,
+          user: p.user ?? current.user,
+          isAuthenticated: !!(p.accessToken && p.user),
+        };
+      },
+    },
   ),
 );
 
-/** Returns true once Zustand persist has finished rehydrating from localStorage.
- *  Returns false during SSR (window is not defined). */
 export function useAuthHydrated(): boolean {
   const [hydrated, setHydrated] = useState(() => {
     if (typeof window === 'undefined') return false;

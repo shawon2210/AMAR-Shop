@@ -3,17 +3,13 @@ import { PrismaService } from './prisma.service';
 
 @Injectable()
 export class DependencyChecker {
-  private prisma: PrismaService;
-
-  constructor(private prismaService: PrismaService) {
-    this.prisma = this.prismaService;
-  }
+  constructor(private prismaService: PrismaService) {}
 
   async checkDatabase() {
     try {
-      await this.prisma.$queryRaw`SELECT 1`;
+      await this.prismaService.$queryRaw`SELECT 1`;
       return { status: 'up', latency: 0 };
-    } catch (error) {
+    } catch (error: any) {
       return { status: 'down', error: error.message };
     }
   }
@@ -28,7 +24,7 @@ export class DependencyChecker {
         return { status: 'up', latency: 0 };
       }
       return { status: 'not_configured' };
-    } catch (error) {
+    } catch (error: any) {
       return { status: 'down', error: error.message };
     }
   }

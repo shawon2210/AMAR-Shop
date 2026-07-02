@@ -25,6 +25,8 @@ import { FulfillmentModule } from './modules/fulfillment/fulfillment.module';
 import { FinanceModule } from './modules/finance/finance.module';
 import { BiModule } from './modules/bi/bi.module';
 import { AddressesModule } from './modules/addresses/addresses.module';
+import { AppController } from './app.controller';
+import { AppService } from './app.service';
 import {
   HealthController,
   DependencyChecker,
@@ -60,7 +62,7 @@ import { PrismaService } from './common/prisma.service';
     BiModule,
     AddressesModule,
   ],
-  controllers: [HealthController],
-  providers: [PrismaService, DependencyChecker],
+  controllers: [AppController, HealthController],
+  providers: [AppService, PrismaService, DependencyChecker],
 })
 export class AppModule {}

@@ -3,14 +3,10 @@ import { PrismaService } from '../../common/prisma.service';
 
 @Injectable()
 export class CartService {
-  private prisma: PrismaService;
-
-  constructor(private prismaService: PrismaService) {
-    this.prisma = this.prismaService;
-  }
+  constructor(private prismaService: PrismaService) {}
 
   async getCart(userId: string) {
-    const items = await this.prisma.cartItem.findMany({
+    const items = await this.prismaService.cartItem.findMany({
       where: { userId },
       include: {
         product: {
@@ -49,62 +45,62 @@ export class CartService {
   }
 
   async addItem(userId: string, productId: string, quantity = 1) {
-    const product = await this.prisma.product.findUnique({
+    const product = await this.prismaService.product.findUnique({
       where: { id: productId },
     });
     if (!product) throw new NotFoundException('Product not found');
 
-    const existing = await this.prisma.cartItem.findUnique({
+    const existing = await this.prismaService.cartItem.findUnique({
       where: { userId_productId: { userId, productId } },
     });
 
     if (existing) {
-      return this.prisma.cartItem.update({
+      return this.prismaService.cartItem.update({
         where: { id: existing.id },
         data: { quantity: existing.quantity + quantity },
       });
     }
 
-    return this.prisma.cartItem.create({
+    return this.prismaService.cartItem.create({
       data: { userId, productId, quantity, selected: true },
     });
   }
 
   async updateQuantity(userId: string, productId: string, quantity: number) {
-    const item = await this.prisma.cartItem.findUnique({
+    const item = await this.prismaService.cartItem.findUnique({
       where: { userId_productId: { userId, productId } },
     });
     if (!item) throw new NotFoundException('Cart item not found');
 
-    return this.prisma.cartItem.update({
+    return this.prismaService.cartItem.update({
       where: { id: item.id },
       data: { quantity },
     });
   }
 
   async removeItem(userId: string, productId: string) {
-    const item = await this.prisma.cartItem.findUnique({
+    const item = await this.prismaService.cartItem.findUnique({
       where: { userId_productId: { userId, productId } },
     });
     if (!item) throw new NotFoundException('Cart item not found');
 
-    return this.prisma.cartItem.delete({ where: { id: item.id } });
+    return this.prismaService.cartItem.delete({ where: { id: item.id } });
   }
 
   async toggleSelect(userId: string, productId: string) {
-    const item = await this.prisma.cartItem.findUnique({
+    const item = await this.prismaService.cartItem.findUnique({
       where: { userId_productId: { userId, productId } },
     });
     if (!item) throw new NotFoundException('Cart item not found');
 
-    return this.prisma.cartItem.update({
+    return this.prismaService.cartItem.update({
       where: { id: item.id },
       data: { selected: !item.selected },
     });
   }
 
   async clearCart(userId: string) {
-    await this.prisma.cartItem.deleteMany({ where: { userId } });
+    await this.prismaService.cartItem.deleteMany({ where: { userId } });
     return { message: 'Cart cleared' };
   }
 }

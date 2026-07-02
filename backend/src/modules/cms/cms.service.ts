@@ -3,14 +3,10 @@ import { PrismaService } from '../../common/prisma.service';
 
 @Injectable()
 export class CmsService {
-  private prisma: PrismaService;
-
-  constructor(private prismaService: PrismaService) {
-    this.prisma = this.prismaService;
-  }
+  constructor(private prismaService: PrismaService) {}
 
   async getPages() {
-    return this.prisma.cMSPage.findMany({
+    return this.prismaService.cMSPage.findMany({
       where: { isActive: true },
       orderBy: { createdAt: 'desc' },
       select: {
@@ -37,7 +33,7 @@ export class CmsService {
         .toLowerCase()
         .replace(/[^a-z0-9]+/g, '-')
         .replace(/^-|-$/g, '');
-    return this.prisma.cMSPage.create({
+    return this.prismaService.cMSPage.create({
       data: {
         title: data.title,
         slug,
@@ -58,7 +54,7 @@ export class CmsService {
       isActive?: boolean;
     },
   ) {
-    const page = await this.prisma.cMSPage.findUnique({ where: { id } });
+    const page = await this.prismaService.cMSPage.findUnique({ where: { id } });
     if (!page) throw new NotFoundException('Page not found');
 
     const updateData: Record<string, unknown> = {};
@@ -68,14 +64,14 @@ export class CmsService {
     if (data.metaDesc !== undefined) updateData.metaDesc = data.metaDesc;
     if (data.isActive !== undefined) updateData.isActive = data.isActive;
 
-    return this.prisma.cMSPage.update({ where: { id }, data: updateData });
+    return this.prismaService.cMSPage.update({ where: { id }, data: updateData });
   }
 
   async getBanners(position?: string) {
     const where: Record<string, unknown> = { isActive: true };
     if (position) where.position = position;
 
-    return this.prisma.banner.findMany({
+    return this.prismaService.banner.findMany({
       where,
       orderBy: { sortOrder: 'asc' },
     });
@@ -89,7 +85,7 @@ export class CmsService {
     sortOrder?: number;
     storeId?: string;
   }) {
-    return this.prisma.banner.create({
+    return this.prismaService.banner.create({
       data: {
         title: data.title,
         image: data.image,
@@ -103,7 +99,7 @@ export class CmsService {
 
   async getAnnouncements() {
     const now = new Date();
-    return this.prisma.announcement.findMany({
+    return this.prismaService.announcement.findMany({
       where: {
         isActive: true,
         OR: [{ expiresAt: { gte: now } }, { expiresAt: null }],
