@@ -42,10 +42,10 @@ export function Header() {
 
   return (
     <header className="w-full top-0 sticky z-50 bg-surface shadow-sm transition-colors duration-200">
-      <div className="flex items-center justify-between px-container-margin py-lg w-full max-w-7xl mx-auto gap-md">
-        <div className="shrink-0 overflow-visible">
+      <div className="flex items-center justify-between px-container-margin py-1 md:py-2 w-full max-w-7xl mx-auto gap-md">
+        <div className="shrink-0 overflow-visible flex items-center">
           <Link href="/" className="flex items-center">
-            <img src="/images/logo.png" alt="AmarShop" className="h-16 lg:h-20 xl:h-24 w-auto object-contain" />
+            <img src="/images/logo.png" alt="AmarShop" className="w-auto" style={{ height: 'clamp(48px, 8vw, 96px)' }} />
           </Link>
         </div>
 
