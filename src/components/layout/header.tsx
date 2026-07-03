@@ -41,11 +41,11 @@ export function Header() {
   };
 
   return (
-    <header className="w-full top-0 sticky z-50 bg-surface shadow-sm transition-colors duration-200 py-lg lg:py-7">
-      <div className="flex items-center justify-between px-container-margin w-full max-w-7xl mx-auto gap-md">
-        <div className="shrink-0 overflow-visible">
+    <header className="w-full top-0 sticky z-50 bg-white border-b border-outline-variant shadow-sm transition-colors duration-200 min-h-[88px] lg:min-h-[110px] py-3 lg:py-4 flex items-center">
+      <div className="flex items-center justify-between px-container-margin w-full max-w-7xl mx-auto gap-6 flex-nowrap">
+        <div className="flex items-center shrink-0 overflow-visible min-w-fit">
           <Link href="/">
-            <img src="/images/logo.png?v=2" alt="AmarShop" className="h-16 lg:h-20 xl:h-24 w-auto object-contain" />
+            <img src="/images/logo.svg" alt="AmarShop" className="h-16 md:h-[72px] lg:h-20 xl:h-24 w-auto max-w-none object-contain block" />
           </Link>
         </div>
 
