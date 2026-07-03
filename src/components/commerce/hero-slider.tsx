@@ -8,7 +8,6 @@ interface HeroSlide {
   subtitle: string;
   cta: string;
   ctaHref: string;
-  fit?: string;
   hideContent?: boolean;
 }
 
@@ -16,24 +15,22 @@ const slides: HeroSlide[] = [
   {
     image: "/images/poster.png",
     title: "Shop Smart, Live Better",
-    subtitle: "Discover amazing deals on millions of products with nationwide delivery.",
+    subtitle: "Discover millions of products with fast delivery across Bangladesh.",
     cta: "Shop Now",
     ctaHref: "/categories",
-    fit: "object-contain",
     hideContent: true,
   },
   {
     image: "/images/hero-poster.png",
     title: "Eid Mubarak! Huge Savings Await",
-    subtitle: "Exclusive deals on fashion, electronics & home essentials — up to 50% off.",
+    subtitle: "Exclusive deals on fashion, electronics & home — up to 50% off.",
     cta: "Explore Deals",
     ctaHref: "/flash-sale",
-    fit: "object-contain",
     hideContent: true,
   },
   {
     image:
-      "https://images.unsplash.com/photo-1607082349566-187342175e2f?w=1200&q=80",
+      "https://images.unsplash.com/photo-1556742049-0cfed4f6a45d?w=1920&h=720&fit=crop&q=80",
     title: "Biggest Online Marketplace in Bangladesh",
     subtitle: "Shop millions of products with fast delivery nationwide.",
     cta: "Shop Now",
@@ -41,17 +38,17 @@ const slides: HeroSlide[] = [
   },
   {
     image:
-      "https://images.unsplash.com/photo-1556742049-0cfed4f6a45d?w=1200&q=80",
-    title: "Launch Your Store on AmarShop",
-    subtitle: "Reach customers across Bangladesh. Start selling today.",
-    cta: "Become a Seller",
-    ctaHref: "/seller/dashboard",
+      "https://images.unsplash.com/photo-1607082349566-187342175e2f?w=1920&h=720&fit=crop&q=80",
+    title: "Festival Mega Sale — Up to 70% OFF",
+    subtitle: "Limited-time deals across fashion, electronics & home essentials.",
+    cta: "Explore Deals",
+    ctaHref: "/flash-sale",
   },
   {
     image:
-      "https://images.unsplash.com/photo-1490114538077-0a7f8cb49891?w=1200&q=80",
+      "https://images.unsplash.com/photo-1490114538077-0a7f8cb49891?w=1920&h=720&fit=crop&q=80",
     title: "Fashion Collection 2026",
-    subtitle: "Trending styles with free delivery available.",
+    subtitle: "Trending styles with free delivery available. Shop the look.",
     cta: "Shop Fashion",
     ctaHref: "/category/fashion",
   },
@@ -97,7 +94,7 @@ export function HeroSlider() {
 
   return (
     <div
-      className="relative overflow-hidden rounded-2xl md:rounded-[28px] bg-surface-container-high w-full h-full min-h-[280px] sm:min-h-[320px] md:min-h-0 group"
+      className="relative overflow-hidden rounded-[32px] bg-gradient-to-br from-gray-50 to-white w-full h-[320px] sm:h-[360px] md:h-[440px] lg:h-[520px] xl:h-[580px] 2xl:h-[640px] group"
       onTouchStart={handleTouchStart}
       onTouchMove={handleTouchMove}
       onTouchEnd={handleTouchEnd}
@@ -119,46 +116,45 @@ export function HeroSlider() {
               loading={i === 0 ? "eager" : "lazy"}
               decoding="async"
               fetchPriority={i === 0 ? "high" : "auto"}
-              sizes="(max-width: 640px) 100vw, (max-width: 1024px) 80vw, (max-width: 1280px) 60vw, 880px"
-              className={`absolute inset-0 h-full w-full ${slide.fit ?? "object-cover"} object-center`}
+              className="absolute inset-0 h-full w-full object-scale-down p-2 sm:p-3 md:p-4"
             />
 
-            {!slide.hideContent && (
-              <div className="absolute inset-0 bg-gradient-to-r from-black/75 via-black/30 to-transparent" />
-            )}
-
             {slide.hideContent ? (
-              /* Poster layout: CTA at bottom-right */
-              <div className="absolute bottom-4 right-4 sm:bottom-6 sm:right-6 md:bottom-8 md:right-8 z-10">
+              /* Poster slide: CTA at bottom-right */
+              <div className="absolute bottom-4 sm:bottom-5 md:bottom-6 right-4 sm:right-5 md:right-6 z-10">
                 <a
                   href={slide.ctaHref}
-                  className="inline-flex items-center justify-center h-10 sm:h-11 md:h-12 px-5 sm:px-6 md:px-7 rounded-full bg-primary text-white text-[13px] sm:text-[14px] md:text-[15px] font-semibold shadow-lg hover:brightness-110 transition-all"
+                  className="inline-flex items-center justify-center h-11 md:h-12 lg:h-14 px-5 md:px-6 lg:px-7 rounded-full bg-primary text-white text-[13px] sm:text-[14px] md:text-[15px] font-semibold shadow-lg hover:brightness-110 transition-all"
                 >
-                  {slide.cta}
-                  <span className="material-symbols-outlined ml-1.5 text-[16px] sm:text-[18px] md:text-[20px]">
+                  <span>{slide.cta}</span>
+                  <span className="material-symbols-outlined ml-1.5 text-[16px] sm:text-[18px]">
                     arrow_forward
                   </span>
                 </a>
               </div>
             ) : (
-              /* Content overlay layout */
-              <div className="relative z-10 flex h-full flex-col justify-center px-6 sm:px-8 md:px-10 lg:px-14">
-                <div className="max-w-[520px] flex flex-col gap-4 sm:gap-5 md:gap-6">
-                  <h2 className="text-xl sm:text-2xl md:text-3xl lg:text-4xl xl:text-5xl font-bold leading-tight text-white">
-                    {slide.title}
-                  </h2>
-                  <p className="text-[13px] sm:text-[14px] md:text-[15px] lg:text-lg text-white/80 max-w-[440px]">
-                    {slide.subtitle}
-                  </p>
-                  <a
-                    href={slide.ctaHref}
-                    className="inline-flex items-center justify-center h-10 sm:h-11 md:h-[52px] px-5 sm:px-6 md:px-8 rounded-full bg-primary text-white text-[13px] sm:text-[14px] md:text-[15px] font-semibold shadow-lg hover:brightness-110 transition-all w-fit"
-                  >
-                    {slide.cta}
-                    <span className="material-symbols-outlined ml-1.5 sm:ml-2 text-[16px] sm:text-[18px] md:text-[20px]">
-                      arrow_forward
-                    </span>
-                  </a>
+              /* Content slide: glass panel overlay */
+              <div className="absolute inset-0 p-3 sm:p-4 md:p-5 lg:p-6">
+                <div className="flex h-full flex-col justify-center">
+                  <div className="max-w-full sm:max-w-[420px] md:max-w-[520px] lg:max-w-[560px] bg-black/30 backdrop-blur-sm rounded-2xl p-4 sm:p-5 md:p-6 lg:p-8">
+                    <div className="flex flex-col gap-3 sm:gap-4">
+                      <h2 className="text-xl sm:text-2xl md:text-3xl lg:text-4xl xl:text-5xl 2xl:text-6xl font-bold leading-tight text-white">
+                        {slide.title}
+                      </h2>
+                      <p className="text-sm sm:text-base md:text-lg lg:text-xl text-white/85">
+                        {slide.subtitle}
+                      </p>
+                      <a
+                        href={slide.ctaHref}
+                        className="inline-flex items-center justify-center h-11 md:h-12 lg:h-14 px-5 md:px-6 lg:px-7 rounded-full bg-primary text-white text-[13px] sm:text-[14px] md:text-[15px] font-semibold shadow-lg hover:brightness-110 transition-all w-fit mt-1"
+                      >
+                        <span>{slide.cta}</span>
+                        <span className="material-symbols-outlined ml-1.5 md:ml-2 text-[16px] sm:text-[18px] md:text-[20px]">
+                          arrow_forward
+                        </span>
+                      </a>
+                    </div>
+                  </div>
                 </div>
               </div>
             )}
@@ -170,30 +166,30 @@ export function HeroSlider() {
       <button
         onClick={prev}
         aria-label="Previous Slide"
-        className="absolute left-2 sm:left-3 md:left-5 top-1/2 -translate-y-1/2 size-9 sm:size-11 md:size-14 rounded-full bg-white/15 backdrop-blur-md text-white opacity-0 group-hover:opacity-85 transition-opacity hover:bg-white/30 flex items-center justify-center"
+        className="absolute left-3 sm:left-4 md:left-5 top-1/2 -translate-y-1/2 size-9 sm:size-10 md:size-12 lg:size-14 rounded-full bg-white/20 backdrop-blur-md text-white opacity-0 group-hover:opacity-85 transition-opacity hover:bg-white/35 flex items-center justify-center"
       >
-        <span className="material-symbols-outlined text-[18px] sm:text-[22px] md:text-[28px]">
+        <span className="material-symbols-outlined text-[18px] sm:text-[20px] md:text-[24px] lg:text-[28px]">
           chevron_left
         </span>
       </button>
       <button
         onClick={next}
         aria-label="Next Slide"
-        className="absolute right-2 sm:right-3 md:right-5 top-1/2 -translate-y-1/2 size-9 sm:size-11 md:size-14 rounded-full bg-white/15 backdrop-blur-md text-white opacity-0 group-hover:opacity-85 transition-opacity hover:bg-white/30 flex items-center justify-center"
+        className="absolute right-3 sm:right-4 md:right-5 top-1/2 -translate-y-1/2 size-9 sm:size-10 md:size-12 lg:size-14 rounded-full bg-white/20 backdrop-blur-md text-white opacity-0 group-hover:opacity-85 transition-opacity hover:bg-white/35 flex items-center justify-center"
       >
-        <span className="material-symbols-outlined text-[18px] sm:text-[22px] md:text-[28px]">
+        <span className="material-symbols-outlined text-[18px] sm:text-[20px] md:text-[24px] lg:text-[28px]">
           chevron_right
         </span>
       </button>
 
       {/* Indicators */}
-      <div className="absolute bottom-3 sm:bottom-4 md:bottom-5 left-1/2 flex -translate-x-1/2 gap-1.5 sm:gap-2 md:gap-2.5">
+      <div className="absolute bottom-3 sm:bottom-4 md:bottom-5 lg:bottom-6 left-1/2 flex -translate-x-1/2 gap-2 sm:gap-2.5 md:gap-3">
         {slides.map((_, index) => (
           <button
             key={index}
             aria-label={`Slide ${index + 1}`}
             onClick={() => setCurrent(index)}
-            className={`rounded-full transition-all duration-300 bg-white/60 hover:bg-white/80 ${
+            className={`rounded-full transition-all duration-300 bg-white/70 hover:bg-white ${
               current === index
                 ? "w-6 sm:w-7 md:w-8"
                 : "w-2 sm:w-2.5 md:w-3"
