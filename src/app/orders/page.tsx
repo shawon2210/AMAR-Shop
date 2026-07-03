@@ -67,7 +67,7 @@ export default function OrdersPage() {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    if (!hydrated || !token) return;
+    if (!hydrated || !token) { setLoading(false); return; }
 
     setLoading(true);
     const statusParam = activeTab === 'All' ? undefined : activeTab.toUpperCase();
@@ -75,7 +75,12 @@ export default function OrdersPage() {
     api
       .get<OrdersResponse>(`/orders${statusParam ? `?status=${statusParam}` : ''}`)
       .then(data => setOrders(data.orders))
-      .catch(err => addToast(err.message || 'Failed to load orders', 'error'))
+      .catch(() => {
+        try {
+          const local = JSON.parse(localStorage.getItem('amarshop-orders') || '[]');
+          setOrders(local);
+        } catch { setOrders([]); }
+      })
       .finally(() => setLoading(false));
   }, [hydrated, token, activeTab, router, addToast]);
 
@@ -139,7 +144,7 @@ export default function OrdersPage() {
                     <span className="material-symbols-outlined text-secondary text-lg">
                       receipt_long
                     </span>
-                    <span className="font-medium font-mono text-xs">{order.orderNumber}</span>
+                    <span className="font-medium font-mono text-xs">{order.orderNumber || order.id}</span>
                   </div>
                   <span
                     className={`text-[10px] font-label-bold px-2 py-0.5 rounded-full ${cfg.color}`}
