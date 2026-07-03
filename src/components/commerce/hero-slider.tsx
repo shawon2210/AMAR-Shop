@@ -8,9 +8,26 @@ interface HeroSlide {
   subtitle: string;
   cta: string;
   ctaHref: string;
+  fit?: string;
 }
 
 const slides: HeroSlide[] = [
+  {
+    image: "/images/poster.png",
+    title: "Shop Smart, Live Better",
+    subtitle: "Discover amazing deals on millions of products with nationwide delivery.",
+    cta: "Shop Now",
+    ctaHref: "/categories",
+    fit: "object-contain",
+  },
+  {
+    image: "/images/hero-poster.png",
+    title: "Eid Mubarak! Huge Savings Await",
+    subtitle: "Exclusive deals on fashion, electronics & home essentials — up to 50% off.",
+    cta: "Explore Deals",
+    ctaHref: "/flash-sale",
+    fit: "object-contain",
+  },
   {
     image:
       "https://images.unsplash.com/photo-1607082349566-187342175e2f?w=1200&q=80",
@@ -18,14 +35,6 @@ const slides: HeroSlide[] = [
     subtitle: "Shop millions of products with fast delivery nationwide.",
     cta: "Shop Now",
     ctaHref: "/categories",
-  },
-  {
-    image:
-      "https://images.unsplash.com/photo-1607082350899-7e105aa7aecc?w=1200&q=80",
-    title: "Festival Mega Sale — Up to 70% OFF",
-    subtitle: "Limited-time deals across fashion, electronics & home.",
-    cta: "Explore Deals",
-    ctaHref: "/flash-sale",
   },
   {
     image:
@@ -66,7 +75,7 @@ export function HeroSlider() {
     setCurrent((prev) => (prev + 1) % slides.length);
 
   return (
-    <div className="relative overflow-hidden rounded-2xl md:rounded-[28px] bg-surface-container-high w-full h-full group">
+    <div className="relative overflow-hidden rounded-2xl md:rounded-[28px] bg-surface-container-high w-full h-full min-h-[360px] group">
       {/* Slides track */}
       <div
         className="flex h-full transition-[transform] duration-700 ease-in-out will-change-transform transform-gpu"
@@ -88,7 +97,8 @@ export function HeroSlider() {
               alt={slide.title}
               loading={i === 0 ? "eager" : "lazy"}
               decoding="async"
-              className="absolute inset-0 h-full w-full object-cover object-center"
+              sizes="(max-width: 768px) 100vw, (max-width: 1280px) 60vw, 880px"
+              className={`absolute inset-0 h-full w-full ${slide.fit ?? "object-cover"} object-center`}
             />
 
             {/* Gradient overlay */}
@@ -96,19 +106,19 @@ export function HeroSlider() {
 
             {/* Content */}
             <div className="relative z-10 flex h-full flex-col justify-center px-6 sm:px-10 md:px-14">
-              <div className="max-w-[520px] flex flex-col gap-6">
-                <h2 className="text-3xl sm:text-4xl xl:text-5xl font-bold leading-tight text-white">
+              <div className="max-w-[520px] flex flex-col gap-5 sm:gap-6">
+                <h2 className="text-2xl sm:text-3xl md:text-4xl xl:text-5xl font-bold leading-tight text-white">
                   {slide.title}
                 </h2>
-                <p className="text-base sm:text-lg text-white/80 max-w-[440px]">
+                <p className="text-sm sm:text-base md:text-lg text-white/80 max-w-[440px]">
                   {slide.subtitle}
                 </p>
                 <a
                   href={slide.ctaHref}
-                  className="inline-flex items-center justify-center h-[52px] px-8 rounded-full bg-primary text-white text-[15px] font-semibold shadow-lg hover:brightness-110 transition-all w-fit"
+                  className="inline-flex items-center justify-center h-11 sm:h-[52px] px-6 sm:px-8 rounded-full bg-primary text-white text-[14px] sm:text-[15px] font-semibold shadow-lg hover:brightness-110 transition-all w-fit"
                 >
                   {slide.cta}
-                  <span className="material-symbols-outlined ml-2 text-[20px]">
+                  <span className="material-symbols-outlined ml-2 text-[18px] sm:text-[20px]">
                     arrow_forward
                   </span>
                 </a>
@@ -122,32 +132,32 @@ export function HeroSlider() {
       <button
         onClick={prev}
         aria-label="Previous Slide"
-        className="absolute left-3 sm:left-5 top-1/2 -translate-y-1/2 size-14 rounded-full bg-white/15 backdrop-blur-md text-white opacity-0 group-hover:opacity-85 transition-opacity hover:bg-white/30 flex items-center justify-center"
+        className="absolute left-3 sm:left-5 top-1/2 -translate-y-1/2 size-11 sm:size-14 rounded-full bg-white/15 backdrop-blur-md text-white opacity-0 group-hover:opacity-85 transition-opacity hover:bg-white/30 flex items-center justify-center"
       >
-        <span className="material-symbols-outlined text-[28px]">
+        <span className="material-symbols-outlined text-[22px] sm:text-[28px]">
           chevron_left
         </span>
       </button>
       <button
         onClick={next}
         aria-label="Next Slide"
-        className="absolute right-3 sm:right-5 top-1/2 -translate-y-1/2 size-14 rounded-full bg-white/15 backdrop-blur-md text-white opacity-0 group-hover:opacity-85 transition-opacity hover:bg-white/30 flex items-center justify-center"
+        className="absolute right-3 sm:right-5 top-1/2 -translate-y-1/2 size-11 sm:size-14 rounded-full bg-white/15 backdrop-blur-md text-white opacity-0 group-hover:opacity-85 transition-opacity hover:bg-white/30 flex items-center justify-center"
       >
-        <span className="material-symbols-outlined text-[28px]">
+        <span className="material-symbols-outlined text-[22px] sm:text-[28px]">
           chevron_right
         </span>
       </button>
 
       {/* Indicators */}
-      <div className="absolute bottom-5 left-1/2 flex -translate-x-1/2 gap-2.5">
+      <div className="absolute bottom-4 sm:bottom-5 left-1/2 flex -translate-x-1/2 gap-2 sm:gap-2.5">
         {slides.map((_, index) => (
           <button
             key={index}
             aria-label={`Slide ${index + 1}`}
             onClick={() => setCurrent(index)}
-            className="h-3 rounded-full transition-all duration-300 bg-white/60 hover:bg-white/80"
+            className="h-2.5 sm:h-3 rounded-full transition-all duration-300 bg-white/60 hover:bg-white/80"
             style={{
-              width: current === index ? "32px" : "12px",
+              width: current === index ? "28px" : "10px",
             }}
           />
         ))}

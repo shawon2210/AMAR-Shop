@@ -78,10 +78,10 @@ export function HeroSection() {
           </div>
         </div>
 
-        {/* Desktop 3-column layout */}
-        <div className="h-auto xl:h-[520px] 2xl:h-[580px] md:h-[420px] flex gap-5">
+        {/* Desktop 3-column / Mobile single-column layout */}
+        <div className="flex flex-col md:flex-row md:h-[420px] xl:h-[520px] 2xl:h-[580px] gap-5">
           <CategoriesSidebar />
-          <div className="flex-1 min-w-0 h-full">
+          <div className="flex-1 min-w-0 min-h-[320px] md:min-h-0 h-full">
             <HeroSlider />
           </div>
           <PromoCards />
