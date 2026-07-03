@@ -45,7 +45,7 @@ export function Header() {
       <div className="flex items-center justify-between px-container-margin py-1 md:py-2 w-full max-w-7xl mx-auto gap-md">
         <div className="shrink-0 overflow-visible flex items-center">
           <Link href="/" className="flex items-center">
-            <img src="/images/logo.png?v=2" alt="AmarShop" className="w-auto" style={{ height: 'clamp(48px, 8vw, 96px)' }} />
+            <img src="/images/logo.png?v=2" alt="AmarShop" style={{ width: 'clamp(120px, 20vw, 220px)', height: 'auto' }} />
           </Link>
         </div>
 
