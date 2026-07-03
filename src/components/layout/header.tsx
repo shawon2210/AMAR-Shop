@@ -41,15 +41,15 @@ export function Header() {
   };
 
   return (
-    <header className="w-full top-0 sticky z-50 bg-surface shadow-sm transition-colors duration-200 h-20 md:h-24 flex items-center">
+    <header className="w-full top-0 sticky z-50 bg-surface shadow-sm transition-colors duration-200 py-lg lg:py-7">
       <div className="flex items-center justify-between px-container-margin w-full max-w-7xl mx-auto gap-md">
-        <div className="shrink-0 overflow-visible flex items-center h-full">
-          <Link href="/" className="flex items-center h-full py-2">
-            <img src="/images/logo.png?v=2" alt="AmarShop" className="h-full w-auto object-contain" />
+        <div className="shrink-0 overflow-visible">
+          <Link href="/">
+            <img src="/images/logo.png?v=2" alt="AmarShop" className="h-16 lg:h-20 xl:h-24 w-auto object-contain" />
           </Link>
         </div>
 
-        <div className="flex-grow max-w-xl hidden md:flex relative">
+        <div className="flex-grow max-w-2xl hidden md:flex relative">
           <input
             className="w-full bg-surface-container-low border-none rounded-lg px-md py-2.5 text-sm focus:ring-2 focus:ring-primary outline-none"
             placeholder="Search..."
