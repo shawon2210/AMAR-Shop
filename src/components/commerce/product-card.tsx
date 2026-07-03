@@ -31,7 +31,7 @@ export function ProductCard({ product, variant = 'default' }: ProductCardProps) 
 
   if (variant === 'compact') {
     return (
-      <Link href={`/product/${product.id}`} className="bg-white rounded-lg shadow-sm hover:shadow-md transition-shadow cursor-pointer overflow-hidden flex flex-col group">
+      <Link href={`/product/${product.id}`} className="bg-white rounded-lg shadow-sm hover:shadow-md transition-shadow cursor-pointer overflow-hidden flex flex-col group h-full">
         <div className="aspect-square relative overflow-hidden bg-surface-container">
           {!imgError ? (
             <img
@@ -80,7 +80,7 @@ export function ProductCard({ product, variant = 'default' }: ProductCardProps) 
   }
 
   return (
-    <Link href={`/product/${product.id}`} className="bg-surface border border-outline-variant rounded-lg overflow-hidden group hover:shadow-lg transition-all duration-300 flex flex-col">
+    <Link href={`/product/${product.id}`} className="bg-surface border border-outline-variant rounded-lg overflow-hidden group hover:shadow-lg transition-all duration-300 flex flex-col h-full">
       <div className="relative aspect-square overflow-hidden bg-surface-container">
         {!imgError ? (
           <img

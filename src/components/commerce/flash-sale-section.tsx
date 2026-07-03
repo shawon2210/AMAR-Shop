@@ -38,7 +38,7 @@ export function FlashSaleSection() {
         {displayProducts.length > 0 ? (
           <div className="flex overflow-x-auto hide-scrollbar gap-md pb-1">
             {displayProducts.map(product => (
-              <div key={product.id} className="min-w-45 md:min-w-50">
+              <div key={product.id} className="min-w-45 md:min-w-50 h-full">
                 <ProductCard product={product} variant="flash-sale" />
               </div>
             ))}

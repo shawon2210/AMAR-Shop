@@ -66,7 +66,7 @@ export function ProductGrid({
         {visibleProducts.map((product, index) => (
           <div
             key={product.id}
-            className={`transition-all duration-500 ${
+            className={`h-full transition-all duration-500 ${
               isVisible
                 ? 'opacity-100 translate-y-0'
                 : 'opacity-0 translate-y-4'
