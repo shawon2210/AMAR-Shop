@@ -45,16 +45,14 @@ export function Header() {
       <div className="flex items-center justify-between px-container-margin py-sm w-full max-w-7xl mx-auto gap-md">
         <div className="flex items-center gap-sm">
           <Link href="/" className="flex items-center gap-sm">
-            <h1 className="font-display-lg-mobile text-display-lg-mobile text-primary tracking-tight leading-none">
-              AmarShop
-            </h1>
+            <img src="/images/logo.png" alt="AmarShop" className="h-8 w-auto" />
           </Link>
         </div>
 
         <div className="flex-grow max-w-2xl hidden md:flex relative">
           <input
             className="w-full bg-surface-container-low border-none rounded-lg px-md py-2.5 text-sm focus:ring-2 focus:ring-primary outline-none"
-            placeholder="Search in AmarShop..."
+            placeholder="Search..."
             type="text"
           />
           <button className="absolute right-3 top-1/2 -translate-y-1/2 text-primary">
@@ -210,7 +208,7 @@ export function Header() {
             <span className="material-symbols-outlined text-secondary mr-sm text-lg">search</span>
             <input
               className="bg-transparent border-none focus:ring-0 text-sm w-full outline-none"
-              placeholder="Search in AmarShop..."
+              placeholder="Search..."
               type="text"
               autoFocus
             />

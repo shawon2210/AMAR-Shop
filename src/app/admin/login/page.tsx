@@ -54,9 +54,8 @@ export default function AdminLoginPage() {
     <div className="min-h-screen flex items-center justify-center bg-[#1a1a2e] px-4">
       <div className="w-full max-w-[400px] bg-white rounded-xl shadow-2xl p-8">
         <div className="text-center mb-6">
-          <div className="flex items-center justify-center gap-2 mb-3">
-            <span className="material-symbols-outlined text-primary text-3xl">store</span>
-            <span className="font-bold text-2xl text-[#1a1a2e]">AmarShop</span>
+          <div className="flex items-center justify-center mb-3">
+            <img src="/images/logo.png" alt="AmarShop" className="h-8 w-auto" />
           </div>
           <h1 className="text-lg font-semibold text-[#333]">Admin Panel</h1>
           <p className="text-sm text-[#888] mt-1">Sign in with admin credentials</p>

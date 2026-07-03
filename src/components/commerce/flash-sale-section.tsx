@@ -5,6 +5,7 @@ import Link from 'next/link';
 import { CountdownTimer } from '@/components/ui/countdown-timer';
 import { ProductCard } from '@/components/commerce/product-card';
 import { getFlashSaleProducts } from '@/services/products';
+import { flashSaleProducts } from '@/lib/data/products';
 import type { Product } from '@/types';
 
 const FLASH_SALE_END = '2026-06-30T23:59:59Z';
@@ -13,7 +14,9 @@ export function FlashSaleSection() {
   const [displayProducts, setDisplayProducts] = useState<Product[]>([]);
 
   useEffect(() => {
-    getFlashSaleProducts().then(all => setDisplayProducts(all.slice(0, 8)));
+    getFlashSaleProducts().then(all => {
+      setDisplayProducts(all.length > 0 ? all.slice(0, 8) : flashSaleProducts.slice(0, 8));
+    });
   }, []);
 
   return (
@@ -32,13 +35,19 @@ export function FlashSaleSection() {
           </Link>
         </div>
 
-        <div className="flex overflow-x-auto hide-scrollbar gap-md pb-1">
-          {displayProducts.map(product => (
-            <div key={product.id} className="min-w-45 md:min-w-50">
-              <ProductCard product={product} variant="flash-sale" />
-            </div>
-          ))}
-        </div>
+        {displayProducts.length > 0 ? (
+          <div className="flex overflow-x-auto hide-scrollbar gap-md pb-1">
+            {displayProducts.map(product => (
+              <div key={product.id} className="min-w-45 md:min-w-50">
+                <ProductCard product={product} variant="flash-sale" />
+              </div>
+            ))}
+          </div>
+        ) : (
+          <div className="flex items-center justify-center py-8">
+            <span className="material-symbols-outlined text-3xl text-secondary">flash_on</span>
+          </div>
+        )}
       </div>
     </section>
   );

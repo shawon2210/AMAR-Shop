@@ -1,5 +1,6 @@
 import { api } from './api';
 import type { Product } from '@/types';
+import { MOCK_PRODUCTS, MOCK_FLASH_SALE_PRODUCTS } from '@/data/mock-products';
 
 interface ProductsResponse {
   products: any[];
@@ -40,10 +41,14 @@ function toProduct(raw: any): Product {
 }
 
 export async function getProducts(skip = 0, take = 20, categorySlug?: string): Promise<Product[]> {
-  let path = `/products?skip=${skip}&take=${take}`;
-  if (categorySlug) path += `&category=${categorySlug}`;
-  const data = await api.get<ProductsResponse>(path);
-  return (data.products || []).map(toProduct);
+  try {
+    let path = `/products?skip=${skip}&take=${take}`;
+    if (categorySlug) path += `&category=${categorySlug}`;
+    const data = await api.get<ProductsResponse>(path);
+    return (data.products || []).map(toProduct);
+  } catch {
+    return MOCK_PRODUCTS.slice(skip, skip + take);
+  }
 }
 
 export async function getProductById(id: string): Promise<Product | null> {
@@ -51,16 +56,24 @@ export async function getProductById(id: string): Promise<Product | null> {
     const raw = await api.get<any>(`/products/${id}`);
     return toProduct(raw);
   } catch {
-    return null;
+    return MOCK_PRODUCTS.find(p => p.id === id) || null;
   }
 }
 
 export async function getProductsByCategory(categorySlug: string): Promise<Product[]> {
-  const data = await api.get<ProductsResponse>(`/products?categorySlug=${categorySlug}`);
-  return (data.products || []).map(toProduct);
+  try {
+    const data = await api.get<ProductsResponse>(`/products?categorySlug=${categorySlug}`);
+    return (data.products || []).map(toProduct);
+  } catch {
+    return MOCK_PRODUCTS.filter(p => p.categoryId === categorySlug);
+  }
 }
 
 export async function getFlashSaleProducts(): Promise<Product[]> {
-  const data = await api.get<ProductsResponse>('/products?flashSale=true');
-  return (data.products || []).map(toProduct);
+  try {
+    const data = await api.get<ProductsResponse>('/products?flashSale=true');
+    return (data.products || []).map(toProduct);
+  } catch {
+    return MOCK_FLASH_SALE_PRODUCTS;
+  }
 }
