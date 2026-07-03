@@ -42,10 +42,10 @@ export function Header() {
 
   return (
     <header className="w-full top-0 sticky z-50 bg-surface shadow-sm transition-colors duration-200">
-      <div className="flex items-center justify-between px-container-margin py-sm w-full max-w-7xl mx-auto gap-md">
+      <div className="flex items-center justify-between px-container-margin py-md w-full max-w-7xl mx-auto gap-md">
         <div className="flex items-center gap-sm">
           <Link href="/" className="flex items-center gap-sm">
-            <img src="/images/logo.png" alt="AmarShop" className="h-10 sm:h-12 w-auto" />
+            <img src="/images/logo.png" alt="AmarShop" className="h-14 sm:h-16 w-auto" />
           </Link>
         </div>
 
