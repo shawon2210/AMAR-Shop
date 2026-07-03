@@ -8,6 +8,7 @@ interface HeroSlide {
   subtitle?: string;
   badge?: string;
   badgeColor?: string;
+  fit?: string;
 }
 
 const slides: HeroSlide[] = [
@@ -17,6 +18,7 @@ const slides: HeroSlide[] = [
     badge: "EID COLLECTION",
     badgeColor: "bg-primary",
     subtitle: "Exclusive deals on fashion, electronics & home essentials — up to 50% off",
+    fit: "object-contain",
   },
   {
     image: "https://images.unsplash.com/photo-1511707171634-5f897ff02aa9",
@@ -77,14 +79,12 @@ export function HeroSlider() {
     return () => clearInterval(timer);
   }, []);
 
-  const prev = () => setCurrent((prev) => (prev - 1 + slides.length) % slides.length);
-
   const next = () => setCurrent((prev) => (prev + 1) % slides.length);
 
   return (
     <section className="px-container-margin md:mt-md">
       <div
-        className="relative overflow-hidden rounded-2xl shadow-xl bg-surface-container-high w-full aspect-video sm:aspect-2/1 md:aspect-21/9 lg:aspect-3/1"
+        className="relative overflow-hidden rounded-2xl shadow-xl bg-surface-container-high w-full aspect-[3/2]"
         onMouseEnter={() => { paused.current = true; }}
         onMouseLeave={() => { paused.current = false; }}
       >
@@ -104,7 +104,7 @@ export function HeroSlider() {
                 alt={slide.title}
                 loading="eager"
                 decoding="async"
-                className="absolute inset-0 h-full w-full object-cover object-center"
+                className={`absolute inset-0 h-full w-full ${slide.fit ?? "object-cover"} object-center`}
               />
 
               <div className="absolute inset-0 bg-linear-to-r from-black/80 via-black/40 to-transparent" />
