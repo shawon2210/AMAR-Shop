@@ -43,6 +43,8 @@ jobs:
   security:
     runs-on: ubuntu-latest
     steps:
+      - uses: actions/checkout@v4
+      - run: npm ci
       - run: npm audit --audit-level=high
       - name: Run Trivy scan
         uses: aquasecurity/trivy-action@master
