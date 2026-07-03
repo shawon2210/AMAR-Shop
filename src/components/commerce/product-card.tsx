@@ -57,11 +57,13 @@ export function ProductCard({ product, variant = 'default' }: ProductCardProps) 
           )}
         </div>
         <div className="p-sm flex flex-col flex-grow">
-          <h3 className="font-body-sm text-body-sm line-clamp-2 text-on-surface mb-1 flex-grow">
-            {product.name}
-          </h3>
+          <div className="flex-grow">
+            <h3 className="font-body-sm text-body-sm line-clamp-2 text-on-surface mb-1">
+              {product.name}
+            </h3>
+          </div>
           <PriceDisplay price={product.price} originalPrice={product.originalPrice} size="sm" />
-          <div className="flex items-center justify-between mt-auto pt-1">
+          <div className="flex items-center justify-between pt-1">
             <div className="flex items-center gap-0.5">
               <span className="material-symbols-outlined text-xs text-primary" style={{ fontVariationSettings: "'FILL' 1" }}>
                 star
@@ -78,7 +80,7 @@ export function ProductCard({ product, variant = 'default' }: ProductCardProps) 
   }
 
   return (
-    <Link href={`/product/${product.id}`} className="bg-surface border border-outline-variant rounded-lg overflow-hidden group hover:shadow-lg transition-all duration-300">
+    <Link href={`/product/${product.id}`} className="bg-surface border border-outline-variant rounded-lg overflow-hidden group hover:shadow-lg transition-all duration-300 flex flex-col">
       <div className="relative aspect-square overflow-hidden bg-surface-container">
         {!imgError ? (
           <img
@@ -104,8 +106,10 @@ export function ProductCard({ product, variant = 'default' }: ProductCardProps) 
           </div>
         )}
       </div>
-      <div className="p-sm space-y-1">
-        <h3 className="font-body-md text-body-md text-on-surface line-clamp-2">{product.name}</h3>
+      <div className="p-sm flex flex-col flex-grow">
+        <div className="flex-grow">
+          <h3 className="font-body-md text-body-md text-on-surface line-clamp-2">{product.name}</h3>
+        </div>
         <PriceDisplay price={product.price} originalPrice={product.originalPrice} size="md" />
 
         {variant === 'flash-sale' && product.soldPercent !== undefined && (
