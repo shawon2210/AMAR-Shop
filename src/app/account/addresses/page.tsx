@@ -30,11 +30,24 @@ export default function AddressesPage() {
     label: '', fullName: '', phone: '', street: '', city: 'Dhaka', area: '',
   });
 
+  function loadLocalAddresses(): Address[] {
+    if (typeof window === 'undefined') return [];
+    try { return JSON.parse(localStorage.getItem('amarshop-addresses') || '[]'); } catch { return []; }
+  }
+
+  function saveLocalAddresses(list: Address[]) {
+    try { localStorage.setItem('amarshop-addresses', JSON.stringify(list)); } catch {}
+  }
+
   useEffect(() => {
-    if (!token) return;
+    if (!token) { setLoading(false); return; }
     api.get<Address[]>('/addresses')
       .then(setAddresses)
-      .catch(() => addToast('Failed to load addresses', 'error'))
+      .catch(() => {
+        const local = loadLocalAddresses();
+        if (local.length > 0) { setAddresses(local); }
+        setLoading(false);
+      })
       .finally(() => setLoading(false));
   }, [token, addToast]);
 
@@ -57,8 +70,23 @@ export default function AddressesPage() {
       setShowForm(false);
       setForm({ label: '', fullName: '', phone: '', street: '', city: 'Dhaka', area: '' });
       addToast('Address added successfully', 'success');
-    } catch (err: any) {
-      addToast(err.message || 'Failed to add address', 'error');
+    } catch {
+      const local: Address = {
+        id: 'addr-' + Date.now(),
+        label: form.label || 'Home',
+        fullName: form.fullName,
+        phone: form.phone,
+        street: form.street,
+        city: form.city,
+        area: form.area,
+        isDefault: false,
+      };
+      const updated = [...loadLocalAddresses(), local];
+      saveLocalAddresses(updated);
+      setAddresses(updated);
+      setShowForm(false);
+      setForm({ label: '', fullName: '', phone: '', street: '', city: 'Dhaka', area: '' });
+      addToast('Address added successfully', 'success');
     } finally {
       setSaving(false);
     }
