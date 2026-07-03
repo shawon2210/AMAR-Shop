@@ -41,11 +41,11 @@ export function Header() {
   };
 
   return (
-    <header className="w-full top-0 sticky z-50 bg-surface shadow-sm transition-colors duration-200">
-      <div className="flex items-center justify-between px-container-margin py-2 md:py-3 w-full max-w-7xl mx-auto gap-md">
-        <div className="shrink-0 overflow-visible flex items-center">
-          <Link href="/" className="flex items-center">
-            <img src="/images/logo.png?v=2" alt="AmarShop" style={{ width: 'clamp(140px, 22vw, 260px)', height: 'auto' }} />
+    <header className="w-full top-0 sticky z-50 bg-surface shadow-sm transition-colors duration-200 h-20 md:h-24 flex items-center">
+      <div className="flex items-center justify-between px-container-margin w-full max-w-7xl mx-auto gap-md">
+        <div className="shrink-0 overflow-visible flex items-center h-full">
+          <Link href="/" className="flex items-center h-full py-2">
+            <img src="/images/logo.png?v=2" alt="AmarShop" className="h-full w-auto object-contain" />
           </Link>
         </div>
 
