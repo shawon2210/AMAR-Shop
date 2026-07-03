@@ -13,6 +13,7 @@ interface AuthState {
   isAuthenticated: boolean;
   login: (identity: string, password: string) => Promise<void>;
   loginWithPhone: (phone: string, password: string) => Promise<void>;
+  demoLogin: (user: User) => void;
   register: (data: {
     name: string;
     email?: string;
@@ -66,6 +67,15 @@ export const useAuthStore = create<AuthState>()(
           accessToken: res.accessToken,
           refreshToken: res.refreshToken,
           user: res.user,
+          isAuthenticated: true,
+        });
+      },
+
+      demoLogin: (user) => {
+        set({
+          accessToken: 'demo-token-' + user.id,
+          refreshToken: 'demo-refresh-' + user.id,
+          user,
           isAuthenticated: true,
         });
       },

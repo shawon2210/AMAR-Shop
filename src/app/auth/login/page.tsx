@@ -10,6 +10,7 @@ function LoginForm() {
   const searchParams = useSearchParams();
   const redirectTo = searchParams.get('redirect') || '/';
   const login = useAuthStore(s => s.login);
+  const demoLogin = useAuthStore(s => s.demoLogin);
   const isAuthenticated = useAuthStore(s => s.isAuthenticated);
 
   const [identity, setIdentity] = useState('');
@@ -196,7 +197,7 @@ function LoginForm() {
           <div className="mt-4 grid grid-cols-2 gap-2 sm:gap-3">
             <button
               type="button"
-              onClick={() => { setIdentity('01712345678'); setPassword('admin123'); }}
+              onClick={() => demoLogin({ id: 'demo-admin', name: 'Admin User', email: 'admin@amarshop.com', phone: '01712345678', role: 'SUPER_ADMIN', isSeller: false })}
               className="flex items-center justify-center gap-1.5 sm:gap-2 py-2 sm:py-2.5 border border-outline rounded-lg hover:bg-surface-container transition-colors text-[11px] sm:text-sm"
             >
               <span className="material-symbols-outlined text-sm sm:text-base">admin_panel_settings</span>
@@ -204,7 +205,7 @@ function LoginForm() {
             </button>
             <button
               type="button"
-              onClick={() => { setIdentity('01700000000'); setPassword('customer123'); }}
+              onClick={() => demoLogin({ id: 'demo-customer', name: 'Demo Customer', email: 'customer@amarshop.com', phone: '01700000000', role: 'CUSTOMER', isSeller: false })}
               className="flex items-center justify-center gap-1.5 sm:gap-2 py-2 sm:py-2.5 border border-outline rounded-lg hover:bg-surface-container transition-colors text-[11px] sm:text-sm"
             >
               <span className="material-symbols-outlined text-sm sm:text-base">person</span>
