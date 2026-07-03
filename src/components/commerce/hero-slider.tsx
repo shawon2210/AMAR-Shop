@@ -12,6 +12,13 @@ interface HeroSlide {
 
 const slides: HeroSlide[] = [
   {
+    image: "/images/hero-poster.png",
+    title: "Eid Mubarak! Huge Savings Await",
+    badge: "EID COLLECTION",
+    badgeColor: "bg-primary",
+    subtitle: "Exclusive deals on fashion, electronics & home essentials — up to 50% off",
+  },
+  {
     image: "https://images.unsplash.com/photo-1511707171634-5f897ff02aa9",
     title: "Top Electronics & Gadgets",
     badge: "ELECTRONICS",
@@ -124,15 +131,6 @@ export function HeroSlider() {
             </div>
           ))}
         </div>
-
-        {/* Previous */}
-        <button
-          onClick={prev}
-          aria-label="Previous Slide"
-          className="absolute left-2 sm:left-4 top-1/2 -translate-y-1/2 rounded-full bg-black/40 p-2 sm:p-3 text-white backdrop-blur transition hover:bg-black/60"
-        >
-          <span className="material-symbols-outlined text-xl sm:text-2xl">chevron_left</span>
-        </button>
 
         {/* Next */}
         <button
