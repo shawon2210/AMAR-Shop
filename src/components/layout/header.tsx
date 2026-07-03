@@ -63,37 +63,35 @@ export function Header() {
   ];
 
   return (
-    <header className="sticky top-0 z-50 bg-white border-b border-gray-200 shadow-sm h-[96px] md:h-[120px] xl:h-[144px] 2xl:h-[156px] flex items-center">
-      {/* Desktop / Tablet Header */}
-      <div className="max-w-[1800px] mx-auto px-4 md:px-6 lg:px-8 xl:px-10 w-full h-full flex items-center justify-between gap-10">
-        {/* Logo - 34% on desktop */}
-        <div className="basis-[34%] min-w-[340px] shrink-0 overflow-visible flex items-center">
+    <header className="sticky top-0 z-50 bg-white border-b border-gray-200 shadow-sm h-[84px] md:h-[96px] lg:h-[112px] xl:h-[120px]">
+      <div className="max-w-[1600px] mx-auto px-4 sm:px-6 lg:px-8 h-full flex items-center justify-between">
+        {/* Brand - width-driven logo */}
+        <div className="basis-[28%] min-w-fit shrink-0 overflow-visible flex items-center">
           <Link href="/">
             <img
               src="/images/logo.svg"
               alt="AmarShop"
-              priority
-              className="h-[72px] md:h-[92px] lg:h-[118px] xl:h-[132px] 2xl:h-[140px] w-auto object-contain max-w-none block"
+              className="w-[170px] md:w-[220px] lg:w-[320px] xl:w-[360px] 2xl:w-[380px] h-auto object-contain block"
             />
           </Link>
         </div>
 
-        {/* Search - centered, hidden on mobile */}
-        <div className="hidden md:flex basis-[42%] max-w-[760px]">
+        {/* Search */}
+        <div className="hidden md:flex basis-[48%] max-w-[800px]">
           <div className="relative w-full">
             <input
-              className="w-full h-[60px] rounded-full border border-gray-200 bg-gray-50 px-6 pr-14 text-base focus:ring-2 focus:ring-primary focus:border-primary outline-none transition-all"
+              className="w-full h-[52px] rounded-full border border-gray-200 bg-gray-50 px-6 pr-14 text-sm focus:ring-2 focus:ring-primary focus:border-primary outline-none transition-all"
               placeholder="Search in AmarShop..."
               type="text"
             />
-            <button className="absolute right-1.5 top-1/2 -translate-y-1/2 w-11 h-11 flex items-center justify-center rounded-full bg-primary text-white hover:brightness-110 transition-all">
-              <span className="material-symbols-outlined text-xl">search</span>
+            <button className="absolute right-1.5 top-1/2 -translate-y-1/2 w-10 h-10 flex items-center justify-center rounded-full bg-primary text-white hover:brightness-110 transition-all">
+              <span className="material-symbols-outlined text-lg">search</span>
             </button>
           </div>
         </div>
 
         {/* Actions - right side */}
-        <div className="hidden lg:flex items-center basis-[24%] gap-10 shrink-0 text-[15px]">
+        <div className="hidden lg:flex items-center basis-[24%] gap-8 shrink-0 text-[15px]">
           {/* Navigation links */}
           {navLinks.map(link => (
             <Link
