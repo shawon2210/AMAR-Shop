@@ -45,7 +45,7 @@ export function Header() {
       <div className="flex items-center justify-between px-container-margin py-sm w-full max-w-7xl mx-auto gap-md">
         <div className="flex items-center gap-sm">
           <Link href="/" className="flex items-center gap-sm">
-            <img src="/images/logo.png" alt="AmarShop" className="h-8 w-auto" />
+            <img src="/images/logo.png" alt="AmarShop" className="h-10 sm:h-12 w-auto" />
           </Link>
         </div>
 
