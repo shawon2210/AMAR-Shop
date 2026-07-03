@@ -1,4 +1,4 @@
-import { HeroSlider } from '@/components/commerce/hero-slider';
+import { HeroSection } from '@/components/commerce/hero-section';
 import { CategoryGrid } from '@/components/commerce/category-grid';
 import { FlashSaleSection } from '@/components/commerce/flash-sale-section';
 import { LocalBanners } from '@/components/commerce/local-banners';
@@ -13,7 +13,7 @@ export default async function HomePage() {
 
   return (
     <div className="pb-24">
-      <HeroSlider />
+      <HeroSection />
       <CategoryGrid />
       <FlashSaleSection />
       <LocalBanners />
