@@ -42,14 +42,14 @@ export function Header() {
 
   return (
     <header className="w-full top-0 sticky z-50 bg-surface shadow-sm transition-colors duration-200">
-      <div className="flex items-center justify-between px-container-margin py-1 md:py-2 w-full max-w-7xl mx-auto gap-md">
+      <div className="flex items-center justify-between px-container-margin py-2 md:py-3 w-full max-w-7xl mx-auto gap-md">
         <div className="shrink-0 overflow-visible flex items-center">
           <Link href="/" className="flex items-center">
-            <img src="/images/logo.png?v=2" alt="AmarShop" style={{ width: 'clamp(120px, 20vw, 220px)', height: 'auto' }} />
+            <img src="/images/logo.png?v=2" alt="AmarShop" style={{ width: 'clamp(140px, 22vw, 260px)', height: 'auto' }} />
           </Link>
         </div>
 
-        <div className="flex-grow max-w-2xl hidden md:flex relative">
+        <div className="flex-grow max-w-xl hidden md:flex relative">
           <input
             className="w-full bg-surface-container-low border-none rounded-lg px-md py-2.5 text-sm focus:ring-2 focus:ring-primary outline-none"
             placeholder="Search..."
