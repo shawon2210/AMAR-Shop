@@ -28,30 +28,6 @@ const slides: HeroSlide[] = [
     ctaHref: "/flash-sale",
     hideContent: true,
   },
-  {
-    image:
-      "https://images.unsplash.com/photo-1556742049-0cfed4f6a45d?w=1920&h=720&fit=crop&q=80",
-    title: "Biggest Online Marketplace in Bangladesh",
-    subtitle: "Shop millions of products with fast delivery nationwide.",
-    cta: "Shop Now",
-    ctaHref: "/categories",
-  },
-  {
-    image:
-      "https://images.unsplash.com/photo-1607082349566-187342175e2f?w=1920&h=720&fit=crop&q=80",
-    title: "Festival Mega Sale — Up to 70% OFF",
-    subtitle: "Limited-time deals across fashion, electronics & home essentials.",
-    cta: "Explore Deals",
-    ctaHref: "/flash-sale",
-  },
-  {
-    image:
-      "https://images.unsplash.com/photo-1490114538077-0a7f8cb49891?w=1920&h=720&fit=crop&q=80",
-    title: "Fashion Collection 2026",
-    subtitle: "Trending styles with free delivery available. Shop the look.",
-    cta: "Shop Fashion",
-    ctaHref: "/category/fashion",
-  },
 ];
 
 const AUTO_PLAY = 5000;
