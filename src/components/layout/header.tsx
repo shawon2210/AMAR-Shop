@@ -2,18 +2,18 @@
 
 import { useState, useEffect, useRef } from 'react';
 import Link from 'next/link';
-import { useRouter } from 'next/navigation';
+import { useRouter, usePathname } from 'next/navigation';
 import { useAuthStore, useAuthHydrated } from '@/stores/auth-store';
 import { useCartStore } from '@/stores/cart-store';
 
 export function Header() {
   const router = useRouter();
+  const pathname = usePathname();
   const [mobileSearchOpen, setMobileSearchOpen] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [hydrated, setHydrated] = useState(false);
   const menuRef = useRef<HTMLDivElement>(null);
-  const sidebarRef = useRef<HTMLDivElement>(null);
   const hydrated_store = useAuthHydrated();
 
   useEffect(() => { setHydrated(true); }, []);
@@ -23,44 +23,10 @@ export function Header() {
   const logout = useAuthStore(s => s.logout);
   const itemCount = useCartStore(s => s.getItemCount());
 
-  useEffect(() => {
-    const handleClickOutside = (e: MouseEvent) => {
-      if (menuRef.current && !menuRef.current.contains(e.target as Node)) {
-        setMenuOpen(false);
-      }
-    };
-    document.addEventListener('mousedown', handleClickOutside);
-    return () => document.removeEventListener('mousedown', handleClickOutside);
-  }, []);
-
-  useEffect(() => {
-    const handleClickOutside = (e: MouseEvent) => {
-      if (sidebarRef.current && !sidebarRef.current.contains(e.target as Node)) {
-        setSidebarOpen(false);
-      }
-    };
-    if (sidebarOpen) {
-      document.addEventListener('mousedown', handleClickOutside);
-    }
-    return () => document.removeEventListener('mousedown', handleClickOutside);
-  }, [sidebarOpen]);
-
   const isAdmin = user?.role === 'ADMIN' || user?.role === 'SUPER_ADMIN';
   const showAuth = hydrated && hydrated_store;
 
-  const handleLogout = () => {
-    setMenuOpen(false);
-    setSidebarOpen(false);
-    logout();
-    router.push('/');
-  };
-
-  const navLinks = [
-    { href: '/categories', label: 'Categories' },
-    { href: '/flash-sale', label: 'Flash Sale' },
-    { href: '/orders', label: 'Orders' },
-    { href: '/help', label: 'Help' },
-  ];
+  const isActiveCategory = (href: string) => pathname === href;
 
   const categoryNav = [
     { href: '/category/fashion', label: 'Fashion' },
@@ -69,301 +35,82 @@ export function Header() {
     { href: '/category/groceries', label: 'Groceries' },
     { href: '/category/home', label: 'Home & Living' },
     { href: '/category/sports', label: 'Sports' },
-    { href: '/flash-sale', label: '⚡ Flash Sale' },
   ];
 
   return (
-    <header className="sticky top-0 z-50 bg-white border-b border-gray-200 shadow-sm">
-      {/* Main header row — compact, single-bar */}
-      <div className="h-[64px] md:h-[96px] lg:h-[104px]">
-        <div className="max-w-[1600px] 2xl:max-w-[1800px] mx-auto px-4 sm:px-6 lg:px-8 xl:px-10 h-full flex md:grid md:grid-cols-[260px_1fr_240px] lg:grid-cols-[320px_1fr_300px] xl:grid-cols-[380px_1fr_320px] 2xl:grid-cols-[420px_1fr_340px] items-center justify-between md:justify-normal gap-2 md:gap-4 lg:gap-8">
-          {/* Mobile hamburger */}
-          <button
-            className="md:hidden text-gray-600 hover:text-primary shrink-0"
-            onClick={() => setSidebarOpen(true)}
-          >
-            <span className="material-symbols-outlined text-2xl">menu</span>
-          </button>
+    <header className="sticky top-0 z-50 bg-white border-b border-gray-200">
+      {/* Row 1: Utility */}
+      <div className="hidden lg:block bg-gray-100 h-9">
+        <div className="max-w-[1440px] mx-auto px-6 h-full flex items-center justify-between text-xs text-gray-500">
+          <div className="flex items-center gap-6">
+            <Link href="/help" className="hover:text-primary">Help Center</Link>
+            <Link href="/orders" className="hover:text-primary">Track Order</Link>
+            <Link href="/seller/dashboard" className="hover:text-primary">Become a Seller</Link>
+          </div>
+          <div className="flex items-center gap-6">
+            <Link href="/notifications" className="hover:text-primary">Offers</Link>
+          </div>
+        </div>
+      </div>
 
-          {/* Brand */}
-          <Link href="/" className="flex items-center justify-self-start">
-            <img src="/images/amarshop-logo.png" alt="AmarShop" className="w-[160px] sm:w-[200px] md:w-[220px] lg:w-[280px] xl:w-[320px] 2xl:w-[380px] h-auto object-contain" />
+      {/* Row 2: Main Header */}
+      <div className="h-[96px]">
+        <div className="max-w-[1440px] mx-auto px-6 h-full grid grid-cols-[300px_1fr_240px] items-center gap-4">
+          <Link href="/" className="flex items-center shrink-0">
+            <img src="/images/amarshop-logo.png" alt="AmarShop" className="h-auto w-auto" style={{ maxHeight: '58px', objectFit: 'contain' }} />
           </Link>
 
-          {/* Search — centered in grid */}
-          <div className="hidden md:flex justify-center">
-            <div className="relative w-full max-w-[480px] lg:max-w-[560px] xl:max-w-[640px] 2xl:max-w-[720px]">
+          <div className="flex justify-center w-full">
+            <div className="relative w-full max-w-[760px]">
               <input
-                className="w-full h-11 lg:h-12 rounded-full border border-gray-300 bg-gray-50 px-4 pr-12 text-sm focus:ring-2 focus:ring-green-500 focus:border-green-500 outline-none transition-all"
+                className="w-full h-12 rounded-full border border-gray-300 bg-gray-50 pl-6 pr-14 text-sm outline-none focus:ring-2 focus:ring-green-500 transition-all"
                 placeholder="Search in AmarShop"
                 type="text"
               />
-              <button className="absolute right-1 top-1/2 -translate-y-1/2 w-8 h-8 lg:w-9 lg:h-9 flex items-center justify-center rounded-full bg-primary text-white hover:brightness-110 transition-all">
-                <span className="material-symbols-outlined text-sm lg:text-base">search</span>
+              <button className="absolute right-1 top-1/2 -translate-y-1/2 w-12 h-11 flex items-center justify-center rounded-full bg-[#0F9D58] text-white hover:bg-green-700">
+                <span className="material-symbols-outlined text-lg">search</span>
               </button>
             </div>
           </div>
 
-          {/* Actions */}
-          <div className="flex items-center justify-self-end gap-2 md:gap-3 lg:gap-5">
-            {/* Help */}
-            <Link href="/help" className="hidden lg:flex items-center gap-1 text-xs lg:text-sm text-gray-500 hover:text-primary transition-colors">
-              <span className="material-symbols-outlined text-lg">help</span>
-              <span className="hidden xl:inline">Help</span>
+          <div className="flex items-center justify-end gap-4 text-gray-600">
+            <Link href="/seller/dashboard" className="hidden lg:flex hover:text-primary">
+              <span className="material-symbols-outlined text-xl">storefront</span>
             </Link>
-
-            {/* Sell */}
-            <Link href="/seller/dashboard" className="hidden lg:flex items-center gap-1 text-xs lg:text-sm font-medium text-primary hover:text-primary-dark transition-colors">
-              <span className="material-symbols-outlined text-lg">storefront</span>
-              <span className="hidden xl:inline">Sell</span>
-            </Link>
-
-            {/* Notifications */}
-            <Link href="/notifications" className="relative text-gray-600 hover:text-primary transition-colors hidden sm:flex">
+            <Link href="/notifications" className="hover:text-primary">
               <span className="material-symbols-outlined text-xl">notifications</span>
             </Link>
-
-            {/* Cart */}
-            <Link href="/cart" className="relative text-gray-600 hover:text-primary transition-colors">
+            <Link href="/cart" className="relative hover:text-primary">
               <span className="material-symbols-outlined text-xl">shopping_cart</span>
               {hydrated && itemCount > 0 && (
-                <span className="absolute -top-2 -right-2 bg-red text-white text-[10px] font-bold rounded-full size-5 flex items-center justify-center">
-                  {itemCount > 9 ? '9+' : itemCount}
+                <span className="absolute -top-2 -right-2 bg-red-500 text-white text-[10px] rounded-full w-4 h-4 flex items-center justify-center">
+                  {itemCount}
                 </span>
               )}
             </Link>
-
-            {/* Auth */}
             {!showAuth || !isAuthenticated ? (
-              <Link
-                href="/auth/login"
-                className="hidden sm:flex px-5 py-1.5 text-xs font-semibold text-white bg-primary rounded-full hover:brightness-110 transition-colors whitespace-nowrap"
-              >
+              <Link href="/auth/login" className="px-5 py-2 text-xs font-semibold text-white bg-primary rounded-full hover:brightness-110">
                 Login
               </Link>
             ) : (
-              <div className="relative" ref={menuRef}>
-                <button
-                  onClick={() => setMenuOpen(!menuOpen)}
-                  className="flex items-center gap-1 px-1 py-1 rounded-lg hover:bg-gray-100 transition-colors"
-                >
-                  <div className="w-7 h-7 rounded-full bg-gray-200 flex items-center justify-center text-gray-600 overflow-hidden">
-                    {user?.avatar ? (
-                      <img src={user.avatar} alt="" className="w-full h-full object-cover" />
-                    ) : (
-                      <span className="material-symbols-outlined text-base">person</span>
-                    )}
-                  </div>
-                  <span className="text-xs font-medium max-w-[60px] truncate hidden lg:block">{user?.name?.split(' ')[0]}</span>
-                </button>
-
-                {menuOpen && (
-                  <div className="absolute right-0 top-full mt-2 w-56 bg-white rounded-xl shadow-lg border border-gray-200 overflow-hidden z-50">
-                    <div className="p-3 border-b border-gray-100">
-                      <p className="font-semibold text-sm truncate">{user?.name}</p>
-                      <p className="text-xs text-gray-500 truncate">{user?.email || user?.phone}</p>
-                    </div>
-                    <div className="py-1">
-                      {isAdmin && (
-                        <Link href="/admin" onClick={() => setMenuOpen(false)} className="flex items-center gap-3 px-3 py-2 text-sm hover:bg-gray-50 transition-colors">
-                          <span className="material-symbols-outlined text-base text-gray-500">dashboard</span>
-                          Admin Dashboard
-                        </Link>
-                      )}
-                      <Link href="/account" onClick={() => setMenuOpen(false)} className="flex items-center gap-3 px-3 py-2 text-sm hover:bg-gray-50 transition-colors">
-                        <span className="material-symbols-outlined text-base text-gray-500">person</span>
-                        My Profile
-                      </Link>
-                      <Link href="/orders" onClick={() => setMenuOpen(false)} className="flex items-center gap-3 px-3 py-2 text-sm hover:bg-gray-50 transition-colors">
-                        <span className="material-symbols-outlined text-base text-gray-500">receipt_long</span>
-                        Orders
-                      </Link>
-                      <Link href="/account/addresses" onClick={() => setMenuOpen(false)} className="flex items-center gap-3 px-3 py-2 text-sm hover:bg-gray-50 transition-colors">
-                        <span className="material-symbols-outlined text-base text-gray-500">location_on</span>
-                        Addresses
-                      </Link>
-                      <Link href="/account/wishlist" onClick={() => setMenuOpen(false)} className="flex items-center gap-3 px-3 py-2 text-sm hover:bg-gray-50 transition-colors">
-                        <span className="material-symbols-outlined text-base text-gray-500">favorite</span>
-                        Wishlist
-                      </Link>
-                      <Link href="/notifications" onClick={() => setMenuOpen(false)} className="flex items-center gap-3 px-3 py-2 text-sm hover:bg-gray-50 transition-colors">
-                        <span className="material-symbols-outlined text-base text-gray-500">notifications</span>
-                        Notifications
-                      </Link>
-                      <Link href="/account/settings" onClick={() => setMenuOpen(false)} className="flex items-center gap-3 px-3 py-2 text-sm hover:bg-gray-50 transition-colors">
-                        <span className="material-symbols-outlined text-base text-gray-500">settings</span>
-                        Settings
-                      </Link>
-                    </div>
-                    <div className="border-t border-gray-100 py-1">
-                      <button onClick={handleLogout} className="flex items-center gap-3 px-3 py-2 text-sm text-red-600 hover:bg-red-50 transition-colors w-full text-left">
-                        <span className="material-symbols-outlined text-base">logout</span>
-                        Logout
-                      </button>
-                    </div>
-                  </div>
-                )}
-              </div>
-            )}
-
-            {/* Mobile search trigger */}
-            <button
-              className="md:hidden text-gray-600 hover:text-primary transition-colors"
-              onClick={() => setMobileSearchOpen(!mobileSearchOpen)}
-            >
-              <span className="material-symbols-outlined text-xl">search</span>
-            </button>
-          </div>
-        </div>
-      </div>
-
-      {/* Category navigation — slim bar */}
-      <div className="hidden lg:block bg-white border-b border-gray-100">
-        <div className="max-w-[1600px] 2xl:max-w-[1800px] mx-auto px-4 sm:px-6 lg:px-8 xl:px-10">
-          <div className="flex items-center gap-6 h-[38px] lg:h-[42px] xl:h-[46px] overflow-x-auto hide-scrollbar">
-            <Link
-              href="/"
-              className="flex items-center gap-1 text-xs lg:text-sm font-semibold text-primary hover:text-primary/80 rounded-md transition-colors whitespace-nowrap"
-            >
-              <span className="material-symbols-outlined text-base lg:text-lg">home</span>
-              Home
-            </Link>
-            {categoryNav.map((cat) => (
-              <Link
-                key={cat.href}
-                href={cat.href}
-                className="text-xs lg:text-sm font-medium text-gray-600 hover:text-primary transition-colors whitespace-nowrap"
-              >
-                {cat.label}
-              </Link>
-            ))}
-            <Link
-              href="/categories"
-              className="text-xs lg:text-sm font-medium text-primary hover:text-primary/80 transition-colors whitespace-nowrap flex items-center gap-0.5 ml-auto"
-            >
-              All Categories
-              <span className="material-symbols-outlined text-sm lg:text-base">chevron_right</span>
-            </Link>
-          </div>
-        </div>
-      </div>
-
-      {/* Mobile search bar */}
-      {mobileSearchOpen && (
-        <div className="lg:hidden px-4 pb-3 bg-white border-b border-gray-100">
-          <div className="relative w-full">
-            <input
-              className="w-full h-11 rounded-lg border-2 border-primary/20 bg-gray-50 px-4 pr-11 text-sm outline-none focus:ring-2 focus:ring-primary/30 focus:border-primary transition-all"
-              placeholder="Search in AmarShop..."
-              type="text"
-              autoFocus
-            />
-            <button className="absolute right-1 top-1/2 -translate-y-1/2 w-9 h-9 flex items-center justify-center rounded-lg bg-primary text-white">
-              <span className="material-symbols-outlined text-base">search</span>
-            </button>
-          </div>
-        </div>
-      )}
-
-      {/* Mobile sidebar overlay */}
-      {sidebarOpen && (
-        <div className="fixed inset-0 z-50 lg:hidden">
-          <div className="absolute inset-0 bg-black/50" onClick={() => setSidebarOpen(false)} />
-          <div ref={sidebarRef} className="absolute left-0 top-0 h-full w-80 max-w-[85vw] bg-white shadow-xl flex flex-col">
-            <div className="flex items-center justify-between px-4 h-14 border-b border-gray-200">
-              <div className="flex items-center">
-                <img src="/images/amarshop-logo.png" alt="AmarShop" className="w-[160px] h-auto object-contain" />
-              </div>
-              <button onClick={() => setSidebarOpen(false)} className="text-gray-500 hover:text-gray-700">
-                <span className="material-symbols-outlined text-2xl">close</span>
+              <button onClick={() => setMenuOpen(!menuOpen)} className="hover:text-primary">
+                <span className="material-symbols-outlined text-xl">person</span>
               </button>
-            </div>
-            <div className="flex-1 overflow-y-auto py-4">
-              {showAuth && isAuthenticated && user ? (
-                <div className="px-4 pb-4 border-b border-gray-100 mb-4">
-                  <div className="flex items-center gap-3">
-                    <div className="w-12 h-12 rounded-full bg-gray-200 flex items-center justify-center text-gray-600 overflow-hidden">
-                      {user.avatar ? (
-                        <img src={user.avatar} alt="" className="w-full h-full object-cover" />
-                      ) : (
-                        <span className="material-symbols-outlined text-2xl">person</span>
-                      )}
-                    </div>
-                    <div>
-                      <p className="font-semibold text-sm">{user.name}</p>
-                      <p className="text-xs text-gray-500">{user.email || user.phone}</p>
-                    </div>
-                  </div>
-                </div>
-              ) : (
-                <div className="px-4 pb-4 border-b border-gray-100 mb-4">
-                  <Link
-                    href="/auth/login"
-                    onClick={() => setSidebarOpen(false)}
-                    className="block w-full text-center py-2.5 bg-primary text-white rounded-lg font-semibold text-sm mb-2"
-                  >
-                    Login
-                  </Link>
-                  <Link
-                    href="/auth/register"
-                    onClick={() => setSidebarOpen(false)}
-                    className="block w-full text-center py-2.5 border border-primary text-primary rounded-lg font-semibold text-sm"
-                  >
-                    Register
-                  </Link>
-                </div>
-              )}
-
-              <div className="px-2 space-y-1">
-                {[
-                  { href: '/', label: 'Home', icon: 'home' },
-                  { href: '/categories', label: 'Categories', icon: 'category' },
-                  { href: '/flash-sale', label: 'Flash Sale', icon: 'flash_on' },
-                  { href: '/orders', label: 'My Orders', icon: 'receipt_long' },
-                  { href: '/cart', label: 'Cart', icon: 'shopping_cart' },
-                  { href: '/account/wishlist', label: 'Wishlist', icon: 'favorite' },
-                  { href: '/account', label: 'My Account', icon: 'person' },
-                  { href: '/notifications', label: 'Notifications', icon: 'notifications' },
-                  { href: '/seller/dashboard', label: 'Become a Seller', icon: 'storefront' },
-                  { href: '/help', label: 'Help Center', icon: 'help' },
-                  { href: '/support/chat', label: 'Live Chat', icon: 'chat' },
-                ].map(item => (
-                  <Link
-                    key={item.href}
-                    href={item.href}
-                    onClick={() => setSidebarOpen(false)}
-                    className="flex items-center gap-3 px-3 py-2.5 text-sm text-gray-700 hover:bg-gray-50 rounded-lg transition-colors"
-                  >
-                    <span className="material-symbols-outlined text-base text-gray-500">{item.icon}</span>
-                    {item.label}
-                  </Link>
-                ))}
-                {isAdmin && (
-                  <Link
-                    href="/admin"
-                    onClick={() => setSidebarOpen(false)}
-                    className="flex items-center gap-3 px-3 py-2.5 text-sm text-primary hover:bg-primary/5 rounded-lg transition-colors font-semibold"
-                  >
-                    <span className="material-symbols-outlined text-base">dashboard</span>
-                    Admin Dashboard
-                  </Link>
-                )}
-              </div>
-            </div>
-            {showAuth && isAuthenticated && (
-              <div className="border-t border-gray-200 p-4">
-                <button
-                  onClick={handleLogout}
-                  className="flex items-center justify-center gap-2 w-full py-2.5 text-sm text-red-600 border border-red-200 rounded-lg hover:bg-red-50 transition-colors"
-                >
-                  <span className="material-symbols-outlined text-base">logout</span>
-                  Logout
-                </button>
-              </div>
             )}
           </div>
         </div>
-      )}
+      </div>
+
+      {/* Row 3: Category Nav */}
+      <div className="hidden lg:block bg-white border-t border-gray-100 shadow-[0_1px_0_rgba(0,0,0,.04)] h-11">
+        <div className="max-w-[1440px] mx-auto px-6 h-full flex items-center gap-8">
+          {categoryNav.map((cat) => (
+            <Link key={cat.href} href={cat.href} className="text-sm font-medium text-gray-600 hover:text-primary whitespace-nowrap">
+              {cat.label}
+            </Link>
+          ))}
+        </div>
+      </div>
     </header>
   );
 }
