@@ -76,7 +76,7 @@ export function Header() {
     <header className="sticky top-0 z-50 bg-white border-b border-gray-200 shadow-sm">
       {/* Main header row — compact, single-bar */}
       <div className="h-[60px] md:h-[56px] lg:h-[56px]">
-        <div className="max-w-[1600px] mx-auto px-4 sm:px-6 lg:px-8 xl:px-10 h-full flex items-center justify-between gap-2 md:gap-3 lg:gap-5">
+        <div className="max-w-[1600px] 2xl:max-w-[1800px] mx-auto px-4 sm:px-6 lg:px-8 xl:px-10 h-full flex items-center justify-between gap-2 md:gap-3 lg:gap-5">
           {/* Mobile hamburger */}
           <button
             className="lg:hidden text-gray-600 hover:text-primary shrink-0"
@@ -224,7 +224,7 @@ export function Header() {
 
       {/* Category navigation — slim bar */}
       <div className="hidden lg:block bg-white border-b border-gray-100">
-        <div className="max-w-[1600px] mx-auto px-4 sm:px-6 lg:px-8 xl:px-10">
+        <div className="max-w-[1600px] 2xl:max-w-[1800px] mx-auto px-4 sm:px-6 lg:px-8 xl:px-10">
           <div className="flex items-center gap-0.5 h-[38px] overflow-x-auto hide-scrollbar">
             <Link
               href="/"

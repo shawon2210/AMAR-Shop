@@ -6,7 +6,9 @@
   "transform": {
     "^.+\\.(t|j)s$": "ts-jest"
   },
-  "setupFilesAfterEnv": [],
+  "transformIgnorePatterns": [
+    "/node_modules/(?!uuid)"
+  ],
   "globalSetup": "<rootDir>/global-setup.ts",
   "globalTeardown": "<rootDir>/global-teardown.ts"
 }

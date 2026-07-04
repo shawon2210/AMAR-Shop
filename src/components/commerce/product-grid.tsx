@@ -59,7 +59,7 @@ export function ProductGrid({
 
   return (
     <section>
-      <div className="max-w-site mx-auto px-3 sm:px-4 lg:px-6 xl:px-8">
+      <div className="max-w-[1600px] 2xl:max-w-[1800px] mx-auto px-4 sm:px-6 lg:px-8 xl:px-10">
         {/* Header */}
         {title && (
           <div className="flex items-center justify-between mb-4">
@@ -74,7 +74,7 @@ export function ProductGrid({
           </div>
         )}
 
-        <div ref={gridRef} className={`grid ${columnClasses[columns]} gap-3`}>
+        <div ref={gridRef} className={`grid ${columnClasses[columns]} gap-4`}>
           {visibleProducts.map((product, index) => (
             <div
               key={product.id}

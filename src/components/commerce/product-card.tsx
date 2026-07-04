@@ -65,12 +65,12 @@ export function ProductCard({ product, variant = 'default' }: ProductCardProps) 
   return (
     <Link
       href={`/product/${product.id}`}
-      className={`bg-white rounded-xl overflow-hidden group hover:shadow-lg hover:border-gray-300 transition-all duration-300 flex flex-col h-full ${
-        isFlashVariant ? 'border border-gray-100' : 'border border-gray-200'
+      className={`bg-white rounded-2xl overflow-hidden group hover:shadow-lg hover:border-gray-300 transition-all duration-300 flex flex-col h-full border border-gray-200 ${
+        isFlashVariant ? 'border-gray-100' : 'border-gray-200'
       }`}
     >
       {/* Image */}
-      <div className="relative aspect-square overflow-hidden bg-gray-50">
+      <div className="relative h-44 w-full overflow-hidden bg-gray-50">
         {!imgError ? (
           <img
             className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
@@ -85,10 +85,10 @@ export function ProductCard({ product, variant = 'default' }: ProductCardProps) 
           </div>
         )}
 
-        {/* Wishlist button — compact */}
+        {/* Wishlist button — always visible */}
         <button
           onClick={handleWishlist}
-          className="absolute top-1.5 right-1.5 w-7 h-7 rounded-full bg-white/80 backdrop-blur-sm flex items-center justify-center shadow-sm opacity-0 group-hover:opacity-100 hover:bg-white transition-all"
+          className="absolute top-1.5 right-1.5 w-8 h-8 rounded-full bg-white/90 backdrop-blur-sm flex items-center justify-center shadow-sm hover:bg-white transition-all"
         >
           <span
             className={`material-symbols-outlined text-base ${wishlisted ? 'text-red-500' : 'text-gray-400'}`}

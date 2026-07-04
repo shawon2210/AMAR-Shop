@@ -74,19 +74,19 @@ export function Footer() {
     <footer className="bg-[#0B1220] text-gray-300 mt-12 md:mt-16">
       {/* ───── Trust Section ───── */}
       <div className="border-b border-slate-800/60">
-        <div className="max-w-[1600px] mx-auto px-4 sm:px-6 lg:px-8 xl:px-10 py-6 md:py-8">
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 md:gap-4">
+        <div className="max-w-[1600px] 2xl:max-w-[1800px] mx-auto px-4 sm:px-6 lg:px-8 xl:px-10 py-8 md:py-10">
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-3 md:gap-4">
             {trustItems.map((item) => (
               <div
                 key={item.title}
-                className="bg-slate-900/80 rounded-2xl p-4 md:p-5 flex items-start gap-3 hover:bg-slate-900 transition-colors"
+                className="bg-slate-900/80 rounded-2xl p-4 flex items-start gap-3 hover:bg-slate-900 transition-colors"
               >
                 <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-green-500/20 to-green-500/5 flex items-center justify-center shrink-0">
                   <span className="material-symbols-outlined text-green-400 text-xl">{item.icon}</span>
                 </div>
                 <div className="min-w-0">
-                  <h4 className="text-white font-semibold text-xs md:text-sm mb-0.5">{item.title}</h4>
-                  <p className="text-[11px] md:text-xs text-gray-400 leading-relaxed">{item.desc}</p>
+                  <h4 className="text-white font-semibold text-xs mb-0.5">{item.title}</h4>
+                  <p className="text-[11px] text-gray-400 leading-relaxed">{item.desc}</p>
                 </div>
               </div>
             ))}
@@ -96,11 +96,11 @@ export function Footer() {
 
       {/* ───── Newsletter ───── */}
       <div className="border-b border-slate-800/60">
-        <div className="max-w-[1600px] mx-auto px-4 sm:px-6 lg:px-8 xl:px-10 py-6 md:py-8">
-          <div className="rounded-[20px] md:rounded-[24px] bg-gradient-to-r from-green-600 to-green-500 p-5 md:p-6 lg:p-8">
+        <div className="max-w-[1600px] 2xl:max-w-[1800px] mx-auto px-4 sm:px-6 lg:px-8 xl:px-10 py-8 md:py-10">
+          <div className="rounded-3xl bg-gradient-to-r from-green-600 to-green-500 p-6 shadow-lg">
             <div className="flex flex-col md:flex-row items-center gap-4 md:gap-6">
               <div className="text-center md:text-left">
-                <h3 className="text-white text-xl sm:text-2xl lg:text-3xl font-bold leading-tight">
+                <h3 className="text-white text-xl sm:text-2xl font-bold leading-tight">
                   Stay in the Loop
                 </h3>
                 <p className="text-green-100 text-xs md:text-sm mt-1 max-w-md">
@@ -112,9 +112,9 @@ export function Footer() {
                   <input
                     type="email"
                     placeholder="Enter your email"
-                    className="flex-1 h-11 md:h-12 rounded-full px-4 md:px-5 bg-white/10 backdrop-blur-sm border border-white/20 text-white text-xs md:text-sm placeholder-gray-300/70 focus:outline-none focus:ring-2 focus:ring-white/40 focus:border-transparent transition-all"
+                    className="flex-1 h-12 rounded-full px-5 bg-white/10 backdrop-blur-sm border border-white/20 text-white text-sm placeholder-gray-300/70 focus:outline-none focus:ring-2 focus:ring-white/40 focus:border-transparent transition-all"
                   />
-                  <button className="h-11 md:h-12 px-5 md:px-6 rounded-full bg-white text-green-700 font-bold text-xs md:text-sm hover:bg-gray-100 transition-colors whitespace-nowrap">
+                  <button className="h-12 px-6 rounded-full bg-white text-green-700 font-bold text-sm hover:bg-gray-100 transition-colors whitespace-nowrap">
                     Subscribe
                   </button>
                 </div>
@@ -126,7 +126,7 @@ export function Footer() {
 
       {/* ───── Main Grid ───── */}
       <div className="border-b border-slate-800/60">
-        <div className="max-w-[1600px] mx-auto px-4 sm:px-6 lg:px-8 xl:px-10 py-8 md:py-12">
+        <div className="max-w-[1600px] 2xl:max-w-[1800px] mx-auto px-4 sm:px-6 lg:px-8 xl:px-10 py-8 md:py-10">
           <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-5 gap-6 md:gap-8">
             {/* Brand column */}
             <div className="md:col-span-3 lg:col-span-1">
@@ -184,7 +184,7 @@ export function Footer() {
       </div>
 
       {/* ───── Payment + Bottom ───── */}
-      <div className="max-w-[1600px] mx-auto px-4 sm:px-6 lg:px-8 xl:px-10 py-5 md:py-6">
+      <div className="max-w-[1600px] 2xl:max-w-[1800px] mx-auto px-4 sm:px-6 lg:px-8 xl:px-10 py-5">
         {/* Payment methods */}
         <div className="flex flex-col sm:flex-row items-center gap-3 mb-4">
           <span className="text-[11px] text-gray-500 font-medium shrink-0">We accept:</span>
@@ -245,7 +245,7 @@ function FooterSection({ title, links }: { title: string; links: { label: string
           open ? 'max-h-[500px] opacity-100 mt-2.5' : 'max-h-0 opacity-0 lg:max-h-[500px] lg:opacity-100 lg:mt-0'
         }`}
       >
-        <ul className="space-y-2 lg:space-y-3">
+        <ul className="space-y-3">
           {links.map((link) => (
             <li key={link.label}>
               <Link

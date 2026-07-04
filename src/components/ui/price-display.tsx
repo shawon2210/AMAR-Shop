@@ -7,7 +7,7 @@ interface PriceDisplayProps {
 }
 
 const sizeMap = {
-  sm: { current: 'text-sm md:text-base font-bold', original: 'text-[10px] md:text-[11px]' },
+  sm: { current: 'text-base lg:text-lg font-bold', original: 'text-[10px] lg:text-[11px]' },
   md: { current: 'text-base md:text-lg lg:text-xl font-bold', original: 'text-[11px] md:text-[12px]' },
   lg: { current: 'text-xl md:text-2xl lg:text-3xl font-bold', original: 'text-sm md:text-base' },
 };

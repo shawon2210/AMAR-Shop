@@ -30,7 +30,7 @@ const trustItems = [
 export function LocalBanners() {
   return (
     <section>
-      <div className="max-w-[1600px] mx-auto px-4 sm:px-6 lg:px-8 xl:px-10">
+      <div className="max-w-[1600px] 2xl:max-w-[1800px] mx-auto px-4 sm:px-6 lg:px-8 xl:px-10">
         <div className="grid grid-cols-2 md:grid-cols-4 gap-2 md:gap-3">
           {trustItems.map((item) => (
             <div

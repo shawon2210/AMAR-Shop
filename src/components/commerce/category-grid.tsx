@@ -6,8 +6,8 @@ import { categories } from '@/lib/data/categories';
 export function CategoryGrid() {
   return (
     <section>
-      <div className="max-w-[1600px] mx-auto px-4 sm:px-6 lg:px-8 xl:px-10">
-        <div className="bg-white rounded-xl lg:rounded-2xl p-3 md:p-4 lg:p-5 shadow-sm border border-gray-100">
+      <div className="max-w-[1600px] 2xl:max-w-[1800px] mx-auto px-4 sm:px-6 lg:px-8 xl:px-10">
+        <div className="bg-white rounded-2xl p-4 shadow-sm border border-gray-100">
           {/* Header */}
           <div className="flex items-center justify-between mb-3">
             <h3 className="text-sm md:text-base font-bold text-gray-900">Shop by Category</h3>
@@ -20,16 +20,16 @@ export function CategoryGrid() {
             </Link>
           </div>
 
-          {/* Desktop grid - 6 cols */}
+          {/* Grid - 6 cols desktop */}
           <div className="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-6 gap-3">
             {categories.map(cat => (
               <Link
                 key={cat.id}
                 href={`/category/${cat.slug}`}
-                className="flex flex-col items-center gap-1.5 cursor-pointer group py-2.5 px-1.5 rounded-xl hover:bg-gray-50 transition-all"
+                className="flex flex-col items-center gap-2 cursor-pointer group p-4 rounded-2xl hover:bg-gray-50 transition-all"
               >
-                <div className="w-10 h-10 sm:w-12 sm:h-12 md:w-14 md:h-14 rounded-xl md:rounded-2xl bg-gradient-to-br from-primary/10 to-primary/5 flex items-center justify-center text-primary group-hover:from-primary group-hover:to-primary-dark group-hover:text-white group-hover:shadow-md transition-all duration-300">
-                  <span className="material-symbols-outlined text-lg sm:text-xl md:text-2xl">{cat.icon}</span>
+                <div className="w-12 h-12 sm:w-14 sm:h-14 rounded-2xl bg-gradient-to-br from-primary/10 to-primary/5 flex items-center justify-center text-primary group-hover:from-primary group-hover:to-primary-dark group-hover:text-white group-hover:shadow-md transition-all duration-300">
+                  <span className="material-symbols-outlined text-xl sm:text-2xl">{cat.icon}</span>
                 </div>
                 <span className="text-[10px] sm:text-[11px] md:text-xs font-medium text-gray-700 group-hover:text-primary text-center leading-tight line-clamp-1">
                   {cat.name}
