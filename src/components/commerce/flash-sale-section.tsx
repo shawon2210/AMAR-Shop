@@ -33,7 +33,7 @@ export function FlashSaleSection() {
                 </span>
                 <h3 className="text-white text-sm md:text-base font-bold">Flash Sale</h3>
               </div>
-              <div className="bg-white/15 backdrop-blur-sm rounded-lg px-2.5 py-0.5">
+              <div className="bg-white/15 backdrop-blur-sm rounded-full px-4 py-0.5">
                 <CountdownTimer targetDate={FLASH_SALE_END} variant="flash-sale" />
               </div>
             </div>

@@ -99,7 +99,7 @@ export function Header() {
           <div className="hidden md:flex flex-1 max-w-[480px] lg:max-w-[560px] xl:max-w-[640px]">
             <div className="relative w-full">
               <input
-                className="w-full h-12 rounded-full border border-gray-300 bg-gray-50 px-4 pr-12 text-sm focus:ring-2 focus:ring-primary/30 focus:border-primary outline-none transition-all"
+                className="w-full h-12 rounded-full border border-gray-300 bg-gray-50 px-4 pr-12 text-sm focus:ring-2 focus:ring-green-500 focus:border-green-500 outline-none transition-all"
                 placeholder="Search in AmarShop"
                 type="text"
               />
@@ -132,7 +132,7 @@ export function Header() {
             <Link href="/cart" className="relative text-gray-600 hover:text-primary transition-colors">
               <span className="material-symbols-outlined text-xl">shopping_cart</span>
               {hydrated && itemCount > 0 && (
-                <span className="absolute -top-1.5 -right-1.5 bg-red text-white text-[9px] font-bold rounded-full min-w-[18px] h-[18px] flex items-center justify-center px-1">
+                <span className="absolute -top-2 -right-2 bg-red text-white text-[10px] font-bold rounded-full size-5 flex items-center justify-center">
                   {itemCount > 9 ? '9+' : itemCount}
                 </span>
               )}
@@ -142,7 +142,7 @@ export function Header() {
             {!showAuth || !isAuthenticated ? (
               <Link
                 href="/auth/login"
-                className="hidden sm:flex px-3 py-1.5 text-xs font-semibold text-white bg-primary rounded-full hover:brightness-110 transition-colors whitespace-nowrap"
+                className="hidden sm:flex px-5 py-1.5 text-xs font-semibold text-white bg-primary rounded-full hover:brightness-110 transition-colors whitespace-nowrap"
               >
                 Login
               </Link>
@@ -225,31 +225,29 @@ export function Header() {
       {/* Category navigation — slim bar */}
       <div className="hidden lg:block bg-white border-b border-gray-100">
         <div className="max-w-[1600px] 2xl:max-w-[1800px] mx-auto px-4 sm:px-6 lg:px-8 xl:px-10">
-          <div className="flex items-center gap-0.5 h-[38px] overflow-x-auto hide-scrollbar">
+          <div className="flex items-center gap-6 h-[38px] overflow-x-auto hide-scrollbar">
             <Link
               href="/"
-              className="flex items-center gap-1 px-2.5 py-1 text-[11px] font-semibold text-primary hover:text-primary/80 rounded-md transition-colors whitespace-nowrap"
+              className="flex items-center gap-1 text-xs font-semibold text-primary hover:text-primary/80 rounded-md transition-colors whitespace-nowrap"
             >
-              <span className="material-symbols-outlined text-[15px]">home</span>
+              <span className="material-symbols-outlined text-base">home</span>
               Home
             </Link>
-            <div className="w-px h-3.5 bg-gray-200 mx-0.5" />
             {categoryNav.map((cat) => (
               <Link
                 key={cat.href}
                 href={cat.href}
-                className="px-2.5 py-1 text-[11px] font-medium text-gray-600 hover:text-primary hover:bg-gray-50 rounded-md transition-colors whitespace-nowrap"
+                className="text-xs font-medium text-gray-600 hover:text-primary transition-colors whitespace-nowrap"
               >
                 {cat.label}
               </Link>
             ))}
-            <div className="flex-1" />
             <Link
               href="/categories"
-              className="px-2.5 py-1 text-[11px] font-medium text-primary hover:text-primary/80 rounded-md transition-colors whitespace-nowrap flex items-center gap-1"
+              className="text-xs font-medium text-primary hover:text-primary/80 transition-colors whitespace-nowrap flex items-center gap-0.5 ml-auto"
             >
               All Categories
-              <span className="material-symbols-outlined text-[13px]">chevron_right</span>
+              <span className="material-symbols-outlined text-sm">chevron_right</span>
             </Link>
           </div>
         </div>

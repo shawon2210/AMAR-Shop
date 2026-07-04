@@ -35,10 +35,10 @@ export function LocalBanners() {
           {trustItems.map((item) => (
             <div
               key={item.title}
-              className="bg-white rounded-xl p-3 md:p-4 flex flex-col items-center text-center gap-1.5 shadow-sm border border-gray-100 hover:shadow-md transition-all"
+              className="bg-white rounded-2xl p-5 flex flex-col items-center text-center gap-2 shadow-sm border border-gray-100 hover:shadow-md transition-all"
             >
-              <div className={`w-9 h-9 md:w-10 md:h-10 rounded-xl ${item.color} flex items-center justify-center`}>
-                <span className="material-symbols-outlined text-lg md:text-xl">{item.icon}</span>
+              <div className={`w-10 h-10 rounded-xl ${item.color} flex items-center justify-center`}>
+                <span className="material-symbols-outlined text-xl">{item.icon}</span>
               </div>
               <div>
                 <h4 className="font-semibold text-[11px] md:text-xs text-gray-900">{item.title}</h4>

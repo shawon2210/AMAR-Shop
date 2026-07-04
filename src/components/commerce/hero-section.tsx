@@ -4,10 +4,10 @@ import Link from 'next/link';
 import { HeroSlider } from "./hero-slider";
 
 const campaignCards = [
-  { icon: 'flash_on', label: 'Flash Sale', desc: 'Up to 70% off', href: '/flash-sale', color: 'from-red-500 to-red-600' },
-  { icon: 'local_shipping', label: 'Free Delivery', desc: 'On orders over ৳999', href: '#', color: 'from-primary to-primary-dark' },
-  { icon: 'new_releases', label: 'New Arrivals', desc: 'Fresh styles & gadgets', href: '/categories', color: 'from-blue-500 to-blue-600' },
-  { icon: 'storefront', label: 'Become a Seller', desc: 'Reach millions', href: '/seller/dashboard', color: 'from-purple-500 to-purple-600' },
+  { icon: 'flash_on', label: 'Flash Sale', desc: 'Up to 70% off', href: '/flash-sale', color: 'from-red-500/85 to-rose-600/75' },
+  { icon: 'local_shipping', label: 'Free Delivery', desc: 'On orders over ৳999', href: '#', color: 'from-emerald-600/85 to-green-700/75' },
+  { icon: 'new_releases', label: 'New Arrivals', desc: 'Fresh styles & gadgets', href: '/categories', color: 'from-sky-600/85 to-blue-700/75' },
+  { icon: 'storefront', label: 'Become a Seller', desc: 'Reach millions', href: '/seller/dashboard', color: 'from-violet-600/85 to-purple-700/75' },
 ];
 
 export function HeroSection() {
@@ -20,13 +20,13 @@ export function HeroSection() {
             <HeroSlider />
           </div>
 
-          {/* Campaign Cards (≈28%) - 2×2 grid */}
+          {/* Campaign Cards (≈26%) - 2×2 rounded-3xl */}
           <aside className="hidden lg:grid grid-cols-2 gap-4 w-[260px] xl:w-[300px] shrink-0">
             {campaignCards.map((card) => (
               <Link
                 key={card.label}
                 href={card.href}
-                className={`bg-gradient-to-r ${card.color} rounded-2xl px-4 py-3 text-white hover:brightness-110 transition-all shadow-sm flex flex-col justify-center h-[150px]`}
+                className={`bg-gradient-to-br ${card.color} rounded-3xl px-4 py-3 text-white hover:brightness-110 transition-all shadow-sm flex flex-col justify-center h-[145px]`}
               >
                 <div className="w-9 h-9 rounded-full bg-white/20 flex items-center justify-center mb-2">
                   <span className="material-symbols-outlined text-lg">{card.icon}</span>

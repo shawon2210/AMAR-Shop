@@ -28,13 +28,13 @@ export function CategoryGrid() {
                 href={`/category/${cat.slug}`}
                 className="flex flex-col items-center gap-2 cursor-pointer group p-4 rounded-2xl hover:bg-gray-50 transition-all"
               >
-                <div className="w-12 h-12 sm:w-14 sm:h-14 rounded-2xl bg-gradient-to-br from-primary/10 to-primary/5 flex items-center justify-center text-primary group-hover:from-primary group-hover:to-primary-dark group-hover:text-white group-hover:shadow-md transition-all duration-300">
+                <div className="w-12 h-12 sm:w-14 sm:h-14 rounded-2xl bg-gradient-to-br from-primary/10 to-primary/5 flex items-center justify-center text-primary group-hover:scale-105 group-hover:from-primary group-hover:to-primary-dark group-hover:text-white group-hover:shadow-md transition-all duration-300">
                   <span className="material-symbols-outlined text-xl sm:text-2xl">{cat.icon}</span>
                 </div>
                 <span className="text-[10px] sm:text-[11px] md:text-xs font-medium text-gray-700 group-hover:text-primary text-center leading-tight line-clamp-1">
                   {cat.name}
                 </span>
-                <span className="text-[8px] sm:text-[9px] text-gray-400 hidden sm:block">
+                <span className="inline-flex items-center text-[8px] sm:text-[9px] font-medium text-gray-400 bg-gray-100/80 px-1.5 py-0.5 rounded-full">
                   {cat.productCount > 999 ? `${(cat.productCount / 1000).toFixed(0)}k+` : `${cat.productCount}`}
                 </span>
               </Link>

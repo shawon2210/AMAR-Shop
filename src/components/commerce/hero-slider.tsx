@@ -144,12 +144,12 @@ export function HeroSlider() {
               /* Content slide: glass panel overlay */
               <div className="absolute inset-0 p-3 sm:p-4 md:p-5">
                 <div className="flex h-full flex-col justify-center">
-                  <div className="max-w-full sm:max-w-[400px] md:max-w-[480px] bg-black/30 backdrop-blur-sm rounded-2xl p-4 sm:p-5 md:p-6">
+                  <div className="max-w-full sm:max-w-[520px] bg-black/30 backdrop-blur-sm rounded-2xl p-4 sm:p-5 md:p-6">
                     <div className="flex flex-col gap-2 sm:gap-3">
-                      <h2 className="text-[clamp(20px,3vw,40px)] font-bold leading-tight text-white">
+                      <h2 className="text-[clamp(28px,2.5vw,48px)] font-bold leading-tight text-white">
                         {slide.title}
                       </h2>
-                      <p className="text-[clamp(12px,1vw,16px)] text-white/85">
+                      <p className="text-[clamp(14px,1vw,18px)] text-white/85">
                         {slide.subtitle}
                       </p>
                       <a
@@ -185,15 +185,15 @@ export function HeroSlider() {
       </button>
 
       {/* Indicators */}
-      <div className="absolute bottom-2 sm:bottom-3 left-1/2 flex -translate-x-1/2 gap-1.5 sm:gap-2">
+      <div className="absolute bottom-2 sm:bottom-3 left-1/2 flex -translate-x-1/2 gap-2">
         {slides.map((_, index) => (
           <button
             key={index}
             aria-label={`Slide ${index + 1}`}
             onClick={() => setCurrent(index)}
             className={`rounded-full transition-all duration-300 bg-white/70 hover:bg-white ${
-              current === index ? "w-5 sm:w-6" : "w-1.5 sm:w-2"
-            } h-1.5 sm:h-2`}
+              current === index ? "w-8" : "w-2"
+            } h-2`}
           />
         ))}
       </div>

@@ -65,7 +65,7 @@ export function ProductCard({ product, variant = 'default' }: ProductCardProps) 
   return (
     <Link
       href={`/product/${product.id}`}
-      className={`bg-white rounded-2xl overflow-hidden group hover:shadow-lg hover:border-gray-300 transition-all duration-300 flex flex-col h-full border border-gray-200 ${
+      className={`bg-white rounded-2xl overflow-hidden group hover:-translate-y-1 hover:shadow-xl hover:border-gray-300 transition-all duration-300 ease-out flex flex-col h-full border border-gray-200 ${
         isFlashVariant ? 'border-gray-100' : 'border-gray-200'
       }`}
     >
@@ -73,7 +73,7 @@ export function ProductCard({ product, variant = 'default' }: ProductCardProps) 
       <div className="relative h-44 w-full overflow-hidden bg-gray-50">
         {!imgError ? (
           <img
-            className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+            className="w-full h-full object-cover group-hover:scale-103 transition-transform duration-500"
             src={product.images[0]}
             alt={product.name}
             loading="lazy"
@@ -143,7 +143,7 @@ export function ProductCard({ product, variant = 'default' }: ProductCardProps) 
                 <span className="text-red-500">{product.stockCount} left</span>
               )}
             </div>
-            <div className="w-full h-1 bg-gray-100 rounded-full overflow-hidden">
+            <div className="w-full h-2 bg-gray-100 rounded-full overflow-hidden">
               <div
                 className={`h-full rounded-full transition-all duration-500 ${
                   product.soldPercent >= 80 ? 'bg-red-500' : 'bg-primary'
