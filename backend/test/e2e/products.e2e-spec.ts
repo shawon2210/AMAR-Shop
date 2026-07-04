@@ -39,7 +39,9 @@ describe('Products (e2e)', () => {
         .query({ categoryId: 'cat-1' })
         .expect(200);
 
-      expect(res.body).toHaveProperty('data');
+      expect(res.body).toHaveProperty('products');
+      expect(res.body).toHaveProperty('total');
+      expect(Array.isArray(res.body.products)).toBe(true);
     });
 
     it('should search products', async () => {
@@ -48,14 +50,16 @@ describe('Products (e2e)', () => {
         .query({ search: 'smartphone' })
         .expect(200);
 
-      expect(res.body).toHaveProperty('data');
+      expect(res.body).toHaveProperty('products');
+      expect(res.body).toHaveProperty('total');
+      expect(Array.isArray(res.body.products)).toBe(true);
     });
   });
 
   describe('GET /api/v1/products/:slug', () => {
     it('should return a single product', async () => {
       const res = await request(app.getHttpServer())
-        .get('/api/v1/products/samsung-galaxy-s24-ultra')
+        .get('/api/v1/products/cmr3pzr9o000774iiknhsyo0k')
         .expect(200);
 
       expect(res.body).toHaveProperty('id');
@@ -74,7 +78,9 @@ describe('Products (e2e)', () => {
         .get('/api/v1/products/category/electronics')
         .expect(200);
 
-      expect(res.body).toHaveProperty('data');
+      expect(res.body).toHaveProperty('products');
+      expect(res.body).toHaveProperty('total');
+      expect(Array.isArray(res.body.products)).toBe(true);
     });
   });
 });
