@@ -21,7 +21,7 @@ export function BottomNav() {
   const itemCount = useCartStore(s => s.getItemCount());
 
   return (
-    <nav className="fixed bottom-0 w-full z-50 flex justify-around items-center py-1.5 bg-surface shadow-[0px_-2px_10px_rgba(0,0,0,0.1)]">
+    <nav className="fixed bottom-0 w-full z-50 flex justify-around items-center py-1.5 bg-white border-t border-gray-200 shadow-[0px_-2px_10px_rgba(0,0,0,0.08)]">
       {navItems.map(item => {
         const isActive = pathname === item.href;
         const isCart = item.href === '/cart';
@@ -38,16 +38,16 @@ export function BottomNav() {
             }`}
           >
             {isCart && hydrated && itemCount > 0 ? (
-              <span className="material-symbols-outlined">{item.icon}</span>
+              <span className="material-symbols-outlined text-xl">{item.icon}</span>
             ) : (
               <span
-                className="material-symbols-outlined"
+                className="material-symbols-outlined text-xl"
                 style={isActive && item.fillIcon ? { fontVariationSettings: "'FILL' 1" } : undefined}
               >
                 {item.icon}
               </span>
             )}
-            <span className="font-label-bold">{item.label}</span>
+            <span className="text-[10px] font-medium">{item.label}</span>
             {isCart && hydrated && itemCount > 0 && (
               <span className="absolute -top-0.5 right-0 bg-error text-white text-[8px] rounded-full w-3.5 h-3.5 flex items-center justify-center font-bold">
                 {itemCount > 9 ? '9+' : itemCount}

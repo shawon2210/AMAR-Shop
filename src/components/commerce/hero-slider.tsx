@@ -4,6 +4,7 @@ import { useEffect, useRef, useState } from "react";
 
 interface HeroSlide {
   image: string;
+  imageFallback?: string;
   title: string;
   subtitle: string;
   cta: string;
@@ -28,15 +29,38 @@ const slides: HeroSlide[] = [
     ctaHref: "/flash-sale",
     hideContent: true,
   },
+  {
+    image: "/images/summer-sale.png",
+    imageFallback: "/images/poster.png",
+    title: "Summer Mega Sale",
+    subtitle: "Up to 70% off on top brands. Limited time offers on everything you love!",
+    cta: "Shop Summer Deals",
+    ctaHref: "/flash-sale",
+    hideContent: true,
+  },
+  {
+    image: "/images/tech-fest.png",
+    imageFallback: "/images/hero-poster.png",
+    title: "Tech Fest 2026",
+    subtitle: "Latest gadgets, smartphones & laptops at unbeatable prices. Free shipping!",
+    cta: "Explore Tech",
+    ctaHref: "/categories",
+    hideContent: true,
+  },
 ];
 
 const AUTO_PLAY = 5000;
 
 export function HeroSlider() {
   const [current, setCurrent] = useState(0);
+  const [imgErrors, setImgErrors] = useState<Record<number, boolean>>({});
   const paused = useRef(false);
   const touchStartX = useRef(0);
   const touchEndX = useRef(0);
+
+  const handleImgError = (index: number) => {
+    setImgErrors(prev => ({ ...prev, [index]: true }));
+  };
 
   useEffect(() => {
     const timer = setInterval(() => {
@@ -86,14 +110,24 @@ export function HeroSlider() {
             onMouseEnter={() => { paused.current = true; }}
             onMouseLeave={() => { paused.current = false; }}
           >
-            <img
-              src={slide.image}
-              alt={slide.title}
-              loading={i === 0 ? "eager" : "lazy"}
-              decoding="async"
-              fetchPriority={i === 0 ? "high" : "auto"}
-              className="absolute inset-0 h-full w-full object-scale-down p-2 sm:p-3 md:p-4"
-            />
+            {imgErrors[i] ? (
+              <div className="absolute inset-0 bg-gradient-to-br from-primary/10 to-primary-fixed flex items-center justify-center">
+                <div className="text-center p-6">
+                  <span className="material-symbols-outlined text-5xl text-primary/40">shopping_bag</span>
+                  <p className="text-primary/60 font-semibold mt-2 text-sm">{slide.title}</p>
+                </div>
+              </div>
+            ) : (
+              <img
+                src={slide.image}
+                alt={slide.title}
+                loading={i === 0 ? "eager" : "lazy"}
+                decoding="async"
+                fetchPriority={i === 0 ? "high" : "auto"}
+                className="absolute inset-0 h-full w-full object-scale-down p-2 sm:p-3 md:p-4"
+                onError={() => handleImgError(i)}
+              />
+            )}
 
             {slide.hideContent ? (
               /* Poster slide: CTA at bottom-right */

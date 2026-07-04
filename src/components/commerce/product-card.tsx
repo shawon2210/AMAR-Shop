@@ -29,10 +29,37 @@ export function ProductCard({ product, variant = 'default' }: ProductCardProps) 
     ? Math.round(((product.originalPrice - product.price) / product.originalPrice) * 100)
     : 0;
 
+  const renderStars = (rating: number) => {
+    const full = Math.floor(rating);
+    const half = rating % 1 >= 0.5;
+    return (
+      <div className="flex items-center gap-0.5">
+        {Array.from({ length: 5 }, (_, i) => (
+          <span
+            key={i}
+            className={`material-symbols-outlined text-[10px] ${
+              i < full
+                ? 'text-yellow-400'
+                : i === full && half
+                  ? 'text-yellow-400'
+                  : 'text-gray-200'
+            }`}
+            style={i < full || (i === full && half) ? { fontVariationSettings: "'FILL' 1" } : undefined}
+          >
+            {i === full && half ? 'star_half' : 'star'}
+          </span>
+        ))}
+        <span className="text-[10px] text-gray-500 ml-0.5">
+          ({product.reviewCount > 999 ? `${(product.reviewCount / 1000).toFixed(1)}k` : product.reviewCount})
+        </span>
+      </div>
+    );
+  };
+
   if (variant === 'compact') {
     return (
       <Link href={`/product/${product.id}`} className="bg-white rounded-lg shadow-sm hover:shadow-md transition-shadow cursor-pointer overflow-hidden flex flex-col group h-full">
-        <div className="aspect-square relative overflow-hidden bg-surface-container">
+        <div className="aspect-square relative overflow-hidden bg-gray-100">
           {!imgError ? (
             <img
               className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
@@ -42,36 +69,30 @@ export function ProductCard({ product, variant = 'default' }: ProductCardProps) 
               onError={() => setImgError(true)}
             />
           ) : (
-            <div className="w-full h-full flex items-center justify-center bg-surface-container-high text-secondary">
+            <div className="w-full h-full flex items-center justify-center bg-gray-100 text-gray-400">
               <span className="material-symbols-outlined text-3xl">image</span>
             </div>
           )}
-          {product.isMall && (
-            <Badge variant="primary" className="absolute top-2 left-2">MALL</Badge>
-          )}
-          {product.isNew && (
-            <Badge variant="tertiary" className="absolute top-2 left-2">NEW</Badge>
-          )}
           {discount > 0 && (
-            <DiscountBadge discount={discount} />
+            <span className="absolute top-1.5 left-1.5 bg-primary text-white text-[9px] font-bold px-1.5 py-0.5 rounded-full">
+              -{discount}%
+            </span>
+          )}
+          {product.isMall && (
+            <span className="absolute top-1.5 right-1.5 bg-blue-600 text-white text-[8px] font-bold px-1.5 py-0.5 rounded uppercase">Mall</span>
           )}
         </div>
-        <div className="p-sm flex flex-col flex-grow">
+        <div className="p-2 md:p-3 flex flex-col flex-grow">
           <div className="flex-grow">
-            <h3 className="font-body-sm text-body-sm line-clamp-2 text-on-surface mb-1">
+            <h3 className="text-xs md:text-sm text-gray-800 line-clamp-2 mb-1 leading-snug">
               {product.name}
             </h3>
           </div>
           <PriceDisplay price={product.price} originalPrice={product.originalPrice} size="sm" />
-          <div className="flex items-center justify-between pt-1">
-            <div className="flex items-center gap-0.5">
-              <span className="material-symbols-outlined text-xs text-primary" style={{ fontVariationSettings: "'FILL' 1" }}>
-                star
-              </span>
-              <span className="text-[10px] text-secondary">({product.reviewCount > 999 ? `${(product.reviewCount / 1000).toFixed(1)}k` : product.reviewCount})</span>
-            </div>
+          <div className="flex items-center justify-between pt-1 mt-auto">
+            {renderStars(product.rating)}
             {product.freeShipping && (
-              <span className="text-[10px] font-bold text-tertiary">FREE SHIPPING</span>
+              <span className="text-[9px] font-semibold text-green-600 whitespace-nowrap">Free shipping</span>
             )}
           </div>
         </div>
@@ -80,8 +101,9 @@ export function ProductCard({ product, variant = 'default' }: ProductCardProps) 
   }
 
   return (
-    <Link href={`/product/${product.id}`} className="bg-surface border border-outline-variant rounded-lg overflow-hidden group hover:shadow-lg transition-all duration-300 flex flex-col h-full">
-      <div className="relative aspect-square overflow-hidden bg-surface-container">
+    <Link href={`/product/${product.id}`} className="bg-white border border-gray-200 rounded-xl overflow-hidden group hover:shadow-lg hover:border-gray-300 transition-all duration-300 flex flex-col h-full">
+      {/* Image */}
+      <div className="relative aspect-square overflow-hidden bg-gray-50">
         {!imgError ? (
           <img
             className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
@@ -91,49 +113,81 @@ export function ProductCard({ product, variant = 'default' }: ProductCardProps) 
             onError={() => setImgError(true)}
           />
         ) : (
-          <div className="w-full h-full flex items-center justify-center bg-surface-container-high text-secondary">
+          <div className="w-full h-full flex items-center justify-center bg-gray-100 text-gray-400">
             <span className="material-symbols-outlined text-4xl">image</span>
           </div>
         )}
-        {product.isFlashSale && discount > 0 && (
-          <div className="absolute top-2 left-2 bg-primary text-white text-[10px] font-label-bold px-2 py-1 rounded-full uppercase">
-            -{discount}% OFF
-          </div>
+
+        {/* Top-left: discount badge */}
+        {discount > 0 && (
+          <span className="absolute top-2 left-2 bg-primary text-white text-[10px] font-bold px-2 py-0.5 rounded-full">
+            -{discount}%
+          </span>
         )}
-        {product.isMall && (
-          <div className="absolute top-2 right-2">
-            <Badge variant="primary">MALL</Badge>
+
+        {/* Top-right: badges */}
+        <div className="absolute top-2 right-2 flex flex-col gap-1">
+          {product.isMall && (
+            <span className="bg-blue-600 text-white text-[8px] font-bold px-1.5 py-0.5 rounded uppercase shadow-sm">Mall</span>
+          )}
+          {product.isNew && (
+            <span className="bg-green-500 text-white text-[8px] font-bold px-1.5 py-0.5 rounded uppercase shadow-sm">New</span>
+          )}
+        </div>
+
+        {/* Seller info overlay */}
+        {product.seller?.isOfficial && (
+          <div className="absolute bottom-2 left-2 bg-black/60 backdrop-blur-sm text-white text-[9px] font-medium px-2 py-0.5 rounded flex items-center gap-1">
+            <span className="material-symbols-outlined text-[10px]" style={{ fontVariationSettings: "'FILL' 1" }}>verified</span>
+            {product.seller.name}
           </div>
         )}
       </div>
-      <div className="p-sm flex flex-col flex-grow">
+
+      {/* Content */}
+      <div className="p-3 flex flex-col flex-grow">
         <div className="flex-grow">
-          <h3 className="font-body-md text-body-md text-on-surface line-clamp-2">{product.name}</h3>
+          <h3 className="text-sm font-medium text-gray-800 line-clamp-2 leading-snug mb-1.5">
+            {product.name}
+          </h3>
         </div>
+
         <PriceDisplay price={product.price} originalPrice={product.originalPrice} size="md" />
 
+        {/* Rating row */}
+        <div className="flex items-center justify-between mt-1">
+          {renderStars(product.rating)}
+          {product.freeShipping && (
+            <span className="text-[9px] font-semibold text-green-600 whitespace-nowrap">Free shipping</span>
+          )}
+        </div>
+
+        {/* Flash sale progress */}
         {variant === 'flash-sale' && product.soldPercent !== undefined && (
-          <div className="space-y-1 pt-1">
-            <div className="flex justify-between text-[10px] font-label-bold">
-              <span className="text-on-surface-variant">{product.soldPercent}% Sold</span>
+          <div className="space-y-1 mt-2">
+            <div className="flex justify-between text-[10px] font-semibold">
+              <span className="text-gray-500">{product.soldPercent}% Sold</span>
               {product.soldPercent >= 80 && (
-                <span className="text-error font-bold animate-pulse-subtle">Limited Stock!</span>
+                <span className="text-red-500 font-bold animate-pulse-subtle">Limited Stock!</span>
               )}
             </div>
-            <div className="w-full h-1.5 bg-surface-container-highest rounded-full overflow-hidden">
+            <div className="w-full h-2 bg-gray-100 rounded-full overflow-hidden">
               <div
-                className={`h-full rounded-full ${product.soldPercent >= 80 ? 'bg-error' : 'bg-primary'}`}
+                className={`h-full rounded-full transition-all duration-500 ${
+                  product.soldPercent >= 80 ? 'bg-red-500' : 'bg-primary'
+                }`}
                 style={{ width: `${product.soldPercent}%` }}
               />
             </div>
           </div>
         )}
 
+        {/* Buy button */}
         <button
           onClick={handleAddToCart}
-          className="w-full mt-2 py-2 bg-primary text-white font-label-bold rounded-lg hover:bg-primary-container active:scale-95 transition-all text-sm"
+          className="w-full mt-2.5 py-2.5 bg-primary text-white font-semibold rounded-lg hover:bg-primary/90 active:scale-[0.97] transition-all text-sm"
         >
-          Buy Now
+          {variant === 'flash-sale' ? 'Grab Now' : 'Add to Cart'}
         </button>
       </div>
     </Link>

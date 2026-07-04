@@ -1,6 +1,7 @@
 "use client";
 
 import { HeroSlider } from "./hero-slider";
+import { PromoCards } from "./promo-cards";
 
 const mobileCategories = [
   { name: "Electronics", icon: "devices", slug: "electronics" },
@@ -37,7 +38,13 @@ export function HeroSection() {
           </div>
         </div>
 
-        <HeroSlider />
+        {/* Desktop layout: slider + promo cards sidebar */}
+        <div className="flex gap-4 xl:gap-6">
+          <div className="flex-1 min-w-0">
+            <HeroSlider />
+          </div>
+          <PromoCards />
+        </div>
       </div>
     </section>
   );

@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import "./globals.css";
 import { Header } from "@/components/layout/header";
+import { Footer } from "@/components/layout/footer";
 import { BottomNav } from "@/components/layout/bottom-nav";
 import { ToastContainer } from "@/components/ui/toast-container";
 import { PwaPrompt } from "@/components/layout/pwa-prompt";
@@ -63,7 +64,8 @@ export default function RootLayout({
       </head>
       <body className="min-h-screen bg-background text-on-background font-sans antialiased pb-16" suppressHydrationWarning>
         <Header />
-        <main className="max-w-7xl mx-auto pb-8">{children}</main>
+        <main>{children}</main>
+        <Footer />
         <BottomNav />
         <PwaPrompt />
         <ToastContainer />

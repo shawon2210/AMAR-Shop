@@ -1,23 +1,52 @@
+'use client';
+
 import Link from 'next/link';
 import { categories } from '@/lib/data/categories';
 
 export function CategoryGrid() {
   return (
-    <section className="mt-lg px-container-margin">
-      <div className="grid grid-cols-4 md:grid-cols-8 gap-md">
-        {categories.map(cat => (
-          <Link
-            key={cat.id}
-            href={`/category/${cat.slug}`}
-            className="flex flex-col items-center gap-1.5 cursor-pointer group"
-          >
-            <div className="w-12 h-12 md:w-16 md:h-16 bg-primary-fixed rounded-full flex items-center justify-center text-primary group-hover:bg-primary group-hover:text-white transition-colors duration-200">
-              <span className="material-symbols-outlined text-2xl md:text-3xl">{cat.icon}</span>
-            </div>
-            <span className="font-label-bold text-center">{cat.bnName}</span>
-            <span className="text-[10px] text-secondary -mt-1">{cat.name}</span>
-          </Link>
-        ))}
+    <section className="bg-white mt-xl">
+      <div className="max-w-[1600px] mx-auto px-4 sm:px-6 lg:px-8 xl:px-10 py-4 md:py-6">
+        {/* Desktop: 2-row grid */}
+        <div className="hidden md:grid grid-cols-6 xl:grid-cols-6 gap-y-5 gap-x-2">
+          {categories.map(cat => (
+            <Link
+              key={cat.id}
+              href={`/category/${cat.slug}`}
+              className="flex flex-col items-center gap-2 cursor-pointer group py-2 px-1 rounded-xl hover:bg-gray-50 transition-all"
+            >
+              <div className="w-14 h-14 lg:w-16 lg:h-16 rounded-full bg-gradient-to-br from-primary-fixed to-primary/10 flex items-center justify-center text-primary group-hover:from-primary group-hover:to-primary/80 group-hover:text-white transition-all duration-300 shadow-sm group-hover:shadow-md">
+                <span className="material-symbols-outlined text-2xl lg:text-3xl">{cat.icon}</span>
+              </div>
+              <span className="text-xs lg:text-sm font-medium text-gray-700 group-hover:text-primary text-center leading-tight">
+                {cat.name}
+              </span>
+              <span className="text-[10px] text-gray-400 -mt-1">
+                {cat.productCount > 999 ? `${(cat.productCount / 1000).toFixed(0)}k+ items` : `${cat.productCount} items`}
+              </span>
+            </Link>
+          ))}
+        </div>
+
+        {/* Mobile: horizontal scroll */}
+        <div className="md:hidden overflow-x-auto hide-scrollbar -mx-4 px-4">
+          <div className="flex gap-3 pb-2 w-max">
+            {categories.map(cat => (
+              <Link
+                key={cat.id}
+                href={`/category/${cat.slug}`}
+                className="flex flex-col items-center gap-1.5 min-w-[80px] py-2"
+              >
+                <div className="w-14 h-14 rounded-full bg-gradient-to-br from-primary-fixed to-primary/10 flex items-center justify-center text-primary">
+                  <span className="material-symbols-outlined text-2xl">{cat.icon}</span>
+                </div>
+                <span className="text-[11px] font-medium text-gray-700 text-center leading-tight">
+                  {cat.name}
+                </span>
+              </Link>
+            ))}
+          </div>
+        </div>
       </div>
     </section>
   );
