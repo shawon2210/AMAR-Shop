@@ -174,7 +174,7 @@ function Sidebar({ open, onClose }: { open: boolean; onClose: () => void }) {
             <span className="material-symbols-outlined text-white text-xl">store</span>
           </div>
           <div>
-            <img src="/images/amarshop-logo.png" alt="AmarShop" className="h-20 md:h-24 w-auto object-contain" />
+            <img src="/images/amarshop-logo.png" alt="AmarShop" className="w-[clamp(140px,16vw,260px)] h-auto object-contain" />
             <p className="text-[10px] text-white/40 -mt-0.5">Admin Panel</p>
           </div>
         </div>
