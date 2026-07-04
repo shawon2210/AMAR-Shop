@@ -42,7 +42,7 @@ export default function SellerLayout({ children }: { children: React.ReactNode }
         <div className="flex items-center justify-between px-5 h-16 border-b border-white/10">
           <Link href="/seller/dashboard" className="flex items-center gap-2">
             <span className="material-symbols-outlined text-[#ffb59b]">storefront</span>
-            <img src="/images/amarshop-logo.png" alt="AmarShop" className="h-7 md:h-8 w-auto object-contain" />
+            <img src="/images/amarshop-logo.png" alt="AmarShop" className="h-10 md:h-12 w-auto object-contain" />
           </Link>
           <button
             className="lg:hidden text-white/70 hover:text-white"
