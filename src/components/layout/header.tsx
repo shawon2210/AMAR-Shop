@@ -87,7 +87,7 @@ export function Header() {
 
           {/* Brand */}
           <Link href="/" className="flex items-center shrink-0">
-            <img src="/images/amarshop-logo.png" alt="AmarShop" className="h-full w-auto object-contain py-1" />
+            <img src="/images/amarshop-logo.png" alt="AmarShop" className="h-14 md:h-16 w-auto object-contain" />
           </Link>
 
           {/* Search — h-12, centered */}
@@ -272,7 +272,7 @@ export function Header() {
           <div ref={sidebarRef} className="absolute left-0 top-0 h-full w-80 max-w-[85vw] bg-white shadow-xl flex flex-col">
             <div className="flex items-center justify-between px-4 h-14 border-b border-gray-200">
               <div className="flex items-center">
-                <img src="/images/amarshop-logo.png" alt="AmarShop" className="h-20 w-auto object-contain" />
+                <img src="/images/amarshop-logo.png" alt="AmarShop" className="h-24 w-auto object-contain" />
               </div>
               <button onClick={() => setSidebarOpen(false)} className="text-gray-500 hover:text-gray-700">
                 <span className="material-symbols-outlined text-2xl">close</span>
