@@ -70,7 +70,7 @@ export function ProductCard({ product, variant = 'default' }: ProductCardProps) 
       }`}
     >
       {/* Image */}
-      <div className="relative h-44 w-full overflow-hidden bg-gray-50">
+      <div className="relative h-36 sm:h-40 md:h-44 w-full overflow-hidden bg-gray-50">
         {!imgError ? (
           <img
             className="w-full h-full object-cover group-hover:scale-103 transition-transform duration-500"

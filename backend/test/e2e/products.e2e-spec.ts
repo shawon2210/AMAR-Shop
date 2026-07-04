@@ -55,7 +55,7 @@ describe('Products (e2e)', () => {
   describe('GET /api/v1/products/:slug', () => {
     it('should return a single product', async () => {
       const res = await request(app.getHttpServer())
-        .get('/api/v1/products/test-product')
+        .get('/api/v1/products/samsung-galaxy-s24-ultra')
         .expect(200);
 
       expect(res.body).toHaveProperty('id');
