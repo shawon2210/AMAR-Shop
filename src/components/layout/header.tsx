@@ -75,8 +75,8 @@ export function Header() {
   return (
     <header className="sticky top-0 z-50 bg-white border-b border-gray-200 shadow-sm">
       {/* Main header row — compact, single-bar */}
-      <div className="h-[60px] md:h-[56px] lg:h-[56px]">
-        <div className="max-w-[1600px] 2xl:max-w-[1800px] mx-auto px-4 sm:px-6 lg:px-8 xl:px-10 h-full flex items-center justify-between gap-2 md:gap-3 lg:gap-5">
+      <div className="h-[56px] sm:h-[60px] md:h-[64px] lg:h-[68px]">
+        <div className="max-w-[1600px] 2xl:max-w-[1800px] mx-auto px-4 sm:px-6 lg:px-8 xl:px-10 h-full flex items-center justify-between gap-2 md:gap-4 lg:gap-6">
           {/* Mobile hamburger */}
           <button
             className="lg:hidden text-gray-600 hover:text-primary shrink-0"
@@ -87,16 +87,16 @@ export function Header() {
 
           {/* Brand */}
           <Link href="/" className="flex items-center gap-1.5 shrink-0">
-            <div className="w-7 h-7 md:w-8 md:h-8 rounded-lg bg-primary flex items-center justify-center">
-              <span className="material-symbols-outlined text-white text-base md:text-lg">shopping_bag</span>
+            <div className="w-7 h-7 sm:w-8 sm:h-8 md:w-9 md:h-9 lg:w-10 lg:h-10 rounded-lg bg-primary flex items-center justify-center">
+              <span className="material-symbols-outlined text-white text-sm sm:text-base md:text-lg lg:text-xl">shopping_bag</span>
             </div>
-            <span className="text-base md:text-lg lg:text-xl font-bold text-gray-900 hidden sm:block">
+            <span className="text-sm sm:text-base md:text-lg lg:text-xl xl:text-2xl font-bold text-gray-900 hidden sm:block">
               Amar<span className="text-primary">Shop</span>
             </span>
           </Link>
 
           {/* Search — h-12, centered */}
-          <div className="hidden md:flex flex-1 max-w-[480px] lg:max-w-[560px] xl:max-w-[640px]">
+          <div className="hidden md:flex flex-1 max-w-[400px] md:max-w-[480px] lg:max-w-[640px] xl:max-w-[800px]">
             <div className="relative w-full">
               <input
                 className="w-full h-12 rounded-full border border-gray-300 bg-gray-50 px-4 pr-12 text-sm focus:ring-2 focus:ring-green-500 focus:border-green-500 outline-none transition-all"
@@ -112,19 +112,19 @@ export function Header() {
           {/* Actions */}
           <div className="flex items-center gap-2 md:gap-3 lg:gap-5 shrink-0">
             {/* Help */}
-            <Link href="/help" className="hidden xl:flex items-center gap-1 text-xs text-gray-500 hover:text-primary transition-colors">
+            <Link href="/help" className="hidden lg:flex items-center gap-1 text-xs lg:text-sm text-gray-500 hover:text-primary transition-colors">
               <span className="material-symbols-outlined text-lg">help</span>
-              <span>Help</span>
+              <span className="hidden xl:inline">Help</span>
             </Link>
 
             {/* Sell */}
-            <Link href="/seller/dashboard" className="hidden xl:flex items-center gap-1 text-xs font-medium text-primary hover:text-primary-dark transition-colors">
+            <Link href="/seller/dashboard" className="hidden lg:flex items-center gap-1 text-xs lg:text-sm font-medium text-primary hover:text-primary-dark transition-colors">
               <span className="material-symbols-outlined text-lg">storefront</span>
-              <span>Sell</span>
+              <span className="hidden xl:inline">Sell</span>
             </Link>
 
             {/* Notifications */}
-            <Link href="/notifications" className="relative text-gray-600 hover:text-primary transition-colors hidden lg:flex">
+            <Link href="/notifications" className="relative text-gray-600 hover:text-primary transition-colors hidden sm:flex">
               <span className="material-symbols-outlined text-xl">notifications</span>
             </Link>
 
@@ -225,29 +225,29 @@ export function Header() {
       {/* Category navigation — slim bar */}
       <div className="hidden lg:block bg-white border-b border-gray-100">
         <div className="max-w-[1600px] 2xl:max-w-[1800px] mx-auto px-4 sm:px-6 lg:px-8 xl:px-10">
-          <div className="flex items-center gap-6 h-[38px] overflow-x-auto hide-scrollbar">
+          <div className="flex items-center gap-6 h-[38px] lg:h-[42px] xl:h-[46px] overflow-x-auto hide-scrollbar">
             <Link
               href="/"
-              className="flex items-center gap-1 text-xs font-semibold text-primary hover:text-primary/80 rounded-md transition-colors whitespace-nowrap"
+              className="flex items-center gap-1 text-xs lg:text-sm font-semibold text-primary hover:text-primary/80 rounded-md transition-colors whitespace-nowrap"
             >
-              <span className="material-symbols-outlined text-base">home</span>
+              <span className="material-symbols-outlined text-base lg:text-lg">home</span>
               Home
             </Link>
             {categoryNav.map((cat) => (
               <Link
                 key={cat.href}
                 href={cat.href}
-                className="text-xs font-medium text-gray-600 hover:text-primary transition-colors whitespace-nowrap"
+                className="text-xs lg:text-sm font-medium text-gray-600 hover:text-primary transition-colors whitespace-nowrap"
               >
                 {cat.label}
               </Link>
             ))}
             <Link
               href="/categories"
-              className="text-xs font-medium text-primary hover:text-primary/80 transition-colors whitespace-nowrap flex items-center gap-0.5 ml-auto"
+              className="text-xs lg:text-sm font-medium text-primary hover:text-primary/80 transition-colors whitespace-nowrap flex items-center gap-0.5 ml-auto"
             >
               All Categories
-              <span className="material-symbols-outlined text-sm">chevron_right</span>
+              <span className="material-symbols-outlined text-sm lg:text-base">chevron_right</span>
             </Link>
           </div>
         </div>
