@@ -54,10 +54,16 @@ export function Header() {
       {/* Row 2: Main Header (Responsive) */}
       <div className="h-[72px] lg:h-[96px] flex items-center">
         <div className="max-w-[1440px] mx-auto px-4 lg:px-6 w-full flex items-center justify-between gap-4">
-          {/* Logo */}
-          <Link href="/" className="flex items-center shrink-0">
-            <img src="/images/amarshop-logo.png" alt="AmarShop" className="w-[clamp(140px,18vw,300px)] h-auto object-contain" />
-          </Link>
+          <div className="flex items-center gap-3">
+            {/* Hamburger menu */}
+            <button onClick={() => setSidebarOpen(true)} className="md:hidden text-gray-600">
+              <span className="material-symbols-outlined text-2xl">menu</span>
+            </button>
+            {/* Logo */}
+            <Link href="/" className="flex items-center shrink-0">
+              <img src="/images/amarshop-logo.png" alt="AmarShop" className="w-[clamp(140px,18vw,300px)] h-auto object-contain" />
+            </Link>
+          </div>
 
           {/* Search (Tablet+) */}
           <div className="flex-1 max-w-[760px] hidden md:block">
@@ -75,6 +81,9 @@ export function Header() {
 
           {/* Actions */}
           <div className="flex items-center gap-3 lg:gap-4 text-gray-600">
+            <button onClick={() => setMobileSearchOpen(!mobileSearchOpen)} className="md:hidden hover:text-primary">
+              <span className="material-symbols-outlined text-xl">search</span>
+            </button>
             <Link href="/seller/dashboard" className="hidden lg:flex hover:text-primary">
               <span className="material-symbols-outlined text-xl">storefront</span>
             </Link>
@@ -102,7 +111,7 @@ export function Header() {
         </div>
       </div>
 
-      {/* Row 3: Category Nav (Desktop only) */}
+      {/* Row 3: Category Nav + Sidebar (Mobile) */}
       <div className="hidden lg:block bg-white border-t border-gray-100 shadow-[0_1px_0_rgba(0,0,0,.04)] h-11">
         <div className="max-w-[1440px] mx-auto px-6 h-full flex items-center gap-8">
           {categoryNav.map((cat) => (
@@ -112,6 +121,26 @@ export function Header() {
           ))}
         </div>
       </div>
+
+      {/* Mobile Sidebar */}
+      {sidebarOpen && (
+        <div className="fixed inset-0 z-[100] md:hidden">
+          <div className="absolute inset-0 bg-black/50" onClick={() => setSidebarOpen(false)} />
+          <div className="absolute left-0 top-0 h-full w-[80vw] bg-white p-6 shadow-xl">
+             <button onClick={() => setSidebarOpen(false)} className="mb-6"><span className="material-symbols-outlined text-3xl">close</span></button>
+             <div className="flex flex-col gap-4">
+               {categoryNav.map(cat => <Link key={cat.href} href={cat.href} onClick={() => setSidebarOpen(false)}>{cat.label}</Link>)}
+             </div>
+          </div>
+        </div>
+      )}
+
+      {/* Mobile Search Overlay */}
+      {mobileSearchOpen && (
+        <div className="md:hidden px-4 pb-4">
+           <input className="w-full h-10 rounded-full border px-4" placeholder="Search..." />
+        </div>
+      )}
     </header>
   );
 }
