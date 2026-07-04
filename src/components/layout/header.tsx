@@ -75,37 +75,37 @@ export function Header() {
   return (
     <header className="sticky top-0 z-50 bg-white border-b border-gray-200 shadow-sm">
       {/* Main header row — compact, single-bar */}
-      <div className="h-[64px] md:h-[92px] lg:h-[112px] xl:h-[124px]">
-        <div className="max-w-[1600px] 2xl:max-w-[1800px] mx-auto px-4 sm:px-6 lg:px-8 xl:px-10 h-full flex items-center justify-between gap-2 md:gap-4 lg:gap-6">
+      <div className="h-[64px] md:h-[96px] lg:h-[104px]">
+        <div className="max-w-[1600px] 2xl:max-w-[1800px] mx-auto px-4 sm:px-6 lg:px-8 xl:px-10 h-full flex md:grid md:grid-cols-[260px_1fr_240px] lg:grid-cols-[320px_1fr_300px] xl:grid-cols-[380px_1fr_320px] 2xl:grid-cols-[420px_1fr_340px] items-center justify-between md:justify-normal gap-2 md:gap-4 lg:gap-8">
           {/* Mobile hamburger */}
           <button
-            className="lg:hidden text-gray-600 hover:text-primary shrink-0"
+            className="md:hidden text-gray-600 hover:text-primary shrink-0"
             onClick={() => setSidebarOpen(true)}
           >
             <span className="material-symbols-outlined text-2xl">menu</span>
           </button>
 
           {/* Brand */}
-          <Link href="/" className="flex items-center shrink-0">
-            <img src="/images/amarshop-logo.png" alt="AmarShop" className="w-[clamp(150px,20vw,380px)] h-auto object-contain shrink-0" />
+          <Link href="/" className="flex items-center justify-self-start">
+            <img src="/images/amarshop-logo.png" alt="AmarShop" className="w-[160px] sm:w-[200px] md:w-[220px] lg:w-[280px] xl:w-[320px] 2xl:w-[380px] h-auto object-contain" />
           </Link>
 
-          {/* Search — h-12, centered */}
-          <div className="hidden md:flex flex-1 max-w-[400px] md:max-w-[480px] lg:max-w-[640px] xl:max-w-[800px]">
-            <div className="relative w-full">
+          {/* Search — centered in grid */}
+          <div className="hidden md:flex justify-center">
+            <div className="relative w-full max-w-[480px] lg:max-w-[560px] xl:max-w-[640px] 2xl:max-w-[720px]">
               <input
-                className="w-full h-12 rounded-full border border-gray-300 bg-gray-50 px-4 pr-12 text-sm focus:ring-2 focus:ring-green-500 focus:border-green-500 outline-none transition-all"
+                className="w-full h-11 lg:h-12 rounded-full border border-gray-300 bg-gray-50 px-4 pr-12 text-sm focus:ring-2 focus:ring-green-500 focus:border-green-500 outline-none transition-all"
                 placeholder="Search in AmarShop"
                 type="text"
               />
-              <button className="absolute right-1 top-1/2 -translate-y-1/2 w-9 h-9 flex items-center justify-center rounded-full bg-primary text-white hover:brightness-110 transition-all">
-                <span className="material-symbols-outlined text-base">search</span>
+              <button className="absolute right-1 top-1/2 -translate-y-1/2 w-8 h-8 lg:w-9 lg:h-9 flex items-center justify-center rounded-full bg-primary text-white hover:brightness-110 transition-all">
+                <span className="material-symbols-outlined text-sm lg:text-base">search</span>
               </button>
             </div>
           </div>
 
           {/* Actions */}
-          <div className="flex items-center gap-2 md:gap-3 lg:gap-5 shrink-0">
+          <div className="flex items-center justify-self-end gap-2 md:gap-3 lg:gap-5">
             {/* Help */}
             <Link href="/help" className="hidden lg:flex items-center gap-1 text-xs lg:text-sm text-gray-500 hover:text-primary transition-colors">
               <span className="material-symbols-outlined text-lg">help</span>
