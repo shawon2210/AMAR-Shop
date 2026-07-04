@@ -41,8 +41,8 @@ export function LocalBanners() {
                 <span className="material-symbols-outlined text-xl">{item.icon}</span>
               </div>
               <div>
-                <h4 className="font-semibold text-[11px] md:text-xs text-gray-900">{item.title}</h4>
-                <p className="text-[9px] md:text-[11px] text-gray-500 mt-0.5 leading-tight">{item.desc}</p>
+                <h4 className="font-semibold text-xs text-gray-900">{item.title}</h4>
+                <p className="text-[10px] md:text-xs text-gray-500 mt-0.5 leading-tight">{item.desc}</p>
               </div>
             </div>
           ))}

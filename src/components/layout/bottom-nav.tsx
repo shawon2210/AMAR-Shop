@@ -37,19 +37,15 @@ export function BottomNav() {
                 : 'text-secondary hover:text-primary-container'
             }`}
           >
-            {isCart && hydrated && itemCount > 0 ? (
-              <span className="material-symbols-outlined text-xl">{item.icon}</span>
-            ) : (
-              <span
-                className="material-symbols-outlined text-xl"
-                style={isActive && item.fillIcon ? { fontVariationSettings: "'FILL' 1" } : undefined}
-              >
-                {item.icon}
-              </span>
-            )}
-            <span className="text-[10px] font-medium">{item.label}</span>
+            <span
+              className="material-symbols-outlined text-xl"
+              style={(isActive && item.fillIcon) ? { fontVariationSettings: "'FILL' 1" } : undefined}
+            >
+              {item.icon}
+            </span>
+            <span className={`text-[10px] font-medium ${isActive ? 'text-primary' : ''}`}>{item.label}</span>
             {isCart && hydrated && itemCount > 0 && (
-              <span className="absolute -top-0.5 right-0 bg-error text-white text-[8px] rounded-full w-3.5 h-3.5 flex items-center justify-center font-bold">
+              <span className="absolute -top-0.5 right-0.5 bg-red text-white text-[9px] font-bold rounded-full w-4 h-4 flex items-center justify-center">
                 {itemCount > 9 ? '9+' : itemCount}
               </span>
             )}

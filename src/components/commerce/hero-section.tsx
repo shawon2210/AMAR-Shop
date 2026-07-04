@@ -39,13 +39,13 @@ export function HeroSection() {
         </div>
 
         {/* Mobile categories pills */}
-        <div className="lg:hidden -mx-4 px-4 pt-2 pb-1 overflow-x-auto hide-scrollbar">
-          <div className="flex gap-2 w-max">
+        <div className="lg:hidden -mx-4 px-4 pt-3 pb-2 overflow-x-auto hide-scrollbar">
+          <div className="flex gap-2.5 w-max">
             {['Electronics', 'Fashion', 'Beauty', 'Groceries', 'Home & Living', 'Sports', 'Flash Sale', 'New Arrivals', 'Deals', 'Mall'].map((name) => (
               <Link
                 key={name}
                 href="/categories"
-                className="flex items-center h-7 px-3 rounded-full bg-gray-100 border border-gray-200 text-[11px] font-medium text-gray-700 hover:border-primary hover:text-primary transition-colors whitespace-nowrap"
+                className="flex items-center h-8 px-4 rounded-full bg-gray-50 border border-gray-200 text-xs font-medium text-gray-700 lg:hover:border-primary lg:hover:text-primary transition-colors whitespace-nowrap"
               >
                 {name}
               </Link>

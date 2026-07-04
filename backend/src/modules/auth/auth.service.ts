@@ -23,11 +23,13 @@ export class AuthService {
     phone: string;
     password: string;
   }) {
-    const existingPhone = await this.prismaService.user.findUnique({
-      where: { phone: data.phone },
-    });
-    if (existingPhone) {
-      throw new ConflictException('Phone number already registered');
+    if (data.phone) {
+      const existingPhone = await this.prismaService.user.findUnique({
+        where: { phone: data.phone },
+      });
+      if (existingPhone) {
+        throw new ConflictException('Phone number already registered');
+      }
     }
 
     if (data.email) {

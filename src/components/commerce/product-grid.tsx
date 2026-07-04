@@ -93,7 +93,7 @@ export function ProductGrid({
         {showLoadMore && hasMore && (
           <button
             onClick={loadMore}
-            className="w-full mt-4 py-2.5 border-2 border-primary text-primary font-semibold rounded-xl hover:bg-primary/5 active:scale-[0.99] transition-all cursor-pointer text-xs"
+            className="w-full mt-4 min-h-[44px] py-3 sm:py-2.5 sm:min-h-0 border-2 border-primary text-primary font-semibold rounded-xl lg:hover:bg-primary/5 active:scale-[0.99] transition-all cursor-pointer text-xs"
           >
             Load More
           </button>

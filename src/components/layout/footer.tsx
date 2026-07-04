@@ -148,7 +148,7 @@ export function Footer() {
                   <a
                     key={social.label}
                     href={social.href}
-                    className="w-10 h-10 rounded-full bg-slate-800 flex items-center justify-center text-gray-400 hover:bg-green-600 hover:text-white transition-all duration-300"
+                    className="w-11 h-11 lg:w-10 lg:h-10 rounded-full bg-slate-800 flex items-center justify-center text-gray-400 lg:hover:bg-green-600 lg:hover:text-white transition-all duration-300"
                     aria-label={social.label}
                   >
                     <span className="material-symbols-outlined text-lg">{social.icon}</span>

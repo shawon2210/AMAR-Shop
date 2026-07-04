@@ -28,9 +28,9 @@ describe('Products (e2e)', () => {
         .query({ page: 1, limit: 10 })
         .expect(200);
 
-      expect(res.body).toHaveProperty('data');
-      expect(res.body).toHaveProperty('meta');
-      expect(Array.isArray(res.body.data)).toBe(true);
+      expect(res.body).toHaveProperty('products');
+      expect(res.body).toHaveProperty('total');
+      expect(Array.isArray(res.body.products)).toBe(true);
     });
 
     it('should filter by category', async () => {

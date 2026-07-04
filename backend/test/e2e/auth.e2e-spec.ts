@@ -36,9 +36,9 @@ describe('Auth (e2e)', () => {
         .send(testUser)
         .expect(201);
 
-      expect(res.body).toHaveProperty('token');
+      expect(res.body).toHaveProperty('accessToken');
       expect(res.body.user).toHaveProperty('phone', testUser.phone);
-      authToken = res.body.token;
+      authToken = res.body.accessToken;
     });
 
     it('should fail with duplicate phone', async () => {
@@ -63,8 +63,8 @@ describe('Auth (e2e)', () => {
         .send({ phone: testUser.phone, password: testUser.password })
         .expect(201);
 
-      expect(res.body).toHaveProperty('token');
-      authToken = res.body.token;
+      expect(res.body).toHaveProperty('accessToken');
+      authToken = res.body.accessToken;
     });
 
     it('should fail with wrong password', async () => {
