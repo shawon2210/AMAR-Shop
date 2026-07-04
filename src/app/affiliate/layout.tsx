@@ -24,7 +24,7 @@ export default function AffiliateLayout({ children }: { children: React.ReactNod
         <div className="flex items-center gap-3 px-5 h-16 border-b border-white/10 shrink-0">
           <span className="material-symbols-outlined text-primary text-3xl">campaign</span>
           <div>
-            <img src="/images/amarshop-logo.png" alt="AmarShop" className="h-9 md:h-10 w-auto object-contain" />
+            <img src="/images/amarshop-logo.png" alt="AmarShop" className="h-11 md:h-12 w-auto object-contain" />
             <p className="text-[10px] text-white/50">Affiliate Dashboard</p>
           </div>
         </div>
