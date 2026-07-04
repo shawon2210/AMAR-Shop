@@ -94,7 +94,7 @@ export function HeroSlider() {
 
   return (
     <div
-      className="relative overflow-hidden rounded-xl sm:rounded-2xl lg:rounded-[32px] bg-gradient-to-br from-gray-100 to-white w-full aspect-[4/3] sm:aspect-[2/1] md:aspect-[21/9] lg:aspect-[3/1] xl:aspect-[3.5/1] max-h-[260px] sm:max-h-[320px] md:max-h-[400px] lg:max-h-[500px] xl:max-h-[580px] 2xl:max-h-[640px] group"
+      className="relative overflow-hidden rounded-xl sm:rounded-2xl lg:rounded-[24px] bg-gradient-to-br from-gray-100 to-white w-full h-hero min-h-[200px] max-h-[520px] group"
       onTouchStart={handleTouchStart}
       onTouchMove={handleTouchMove}
       onTouchEnd={handleTouchEnd}

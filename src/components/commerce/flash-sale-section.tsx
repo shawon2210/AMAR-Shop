@@ -32,23 +32,19 @@ export function FlashSaleSection() {
 
   return (
     <section>
-      <div className="max-w-site mx-auto px-3 sm:px-4 lg:px-6 xl:px-8">
-        <div className="bg-gradient-to-r from-red-500 to-red-600 rounded-xl lg:rounded-2xl p-4 md:p-5 lg:p-6 shadow-lg">
+      <div className="max-w-[1600px] mx-auto px-4 sm:px-6 lg:px-8 xl:px-10">
+        <div className="bg-gradient-to-r from-red-500 to-red-600 rounded-xl lg:rounded-2xl p-3 md:p-4 lg:p-5 shadow-lg">
           {/* Header */}
-          <div className="flex items-center justify-between mb-3 md:mb-4">
+          <div className="flex items-center justify-between mb-2 md:mb-3">
             <div className="flex items-center gap-2 md:gap-3">
               <div className="flex items-center gap-1.5">
-                <span className="relative flex h-3 w-3">
+                <span className="relative flex h-2.5 w-2.5">
                   <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-white opacity-60"></span>
-                  <span className="relative inline-flex rounded-full h-3 w-3 bg-white"></span>
+                  <span className="relative inline-flex rounded-full h-2.5 w-2.5 bg-white"></span>
                 </span>
-                <h3 className="text-white text-base md:text-lg lg:text-xl font-bold">Flash Sale</h3>
+                <h3 className="text-white text-sm md:text-base lg:text-lg font-bold">Flash Sale</h3>
               </div>
-              <div className="hidden sm:block bg-white/15 backdrop-blur-sm rounded-lg px-3 py-1">
-                <CountdownTimer targetDate={FLASH_SALE_END} variant="flash-sale" />
-              </div>
-              <div className="sm:hidden bg-white/15 backdrop-blur-sm rounded-lg px-2 py-1">
-                <span className="material-symbols-outlined text-white text-sm">timer</span>
+              <div className="bg-white/15 backdrop-blur-sm rounded-lg px-2.5 py-0.5">
                 <CountdownTimer targetDate={FLASH_SALE_END} variant="flash-sale" />
               </div>
             </div>
@@ -73,9 +69,9 @@ export function FlashSaleSection() {
               </button>
 
               <div ref={scrollRef} className="overflow-x-auto hide-scrollbar -mx-1 px-1">
-                <div className="flex gap-2 sm:gap-3 md:gap-4 pb-1">
+                <div className="flex gap-2 sm:gap-3 pb-1">
                   {displayProducts.map(product => (
-                    <div key={product.id} className="min-w-[140px] sm:min-w-[170px] md:min-w-[200px] lg:min-w-[220px]">
+                    <div key={product.id} className="min-w-[130px] sm:min-w-[150px] md:min-w-[170px] lg:min-w-[190px]">
                       <ProductCard product={product} variant="flash-sale" />
                     </div>
                   ))}

@@ -47,6 +47,10 @@
   --color-outline: #D1D5DB;
   --color-outline-variant: #E5E7EB;
 
+  /* Clamp-based responsive spacing */
+  --container-padding: clamp(12px, 2.5vw, 40px);
+  --section-gap: clamp(16px, 3vw, 48px);
+
   /* Backward-compatible aliases for old M3 color scheme */
   --color-primary-fixed: #E6F4EA;
   --color-primary-fixed-dim: #A8E6C1;
@@ -377,9 +381,36 @@
   animation: shimmer 1.5s infinite;
 }
 
-/* Container */
+/* Container system */
 .max-w-site {
   max-width: 1600px;
+}
+
+@media (min-width: 1720px) {
+  .max-w-site {
+    max-width: 1720px;
+  }
+}
+
+@media (min-width: 1920px) {
+  .max-w-site {
+    max-width: 1800px;
+  }
+}
+
+/* Ultra-wide utility */
+.max-w-ultra {
+  max-width: 1800px;
+}
+
+/* Clamp-based hero height — applied via style or clamp class */
+.h-hero {
+  height: clamp(280px, 45vw, 520px);
+}
+
+/* Compact spacing */
+.gap-site {
+  gap: clamp(12px, 2vw, 24px);
 }
 
 /* Star rating fill */

@@ -74,19 +74,19 @@ export function Footer() {
     <footer className="bg-[#0B1220] text-gray-300 mt-12 md:mt-16">
       {/* ───── Trust Section ───── */}
       <div className="border-b border-slate-800/60">
-        <div className="max-w-site mx-auto px-4 sm:px-6 lg:px-8 xl:px-10 py-8 md:py-10">
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 md:gap-6">
+        <div className="max-w-[1600px] mx-auto px-4 sm:px-6 lg:px-8 xl:px-10 py-6 md:py-8">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 md:gap-4">
             {trustItems.map((item) => (
               <div
                 key={item.title}
-                className="bg-slate-900/80 rounded-3xl p-5 md:p-6 flex items-start gap-4 hover:bg-slate-900 transition-colors"
+                className="bg-slate-900/80 rounded-2xl p-4 md:p-5 flex items-start gap-3 hover:bg-slate-900 transition-colors"
               >
-                <div className="w-12 h-12 rounded-2xl bg-gradient-to-br from-green-500/20 to-green-500/5 flex items-center justify-center shrink-0">
-                  <span className="material-symbols-outlined text-green-400 text-2xl">{item.icon}</span>
+                <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-green-500/20 to-green-500/5 flex items-center justify-center shrink-0">
+                  <span className="material-symbols-outlined text-green-400 text-xl">{item.icon}</span>
                 </div>
                 <div className="min-w-0">
-                  <h4 className="text-white font-semibold text-sm md:text-base mb-1">{item.title}</h4>
-                  <p className="text-xs md:text-sm text-gray-400 leading-relaxed">{item.desc}</p>
+                  <h4 className="text-white font-semibold text-xs md:text-sm mb-0.5">{item.title}</h4>
+                  <p className="text-[11px] md:text-xs text-gray-400 leading-relaxed">{item.desc}</p>
                 </div>
               </div>
             ))}
@@ -96,25 +96,25 @@ export function Footer() {
 
       {/* ───── Newsletter ───── */}
       <div className="border-b border-slate-800/60">
-        <div className="max-w-site mx-auto px-4 sm:px-6 lg:px-8 xl:px-10 py-8 md:py-10">
-          <div className="rounded-[24px] md:rounded-[32px] bg-gradient-to-r from-green-600 to-green-500 p-6 md:p-8 lg:p-10">
-            <div className="flex flex-col md:flex-row items-center gap-5 md:gap-8">
+        <div className="max-w-[1600px] mx-auto px-4 sm:px-6 lg:px-8 xl:px-10 py-6 md:py-8">
+          <div className="rounded-[20px] md:rounded-[24px] bg-gradient-to-r from-green-600 to-green-500 p-5 md:p-6 lg:p-8">
+            <div className="flex flex-col md:flex-row items-center gap-4 md:gap-6">
               <div className="text-center md:text-left">
-                <h3 className="text-white text-2xl sm:text-3xl lg:text-4xl font-bold leading-tight">
+                <h3 className="text-white text-xl sm:text-2xl lg:text-3xl font-bold leading-tight">
                   Stay in the Loop
                 </h3>
-                <p className="text-green-100 text-sm md:text-base mt-1.5 max-w-md">
-                  Get exclusive deals, new arrivals, and offers straight to your inbox.
+                <p className="text-green-100 text-xs md:text-sm mt-1 max-w-md">
+                  Exclusive deals, new arrivals, and offers straight to your inbox.
                 </p>
               </div>
-              <div className="flex-1 w-full md:max-w-lg">
-                <div className="flex flex-col sm:flex-row gap-3">
+              <div className="flex-1 w-full md:max-w-md">
+                <div className="flex flex-col sm:flex-row gap-2">
                   <input
                     type="email"
-                    placeholder="Enter your email address"
-                    className="flex-1 h-12 md:h-14 rounded-full px-5 md:px-6 bg-white/10 backdrop-blur-sm border border-white/20 text-white text-sm placeholder-gray-300/70 focus:outline-none focus:ring-2 focus:ring-white/40 focus:border-transparent transition-all"
+                    placeholder="Enter your email"
+                    className="flex-1 h-11 md:h-12 rounded-full px-4 md:px-5 bg-white/10 backdrop-blur-sm border border-white/20 text-white text-xs md:text-sm placeholder-gray-300/70 focus:outline-none focus:ring-2 focus:ring-white/40 focus:border-transparent transition-all"
                   />
-                  <button className="h-12 md:h-14 px-6 md:px-8 rounded-full bg-white text-green-700 font-bold text-sm md:text-base hover:bg-gray-100 transition-colors whitespace-nowrap">
+                  <button className="h-11 md:h-12 px-5 md:px-6 rounded-full bg-white text-green-700 font-bold text-xs md:text-sm hover:bg-gray-100 transition-colors whitespace-nowrap">
                     Subscribe
                   </button>
                 </div>
@@ -126,50 +126,50 @@ export function Footer() {
 
       {/* ───── Main Grid ───── */}
       <div className="border-b border-slate-800/60">
-        <div className="max-w-site mx-auto px-4 sm:px-6 lg:px-8 xl:px-10 py-10 md:py-16">
-          <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-5 gap-8 md:gap-10">
+        <div className="max-w-[1600px] mx-auto px-4 sm:px-6 lg:px-8 xl:px-10 py-8 md:py-12">
+          <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-5 gap-6 md:gap-8">
             {/* Brand column */}
             <div className="md:col-span-3 lg:col-span-1">
-              <Link href="/" className="inline-flex items-center gap-2 mb-4">
-                <div className="w-9 h-9 rounded-xl bg-primary flex items-center justify-center">
-                  <span className="material-symbols-outlined text-white text-xl">shopping_bag</span>
+              <Link href="/" className="inline-flex items-center gap-1.5 mb-3">
+                <div className="w-8 h-8 rounded-lg bg-primary flex items-center justify-center">
+                  <span className="material-symbols-outlined text-white text-lg">shopping_bag</span>
                 </div>
-                <span className="text-xl font-bold text-white">
+                <span className="text-lg font-bold text-white">
                   Amar<span className="text-primary">Shop</span>
                 </span>
               </Link>
-              <p className="text-sm text-gray-400 leading-7 max-w-[420px] mb-5">
-                Bangladesh&apos;s premium online marketplace. Shop millions of products from trusted sellers with fast delivery, cash on delivery, and the best deals every day.
+              <p className="text-xs md:text-sm text-gray-400 leading-6 max-w-[380px] mb-4">
+                Bangladesh&apos;s premium online marketplace. Shop millions of products from trusted sellers with fast delivery and the best deals.
               </p>
 
               {/* Social */}
-              <div className="flex items-center gap-3 mb-6">
+              <div className="flex items-center gap-2 mb-4">
                 {socialLinks.map((social) => (
                   <a
                     key={social.label}
                     href={social.href}
-                    className="w-11 h-11 rounded-full bg-slate-800 flex items-center justify-center text-gray-400 hover:bg-green-600 hover:text-white transition-all duration-300"
+                    className="w-10 h-10 rounded-full bg-slate-800 flex items-center justify-center text-gray-400 hover:bg-green-600 hover:text-white transition-all duration-300"
                     aria-label={social.label}
                   >
-                    <span className="material-symbols-outlined text-xl">{social.icon}</span>
+                    <span className="material-symbols-outlined text-lg">{social.icon}</span>
                   </a>
                 ))}
               </div>
 
               {/* App download */}
-              <div className="flex flex-wrap gap-3">
-                <a href="#" className="flex items-center gap-2.5 px-4 py-2.5 bg-slate-800 rounded-xl hover:bg-slate-700 transition-colors">
-                  <span className="material-symbols-outlined text-2xl text-gray-300">play_store</span>
+              <div className="flex flex-wrap gap-2">
+                <a href="#" className="flex items-center gap-2 px-3.5 py-2 bg-slate-800 rounded-lg hover:bg-slate-700 transition-colors">
+                  <span className="material-symbols-outlined text-xl text-gray-300">play_store</span>
                   <div className="text-left">
-                    <p className="text-[9px] text-gray-400">GET IT ON</p>
-                    <p className="text-[13px] text-white font-semibold">Google Play</p>
+                    <p className="text-[8px] text-gray-400">GET IT ON</p>
+                    <p className="text-xs text-white font-semibold">Google Play</p>
                   </div>
                 </a>
-                <a href="#" className="flex items-center gap-2.5 px-4 py-2.5 bg-slate-800 rounded-xl hover:bg-slate-700 transition-colors">
-                  <span className="material-symbols-outlined text-2xl text-gray-300">app_store</span>
+                <a href="#" className="flex items-center gap-2 px-3.5 py-2 bg-slate-800 rounded-lg hover:bg-slate-700 transition-colors">
+                  <span className="material-symbols-outlined text-xl text-gray-300">app_store</span>
                   <div className="text-left">
-                    <p className="text-[9px] text-gray-400">DOWNLOAD ON</p>
-                    <p className="text-[13px] text-white font-semibold">App Store</p>
+                    <p className="text-[8px] text-gray-400">DOWNLOAD ON</p>
+                    <p className="text-xs text-white font-semibold">App Store</p>
                   </div>
                 </a>
               </div>
@@ -184,15 +184,15 @@ export function Footer() {
       </div>
 
       {/* ───── Payment + Bottom ───── */}
-      <div className="max-w-site mx-auto px-4 sm:px-6 lg:px-8 xl:px-10 py-6 md:py-8">
+      <div className="max-w-[1600px] mx-auto px-4 sm:px-6 lg:px-8 xl:px-10 py-5 md:py-6">
         {/* Payment methods */}
-        <div className="flex flex-col sm:flex-row items-center gap-4 mb-6">
-          <span className="text-xs text-gray-500 font-medium shrink-0">We accept:</span>
-          <div className="flex flex-wrap items-center gap-3">
+        <div className="flex flex-col sm:flex-row items-center gap-3 mb-4">
+          <span className="text-[11px] text-gray-500 font-medium shrink-0">We accept:</span>
+          <div className="flex flex-wrap items-center gap-2">
             {paymentMethods.map((method) => (
               <span
                 key={method}
-                className="px-3 py-1.5 bg-slate-800 rounded-xl text-xs text-gray-400 font-medium hover:bg-slate-700 transition-colors"
+                className="px-2.5 py-1 bg-slate-800 rounded-lg text-[11px] text-gray-400 font-medium hover:bg-slate-700 transition-colors"
               >
                 {method}
               </span>
@@ -201,16 +201,16 @@ export function Footer() {
         </div>
 
         {/* Bottom bar */}
-        <div className="flex flex-col md:flex-row items-center justify-between gap-4 pt-6 border-t border-slate-800">
-          <p className="text-xs sm:text-sm text-gray-500 text-center md:text-left">
+        <div className="flex flex-col md:flex-row items-center justify-between gap-3 pt-4 border-t border-slate-800">
+          <p className="text-xs text-gray-500 text-center md:text-left">
             &copy; {new Date().getFullYear()} <span className="text-gray-400 font-medium">AmarShop</span>. All rights reserved.
           </p>
-          <div className="flex items-center gap-4 text-xs sm:text-sm text-gray-500">
+          <div className="flex items-center gap-3 text-xs text-gray-500">
             <Link href="/terms" className="hover:text-green-400 transition-colors">Terms</Link>
             <Link href="/privacy" className="hover:text-green-400 transition-colors">Privacy</Link>
             <Link href="/cookies" className="hover:text-green-400 transition-colors">Cookies</Link>
           </div>
-          <p className="text-xs sm:text-sm text-gray-600">
+          <p className="text-xs text-gray-600">
             Made with ❤️ for Bangladesh
           </p>
         </div>
@@ -226,12 +226,12 @@ function FooterSection({ title, links }: { title: string; links: { label: string
   return (
     <div className="lg:block">
       {/* Desktop heading */}
-      <h5 className="hidden lg:block text-white font-semibold text-base mb-5">{title}</h5>
+      <h5 className="hidden lg:block text-white font-semibold text-sm mb-4">{title}</h5>
 
       {/* Mobile accordion toggle */}
       <button
         onClick={() => setOpen(!open)}
-        className="lg:hidden flex items-center justify-between w-full py-3 border-b border-slate-800/60 text-white font-semibold text-sm"
+        className="lg:hidden flex items-center justify-between w-full py-2.5 border-b border-slate-800/60 text-white font-semibold text-sm"
       >
         {title}
         <span className={`material-symbols-outlined text-gray-400 transition-transform duration-300 ${open ? 'rotate-180' : ''}`}>
@@ -242,15 +242,15 @@ function FooterSection({ title, links }: { title: string; links: { label: string
       {/* Links */}
       <div
         className={`overflow-hidden transition-all duration-300 ${
-          open ? 'max-h-[500px] opacity-100 mt-3' : 'max-h-0 opacity-0 lg:max-h-[500px] lg:opacity-100 lg:mt-0'
+          open ? 'max-h-[500px] opacity-100 mt-2.5' : 'max-h-0 opacity-0 lg:max-h-[500px] lg:opacity-100 lg:mt-0'
         }`}
       >
-        <ul className="space-y-3 lg:space-y-3.5">
+        <ul className="space-y-2 lg:space-y-3">
           {links.map((link) => (
             <li key={link.label}>
               <Link
                 href={link.href}
-                className="text-sm text-gray-400 hover:text-green-400 transition-all duration-200 block py-0.5"
+                className="text-xs md:text-sm text-gray-400 hover:text-green-400 transition-all duration-200 block py-0.5"
               >
                 {link.label}
               </Link>

@@ -15,9 +15,9 @@ interface ProductGridProps {
 const columnClasses: Record<number, string> = {
   2: 'grid-cols-2',
   3: 'grid-cols-2 sm:grid-cols-3',
-  4: 'grid-cols-2 sm:grid-cols-3 lg:grid-cols-4',
-  5: 'grid-cols-2 sm:grid-cols-3 md:grid-cols-4 xl:grid-cols-5',
-  6: 'grid-cols-2 sm:grid-cols-3 md:grid-cols-4 xl:grid-cols-6',
+  4: 'grid-cols-2 sm:grid-cols-3 md:grid-cols-4',
+  5: 'grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5',
+  6: 'grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6',
 };
 
 export function ProductGrid({
@@ -74,7 +74,7 @@ export function ProductGrid({
           </div>
         )}
 
-        <div ref={gridRef} className={`grid ${columnClasses[columns]} gap-2 sm:gap-3 md:gap-4`}>
+        <div ref={gridRef} className={`grid ${columnClasses[columns]} gap-3`}>
           {visibleProducts.map((product, index) => (
             <div
               key={product.id}
@@ -93,9 +93,9 @@ export function ProductGrid({
         {showLoadMore && hasMore && (
           <button
             onClick={loadMore}
-            className="w-full mt-5 md:mt-6 py-2.5 md:py-3 border-2 border-primary text-primary font-semibold rounded-xl hover:bg-primary/5 active:scale-[0.99] transition-all cursor-pointer text-[13px] md:text-sm"
+            className="w-full mt-4 py-2.5 border-2 border-primary text-primary font-semibold rounded-xl hover:bg-primary/5 active:scale-[0.99] transition-all cursor-pointer text-xs"
           >
-            Load More Items
+            Load More
           </button>
         )}
       </div>
