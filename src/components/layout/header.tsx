@@ -75,7 +75,7 @@ export function Header() {
   return (
     <header className="sticky top-0 z-50 bg-white border-b border-gray-200 shadow-sm">
       {/* Main header row — compact, single-bar */}
-      <div className="h-[60px] sm:h-[64px] md:h-[68px] lg:h-[76px]">
+      <div className="h-[64px] sm:h-[68px] md:h-[72px] lg:h-[84px]">
         <div className="max-w-[1600px] 2xl:max-w-[1800px] mx-auto px-4 sm:px-6 lg:px-8 xl:px-10 h-full flex items-center justify-between gap-2 md:gap-4 lg:gap-6">
           {/* Mobile hamburger */}
           <button
@@ -87,7 +87,7 @@ export function Header() {
 
           {/* Brand */}
           <Link href="/" className="flex items-center shrink-0">
-            <img src="/images/amarshop-logo.png" alt="AmarShop" className="h-10 sm:h-11 md:h-12 lg:h-14 w-auto object-contain" />
+            <img src="/images/amarshop-logo.png" alt="AmarShop" className="h-12 sm:h-12 md:h-14 lg:h-16 w-auto object-contain" />
           </Link>
 
           {/* Search — h-12, centered */}
