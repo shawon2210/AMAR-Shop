@@ -166,10 +166,10 @@ export function ProductCard({ product, variant = 'default' }: ProductCardProps) 
           )}
         </div>
 
-        {/* CTA — min-h-[44px] mobile, h-9 desktop */}
+        {/* CTA — min-h-[44px] mobile, h-9 desktop, mt-auto for uniform alignment */}
         <button
           onClick={handleAddToCart}
-          className={`w-full min-h-[44px] py-2.5 sm:min-h-0 sm:h-9 sm:py-0 font-semibold rounded-lg active:scale-[0.97] transition-all text-xs sm:text-xs ${
+          className={`w-full mt-auto min-h-[44px] py-2.5 sm:min-h-0 sm:h-9 sm:py-0 font-semibold rounded-lg active:scale-[0.97] transition-all text-xs sm:text-xs ${
             isFlashVariant
               ? 'bg-red-500 text-white lg:hover:bg-red-600'
               : 'bg-primary text-white lg:hover:bg-primary-dark'
