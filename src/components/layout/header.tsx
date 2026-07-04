@@ -75,62 +75,62 @@ export function Header() {
   return (
     <header className="sticky top-0 z-50 bg-white border-b border-gray-200 shadow-sm">
       {/* Main header row */}
-      <div className="h-[60px] md:h-[72px] border-b border-gray-100">
-        <div className="max-w-[1600px] mx-auto px-4 sm:px-6 lg:px-8 h-full flex items-center justify-between">
+      <div className="h-[56px] md:h-[64px] lg:h-[72px] border-b border-gray-100">
+        <div className="max-w-[1600px] mx-auto px-3 sm:px-4 lg:px-6 xl:px-8 h-full flex items-center justify-between gap-2">
           {/* Mobile hamburger */}
           <button
-            className="lg:hidden text-gray-600 hover:text-primary mr-2"
+            className="lg:hidden text-gray-600 hover:text-primary shrink-0"
             onClick={() => setSidebarOpen(true)}
           >
             <span className="material-symbols-outlined text-2xl">menu</span>
           </button>
 
-          {/* Brand */}
+          {/* Brand - responsive logo */}
           <div className="flex items-center shrink-0">
             <Link href="/">
               <img
                 src="/images/logo.svg"
                 alt="AmarShop"
-                className="w-[120px] md:w-[160px] h-auto object-contain block"
+                className="w-[90px] sm:w-[110px] md:w-[140px] lg:w-[175px] xl:w-[210px] 2xl:w-[250px] h-auto object-contain block"
               />
             </Link>
           </div>
 
-          {/* Search */}
-          <div className="hidden md:flex flex-1 max-w-[600px] mx-4 lg:mx-8">
+          {/* Search - visible md+ */}
+          <div className="hidden md:flex flex-1 max-w-[480px] lg:max-w-[560px] xl:max-w-[640px] mx-2 lg:mx-4">
             <div className="relative w-full">
               <input
-                className="w-full h-[44px] rounded-lg border border-gray-300 bg-gray-50 px-4 pr-12 text-sm focus:ring-2 focus:ring-primary focus:border-primary outline-none transition-all"
-                placeholder="Search in AmarShop..."
+                className="w-full h-[40px] lg:h-[44px] rounded-lg border border-gray-300 bg-gray-50 px-3 lg:px-4 pr-10 lg:pr-12 text-xs lg:text-sm focus:ring-2 focus:ring-primary focus:border-primary outline-none transition-all"
+                placeholder="Search products, brands, categories..."
                 type="text"
               />
-              <button className="absolute right-1 top-1/2 -translate-y-1/2 w-9 h-9 flex items-center justify-center rounded-lg bg-primary text-white hover:brightness-110 transition-all">
-                <span className="material-symbols-outlined text-lg">search</span>
+              <button className="absolute right-1 top-1/2 -translate-y-1/2 w-8 h-8 lg:w-9 lg:h-9 flex items-center justify-center rounded-lg bg-primary text-white hover:brightness-110 transition-all">
+                <span className="material-symbols-outlined text-base lg:text-lg">search</span>
               </button>
             </div>
           </div>
 
           {/* Actions */}
-          <div className="flex items-center gap-3 lg:gap-5 shrink-0">
-            {/* Sell link - visible on desktop */}
+          <div className="flex items-center gap-1.5 sm:gap-2 lg:gap-3 xl:gap-4 shrink-0">
+            {/* Sell link - xl+ */}
             <Link
               href="/seller/dashboard"
-              className="hidden lg:flex items-center gap-1.5 text-sm font-medium text-gray-700 hover:text-primary transition-colors"
+              className="hidden xl:flex items-center gap-1 text-xs lg:text-sm font-medium text-gray-700 hover:text-primary transition-colors"
             >
-              <span className="material-symbols-outlined text-lg">storefront</span>
+              <span className="material-symbols-outlined text-lg lg:text-xl">storefront</span>
               <span>Sell</span>
             </Link>
 
-            {/* Notifications */}
-            <Link href="/notifications" className="relative text-gray-600 hover:text-primary transition-colors hidden sm:block">
-              <span className="material-symbols-outlined text-2xl">notifications</span>
+            {/* Notifications - lg+ */}
+            <Link href="/notifications" className="relative text-gray-600 hover:text-primary transition-colors hidden lg:block">
+              <span className="material-symbols-outlined text-xl lg:text-2xl">notifications</span>
             </Link>
 
             {/* Cart */}
             <Link href="/cart" className="relative text-gray-600 hover:text-primary transition-colors">
-              <span className="material-symbols-outlined text-2xl">shopping_cart</span>
+              <span className="material-symbols-outlined text-xl lg:text-2xl">shopping_cart</span>
               {hydrated && itemCount > 0 && (
-                <span className="absolute -top-1.5 -right-1.5 bg-primary text-white text-[10px] font-bold rounded-full w-5 h-5 flex items-center justify-center">
+                <span className="absolute -top-1.5 -right-1.5 bg-primary text-white text-[9px] lg:text-[10px] font-bold rounded-full min-w-[18px] lg:min-w-[20px] h-[18px] lg:h-[20px] flex items-center justify-center px-1">
                   {itemCount > 9 ? '9+' : itemCount}
                 </span>
               )}
@@ -140,7 +140,7 @@ export function Header() {
             {!showAuth || !isAuthenticated ? (
               <Link
                 href="/auth/login"
-                className="hidden sm:flex px-4 py-2 text-sm font-semibold text-white bg-primary rounded-lg hover:brightness-110 transition-colors"
+                className="hidden sm:flex px-3 lg:px-4 py-1.5 lg:py-2 text-xs lg:text-sm font-semibold text-white bg-primary rounded-lg hover:brightness-110 transition-colors whitespace-nowrap"
               >
                 Login
               </Link>
@@ -148,16 +148,16 @@ export function Header() {
               <div className="relative" ref={menuRef}>
                 <button
                   onClick={() => setMenuOpen(!menuOpen)}
-                  className="flex items-center gap-1.5 px-2 py-1 rounded-lg hover:bg-gray-100 transition-colors"
+                  className="flex items-center gap-1 px-1.5 lg:px-2 py-1 rounded-lg hover:bg-gray-100 transition-colors"
                 >
-                  <div className="w-8 h-8 rounded-full bg-gray-200 flex items-center justify-center text-gray-600 overflow-hidden">
+                  <div className="w-7 h-7 lg:w-8 lg:h-8 rounded-full bg-gray-200 flex items-center justify-center text-gray-600 overflow-hidden">
                     {user?.avatar ? (
                       <img src={user.avatar} alt="" className="w-full h-full object-cover" />
                     ) : (
-                      <span className="material-symbols-outlined text-lg">person</span>
+                      <span className="material-symbols-outlined text-base lg:text-lg">person</span>
                     )}
                   </div>
-                  <span className="text-sm font-medium max-w-[80px] truncate hidden lg:block">{user?.name?.split(' ')[0]}</span>
+                  <span className="text-xs lg:text-sm font-medium max-w-[60px] lg:max-w-[80px] truncate hidden lg:block">{user?.name?.split(' ')[0]}</span>
                 </button>
 
                 {menuOpen && (
@@ -214,21 +214,27 @@ export function Header() {
               className="md:hidden text-gray-600 hover:text-primary transition-colors"
               onClick={() => setMobileSearchOpen(!mobileSearchOpen)}
             >
-              <span className="material-symbols-outlined text-2xl">search</span>
+              <span className="material-symbols-outlined text-xl">search</span>
             </button>
           </div>
         </div>
       </div>
 
       {/* Secondary nav row (desktop) */}
-      <div className="hidden lg:block bg-gray-50">
-        <div className="max-w-[1600px] mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex items-center gap-1 h-10 overflow-x-auto hide-scrollbar">
+      <div className="hidden lg:block bg-gray-50 border-b border-gray-100">
+        <div className="max-w-[1600px] mx-auto px-4 lg:px-6 xl:px-8">
+          <div className="flex items-center gap-0.5 h-[36px] overflow-x-auto hide-scrollbar">
+            <Link
+              href="/"
+              className="px-2.5 py-1 text-[11px] font-medium text-primary hover:text-primary/80 rounded-md transition-colors whitespace-nowrap"
+            >
+              Home
+            </Link>
             {categoryNav.map((cat) => (
               <Link
                 key={cat.href}
                 href={cat.href}
-                className="px-3 py-1.5 text-xs font-medium text-gray-600 hover:text-primary hover:bg-gray-100 rounded-md transition-colors whitespace-nowrap"
+                className="px-2.5 py-1 text-[11px] font-medium text-gray-600 hover:text-primary hover:bg-gray-100 rounded-md transition-colors whitespace-nowrap"
               >
                 {cat.label}
               </Link>

@@ -12,7 +12,7 @@ export default async function HomePage() {
   let productsData = await getProducts(0, 16).catch(() => products.slice(0, 16));
 
   return (
-    <div className="pb-4 md:pb-8">
+    <div className="pb-4 md:pb-8 space-y-4 sm:space-y-6 md:space-y-8">
       <HeroSection />
       <CategoryGrid />
       <FlashSaleSection />

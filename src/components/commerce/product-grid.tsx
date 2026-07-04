@@ -74,7 +74,7 @@ export function ProductGrid({
           </div>
         )}
 
-        <div ref={gridRef} className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-3 md:gap-4">
+        <div ref={gridRef} className={`grid ${columnClasses[columns]} gap-2 sm:gap-3 md:gap-4`}>
           {visibleProducts.map((product, index) => (
             <div
               key={product.id}

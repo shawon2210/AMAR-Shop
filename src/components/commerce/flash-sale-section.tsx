@@ -31,7 +31,7 @@ export function FlashSaleSection() {
   };
 
   return (
-    <section className="mt-xl">
+    <section>
       <div className="max-w-[1600px] mx-auto px-4 sm:px-6 lg:px-8 xl:px-10">
         <div className="bg-white rounded-2xl p-4 md:p-6 shadow-sm border border-gray-100">
           {/* Header */}
@@ -74,19 +74,19 @@ export function FlashSaleSection() {
               {/* Left scroll button */}
               <button
                 onClick={() => scroll('left')}
-                className="absolute -left-2 md:-left-3 top-1/2 -translate-y-1/2 z-10 w-9 h-9 md:w-10 md:h-10 rounded-full bg-white shadow-lg border border-gray-200 flex items-center justify-center text-gray-600 opacity-0 group-hover/carousel:opacity-100 hover:bg-gray-50 hover:text-primary transition-all"
+                className="absolute -left-2 md:-left-3 top-1/2 -translate-y-1/2 z-10 w-8 h-8 md:w-10 md:h-10 rounded-full bg-white shadow-lg border border-gray-200 flex items-center justify-center text-gray-600 opacity-80 md:opacity-0 md:group-hover/carousel:opacity-100 hover:bg-gray-50 hover:text-primary transition-all"
                 aria-label="Scroll left"
               >
-                <span className="material-symbols-outlined text-lg">chevron_left</span>
+                <span className="material-symbols-outlined text-base md:text-lg">chevron_left</span>
               </button>
 
               <div
                 ref={scrollRef}
-                className="overflow-x-auto hide-scrollbar"
+                className="overflow-x-auto hide-scrollbar -mx-1 px-1"
               >
-                <div className="flex gap-3 md:gap-4 pb-2">
+                <div className="flex gap-2 sm:gap-3 md:gap-4 pb-1">
                   {displayProducts.map(product => (
-                    <div key={product.id} className="min-w-[180px] md:min-w-[220px]">
+                    <div key={product.id} className="min-w-[140px] sm:min-w-[170px] md:min-w-[200px] lg:min-w-[220px]">
                       <ProductCard product={product} variant="flash-sale" />
                     </div>
                   ))}
@@ -96,10 +96,10 @@ export function FlashSaleSection() {
               {/* Right scroll button */}
               <button
                 onClick={() => scroll('right')}
-                className="absolute -right-2 md:-right-3 top-1/2 -translate-y-1/2 z-10 w-9 h-9 md:w-10 md:h-10 rounded-full bg-white shadow-lg border border-gray-200 flex items-center justify-center text-gray-600 opacity-0 group-hover/carousel:opacity-100 hover:bg-gray-50 hover:text-primary transition-all"
+                className="absolute -right-2 md:-right-3 top-1/2 -translate-y-1/2 z-10 w-8 h-8 md:w-10 md:h-10 rounded-full bg-white shadow-lg border border-gray-200 flex items-center justify-center text-gray-600 opacity-80 md:opacity-0 md:group-hover/carousel:opacity-100 hover:bg-gray-50 hover:text-primary transition-all"
                 aria-label="Scroll right"
               >
-                <span className="material-symbols-outlined text-lg">chevron_right</span>
+                <span className="material-symbols-outlined text-base md:text-lg">chevron_right</span>
               </button>
             </div>
           ) : (

@@ -94,7 +94,7 @@ export function HeroSlider() {
 
   return (
     <div
-      className="relative overflow-hidden rounded-[32px] bg-gradient-to-br from-gray-50 to-white w-full h-[320px] sm:h-[360px] md:h-[440px] lg:h-[520px] xl:h-[580px] 2xl:h-[640px] group"
+      className="relative overflow-hidden rounded-xl sm:rounded-2xl lg:rounded-[32px] bg-gradient-to-br from-gray-100 to-white w-full aspect-[4/3] sm:aspect-[2/1] md:aspect-[21/9] lg:aspect-[3/1] xl:aspect-[3.5/1] max-h-[260px] sm:max-h-[320px] md:max-h-[400px] lg:max-h-[500px] xl:max-h-[580px] 2xl:max-h-[640px] group"
       onTouchStart={handleTouchStart}
       onTouchMove={handleTouchMove}
       onTouchEnd={handleTouchEnd}
@@ -112,9 +112,9 @@ export function HeroSlider() {
           >
             {imgErrors[i] ? (
               <div className="absolute inset-0 bg-gradient-to-br from-primary/10 to-primary-fixed flex items-center justify-center">
-                <div className="text-center p-6">
-                  <span className="material-symbols-outlined text-5xl text-primary/40">shopping_bag</span>
-                  <p className="text-primary/60 font-semibold mt-2 text-sm">{slide.title}</p>
+                <div className="text-center p-4 sm:p-6">
+                  <span className="material-symbols-outlined text-4xl sm:text-5xl text-primary/40">shopping_bag</span>
+                  <p className="text-primary/60 font-semibold mt-1 sm:mt-2 text-xs sm:text-sm">{slide.title}</p>
                 </div>
               </div>
             ) : (
@@ -124,7 +124,7 @@ export function HeroSlider() {
                 loading={i === 0 ? "eager" : "lazy"}
                 decoding="async"
                 fetchPriority={i === 0 ? "high" : "auto"}
-                className="absolute inset-0 h-full w-full object-scale-down p-2 sm:p-3 md:p-4"
+                className="absolute inset-0 h-full w-full object-cover"
                 onError={() => handleImgError(i)}
               />
             )}

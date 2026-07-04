@@ -7,9 +7,9 @@ interface PriceDisplayProps {
 }
 
 const sizeMap = {
-  sm: { current: 'text-base', original: 'text-[11px]' },
-  md: { current: 'text-price-lg', original: 'text-[12px]' },
-  lg: { current: 'text-2xl', original: 'text-sm' },
+  sm: { current: 'text-sm md:text-base font-bold', original: 'text-[10px] md:text-[11px]' },
+  md: { current: 'text-base md:text-lg lg:text-xl font-bold', original: 'text-[11px] md:text-[12px]' },
+  lg: { current: 'text-xl md:text-2xl lg:text-3xl font-bold', original: 'text-sm md:text-base' },
 };
 
 export function PriceDisplay({
@@ -23,11 +23,11 @@ export function PriceDisplay({
 
   return (
     <div className={`flex items-baseline gap-1.5 ${className}`}>
-      <span className={`font-price-lg ${s.current} text-primary`}>
+      <span className={`${s.current} text-primary`}>
         {currency}{price.toLocaleString('en-BD')}
       </span>
       {originalPrice && originalPrice > price && (
-        <span className={`text-secondary line-through ${s.original}`}>
+        <span className={`text-gray-400 line-through ${s.original}`}>
           {currency}{originalPrice.toLocaleString('en-BD')}
         </span>
       )}
@@ -37,8 +37,8 @@ export function PriceDisplay({
 
 export function DiscountBadge({ discount }: { discount: number }) {
   return (
-    <span className="bg-primary text-white text-[10px] font-label-bold px-1.5 py-0.5 rounded-full uppercase">
-      -{discount}% OFF
+    <span className="bg-primary text-white text-[10px] font-bold px-1.5 py-0.5 rounded-full uppercase">
+      -{discount}%
     </span>
   );
 }

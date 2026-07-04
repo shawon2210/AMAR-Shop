@@ -5,23 +5,23 @@ import { categories } from '@/lib/data/categories';
 
 export function CategoryGrid() {
   return (
-    <section className="bg-white mt-xl">
+    <section className="bg-white">
       <div className="max-w-[1600px] mx-auto px-4 sm:px-6 lg:px-8 xl:px-10 py-4 md:py-6">
-        {/* Desktop: 2-row grid */}
-        <div className="hidden md:grid grid-cols-6 xl:grid-cols-6 gap-y-5 gap-x-2">
+        {/* Desktop: grid */}
+        <div className="hidden md:grid grid-cols-4 lg:grid-cols-6 xl:grid-cols-6 gap-3 md:gap-4">
           {categories.map(cat => (
             <Link
               key={cat.id}
               href={`/category/${cat.slug}`}
-              className="flex flex-col items-center gap-2 cursor-pointer group py-2 px-1 rounded-xl hover:bg-gray-50 transition-all"
+              className="flex flex-col items-center gap-2 cursor-pointer group py-3 px-2 rounded-xl hover:bg-gray-50 transition-all"
             >
-              <div className="w-14 h-14 lg:w-16 lg:h-16 rounded-full bg-gradient-to-br from-primary-fixed to-primary/10 flex items-center justify-center text-primary group-hover:from-primary group-hover:to-primary/80 group-hover:text-white transition-all duration-300 shadow-sm group-hover:shadow-md">
-                <span className="material-symbols-outlined text-2xl lg:text-3xl">{cat.icon}</span>
+              <div className="w-12 h-12 md:w-14 md:h-14 lg:w-16 lg:h-16 rounded-full bg-gradient-to-br from-primary-fixed to-primary/10 flex items-center justify-center text-primary group-hover:from-primary group-hover:to-primary/80 group-hover:text-white transition-all duration-300 shadow-sm group-hover:shadow-md">
+                <span className="material-symbols-outlined text-xl md:text-2xl lg:text-3xl">{cat.icon}</span>
               </div>
-              <span className="text-xs lg:text-sm font-medium text-gray-700 group-hover:text-primary text-center leading-tight">
+              <span className="text-[11px] md:text-xs lg:text-sm font-medium text-gray-700 group-hover:text-primary text-center leading-tight">
                 {cat.name}
               </span>
-              <span className="text-[10px] text-gray-400 -mt-1">
+              <span className="text-[9px] md:text-[10px] text-gray-400 -mt-1">
                 {cat.productCount > 999 ? `${(cat.productCount / 1000).toFixed(0)}k+ items` : `${cat.productCount} items`}
               </span>
             </Link>

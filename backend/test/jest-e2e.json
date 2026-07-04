@@ -4,9 +4,9 @@
   "testEnvironment": "node",
   "testRegex": ".e2e-spec.ts$",
   "transform": {
-    "^.+\\.(t|j)s$": "../../node_modules/ts-jest"
+    "^.+\\.(t|j)s$": "ts-jest"
   },
-  "setupFilesAfterSetup": [],
+  "setupFilesAfterEnv": [],
   "globalSetup": "<rootDir>/global-setup.ts",
   "globalTeardown": "<rootDir>/global-teardown.ts"
 }
