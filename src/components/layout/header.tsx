@@ -53,15 +53,15 @@ export function Header() {
 
       {/* Row 2: Main Header (Responsive) */}
       <div className="h-[72px] lg:h-[96px] flex items-center">
-        <div className="max-w-[1440px] mx-auto px-4 lg:px-6 w-full flex items-center justify-between gap-4">
-          <div className="flex items-center gap-3">
+        <div className="max-w-[1440px] mx-auto px-2 lg:px-6 w-full flex items-center justify-between gap-2 lg:gap-4">
+          <div className="flex items-center gap-1 sm:gap-2">
             {/* Hamburger menu */}
-            <button onClick={() => setSidebarOpen(true)} className="md:hidden text-gray-600">
+            <button onClick={() => setSidebarOpen(true)} className="text-gray-600 p-1">
               <span className="material-symbols-outlined text-2xl">menu</span>
             </button>
             {/* Logo */}
-            <Link href="/" className="flex items-center shrink-0 -ml-3 md:-ml-4 lg:-ml-6">
-              <img src="/images/amarshop-logo.png" alt="AmarShop" className="w-[clamp(140px,18vw,300px)] h-auto object-contain" />
+            <Link href="/" className="flex items-center shrink-0">
+              <img src="/images/amarshop-logo.png" alt="AmarShop" className="w-[120px] sm:w-[150px] md:w-[clamp(140px,18vw,300px)] h-auto object-contain" />
             </Link>
           </div>
 
