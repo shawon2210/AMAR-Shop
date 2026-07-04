@@ -25,7 +25,7 @@ describe('Products (e2e)', () => {
     it('should return paginated products', async () => {
       const res = await request(app.getHttpServer())
         .get('/api/v1/products')
-        .query({ page: 1, limit: 10 })
+        .query({ skip: 0, take: 10 })
         .expect(200);
 
       expect(res.body).toHaveProperty('products');
@@ -36,7 +36,7 @@ describe('Products (e2e)', () => {
     it('should filter by category', async () => {
       const res = await request(app.getHttpServer())
         .get('/api/v1/products')
-        .query({ categoryId: 'cat-1' })
+        .query({ category: 'electronics' })
         .expect(200);
 
       expect(res.body).toHaveProperty('products');
@@ -56,7 +56,7 @@ describe('Products (e2e)', () => {
     });
   });
 
-  describe('GET /api/v1/products/:slug', () => {
+  describe('GET /api/v1/products/:id', () => {
     it('should return a single product', async () => {
       const res = await request(app.getHttpServer())
         .get('/api/v1/products/cmr3pzr9o000774iiknhsyo0k')
@@ -69,18 +69,6 @@ describe('Products (e2e)', () => {
       await request(app.getHttpServer())
         .get('/api/v1/products/non-existent-product-xyz')
         .expect(404);
-    });
-  });
-
-  describe('GET /api/v1/products/category/:slug', () => {
-    it('should return products by category', async () => {
-      const res = await request(app.getHttpServer())
-        .get('/api/v1/products/category/electronics')
-        .expect(200);
-
-      expect(res.body).toHaveProperty('products');
-      expect(res.body).toHaveProperty('total');
-      expect(Array.isArray(res.body.products)).toBe(true);
     });
   });
 });
