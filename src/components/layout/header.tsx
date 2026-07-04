@@ -86,13 +86,8 @@ export function Header() {
           </button>
 
           {/* Brand */}
-          <Link href="/" className="flex items-center gap-1.5 shrink-0">
-            <div className="w-7 h-7 sm:w-8 sm:h-8 md:w-9 md:h-9 lg:w-10 lg:h-10 rounded-lg bg-primary flex items-center justify-center">
-              <span className="material-symbols-outlined text-white text-sm sm:text-base md:text-lg lg:text-xl">shopping_bag</span>
-            </div>
-            <span className="text-sm sm:text-base md:text-lg lg:text-xl xl:text-2xl font-bold text-gray-900 hidden sm:block">
-              Amar<span className="text-primary">Shop</span>
-            </span>
+          <Link href="/" className="flex items-center shrink-0">
+            <img src="/images/amarshop-logo.png" alt="AmarShop" className="h-6 sm:h-7 md:h-8 lg:h-9 xl:h-10 w-auto object-contain" />
           </Link>
 
           {/* Search — h-12, centered */}
@@ -276,11 +271,8 @@ export function Header() {
           <div className="absolute inset-0 bg-black/50" onClick={() => setSidebarOpen(false)} />
           <div ref={sidebarRef} className="absolute left-0 top-0 h-full w-80 max-w-[85vw] bg-white shadow-xl flex flex-col">
             <div className="flex items-center justify-between px-4 h-14 border-b border-gray-200">
-              <div className="flex items-center gap-2">
-                <div className="w-7 h-7 rounded-lg bg-primary flex items-center justify-center">
-                  <span className="material-symbols-outlined text-white text-sm">shopping_bag</span>
-                </div>
-                <span className="font-bold text-gray-900">AmarShop</span>
+              <div className="flex items-center">
+                <img src="/images/amarshop-logo.png" alt="AmarShop" className="h-7 w-auto object-contain" />
               </div>
               <button onClick={() => setSidebarOpen(false)} className="text-gray-500 hover:text-gray-700">
                 <span className="material-symbols-outlined text-2xl">close</span>

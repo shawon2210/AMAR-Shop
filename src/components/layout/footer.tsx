@@ -123,13 +123,8 @@ export function Footer() {
           <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-5 gap-6 md:gap-8">
             {/* Brand column */}
             <div className="lg:col-span-1">
-              <Link href="/" className="inline-flex items-center gap-1.5 mb-3">
-                <div className="w-8 h-8 rounded-lg bg-primary flex items-center justify-center">
-                  <span className="material-symbols-outlined text-white text-lg">shopping_bag</span>
-                </div>
-                <span className="text-lg font-bold text-text-primary">
-                  Amar<span className="text-primary">Shop</span>
-                </span>
+              <Link href="/" className="inline-flex items-center mb-3">
+                <img src="/images/amarshop-logo.png" alt="AmarShop" className="h-7 md:h-8 w-auto object-contain" />
               </Link>
               <p className="text-xs md:text-sm text-text-secondary leading-6 max-w-[380px]">
                 Bangladesh&apos;s premium online marketplace. Shop millions of products from trusted sellers with fast delivery and the best deals.
