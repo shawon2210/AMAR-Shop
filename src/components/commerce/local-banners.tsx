@@ -1,48 +1,50 @@
 import Link from 'next/link';
 
-const bannerItems = [
+const trustItems = [
   {
-    icon: 'local_shipping',
-    title: 'Free Shipping',
-    desc: 'On all orders over ৳999',
-    bg: 'from-blue-500 to-blue-600',
-    href: '/categories',
-  },
-  {
-    icon: 'payments',
-    title: 'Cash on Delivery',
-    desc: 'Pay when you receive',
-    bg: 'from-emerald-500 to-emerald-600',
-    href: '#',
+    icon: 'verified',
+    title: '100% Authentic',
+    desc: 'Genuine products with brand warranty',
+    color: 'bg-primary/10 text-primary',
   },
   {
     icon: 'assignment_return',
-    title: '7-Day Returns',
-    desc: 'Easy return & exchange',
-    bg: 'from-violet-500 to-violet-600',
-    href: '#',
+    title: 'Easy Returns',
+    desc: '7-day return & exchange policy',
+    color: 'bg-blue-50 text-blue-600',
+  },
+  {
+    icon: 'payments',
+    title: 'Secure Payments',
+    desc: 'SSL encrypted checkout. bKash, Nagad, COD',
+    color: 'bg-emerald-50 text-emerald-600',
+  },
+  {
+    icon: 'local_shipping',
+    title: 'Nationwide Delivery',
+    desc: 'Free shipping on orders over ৳999',
+    color: 'bg-purple-50 text-purple-600',
   },
 ];
 
 export function LocalBanners() {
   return (
     <section>
-      <div className="max-w-[1600px] mx-auto px-4 sm:px-6 lg:px-8 xl:px-10">
-        <div className="grid grid-cols-1 sm:grid-cols-3 gap-2 md:gap-4">
-          {bannerItems.map((item) => (
-            <Link
+      <div className="max-w-site mx-auto px-3 sm:px-4 lg:px-6 xl:px-8">
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-2 md:gap-3">
+          {trustItems.map((item) => (
+            <div
               key={item.title}
-              href={item.href}
-              className={`bg-gradient-to-r ${item.bg} rounded-xl p-3 sm:p-4 md:p-5 flex items-center gap-3 sm:gap-4 text-white hover:brightness-110 transition-all active:scale-[0.98]`}
+              className="bg-white rounded-xl p-3 md:p-4 lg:p-5 flex flex-col items-center text-center gap-2 shadow-sm border border-gray-100 hover:shadow-md transition-all"
             >
-              <div className="w-10 h-10 sm:w-12 sm:h-12 rounded-full bg-white/20 flex items-center justify-center shrink-0">
-                <span className="material-symbols-outlined text-xl sm:text-2xl">{item.icon}</span>
+              <div className={`w-10 h-10 md:w-12 md:h-12 rounded-xl ${item.color} flex items-center justify-center`}>
+                <span className="material-symbols-outlined text-xl md:text-2xl">{item.icon}</span>
               </div>
-              <div className="min-w-0">
-                <h4 className="font-semibold text-sm sm:text-base">{item.title}</h4>
-                <p className="text-[11px] sm:text-xs md:text-sm text-white/80 truncate">{item.desc}</p>
+              <div>
+                <h4 className="font-semibold text-[12px] md:text-sm text-gray-900">{item.title}</h4>
+                <p className="text-[10px] md:text-xs text-gray-500 mt-0.5">{item.desc}</p>
               </div>
-            </Link>
+            </div>
           ))}
         </div>
       </div>

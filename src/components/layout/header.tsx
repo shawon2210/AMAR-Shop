@@ -74,9 +74,28 @@ export function Header() {
 
   return (
     <header className="sticky top-0 z-50 bg-white border-b border-gray-200 shadow-sm">
+      {/* Top bar - hidden on mobile */}
+      <div className="hidden lg:block bg-gray-50 border-b border-gray-100">
+        <div className="max-w-site mx-auto px-4 lg:px-6 xl:px-8">
+          <div className="flex items-center justify-between h-[36px]">
+            <div className="flex items-center gap-4 text-[12px] text-gray-500">
+              <Link href="/help" className="hover:text-primary transition-colors">Help</Link>
+              <Link href="/orders" className="hover:text-primary transition-colors">Track Order</Link>
+              <span className="text-gray-300">|</span>
+              <span>🇧🇩 Bangladesh</span>
+            </div>
+            <div className="flex items-center gap-4 text-[12px] text-gray-500">
+              <Link href="/seller/dashboard" className="hover:text-primary transition-colors font-medium text-primary">Become a Seller</Link>
+              <span className="text-gray-300">|</span>
+              <Link href="/flash-sale" className="hover:text-primary transition-colors">Offers</Link>
+            </div>
+          </div>
+        </div>
+      </div>
+
       {/* Main header row */}
-      <div className="h-[56px] md:h-[64px] lg:h-[72px] border-b border-gray-100">
-        <div className="max-w-[1600px] mx-auto px-3 sm:px-4 lg:px-6 xl:px-8 h-full flex items-center justify-between gap-2">
+      <div className="h-[56px] md:h-[60px] lg:h-[68px]">
+        <div className="max-w-site mx-auto px-3 sm:px-4 lg:px-6 xl:px-8 h-full flex items-center justify-between gap-2">
           {/* Mobile hamburger */}
           <button
             className="lg:hidden text-gray-600 hover:text-primary shrink-0"
@@ -85,22 +104,23 @@ export function Header() {
             <span className="material-symbols-outlined text-2xl">menu</span>
           </button>
 
-          {/* Brand - responsive logo */}
+          {/* Brand */}
           <div className="flex items-center shrink-0">
-            <Link href="/">
-              <img
-                src="/images/logo.svg"
-                alt="AmarShop"
-                className="w-[90px] sm:w-[110px] md:w-[140px] lg:w-[175px] xl:w-[210px] 2xl:w-[250px] h-auto object-contain block"
-              />
+            <Link href="/" className="flex items-center gap-2">
+              <div className="w-8 h-8 md:w-9 md:h-9 rounded-lg bg-primary flex items-center justify-center">
+                <span className="material-symbols-outlined text-white text-lg md:text-xl">shopping_bag</span>
+              </div>
+              <span className="text-lg md:text-xl lg:text-2xl font-bold text-gray-900 hidden sm:block">
+                Amar<span className="text-primary">Shop</span>
+              </span>
             </Link>
           </div>
 
-          {/* Search - visible md+ */}
+          {/* Search */}
           <div className="hidden md:flex flex-1 max-w-[480px] lg:max-w-[560px] xl:max-w-[640px] mx-2 lg:mx-4">
             <div className="relative w-full">
               <input
-                className="w-full h-[40px] lg:h-[44px] rounded-lg border border-gray-300 bg-gray-50 px-3 lg:px-4 pr-10 lg:pr-12 text-xs lg:text-sm focus:ring-2 focus:ring-primary focus:border-primary outline-none transition-all"
+                className="w-full h-[40px] lg:h-[44px] rounded-lg border-2 border-primary/20 bg-gray-50 px-3 lg:px-4 pr-10 lg:pr-12 text-xs lg:text-sm focus:ring-2 focus:ring-primary/30 focus:border-primary outline-none transition-all"
                 placeholder="Search products, brands, categories..."
                 type="text"
               />
@@ -112,16 +132,16 @@ export function Header() {
 
           {/* Actions */}
           <div className="flex items-center gap-1.5 sm:gap-2 lg:gap-3 xl:gap-4 shrink-0">
-            {/* Sell link - xl+ */}
+            {/* Sell link */}
             <Link
               href="/seller/dashboard"
-              className="hidden xl:flex items-center gap-1 text-xs lg:text-sm font-medium text-gray-700 hover:text-primary transition-colors"
+              className="hidden xl:flex items-center gap-1.5 px-3 py-1.5 rounded-lg border border-primary/30 text-[12px] font-medium text-primary hover:bg-primary/5 transition-colors"
             >
-              <span className="material-symbols-outlined text-lg lg:text-xl">storefront</span>
+              <span className="material-symbols-outlined text-lg">storefront</span>
               <span>Sell</span>
             </Link>
 
-            {/* Notifications - lg+ */}
+            {/* Notifications */}
             <Link href="/notifications" className="relative text-gray-600 hover:text-primary transition-colors hidden lg:block">
               <span className="material-symbols-outlined text-xl lg:text-2xl">notifications</span>
             </Link>
@@ -130,7 +150,7 @@ export function Header() {
             <Link href="/cart" className="relative text-gray-600 hover:text-primary transition-colors">
               <span className="material-symbols-outlined text-xl lg:text-2xl">shopping_cart</span>
               {hydrated && itemCount > 0 && (
-                <span className="absolute -top-1.5 -right-1.5 bg-primary text-white text-[9px] lg:text-[10px] font-bold rounded-full min-w-[18px] lg:min-w-[20px] h-[18px] lg:h-[20px] flex items-center justify-center px-1">
+                <span className="absolute -top-1.5 -right-1.5 bg-red text-white text-[9px] lg:text-[10px] font-bold rounded-full min-w-[18px] lg:min-w-[20px] h-[18px] lg:h-[20px] flex items-center justify-center px-1">
                   {itemCount > 9 ? '9+' : itemCount}
                 </span>
               )}
@@ -220,35 +240,45 @@ export function Header() {
         </div>
       </div>
 
-      {/* Secondary nav row (desktop) */}
-      <div className="hidden lg:block bg-gray-50 border-b border-gray-100">
-        <div className="max-w-[1600px] mx-auto px-4 lg:px-6 xl:px-8">
-          <div className="flex items-center gap-0.5 h-[36px] overflow-x-auto hide-scrollbar">
+      {/* Category navigation */}
+      <div className="hidden lg:block bg-white border-b border-gray-100">
+        <div className="max-w-site mx-auto px-4 lg:px-6 xl:px-8">
+          <div className="flex items-center gap-0.5 h-[40px] overflow-x-auto hide-scrollbar">
             <Link
               href="/"
-              className="px-2.5 py-1 text-[11px] font-medium text-primary hover:text-primary/80 rounded-md transition-colors whitespace-nowrap"
+              className="flex items-center gap-1 px-3 py-1.5 text-[12px] font-semibold text-primary hover:text-primary/80 rounded-md transition-colors whitespace-nowrap"
             >
+              <span className="material-symbols-outlined text-[16px]">home</span>
               Home
             </Link>
+            <div className="w-px h-4 bg-gray-200 mx-0.5" />
             {categoryNav.map((cat) => (
               <Link
                 key={cat.href}
                 href={cat.href}
-                className="px-2.5 py-1 text-[11px] font-medium text-gray-600 hover:text-primary hover:bg-gray-100 rounded-md transition-colors whitespace-nowrap"
+                className="px-3 py-1.5 text-[12px] font-medium text-gray-600 hover:text-primary hover:bg-gray-50 rounded-md transition-colors whitespace-nowrap"
               >
                 {cat.label}
               </Link>
             ))}
+            <div className="flex-1" />
+            <Link
+              href="/categories"
+              className="px-3 py-1.5 text-[12px] font-medium text-primary hover:text-primary/80 rounded-md transition-colors whitespace-nowrap flex items-center gap-1"
+            >
+              All Categories
+              <span className="material-symbols-outlined text-[14px]">chevron_right</span>
+            </Link>
           </div>
         </div>
       </div>
 
       {/* Mobile search bar */}
       {mobileSearchOpen && (
-        <div className="lg:hidden px-4 pb-3 bg-white">
+        <div className="lg:hidden px-4 pb-3 bg-white border-b border-gray-100">
           <div className="relative w-full">
             <input
-              className="w-full h-11 rounded-lg border border-gray-300 bg-gray-50 px-4 pr-11 text-sm outline-none focus:ring-2 focus:ring-primary transition-all"
+              className="w-full h-11 rounded-lg border-2 border-primary/20 bg-gray-50 px-4 pr-11 text-sm outline-none focus:ring-2 focus:ring-primary/30 focus:border-primary transition-all"
               placeholder="Search in AmarShop..."
               type="text"
               autoFocus
@@ -264,15 +294,19 @@ export function Header() {
       {sidebarOpen && (
         <div className="fixed inset-0 z-50 lg:hidden">
           <div className="absolute inset-0 bg-black/50" onClick={() => setSidebarOpen(false)} />
-          <div ref={sidebarRef} className="absolute right-0 top-0 h-full w-80 max-w-[85vw] bg-white shadow-xl flex flex-col">
+          <div ref={sidebarRef} className="absolute left-0 top-0 h-full w-80 max-w-[85vw] bg-white shadow-xl flex flex-col">
             <div className="flex items-center justify-between px-4 h-14 border-b border-gray-200">
-              <img src="/images/logo.svg" alt="AmarShop" className="h-6" />
+              <div className="flex items-center gap-2">
+                <div className="w-7 h-7 rounded-lg bg-primary flex items-center justify-center">
+                  <span className="material-symbols-outlined text-white text-sm">shopping_bag</span>
+                </div>
+                <span className="font-bold text-gray-900">AmarShop</span>
+              </div>
               <button onClick={() => setSidebarOpen(false)} className="text-gray-500 hover:text-gray-700">
                 <span className="material-symbols-outlined text-2xl">close</span>
               </button>
             </div>
             <div className="flex-1 overflow-y-auto py-4">
-              {/* User section */}
               {showAuth && isAuthenticated && user ? (
                 <div className="px-4 pb-4 border-b border-gray-100 mb-4">
                   <div className="flex items-center gap-3">
@@ -308,7 +342,6 @@ export function Header() {
                 </div>
               )}
 
-              {/* Navigation links */}
               <div className="px-2 space-y-1">
                 {[
                   { href: '/', label: 'Home', icon: 'home' },
@@ -337,7 +370,7 @@ export function Header() {
                   <Link
                     href="/admin"
                     onClick={() => setSidebarOpen(false)}
-                    className="flex items-center gap-3 px-3 py-2.5 text-sm text-primary hover:bg-primary-fixed rounded-lg transition-colors font-semibold"
+                    className="flex items-center gap-3 px-3 py-2.5 text-sm text-primary hover:bg-primary/5 rounded-lg transition-colors font-semibold"
                   >
                     <span className="material-symbols-outlined text-base">dashboard</span>
                     Admin Dashboard
@@ -359,7 +392,6 @@ export function Header() {
           </div>
         </div>
       )}
-
     </header>
   );
 }

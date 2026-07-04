@@ -58,15 +58,15 @@ export function ProductGrid({
   const hasMore = visibleProducts.length < products.length;
 
   return (
-    <section className="mt-xl">
-      <div className="max-w-[1600px] mx-auto px-4 sm:px-6 lg:px-8 xl:px-10">
-        {/* Header with "See All" */}
+    <section>
+      <div className="max-w-site mx-auto px-3 sm:px-4 lg:px-6 xl:px-8">
+        {/* Header */}
         {title && (
           <div className="flex items-center justify-between mb-4">
-            <h3 className="text-lg md:text-xl font-bold text-gray-900">{title}</h3>
+            <h3 className="text-base md:text-lg font-bold text-gray-900">{title}</h3>
             <Link
               href="/categories"
-              className="flex items-center gap-1 text-sm font-semibold text-primary hover:text-primary/80 transition-colors"
+              className="flex items-center gap-1 text-[12px] md:text-sm font-semibold text-primary hover:text-primary/80 transition-colors"
             >
               See All
               <span className="material-symbols-outlined text-base">arrow_forward_ios</span>
@@ -93,7 +93,7 @@ export function ProductGrid({
         {showLoadMore && hasMore && (
           <button
             onClick={loadMore}
-            className="w-full mt-6 py-3 border-2 border-primary text-primary font-semibold rounded-xl hover:bg-primary/5 active:scale-[0.99] transition-all cursor-pointer text-sm"
+            className="w-full mt-5 md:mt-6 py-2.5 md:py-3 border-2 border-primary text-primary font-semibold rounded-xl hover:bg-primary/5 active:scale-[0.99] transition-all cursor-pointer text-[13px] md:text-sm"
           >
             Load More Items
           </button>
