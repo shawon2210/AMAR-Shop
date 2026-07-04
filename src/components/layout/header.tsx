@@ -87,7 +87,7 @@ export function Header() {
 
           {/* Brand */}
           <Link href="/" className="flex items-center shrink-0">
-            <img src="/images/amarshop-logo.png" alt="AmarShop" className="h-14 md:h-16 w-auto object-contain" />
+            <img src="/images/amarshop-logo.png" alt="AmarShop" className="h-10 sm:h-11 md:h-12 lg:h-14 w-auto object-contain" />
           </Link>
 
           {/* Search — h-12, centered */}
