@@ -55,13 +55,13 @@ export function Header() {
 
       {/* Row 2: Main Header */}
       <div className="h-[96px]">
-        <div className="max-w-[1440px] mx-auto px-6 h-full grid grid-cols-[300px_1fr_240px] items-center gap-4">
+        <div className="max-w-[1440px] mx-auto px-4 md:px-6 h-full flex items-center justify-between gap-4">
           <Link href="/" className="flex items-center shrink-0">
-            <img src="/images/amarshop-logo.png" alt="AmarShop" className="h-auto w-auto" style={{ maxHeight: '58px', objectFit: 'contain' }} />
+            <img src="/images/amarshop-logo.png" alt="AmarShop" className="w-[140px] md:w-[200px] lg:w-[300px] h-auto" style={{ maxHeight: '58px', objectFit: 'contain' }} />
           </Link>
 
-          <div className="flex justify-center w-full">
-            <div className="relative w-full max-w-[760px]">
+          <div className="flex-1 max-w-[760px] hidden md:block">
+            <div className="relative w-full">
               <input
                 className="w-full h-12 rounded-full border border-gray-300 bg-gray-50 pl-6 pr-14 text-sm outline-none focus:ring-2 focus:ring-green-500 transition-all"
                 placeholder="Search in AmarShop"
@@ -73,7 +73,7 @@ export function Header() {
             </div>
           </div>
 
-          <div className="flex items-center justify-end gap-4 text-gray-600">
+          <div className="flex items-center gap-4 text-gray-600">
             <Link href="/seller/dashboard" className="hidden lg:flex hover:text-primary">
               <span className="material-symbols-outlined text-xl">storefront</span>
             </Link>
@@ -89,7 +89,7 @@ export function Header() {
               )}
             </Link>
             {!showAuth || !isAuthenticated ? (
-              <Link href="/auth/login" className="px-5 py-2 text-xs font-semibold text-white bg-primary rounded-full hover:brightness-110">
+              <Link href="/auth/login" className="px-4 py-2 text-xs font-semibold text-white bg-primary rounded-full hover:brightness-110 whitespace-nowrap">
                 Login
               </Link>
             ) : (
