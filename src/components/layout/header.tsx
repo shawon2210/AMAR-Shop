@@ -57,7 +57,7 @@ export function Header() {
       <div className="h-[96px]">
         <div className="max-w-[1440px] mx-auto px-4 md:px-6 h-full flex items-center justify-between gap-4">
           <Link href="/" className="flex items-center shrink-0">
-            <img src="/images/amarshop-logo.png" alt="AmarShop" className="w-[140px] md:w-[200px] lg:w-[300px] h-auto" style={{ maxHeight: '58px', objectFit: 'contain' }} />
+            <img src="/images/amarshop-logo.png" alt="AmarShop" className="w-[clamp(180px,22vw,400px)] h-auto object-contain" style={{ maxHeight: '58px' }} />
           </Link>
 
           <div className="flex-1 max-w-[760px] hidden md:block">
