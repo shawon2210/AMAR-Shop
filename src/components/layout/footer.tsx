@@ -124,7 +124,7 @@ export function Footer() {
             {/* Brand column */}
             <div className="lg:col-span-1">
               <Link href="/" className="inline-flex items-center mb-3">
-                <img src="/images/amarshop-logo.png" alt="AmarShop" className="h-16 md:h-20 w-auto object-contain" />
+                <img src="/images/amarshop-logo.png" alt="AmarShop" className="h-10 md:h-11 w-auto object-contain" />
               </Link>
               <p className="text-xs md:text-sm text-text-secondary leading-6 max-w-[380px]">
                 Bangladesh&apos;s premium online marketplace. Shop millions of products from trusted sellers with fast delivery and the best deals.
