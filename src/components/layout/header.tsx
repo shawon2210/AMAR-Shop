@@ -75,7 +75,7 @@ export function Header() {
   return (
     <header className="sticky top-0 z-50 bg-white border-b border-gray-200 shadow-sm">
       {/* Main header row — compact, single-bar */}
-      <div className="h-[56px] sm:h-[60px] md:h-[64px] lg:h-[68px]">
+      <div className="h-[60px] sm:h-[64px] md:h-[68px] lg:h-[76px]">
         <div className="max-w-[1600px] 2xl:max-w-[1800px] mx-auto px-4 sm:px-6 lg:px-8 xl:px-10 h-full flex items-center justify-between gap-2 md:gap-4 lg:gap-6">
           {/* Mobile hamburger */}
           <button
@@ -87,7 +87,7 @@ export function Header() {
 
           {/* Brand */}
           <Link href="/" className="flex items-center shrink-0">
-            <img src="/images/amarshop-logo.png" alt="AmarShop" className="h-12 md:h-14 w-auto object-contain" />
+            <img src="/images/amarshop-logo.png" alt="AmarShop" className="h-full w-auto max-w-[180px] object-contain py-1.5" />
           </Link>
 
           {/* Search — h-12, centered */}
@@ -272,7 +272,7 @@ export function Header() {
           <div ref={sidebarRef} className="absolute left-0 top-0 h-full w-80 max-w-[85vw] bg-white shadow-xl flex flex-col">
             <div className="flex items-center justify-between px-4 h-14 border-b border-gray-200">
               <div className="flex items-center">
-                <img src="/images/amarshop-logo.png" alt="AmarShop" className="h-14 w-auto object-contain" />
+                <img src="/images/amarshop-logo.png" alt="AmarShop" className="h-16 w-auto object-contain" />
               </div>
               <button onClick={() => setSidebarOpen(false)} className="text-gray-500 hover:text-gray-700">
                 <span className="material-symbols-outlined text-2xl">close</span>
