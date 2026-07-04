@@ -60,7 +60,7 @@ export function Header() {
               <span className="material-symbols-outlined text-2xl">menu</span>
             </button>
             {/* Logo */}
-            <Link href="/" className="flex items-center shrink-0">
+            <Link href="/" className="flex items-center shrink-0 -ml-3 md:-ml-4 lg:-ml-6">
               <img src="/images/amarshop-logo.png" alt="AmarShop" className="w-[clamp(140px,18vw,300px)] h-auto object-contain" />
             </Link>
           </div>
