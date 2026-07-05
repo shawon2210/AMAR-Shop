@@ -226,16 +226,6 @@ function Sidebar({
         <div className="w-9 h-9 rounded-xl bg-gradient-to-br from-primary to-primary/60 flex items-center justify-center shadow-lg shadow-primary/25 shrink-0">
           <span className="material-symbols-outlined text-white text-xl">store</span>
         </div>
-        {!collapsed && (
-          <div className="min-w-0">
-            <img
-              src="/images/amarshop-logo.png"
-              alt="AmarShop"
-              className="w-[clamp(120px,14vw,220px)] h-auto object-contain"
-            />
-            <p className="text-[9px] text-white/30 -mt-0.5 tracking-wider">Admin Panel</p>
-          </div>
-        )}
       </div>
 
       {isDesktop && (
