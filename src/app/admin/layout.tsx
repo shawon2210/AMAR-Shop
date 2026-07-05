@@ -390,26 +390,17 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
   const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
   const [searchOpen, setSearchOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
-  const [mounted, setMounted] = useState(false);
-  const [isDesktop, setIsDesktop] = useState(false);
+  const [isDesktop, setIsDesktop] = useState(true);
 
   useEffect(() => {
-    const checkScreen = () => {
-      setIsDesktop(window.innerWidth >= 1024);
-      if (!localStorage.getItem('adminSidebar')) {
-        if (window.innerWidth >= 768 && window.innerWidth < 1024) {
-          setSidebarCollapsed(true);
-        }
-      }
-    };
-    checkScreen();
+    setIsDesktop(window.innerWidth >= 1024);
 
     const saved = localStorage.getItem('adminSidebar');
     if (saved !== null) {
       setSidebarCollapsed(saved === 'true');
+    } else if (window.innerWidth >= 768 && window.innerWidth < 1024) {
+      setSidebarCollapsed(true);
     }
-
-    setMounted(true);
 
     const handleResize = () => {
       setIsDesktop(window.innerWidth >= 1024);
@@ -469,19 +460,17 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
       className="min-h-screen"
       style={{
         display: 'grid',
-        gridTemplateColumns: mounted && isDesktop ? `${sidebarWidth} 1fr` : '1fr',
+        gridTemplateColumns: isDesktop ? `${sidebarWidth} 1fr` : '1fr',
         transition: 'grid-template-columns 300ms ease-out',
       }}
     >
-      {mounted && (
-        <Sidebar
-          open={sidebarOpen}
-          onClose={() => setSidebarOpen(false)}
-          collapsed={sidebarCollapsed}
-          onToggleCollapse={handleToggleCollapse}
-          isDesktop={isDesktop}
-        />
-      )}
+      <Sidebar
+        open={sidebarOpen}
+        onClose={() => setSidebarOpen(false)}
+        collapsed={sidebarCollapsed}
+        onToggleCollapse={handleToggleCollapse}
+        isDesktop={isDesktop}
+      />
 
       <div className="flex flex-col min-w-0">
         <header className="sticky top-0 z-30 h-[72px] bg-white/85 backdrop-blur-md border-b border-slate-200 flex items-center px-4 lg:px-6 gap-3">
