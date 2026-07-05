@@ -219,13 +219,21 @@ function Sidebar({
   const sidebarContent = (
     <>
       <div
-        className={`flex items-center h-16 shrink-0 border-b border-white/[0.04] ${
+        className={`flex items-center justify-between h-16 shrink-0 border-b border-white/[0.04] ${
           collapsed ? 'justify-center px-0' : 'gap-3 px-5'
         }`}
       >
         <div className="w-9 h-9 rounded-xl bg-gradient-to-br from-primary to-primary/60 flex items-center justify-center shadow-lg shadow-primary/25 shrink-0">
           <span className="material-symbols-outlined text-white text-xl">store</span>
         </div>
+        {!isDesktop && (
+          <button
+            onClick={onClose}
+            className="p-1 rounded-lg hover:bg-white/10 text-white/50"
+          >
+            <span className="material-symbols-outlined text-[20px]">close</span>
+          </button>
+        )}
       </div>
 
       {isDesktop && (
