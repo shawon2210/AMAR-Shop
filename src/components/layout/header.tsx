@@ -45,7 +45,7 @@ export function Header() {
           <div className="flex items-center gap-6">
             <Link href="/help" className="hover:text-primary">Help Center</Link>
             <Link href="/orders" className="hover:text-primary">Track Order</Link>
-            <Link href="/seller/dashboard" className="hover:text-primary">Become a Seller</Link>
+            {!isAuthenticated && <Link href="/seller/dashboard" className="hover:text-primary">Become a Seller</Link>}
           </div>
           <Link href="/notifications" className="hover:text-primary">Offers</Link>
         </div>
@@ -84,9 +84,11 @@ export function Header() {
             <button onClick={() => setMobileSearchOpen(!mobileSearchOpen)} className="md:hidden hover:text-primary">
               <span className="material-symbols-outlined text-xl">search</span>
             </button>
-            <Link href="/seller/dashboard" className="hidden lg:flex hover:text-primary">
-              <span className="material-symbols-outlined text-xl">storefront</span>
-            </Link>
+            {isAuthenticated && (user?.isSeller || user?.role === 'SELLER') && (
+              <Link href="/seller/dashboard" className="hidden lg:flex hover:text-primary">
+                <span className="material-symbols-outlined text-xl">storefront</span>
+              </Link>
+            )}
             <Link href="/notifications" className="hover:text-primary">
               <span className="material-symbols-outlined text-xl">notifications</span>
             </Link>
