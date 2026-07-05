@@ -28,14 +28,14 @@ export default function SellerLayout({ children }: { children: React.ReactNode }
       {/* Mobile overlay */}
       {sidebarOpen && (
         <div
-          className="fixed inset-0 bg-black/50 z-40 lg:hidden"
+          className="fixed inset-0 bg-black/50 z-40 md:hidden"
           onClick={() => setSidebarOpen(false)}
         />
       )}
 
       {/* Sidebar */}
       <aside
-        className={`fixed top-0 left-0 z-50 h-full w-64 bg-[#1a1a2e] text-white transform transition-transform duration-200 ease-in-out lg:translate-x-0 lg:static lg:z-auto ${
+        className={`fixed top-0 left-0 z-50 h-full w-64 bg-[#1a1a2e] text-white transform transition-transform duration-200 ease-in-out md:translate-x-0 md:z-auto ${
           sidebarOpen ? 'translate-x-0' : '-translate-x-full'
         }`}
       >
@@ -45,7 +45,7 @@ export default function SellerLayout({ children }: { children: React.ReactNode }
             <img src="/images/amarshop-logo.png" alt="AmarShop" className="w-[clamp(140px,16vw,260px)] h-auto object-contain" />
           </Link>
           <button
-            className="lg:hidden text-white/70 hover:text-white"
+            className="md:hidden text-white/70 hover:text-white"
             onClick={() => setSidebarOpen(false)}
           >
             <span className="material-symbols-outlined">close</span>
@@ -90,13 +90,13 @@ export default function SellerLayout({ children }: { children: React.ReactNode }
       </aside>
 
       {/* Main area */}
-      <div className="lg:ml-64 flex flex-col min-h-screen">
+      <div className="md:ml-64 flex flex-col min-h-screen">
         {/* Top header */}
         <header className="sticky top-0 z-30 bg-white border-b border-surface-container-high shadow-sm">
           <div className="flex items-center justify-between px-4 h-16">
             <div className="flex items-center gap-3">
               <button
-                className="lg:hidden text-on-surface"
+                className="md:hidden text-on-surface"
                 onClick={() => setSidebarOpen(true)}
               >
                 <span className="material-symbols-outlined">menu</span>

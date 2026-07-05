@@ -155,7 +155,7 @@ function Sidebar({ open, onClose }: { open: boolean; onClose: () => void }) {
   return (
     <>
       {open && (
-        <div className="fixed inset-0 bg-black/40 backdrop-blur-sm z-40 lg:hidden" onClick={onClose} />
+        <div className="fixed inset-0 bg-black/40 backdrop-blur-sm z-40 md:hidden" onClick={onClose} />
       )}
 
       <aside
@@ -164,8 +164,7 @@ function Sidebar({ open, onClose }: { open: boolean; onClose: () => void }) {
           shadow-2xl shadow-black/20
           transition-all duration-300 ease-in-out
           ${open ? 'translate-x-0' : '-translate-x-full'}
-          lg:translate-x-0 lg:sticky lg:top-0 lg:h-screen lg:z-auto
-          ${open ? 'h-screen' : 'h-full'}
+          md:translate-x-0 md:z-auto h-full md:h-screen
         `}
       >
         {/* Logo */}
@@ -350,10 +349,10 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
     <div className="min-h-screen flex bg-[#f5f5f5]">
       <Sidebar open={sidebarOpen} onClose={() => setSidebarOpen(false)} />
 
-      <div className="flex-1 flex flex-col min-w-0">
+      <div className="flex-1 flex flex-col min-w-0 md:ml-64">
         <header className="sticky top-0 z-30 bg-white/80 backdrop-blur-md border-b border-[#e5e5e5] h-16 flex items-center px-4 lg:px-6 gap-3">
           <button
-            className="lg:hidden p-2 -ml-2 rounded-lg hover:bg-[#f5f5f5] transition-colors"
+            className="md:hidden p-2 -ml-2 rounded-lg hover:bg-[#f5f5f5] transition-colors"
             onClick={() => setSidebarOpen(true)}
           >
             <span className="material-symbols-outlined text-[#555]">menu</span>

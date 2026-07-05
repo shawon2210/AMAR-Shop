@@ -18,9 +18,12 @@ export default function AffiliateLayout({ children }: { children: React.ReactNod
 
   return (
     <div className="min-h-screen flex bg-[#f5f5f5]">
+      {sidebarOpen && (
+        <div className="fixed inset-0 bg-black/40 backdrop-blur-sm z-40 md:hidden" onClick={() => setSidebarOpen(false)} />
+      )}
       <aside className={`fixed top-0 left-0 z-50 h-full w-64 bg-[#1a1a2e] text-white flex flex-col transition-transform duration-300 ease-in-out ${
         sidebarOpen ? 'translate-x-0' : '-translate-x-full'
-      } lg:translate-x-0 lg:static lg:z-auto`}>
+      } md:translate-x-0 md:z-auto`}>
         <div className="flex items-center gap-3 px-5 h-16 border-b border-white/10 shrink-0">
           <span className="material-symbols-outlined text-primary text-3xl">campaign</span>
           <div>
@@ -49,9 +52,9 @@ export default function AffiliateLayout({ children }: { children: React.ReactNod
           </Link>
         </div>
       </aside>
-      <div className="flex-1 flex flex-col min-w-0">
+      <div className="flex-1 flex flex-col min-w-0 md:ml-64">
         <header className="sticky top-0 z-30 bg-white border-b border-[#e5e5e5] h-16 flex items-center px-4 lg:px-6 gap-4">
-          <button className="lg:hidden p-2 -ml-2 rounded-lg hover:bg-[#f5f5f5]" onClick={() => setSidebarOpen(true)}>
+          <button className="md:hidden p-2 -ml-2 rounded-lg hover:bg-[#f5f5f5]" onClick={() => setSidebarOpen(true)}>
             <span className="material-symbols-outlined">menu</span>
           </button>
           <div className="flex items-center gap-2 px-3 py-1.5 bg-amber-50 border border-amber-200 rounded-lg text-xs text-amber-700">
