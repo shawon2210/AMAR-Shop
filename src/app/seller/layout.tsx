@@ -21,38 +21,34 @@ const navItems = [
 
 export default function SellerLayout({ children }: { children: React.ReactNode }) {
   const [sidebarOpen, setSidebarOpen] = useState(false);
+  const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
   const pathname = usePathname();
 
   return (
-    <div className="min-h-screen bg-surface-container-low">
+    <div className="min-h-screen grid" style={{ gridTemplateColumns: 'auto 1fr' }}>
       {/* Mobile overlay */}
       {sidebarOpen && (
         <div
-          className="fixed inset-0 bg-black/50 z-40 md:hidden"
+          className="fixed inset-0 bg-black/50 z-40 lg:hidden"
           onClick={() => setSidebarOpen(false)}
         />
       )}
 
       {/* Sidebar */}
       <aside
-        className={`fixed top-0 left-0 z-50 h-full w-64 bg-[#1a1a2e] text-white transform transition-transform duration-200 ease-in-out md:translate-x-0 md:z-auto ${
-          sidebarOpen ? 'translate-x-0' : '-translate-x-full'
+        className={`fixed lg:sticky top-0 left-0 z-50 h-screen bg-gradient-to-b from-[#0f172a] to-[#0b1220] text-white flex flex-col transition-all duration-300 ease-out ${
+          sidebarOpen ? 'translate-x-0' : '-translate-x-full lg:translate-x-0'
         }`}
+        style={{ width: sidebarCollapsed ? '72px' : '256px' }}
       >
-        <div className="flex items-center justify-between px-5 h-16 border-b border-white/10">
-          <Link href="/seller/dashboard" className="flex items-center gap-2">
-            <span className="material-symbols-outlined text-[#ffb59b]">storefront</span>
-            <img src="/images/amarshop-logo.png" alt="AmarShop" className="w-[clamp(140px,16vw,260px)] h-auto object-contain" />
+        <div className="flex items-center h-16 px-5 border-b border-white/[0.04]">
+          <Link href="/seller/dashboard" className="flex items-center gap-3">
+            <span className="material-symbols-outlined text-primary">storefront</span>
+            {!sidebarCollapsed && <span className="font-bold text-white">Seller Center</span>}
           </Link>
-          <button
-            className="md:hidden text-white/70 hover:text-white"
-            onClick={() => setSidebarOpen(false)}
-          >
-            <span className="material-symbols-outlined">close</span>
-          </button>
         </div>
 
-        <nav className="p-3 space-y-1 overflow-y-auto h-[calc(100%-4rem)]">
+        <nav className="flex-1 p-3 space-y-1 overflow-y-auto">
           {navItems.map((item) => {
             const isActive = pathname === item.href || pathname.startsWith(item.href + '/');
             return (
@@ -60,65 +56,48 @@ export default function SellerLayout({ children }: { children: React.ReactNode }
                 key={item.href}
                 href={item.href}
                 onClick={() => setSidebarOpen(false)}
-                className={`flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm transition-colors ${
+                className={`group flex items-center gap-3 px-3 py-2.5 rounded-xl transition-all ${
                   isActive
-                    ? 'bg-primary/20 text-[#ffb59b] font-semibold'
-                    : 'text-white/70 hover:bg-white/10 hover:text-white'
+                    ? 'bg-primary/10 text-primary'
+                    : 'text-white/60 hover:bg-white/[0.06] hover:text-white/90'
                 }`}
               >
-                <span className="material-symbols-outlined text-lg">{item.icon}</span>
-                <span className="flex-1">{item.label}</span>
-                {item.badge !== undefined && item.badge > 0 && (
-                  <span className="bg-error text-white text-[10px] font-bold rounded-full min-w-[18px] h-[18px] flex items-center justify-center px-1">
-                    {item.badge}
-                  </span>
-                )}
+                <span className="material-symbols-outlined size-5">{item.icon}</span>
+                {!sidebarCollapsed && <span className="flex-1 text-sm">{item.label}</span>}
               </Link>
             );
           })}
         </nav>
 
-        <div className="absolute bottom-0 left-0 right-0 p-4 border-t border-white/10">
-          <Link
-            href="/"
-            className="flex items-center gap-2 text-white/50 hover:text-white/80 text-xs transition-colors"
-          >
-            <span className="material-symbols-outlined text-sm">arrow_back</span>
-            Back to Store
-          </Link>
+        <div className="p-4 border-t border-white/[0.04]">
+          <button onClick={() => setSidebarCollapsed(!sidebarCollapsed)} className="w-full flex items-center justify-center p-2 text-white/40 hover:text-white">
+            <span className="material-symbols-outlined">{sidebarCollapsed ? 'chevron_right' : 'chevron_left'}</span>
+          </button>
         </div>
       </aside>
 
       {/* Main area */}
-      <div className="md:ml-64 flex flex-col min-h-screen">
+      <div className="flex flex-col min-w-0">
         {/* Top header */}
-        <header className="sticky top-0 z-30 bg-white border-b border-surface-container-high shadow-sm">
+        <header className="sticky top-0 z-30 bg-white/80 backdrop-blur-md border-b border-slate-200">
           <div className="flex items-center justify-between px-4 h-16">
             <div className="flex items-center gap-3">
               <button
-                className="md:hidden text-on-surface"
+                className="lg:hidden p-2 -ml-2 rounded-lg hover:bg-slate-100"
                 onClick={() => setSidebarOpen(true)}
               >
                 <span className="material-symbols-outlined">menu</span>
               </button>
-              <h2 className="text-sm font-semibold text-on-surface hidden sm:block">
-                Seller Center
-              </h2>
             </div>
 
             <div className="flex items-center gap-3">
-              <button className="relative p-2 rounded-full hover:bg-surface-container-high transition-colors">
-                <span className="material-symbols-outlined text-on-surface">notifications</span>
-                <span className="absolute top-1 right-1 w-2 h-2 bg-error rounded-full" />
+              <button className="relative p-2 rounded-full hover:bg-slate-100">
+                <span className="material-symbols-outlined text-slate-600">notifications</span>
               </button>
 
-              <div className="flex items-center gap-2 pl-3 border-l border-surface-container-high">
-                <div className="w-8 h-8 rounded-full bg-primary flex items-center justify-center text-on-primary text-sm font-bold">
+              <div className="flex items-center gap-2 pl-3 border-l border-slate-200">
+                <div className="w-8 h-8 rounded-full bg-primary flex items-center justify-center text-white text-sm font-bold">
                   S
-                </div>
-                <div className="hidden sm:block">
-                  <p className="text-sm font-medium text-on-surface">ShopZone</p>
-                  <p className="text-xs text-on-surface-variant">seller@amarshop.com</p>
                 </div>
               </div>
             </div>
@@ -126,7 +105,7 @@ export default function SellerLayout({ children }: { children: React.ReactNode }
         </header>
 
         {/* Page content */}
-        <main className="flex-1 p-4 lg:p-6">{children}</main>
+        <main className="flex-1 p-4 lg:p-6 bg-slate-50">{children}</main>
       </div>
     </div>
   );
