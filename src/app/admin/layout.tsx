@@ -511,7 +511,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
     if (pathname.startsWith('/admin/login')) return;
     if (!token || !user) {
       router.replace('/admin/login');
-    } else if (user.role !== 'ADMIN') {
+    } else if (user.role !== 'ADMIN' && user.role !== 'SUPER_ADMIN') {
       router.replace('/');
     }
   }, [hydrated, token, user, pathname, router]);
@@ -531,7 +531,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
     return <>{children}</>;
   }
 
-  if (!token || !user || user.role !== 'ADMIN') {
+  if (!token || !user || (user.role !== 'ADMIN' && user.role !== 'SUPER_ADMIN')) {
     return (
       <div className="min-h-screen flex items-center justify-center bg-[#f5f5f5]">
         <div className="text-center">
