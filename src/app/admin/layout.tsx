@@ -18,92 +18,131 @@ interface NavSection {
 
 const navSections: NavSection[] = [
   {
-    title: 'MAIN',
-    items: [{ label: 'Dashboard', icon: 'dashboard', href: '/admin' }],
+    title: 'Dashboard',
+    items: [
+      { label: 'Overview', icon: 'dashboard', href: '/admin' },
+      { label: 'Analytics', icon: 'analytics', href: '/admin/analytics' },
+      { label: 'Reports', icon: 'description', href: '/admin/reports' },
+      { label: 'Activity', icon: 'monitoring', href: '/admin/activity' },
+    ],
   },
   {
-    title: 'COMMERCE',
+    title: 'Commerce',
+    items: [
+      { label: 'Orders', icon: 'receipt_long', href: '/admin/orders' },
+      { label: 'Returns', icon: 'assignment_return', href: '/admin/orders/returns' },
+      { label: 'Refunds', icon: 'currency_ruble', href: '/admin/orders/refunds' },
+      { label: 'Transactions', icon: 'swap_horiz', href: '/admin/transactions' },
+      { label: 'Invoices', icon: 'receipt', href: '/admin/finance/invoices' },
+      { label: 'Payments', icon: 'payments', href: '/admin/payments' },
+      { label: 'Coupons', icon: 'confirmation_number', href: '/admin/coupons' },
+      { label: 'Flash Sales', icon: 'local_fire_department', href: '/admin/flash-sales' },
+      { label: 'Campaigns', icon: 'campaign', href: '/admin/campaigns' },
+    ],
+  },
+  {
+    title: 'Products',
     items: [
       { label: 'Products', icon: 'inventory_2', href: '/admin/products' },
       { label: 'Categories', icon: 'category', href: '/admin/categories' },
-      { label: 'Orders', icon: 'receipt_long', href: '/admin/orders' },
-      { label: 'Payments', icon: 'payments', href: '/admin/payments' },
+      { label: 'Brands', icon: 'branding_watermark', href: '/admin/brands' },
+      { label: 'Inventory', icon: 'warehouse', href: '/admin/warehouse/inventory' },
+      { label: 'Attributes', icon: 'list_alt', href: '/admin/attributes' },
+      { label: 'Reviews', icon: 'star', href: '/admin/reviews' },
+      { label: 'Tags', icon: 'sell', href: '/admin/tags' },
+      { label: 'Collections', icon: 'collections_bookmark', href: '/admin/collections' },
+      { label: 'Vendors', icon: 'storefront', href: '/admin/vendors' },
     ],
   },
   {
-    title: 'USERS',
+    title: 'Sellers',
+    items: [
+      { label: 'All Sellers', icon: 'store', href: '/admin/sellers' },
+      { label: 'Approvals', icon: 'verified', href: '/admin/sellers/approvals' },
+      { label: 'Commissions', icon: 'percent', href: '/admin/sellers/commissions' },
+      { label: 'Withdrawals', icon: 'account_balance_wallet', href: '/admin/sellers/withdraw-requests' },
+      { label: 'Analytics', icon: 'trending_up', href: '/admin/sellers/analytics' },
+      { label: 'Support', icon: 'headset_mic', href: '/admin/sellers/support' },
+    ],
+  },
+  {
+    title: 'Customers',
+    items: [
+      { label: 'All Customers', icon: 'group', href: '/admin/customers' },
+      { label: 'Segments', icon: 'layers', href: '/admin/customers/segments' },
+      { label: 'Wishlists', icon: 'favorite', href: '/admin/customers/wishlists' },
+      { label: 'Addresses', icon: 'location_on', href: '/admin/customers/addresses' },
+      { label: 'Support Tickets', icon: 'support', href: '/admin/support' },
+    ],
+  },
+  {
+    title: 'Content',
+    items: [
+      { label: 'Banners', icon: 'view_carousel', href: '/admin/banners' },
+      { label: 'Homepage', icon: 'home', href: '/admin/homepage' },
+      { label: 'CMS Pages', icon: 'article', href: '/admin/cms' },
+      { label: 'Announcements', icon: 'campaign', href: '/admin/announcements' },
+      { label: 'Blogs', icon: 'rss_feed', href: '/admin/blogs' },
+      { label: 'FAQ', icon: 'quiz', href: '/admin/faq' },
+    ],
+  },
+  {
+    title: 'Marketing',
+    items: [
+      { label: 'Email Campaigns', icon: 'email', href: '/admin/email-campaigns' },
+      { label: 'Push Notifications', icon: 'notifications_active', href: '/admin/push-notifications' },
+      { label: 'Promotions', icon: 'discount', href: '/admin/promotions' },
+      { label: 'Affiliates', icon: 'campaign', href: '/admin/affiliates' },
+      { label: 'SEO', icon: 'travel_explore', href: '/admin/seo' },
+      { label: 'Referrals', icon: 'share', href: '/admin/referral-system' },
+    ],
+  },
+  {
+    title: 'Logistics',
+    items: [
+      { label: 'Shipping', icon: 'local_shipping', href: '/admin/shipping' },
+      { label: 'Delivery Zones', icon: 'map', href: '/admin/delivery-zones' },
+      { label: 'Couriers', icon: 'speed', href: '/admin/fulfillment/courier' },
+      { label: 'Tracking', icon: 'pin_drop', href: '/admin/fulfillment/tracking' },
+      { label: 'Warehouses', icon: 'warehouse', href: '/admin/warehouse' },
+    ],
+  },
+  {
+    title: 'Finance',
+    items: [
+      { label: 'Revenue', icon: 'trending_up', href: '/admin/revenue' },
+      { label: 'Taxes', icon: 'receipt_long', href: '/admin/taxes' },
+      { label: 'Settlements', icon: 'account_balance', href: '/admin/finance/settlements' },
+      { label: 'Payouts', icon: 'payments', href: '/admin/payouts' },
+      { label: 'Accounting', icon: 'book', href: '/admin/accounting' },
+    ],
+  },
+  {
+    title: 'Administration',
     items: [
       { label: 'Users', icon: 'group', href: '/admin/users' },
-      { label: 'Sellers', icon: 'store', href: '/admin/sellers' },
-      { label: 'Reviews', icon: 'star', href: '/admin/reviews' },
-    ],
-  },
-  {
-    title: 'MARKETING',
-    items: [
-      { label: 'Flash Sales', icon: 'local_fire_department', href: '/admin/flash-sales' },
-      { label: 'Coupons', icon: 'confirmation_number', href: '/admin/coupons' },
-      { label: 'Banners', icon: 'view_carousel', href: '/admin/banners' },
-    ],
-  },
-  {
-    title: 'CONTENT',
-    items: [
-      { label: 'CMS Pages', icon: 'article', href: '/admin/cms' },
-    ],
-  },
-  {
-    title: 'AFFILIATE',
-    items: [
-      { label: 'Affiliates', icon: 'campaign', href: '/admin/affiliates' },
-      { label: 'Creators', icon: 'person_add', href: '/admin/creators' },
-    ],
-  },
-  {
-    title: 'COMPLIANCE',
-    items: [
-      { label: 'Compliance Center', icon: 'verified', href: '/admin/compliance' },
-    ],
-  },
-  {
-    title: 'OPERATIONS',
-    items: [
-      { label: 'Warehouse', icon: 'warehouse', href: '/admin/warehouse' },
-      { label: 'Inbound Orders', icon: 'move_inbox', href: '/admin/warehouse/inbound' },
-      { label: 'Bin Inventory', icon: 'shelves', href: '/admin/warehouse/inventory' },
-      { label: 'Pick Lists', icon: 'assignment', href: '/admin/warehouse/pick-lists' },
-      { label: 'Fulfillment', icon: 'local_shipping', href: '/admin/fulfillment' },
-      { label: 'Courier', icon: 'speed', href: '/admin/fulfillment/courier' },
-      { label: 'Pickup Schedules', icon: 'calendar_month', href: '/admin/fulfillment/pickup' },
-      { label: 'Tracking', icon: 'pin_drop', href: '/admin/fulfillment/tracking' },
-    ],
-  },
-  {
-    title: 'FINANCE',
-    items: [
-      { label: 'Overview', icon: 'payments', href: '/admin/finance' },
-      { label: 'Settlements', icon: 'account_balance', href: '/admin/finance/settlements' },
-      { label: 'Invoices', icon: 'description', href: '/admin/finance/invoices' },
-      { label: 'Tax Reports', icon: 'receipt', href: '/admin/finance/tax' },
-    ],
-  },
-  {
-    title: 'ANALYTICS',
-    items: [
-      { label: 'BI Dashboard', icon: 'bar_chart', href: '/admin/bi' },
-      { label: 'RFM / CLV', icon: 'group_work', href: '/admin/bi/rfm' },
-      { label: 'Cohorts', icon: 'calendar_view_month', href: '/admin/bi/cohorts' },
-      { label: 'Reports', icon: 'description', href: '/admin/bi/reports' },
-    ],
-  },
-  {
-    title: 'SYSTEM',
-    items: [
-      { label: 'Real-Time', icon: 'monitoring', href: '/admin/realtime' },
-      { label: 'Reports', icon: 'assessment', href: '/admin/reports' },
       { label: 'Roles', icon: 'admin_panel_settings', href: '/admin/roles' },
-      { label: 'Settings', icon: 'settings', href: '/admin/settings' },
-      { label: 'Support', icon: 'support', href: '/admin/support' },
+      { label: 'Teams', icon: 'people', href: '/admin/teams' },
+      { label: 'Audit Logs', icon: 'history', href: '/admin/audit-logs' },
+    ],
+  },
+  {
+    title: 'Settings',
+    items: [
+      { label: 'General', icon: 'settings', href: '/admin/settings' },
+      { label: 'API Keys', icon: 'vpn_key', href: '/admin/api-keys' },
+      { label: 'Integrations', icon: 'extension', href: '/admin/integrations' },
+    ],
+  },
+  {
+    title: 'System',
+    items: [
+      { label: 'Notifications', icon: 'notifications', href: '/admin/backups' },
+      { label: 'Backups', icon: 'backup', href: '/admin/backups' },
+      { label: 'Monitoring', icon: 'monitoring', href: '/admin/realtime' },
+      { label: 'Jobs', icon: 'hourglass_empty', href: '/admin/jobs' },
+      { label: 'Logs', icon: 'terminal', href: '/admin/logs' },
+      { label: 'Security', icon: 'security', href: '/admin/security' },
     ],
   },
 ];
@@ -119,24 +158,25 @@ function NavItemLink({ item, onClose, collapsed }: { item: NavItem; onClose: () 
       href={item.href}
       onClick={onClose}
       title={collapsed ? item.label : undefined}
-      className={`
-        group relative flex items-center h-11 rounded-xl transition-all duration-150
-        ${collapsed ? 'justify-center w-11 mx-auto' : 'gap-3 px-4'}
-        ${isActive
+      className={`group relative flex items-center h-11 rounded-xl transition-all duration-150 ${
+        collapsed ? 'justify-center w-11 mx-auto' : 'gap-3 px-4'
+      } ${
+        isActive
           ? 'bg-primary/10 text-primary'
           : 'text-white/60 hover:bg-white/[0.06] hover:text-white/90'
-        }
-      `}
+      }`}
     >
       {isActive && (
         <span className="absolute left-0 top-2 bottom-2 w-[3px] rounded-full bg-primary" />
       )}
-      <span className={`material-symbols-outlined text-[20px] transition-colors shrink-0 ${isActive ? 'text-primary' : 'text-white/40 group-hover:text-white/70'}`}>
+      <span
+        className={`material-symbols-outlined size-5 transition-colors shrink-0 ${
+          isActive ? 'text-primary' : 'text-white/40 group-hover:text-white/70'
+        }`}
+      >
         {item.icon}
       </span>
-      {!collapsed && (
-        <span className="truncate text-sm font-medium">{item.label}</span>
-      )}
+      {!collapsed && <span className="truncate text-sm font-medium">{item.label}</span>}
     </Link>
   );
 }
@@ -180,20 +220,26 @@ function Sidebar({
 
   const sidebarContent = (
     <>
-      {/* Logo */}
-      <div className={`flex items-center h-16 shrink-0 border-b border-white/[0.04] ${collapsed ? 'justify-center px-0' : 'gap-3 px-5'}`}>
+      <div
+        className={`flex items-center h-16 shrink-0 border-b border-white/[0.04] ${
+          collapsed ? 'justify-center px-0' : 'gap-3 px-5'
+        }`}
+      >
         <div className="w-9 h-9 rounded-xl bg-gradient-to-br from-primary to-primary/60 flex items-center justify-center shadow-lg shadow-primary/25 shrink-0">
           <span className="material-symbols-outlined text-white text-xl">store</span>
         </div>
         {!collapsed && (
           <div className="min-w-0">
-            <img src="/images/amarshop-logo.png" alt="AmarShop" className="w-[clamp(120px,14vw,220px)] h-auto object-contain" />
+            <img
+              src="/images/amarshop-logo.png"
+              alt="AmarShop"
+              className="w-[clamp(120px,14vw,220px)] h-auto object-contain"
+            />
             <p className="text-[9px] text-white/30 -mt-0.5 tracking-wider">Admin Panel</p>
           </div>
         )}
       </div>
 
-      {/* Desktop collapse toggle */}
       {isDesktop && (
         <button
           onClick={onToggleCollapse}
@@ -205,13 +251,16 @@ function Sidebar({
         </button>
       )}
 
-      {/* Search */}
       <div
-        className={`overflow-hidden transition-all duration-300 ease-out ${collapsed ? 'opacity-0 pointer-events-none h-0' : 'opacity-100'}`}
+        className={`overflow-hidden transition-all duration-300 ease-out ${
+          collapsed ? 'opacity-0 pointer-events-none h-0' : 'opacity-100'
+        }`}
       >
         <div className="px-3 pt-3 pb-1 shrink-0">
           <div className="relative">
-            <span className="absolute left-3 top-1/2 -translate-y-1/2 material-symbols-outlined text-[15px] text-white/20">search</span>
+            <span className="absolute left-3 top-1/2 -translate-y-1/2 material-symbols-outlined text-[15px] text-white/20">
+              search
+            </span>
             <input
               type="text"
               value={search}
@@ -223,61 +272,85 @@ function Sidebar({
         </div>
       </div>
 
-      {/* Nav */}
       <nav
         className="flex-1 overflow-y-auto py-3 space-y-1"
         style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}
       >
         {collapsed ? (
-          <div className="flex flex-col items-center gap-1">
+          <div className="flex flex-col items-center gap-1 px-2">
             {navSections.map((section) =>
               section.items.map((item) => (
-                <NavItemLink key={`${section.title}-${item.label}`} item={item} onClose={onClose} collapsed />
+                <NavItemLink
+                  key={`${section.title}-${item.label}`}
+                  item={item}
+                  onClose={onClose}
+                  collapsed
+                />
               ))
             )}
           </div>
         ) : (
-          filteredSections.map((section) => (
-            <div key={section.title} className="px-2">
-              <button
-                onClick={() => toggleSection(section.title)}
-                className="flex items-center justify-between w-full h-9 px-3 text-xs uppercase tracking-wide text-white/40 hover:text-white/60 transition-colors"
-              >
-                <span className={`transition-all duration-300 ${collapsed ? 'opacity-0 scale-95' : 'opacity-70'}`}>
-                  {section.title}
-                </span>
-                {!collapsed && (
-                  <span className={`material-symbols-outlined text-[13px] transition-transform duration-200 ${expandedSections[section.title] ? 'rotate-180' : ''}`}>
+          <div className="space-y-5">
+            {filteredSections.map((section) => (
+              <div key={section.title} className="px-2">
+                <button
+                  onClick={() => toggleSection(section.title)}
+                  className="flex items-center justify-between w-full h-9 px-3 text-xs uppercase tracking-wide text-white/40 hover:text-white/60 transition-colors"
+                >
+                  <span className="opacity-70">{section.title}</span>
+                  <span
+                    className={`material-symbols-outlined text-[13px] transition-transform duration-200 ${
+                      expandedSections[section.title] ? 'rotate-180' : ''
+                    }`}
+                  >
                     expand_more
                   </span>
-                )}
-              </button>
-              <div
-                className={`space-y-0.5 overflow-hidden transition-all duration-200 ${expandedSections[section.title] ? 'max-h-[9999px] opacity-100' : 'max-h-0 opacity-0'}`}
-              >
-                {section.items.map((item) => (
-                  <NavItemLink key={`${section.title}-${item.label}`} item={item} onClose={onClose} />
-                ))}
+                </button>
+                <div
+                  className={`space-y-0.5 overflow-hidden transition-all duration-200 ${
+                    expandedSections[section.title]
+                      ? 'max-h-[9999px] opacity-100'
+                      : 'max-h-0 opacity-0'
+                  }`}
+                >
+                  {section.items.map((item) => (
+                    <NavItemLink
+                      key={`${section.title}-${item.label}`}
+                      item={item}
+                      onClose={onClose}
+                    />
+                  ))}
+                </div>
               </div>
-            </div>
-          ))
+            ))}
+          </div>
         )}
       </nav>
 
-      {/* User / Footer */}
       <div className="border-t border-white/[0.04] p-2 shrink-0">
-        <div className={`flex items-center py-2 ${collapsed ? 'justify-center' : 'gap-3 px-2'} rounded-lg hover:bg-white/[0.03] transition-colors`}>
+        <div
+          className={`flex items-center py-2 ${
+            collapsed ? 'justify-center' : 'gap-3 px-2'
+          } rounded-lg hover:bg-white/[0.03] transition-colors`}
+        >
           <div className="w-8 h-8 rounded-full bg-gradient-to-br from-primary to-primary/60 flex items-center justify-center text-white text-sm font-bold uppercase shadow-sm shrink-0">
             {user?.name?.charAt(0) || 'A'}
           </div>
           {!collapsed && (
             <>
               <div className="flex-1 min-w-0">
-                <p className="text-sm font-medium text-white/80 truncate leading-tight">{user?.name || 'Admin'}</p>
-                <p className="text-[9px] text-white/35 truncate tracking-wider">{user?.role || 'Administrator'}</p>
+                <p className="text-sm font-medium text-white/80 truncate leading-tight">
+                  {user?.name || 'Admin'}
+                </p>
+                <p className="text-[9px] text-white/35 truncate tracking-wider">
+                  {user?.role || 'Administrator'}
+                </p>
               </div>
               <button
-                onClick={() => { useAuthStore.getState().logout(); window.location.href = '/admin/login'; }}
+                onClick={() => {
+                  useAuthStore.getState().logout();
+                  window.location.href = '/admin/login';
+                }}
                 className="p-1.5 rounded-lg hover:bg-white/8 text-white/25 hover:text-red-400 transition-colors"
                 title="Logout"
               >
@@ -294,7 +367,10 @@ function Sidebar({
     return (
       <>
         {open && (
-          <div className="fixed inset-0 bg-black/50 z-40 transition-opacity duration-300" onClick={onClose} />
+          <div
+            className="fixed inset-0 bg-black/50 z-40 transition-opacity duration-300"
+            onClick={onClose}
+          />
         )}
         <aside
           className={`fixed top-0 left-0 bottom-0 z-50 w-[280px] bg-gradient-to-b from-[#0f172a] to-[#0b1220] text-white flex flex-col shadow-2xl shadow-black/30 transition-transform duration-300 ease-out ${
@@ -321,7 +397,15 @@ function Sidebar({
   );
 }
 
-function SearchOverlay({ query, setQuery, onClose }: { query: string; setQuery: (v: string) => void; onClose: () => void }) {
+function SearchOverlay({
+  query,
+  setQuery,
+  onClose,
+}: {
+  query: string;
+  setQuery: (v: string) => void;
+  onClose: () => void;
+}) {
   const router = useRouter();
 
   const results = useMemo(() => {
@@ -354,7 +438,9 @@ function SearchOverlay({ query, setQuery, onClose }: { query: string; setQuery: 
             autoFocus
             className="flex-1 bg-transparent border-none outline-none text-sm text-[#333] placeholder:text-[#aaa]"
           />
-          <kbd className="hidden sm:inline-flex text-[10px] bg-[#f5f5f5] px-1.5 py-0.5 rounded text-[#888] font-mono">ESC</kbd>
+          <kbd className="hidden sm:inline-flex text-[10px] bg-[#f5f5f5] px-1.5 py-0.5 rounded text-[#888] font-mono">
+            ESC
+          </kbd>
         </div>
         <div className="max-h-80 overflow-y-auto">
           {results.length === 0 && query.trim() ? (
@@ -363,10 +449,15 @@ function SearchOverlay({ query, setQuery, onClose }: { query: string; setQuery: 
             results.map((item) => (
               <button
                 key={item.href}
-                onClick={() => { router.push(item.href); onClose(); }}
+                onClick={() => {
+                  router.push(item.href);
+                  onClose();
+                }}
                 className="w-full flex items-center gap-3 px-4 py-3 hover:bg-[#fafafa] transition-colors text-left border-b border-[#f5f5f5] last:border-0"
               >
-                <span className="material-symbols-outlined text-[18px] text-[#888]">{item.icon}</span>
+                <span className="material-symbols-outlined text-[18px] text-[#888]">
+                  {item.icon}
+                </span>
                 <div>
                   <p className="text-sm font-medium text-[#333]">{item.label}</p>
                   <p className="text-[10px] text-[#aaa]">{item.section}</p>
@@ -394,14 +485,12 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
 
   useEffect(() => {
     setIsDesktop(window.innerWidth >= 1024);
-
-    const saved = localStorage.getItem('adminSidebar');
+    const saved = localStorage.getItem('amarshop-admin-sidebar');
     if (saved !== null) {
       setSidebarCollapsed(saved === 'true');
     } else if (window.innerWidth >= 768 && window.innerWidth < 1024) {
       setSidebarCollapsed(true);
     }
-
     const handleResize = () => {
       setIsDesktop(window.innerWidth >= 1024);
     };
@@ -412,7 +501,9 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
   const handleToggleCollapse = useCallback(() => {
     setSidebarCollapsed((prev) => {
       const next = !prev;
-      try { localStorage.setItem('adminSidebar', String(next)); } catch {}
+      try {
+        localStorage.setItem('amarshop-admin-sidebar', String(next));
+      } catch {}
       return next;
     });
   }, []);
@@ -446,7 +537,9 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
     return (
       <div className="min-h-screen flex items-center justify-center bg-[#f5f5f5]">
         <div className="text-center">
-          <span className="material-symbols-outlined animate-spin text-primary text-3xl">progress_activity</span>
+          <span className="material-symbols-outlined animate-spin text-primary text-3xl">
+            progress_activity
+          </span>
           <p className="text-sm text-[#888] mt-3">Verifying access...</p>
         </div>
       </div>
@@ -454,6 +547,15 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
   }
 
   const sidebarWidth = sidebarCollapsed ? '72px' : '256px';
+
+  const breadcrumbs = pathname
+    .split('/')
+    .filter(Boolean)
+    .map((segment, i, arr) => ({
+      label: segment.charAt(0).toUpperCase() + segment.slice(1).replace(/-/g, ' '),
+      href: '/' + arr.slice(0, i + 1).join('/'),
+      current: i === arr.length - 1,
+    }));
 
   return (
     <div
@@ -472,8 +574,8 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
         isDesktop={isDesktop}
       />
 
-      <div className="flex flex-col min-w-0">
-        <header className="sticky top-0 z-30 h-[72px] bg-white/85 backdrop-blur-md border-b border-slate-200 flex items-center px-4 lg:px-6 gap-3">
+      <div className="flex flex-col min-w-0 overflow-hidden">
+        <header className="sticky top-0 z-30 h-[72px] bg-white/80 backdrop-blur-md border-b border-slate-200 flex items-center px-4 lg:px-6 gap-3">
           <button
             className="lg:hidden p-2 -ml-2 rounded-lg hover:bg-[#f5f5f5] transition-colors"
             onClick={() => setSidebarOpen(true)}
@@ -481,12 +583,29 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
             <span className="material-symbols-outlined text-[#555]">menu</span>
           </button>
 
+          <nav className="hidden md:flex items-center gap-1.5 text-xs text-slate-400">
+            {breadcrumbs.map((crumb) => (
+              <span key={crumb.href} className="flex items-center gap-1.5">
+                {crumb.href !== '/admin' && <span className="text-slate-300">/</span>}
+                {crumb.current ? (
+                  <span className="text-slate-700 font-medium">{crumb.label}</span>
+                ) : (
+                  <Link href={crumb.href} className="hover:text-slate-600 transition-colors">
+                    {crumb.label}
+                  </Link>
+                )}
+              </span>
+            ))}
+          </nav>
+
+          <div className="flex-1" />
+
           <button
             onClick={() => setSearchOpen(true)}
-            className="hidden sm:flex items-center gap-2 flex-1 max-w-md bg-[#f5f5f5] hover:bg-[#f0f0f0] rounded-lg px-3 py-2 transition-colors group"
+            className="hidden sm:flex items-center gap-2 w-full max-w-xs bg-[#f5f5f5] hover:bg-[#f0f0f0] rounded-lg px-3 py-2 transition-colors group"
           >
             <span className="material-symbols-outlined text-[#888] text-[20px]">search</span>
-            <span className="text-sm text-[#aaa] flex-1 text-left">Search anything...</span>
+            <span className="text-sm text-[#aaa] flex-1 text-left">Search...</span>
             <kbd className="text-[10px] bg-white px-1.5 py-0.5 rounded text-[#999] font-mono border border-[#ddd]">
               ⌘K
             </kbd>
@@ -499,42 +618,46 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
             <span className="material-symbols-outlined text-[#555]">search</span>
           </button>
 
-          <div className="flex items-center gap-3 ml-auto">
-            <button className="relative p-2 rounded-full hover:bg-[#f5f5f5] transition-colors">
-              <span className="material-symbols-outlined text-[#555]">notifications</span>
-              <span className="absolute top-1 right-1 w-4 h-4 bg-red-500 text-white text-[9px] font-bold rounded-full flex items-center justify-center shadow-sm">
-                3
-              </span>
-            </button>
+          <button className="relative p-2 rounded-full hover:bg-[#f5f5f5] transition-colors">
+            <span className="material-symbols-outlined text-[#555]">notifications</span>
+            <span className="absolute top-1 right-1 w-4 h-4 bg-red-500 text-white text-[9px] font-bold rounded-full flex items-center justify-center shadow-sm">
+              3
+            </span>
+          </button>
 
-            <div className="flex items-center gap-2 pl-3 border-l border-[#e5e5e5]">
-              <div className="w-8 h-8 rounded-full bg-gradient-to-br from-primary to-primary/60 flex items-center justify-center text-white text-sm font-bold uppercase shadow-sm">
-                {user?.name?.charAt(0) || 'A'}
-              </div>
-              <div className="hidden md:block">
-                <p className="text-sm font-medium text-[#333] leading-tight">{user?.name || 'Admin'}</p>
-                <p className="text-xs text-[#888]">{user?.phone || ''}</p>
-              </div>
-              <button
-                onClick={() => {
-                  useAuthStore.getState().logout();
-                  router.push('/admin/login');
-                }}
-                className="ml-2 p-1.5 rounded-lg hover:bg-red-50 text-[#888] hover:text-red-500 transition-colors"
-                title="Logout"
-              >
-                <span className="material-symbols-outlined text-[18px]">logout</span>
-              </button>
+          <div className="flex items-center gap-2 pl-3 border-l border-[#e5e5e5]">
+            <div className="w-8 h-8 rounded-full bg-gradient-to-br from-primary to-primary/60 flex items-center justify-center text-white text-sm font-bold uppercase shadow-sm">
+              {user?.name?.charAt(0) || 'A'}
             </div>
+            <div className="hidden md:block text-left">
+              <p className="text-sm font-medium text-[#333] leading-tight">
+                {user?.name || 'Admin'}
+              </p>
+              <p className="text-xs text-[#888]">{user?.phone || ''}</p>
+            </div>
+            <button
+              onClick={() => {
+                useAuthStore.getState().logout();
+                router.push('/admin/login');
+              }}
+              className="ml-2 p-1.5 rounded-lg hover:bg-red-50 text-[#888] hover:text-red-500 transition-colors"
+              title="Logout"
+            >
+              <span className="material-symbols-outlined text-[18px]">logout</span>
+            </button>
           </div>
         </header>
 
-        <main className="flex-1 p-4 lg:p-6 overflow-x-hidden">
-          {children}
-        </main>
+        <main className="flex-1 p-4 lg:p-6 overflow-x-hidden">{children}</main>
       </div>
 
-      {searchOpen && <SearchOverlay query={searchQuery} setQuery={setSearchQuery} onClose={() => setSearchOpen(false)} />}
+      {searchOpen && (
+        <SearchOverlay
+          query={searchQuery}
+          setQuery={setSearchQuery}
+          onClose={() => setSearchOpen(false)}
+        />
+      )}
     </div>
   );
 }
