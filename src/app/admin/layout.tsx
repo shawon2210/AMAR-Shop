@@ -598,22 +598,16 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
 
           <div className="flex-1" />
           <div className="flex items-center gap-1 md:gap-3">
+            {/* Search Trigger (Mobile/Desktop) */}
             <button
               onClick={() => setSearchOpen(true)}
-              className="hidden md:flex items-center gap-2 w-full max-w-xs bg-[#f5f5f5] hover:bg-[#f0f0f0] rounded-lg px-3 py-2 transition-colors group"
+              className="flex items-center gap-2 bg-[#f5f5f5] hover:bg-[#f0f0f0] rounded-lg px-2.5 py-2 transition-colors md:w-[240px]"
             >
               <span className="material-symbols-outlined text-[#888] text-[18px]">search</span>
-              <span className="text-xs text-[#aaa] flex-1 text-left">Search...</span>
-              <kbd className="text-[9px] bg-white px-1 py-0.5 rounded text-[#999] font-mono border border-[#ddd]">
+              <span className="hidden md:inline text-xs text-[#aaa] flex-1 text-left">Search...</span>
+              <kbd className="hidden md:inline-flex text-[9px] bg-white px-1 py-0.5 rounded text-[#999] font-mono border border-[#ddd]">
                 ⌘K
               </kbd>
-            </button>
-
-            <button
-              onClick={() => setSearchOpen(true)}
-              className="md:hidden p-2 rounded-lg hover:bg-[#f5f5f5]"
-            >
-              <span className="material-symbols-outlined text-[#555] text-[20px]">search</span>
             </button>
 
             <Link
@@ -638,7 +632,6 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
                 <p className="text-xs font-medium text-[#333] truncate leading-tight">
                   {user?.name || 'Admin'}
                 </p>
-                <p className="text-[10px] text-[#888] truncate">{user?.phone || ''}</p>
               </div>
 
               <button
