@@ -56,7 +56,7 @@ export function Header() {
         <div className="max-w-[1440px] mx-auto px-2 lg:px-6 w-full flex items-center justify-between gap-2 lg:gap-4">
           <div className="flex items-center gap-1 sm:gap-2">
             {/* Hamburger menu */}
-            <button onClick={() => setSidebarOpen(true)} className="text-gray-600 p-1">
+            <button onClick={() => setSidebarOpen(true)} className="text-gray-600 p-1 md:hidden">
               <span className="material-symbols-outlined text-2xl">menu</span>
             </button>
             {/* Logo */}
