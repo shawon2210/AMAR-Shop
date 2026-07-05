@@ -103,9 +103,12 @@ export function Header() {
                 Login
               </Link>
             ) : (
-              <button onClick={() => setMenuOpen(!menuOpen)} className="hover:text-primary">
+              <Link
+                href={isAdmin ? '/admin' : user?.isSeller ? '/seller/dashboard' : '/account'}
+                className="hover:text-primary"
+              >
                 <span className="material-symbols-outlined text-xl">person</span>
-              </button>
+              </Link>
             )}
           </div>
         </div>
