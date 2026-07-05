@@ -108,42 +108,52 @@ const navSections: NavSection[] = [
   },
 ];
 
-function NavItemLink({ item, sectionTitle, onClose, collapsed }: { item: NavItem; sectionTitle: string; onClose: () => void; collapsed?: boolean }) {
+const allNavItems = navSections.flatMap((s) => s.items.map((i) => ({ ...i, section: s.title })));
+
+function NavItemLink({ item, onClose, collapsed }: { item: NavItem; onClose: () => void; collapsed?: boolean }) {
   const pathname = usePathname();
   const isActive = item.href === '/admin' ? pathname === '/admin' : pathname.startsWith(item.href);
 
   return (
     <Link
-      key={`${sectionTitle}-${item.label}`}
       href={item.href}
       onClick={onClose}
       title={collapsed ? item.label : undefined}
       className={`
-        group relative flex items-center gap-3 px-3 py-2 rounded-lg text-sm font-medium transition-all duration-150
+        group relative flex items-center h-11 rounded-xl transition-all duration-150
+        ${collapsed ? 'justify-center w-11 mx-auto' : 'gap-3 px-4'}
         ${isActive
-          ? 'bg-primary/12 text-primary'
-          : 'text-white/60 hover:bg-white/8 hover:text-white/90'
+          ? 'bg-primary/10 text-primary'
+          : 'text-white/60 hover:bg-white/[0.06] hover:text-white/90'
         }
-        ${collapsed ? 'justify-center px-2' : ''}
       `}
     >
       {isActive && (
-        <span className="absolute left-0 top-1/2 -translate-y-1/2 w-0.5 h-5 rounded-r-full bg-primary" />
+        <span className="absolute left-0 top-2 bottom-2 w-[3px] rounded-full bg-primary" />
       )}
       <span className={`material-symbols-outlined text-[20px] transition-colors shrink-0 ${isActive ? 'text-primary' : 'text-white/40 group-hover:text-white/70'}`}>
         {item.icon}
       </span>
       {!collapsed && (
-        <>
-          <span className="truncate">{item.label}</span>
-          {isActive && <span className="ml-auto w-1.5 h-1.5 rounded-full bg-primary/60" />}
-        </>
+        <span className="truncate text-sm font-medium">{item.label}</span>
       )}
     </Link>
   );
 }
 
-function Sidebar({ open, onClose, collapsed, onToggleCollapse }: { open: boolean; onClose: () => void; collapsed: boolean; onToggleCollapse: () => void }) {
+function Sidebar({
+  open,
+  onClose,
+  collapsed,
+  onToggleCollapse,
+  isDesktop,
+}: {
+  open: boolean;
+  onClose: () => void;
+  collapsed: boolean;
+  onToggleCollapse: () => void;
+  isDesktop: boolean;
+}) {
   const [search, setSearch] = useState('');
   const [expandedSections, setExpandedSections] = useState<Record<string, boolean>>(() => {
     const init: Record<string, boolean> = {};
@@ -168,129 +178,157 @@ function Sidebar({ open, onClose, collapsed, onToggleCollapse }: { open: boolean
       .filter((s) => s.items.length > 0);
   }, [search, collapsed]);
 
-  return (
+  const sidebarContent = (
     <>
-      {open && (
-        <div className="fixed inset-0 bg-black/40 backdrop-blur-sm z-40 md:hidden" onClick={onClose} />
-      )}
-
-      <aside
-        className={`
-          fixed top-0 left-0 z-50 bg-gradient-to-b from-[#0f172a] to-[#0a0f1e] text-white flex flex-col
-          shadow-2xl shadow-black/30 border-r border-white/[0.03]
-          transition-all duration-300 ease-in-out
-          ${open ? 'translate-x-0' : '-translate-x-full'}
-          md:translate-x-0 md:z-auto h-full md:h-screen
-          ${collapsed ? 'w-16' : 'w-64'}
-        `}
-      >
-        {/* Logo */}
-        <div className={`flex items-center ${collapsed ? 'justify-center' : 'gap-3 px-5'} h-16 border-b border-white/[0.04] shrink-0`}>
-          <div className="w-9 h-9 rounded-xl bg-gradient-to-br from-primary to-primary/60 flex items-center justify-center shadow-lg shadow-primary/25 shrink-0">
-            <span className="material-symbols-outlined text-white text-xl">store</span>
-          </div>
-          {!collapsed && (
-            <div className="min-w-0">
-              <img src="/images/amarshop-logo.png" alt="AmarShop" className="w-[clamp(120px,14vw,220px)] h-auto object-contain" />
-              <p className="text-[9px] text-white/30 -mt-0.5 tracking-wider">Admin Panel</p>
-            </div>
-          )}
+      {/* Logo */}
+      <div className={`flex items-center h-16 shrink-0 border-b border-white/[0.04] ${collapsed ? 'justify-center px-0' : 'gap-3 px-5'}`}>
+        <div className="w-9 h-9 rounded-xl bg-gradient-to-br from-primary to-primary/60 flex items-center justify-center shadow-lg shadow-primary/25 shrink-0">
+          <span className="material-symbols-outlined text-white text-xl">store</span>
         </div>
+        {!collapsed && (
+          <div className="min-w-0">
+            <img src="/images/amarshop-logo.png" alt="AmarShop" className="w-[clamp(120px,14vw,220px)] h-auto object-contain" />
+            <p className="text-[9px] text-white/30 -mt-0.5 tracking-wider">Admin Panel</p>
+          </div>
+        )}
+      </div>
 
-        {/* Collapse toggle (desktop) */}
+      {/* Desktop collapse toggle */}
+      {isDesktop && (
         <button
           onClick={onToggleCollapse}
-          className="hidden md:flex absolute -right-3 top-16 z-10 w-6 h-6 rounded-full bg-[#1e293b] border border-white/[0.06] items-center justify-center text-white/40 hover:text-white hover:border-white/[0.12] transition-all shadow-lg"
+          className="absolute -right-3 top-[26px] z-10 w-6 h-6 rounded-full bg-[#1e293b] border border-white/[0.06] flex items-center justify-center text-white/40 hover:text-white hover:border-white/[0.12] transition-all shadow-lg"
         >
-          <span className="material-symbols-outlined text-[14px] transition-transform duration-200">
+          <span className="material-symbols-outlined text-[14px] transition-transform duration-300">
             {collapsed ? 'chevron_right' : 'chevron_left'}
           </span>
         </button>
+      )}
 
-        {/* Search (only when expanded) */}
-        {!collapsed && (
-          <div className="px-3 pt-3 pb-1 shrink-0">
-            <div className="relative">
-              <span className="absolute left-3 top-1/2 -translate-y-1/2 material-symbols-outlined text-[15px] text-white/20">search</span>
-              <input
-                type="text"
-                value={search}
-                onChange={(e) => setSearch(e.target.value)}
-                placeholder="Search menu..."
-                className="w-full bg-white/[0.04] border border-white/[0.05] rounded-lg pl-8 pr-3 py-2 text-xs text-white/60 placeholder:text-white/20 outline-none focus:border-primary/30 focus:bg-white/[0.06] transition-all"
-              />
-            </div>
+      {/* Search */}
+      <div
+        className={`overflow-hidden transition-all duration-300 ease-out ${collapsed ? 'opacity-0 pointer-events-none h-0' : 'opacity-100'}`}
+      >
+        <div className="px-3 pt-3 pb-1 shrink-0">
+          <div className="relative">
+            <span className="absolute left-3 top-1/2 -translate-y-1/2 material-symbols-outlined text-[15px] text-white/20">search</span>
+            <input
+              type="text"
+              value={search}
+              onChange={(e) => setSearch(e.target.value)}
+              placeholder="Search menu..."
+              className="w-full bg-white/[0.04] border border-white/[0.05] rounded-lg pl-8 pr-3 py-2 text-xs text-white/60 placeholder:text-white/20 outline-none focus:border-primary/30 focus:bg-white/[0.06] transition-all"
+            />
           </div>
-        )}
+        </div>
+      </div>
 
-        {/* Nav */}
-        <nav className="flex-1 overflow-y-auto py-3 px-2 space-y-0.5 scrollbar-thin scrollbar-thumb-white/[0.06] hover:scrollbar-thumb-white/[0.1]">
-          {collapsed ? (
-            navSections.map((section) =>
+      {/* Nav */}
+      <nav
+        className="flex-1 overflow-y-auto py-3 space-y-1"
+        style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}
+      >
+        {collapsed ? (
+          <div className="flex flex-col items-center gap-1">
+            {navSections.map((section) =>
               section.items.map((item) => (
-                <NavItemLink key={`${section.title}-${item.label}`} item={item} sectionTitle={section.title} onClose={onClose} collapsed />
+                <NavItemLink key={`${section.title}-${item.label}`} item={item} onClose={onClose} collapsed />
               ))
-            )
-          ) : (
-            filteredSections.map((section) => (
-              <div key={section.title}>
-                <button
-                  onClick={() => toggleSection(section.title)}
-                  className="flex items-center justify-between w-full px-3 py-1.5 mt-1 text-[9px] font-semibold tracking-[0.12em] text-white/25 uppercase hover:text-white/45 transition-colors"
-                >
-                  <span>{section.title}</span>
+            )}
+          </div>
+        ) : (
+          filteredSections.map((section) => (
+            <div key={section.title} className="px-2">
+              <button
+                onClick={() => toggleSection(section.title)}
+                className="flex items-center justify-between w-full h-9 px-3 text-xs uppercase tracking-wide text-white/40 hover:text-white/60 transition-colors"
+              >
+                <span className={`transition-all duration-300 ${collapsed ? 'opacity-0 scale-95' : 'opacity-70'}`}>
+                  {section.title}
+                </span>
+                {!collapsed && (
                   <span className={`material-symbols-outlined text-[13px] transition-transform duration-200 ${expandedSections[section.title] ? 'rotate-180' : ''}`}>
                     expand_more
                   </span>
-                </button>
-                <div className={`space-y-0.5 overflow-hidden transition-all duration-200 ${expandedSections[section.title] ? 'max-h-[9999px] opacity-100' : 'max-h-0 opacity-0'}`}>
-                  {section.items.map((item) => (
-                    <NavItemLink key={`${section.title}-${item.label}`} item={item} sectionTitle={section.title} onClose={onClose} />
-                  ))}
-                </div>
+                )}
+              </button>
+              <div
+                className={`space-y-0.5 overflow-hidden transition-all duration-200 ${expandedSections[section.title] ? 'max-h-[9999px] opacity-100' : 'max-h-0 opacity-0'}`}
+              >
+                {section.items.map((item) => (
+                  <NavItemLink key={`${section.title}-${item.label}`} item={item} onClose={onClose} />
+                ))}
               </div>
-            ))
-          )}
-        </nav>
-
-        {/* User / Footer */}
-        <div className={`border-t border-white/[0.04] p-2 shrink-0 ${collapsed ? 'px-1' : ''}`}>
-          <div className={`flex items-center ${collapsed ? 'justify-center' : 'gap-3 px-2'} py-2 rounded-lg hover:bg-white/[0.03] transition-colors`}>
-            <div className="w-8 h-8 rounded-full bg-gradient-to-br from-primary to-primary/60 flex items-center justify-center text-white text-sm font-bold uppercase shadow-sm shrink-0">
-              {user?.name?.charAt(0) || 'A'}
             </div>
-            {!collapsed && (
-              <>
-                <div className="flex-1 min-w-0">
-                  <p className="text-sm font-medium text-white/80 truncate leading-tight">{user?.name || 'Admin'}</p>
-                  <p className="text-[9px] text-white/35 truncate tracking-wider">{user?.role || 'Administrator'}</p>
-                </div>
-                <button
-                  onClick={() => { useAuthStore.getState().logout(); window.location.href = '/admin/login'; }}
-                  className="p-1.5 rounded-lg hover:bg-white/8 text-white/25 hover:text-red-400 transition-colors"
-                  title="Logout"
-                >
-                  <span className="material-symbols-outlined text-[16px]">logout</span>
-                </button>
-              </>
-            )}
+          ))
+        )}
+      </nav>
+
+      {/* User / Footer */}
+      <div className="border-t border-white/[0.04] p-2 shrink-0">
+        <div className={`flex items-center py-2 ${collapsed ? 'justify-center' : 'gap-3 px-2'} rounded-lg hover:bg-white/[0.03] transition-colors`}>
+          <div className="w-8 h-8 rounded-full bg-gradient-to-br from-primary to-primary/60 flex items-center justify-center text-white text-sm font-bold uppercase shadow-sm shrink-0">
+            {user?.name?.charAt(0) || 'A'}
           </div>
+          {!collapsed && (
+            <>
+              <div className="flex-1 min-w-0">
+                <p className="text-sm font-medium text-white/80 truncate leading-tight">{user?.name || 'Admin'}</p>
+                <p className="text-[9px] text-white/35 truncate tracking-wider">{user?.role || 'Administrator'}</p>
+              </div>
+              <button
+                onClick={() => { useAuthStore.getState().logout(); window.location.href = '/admin/login'; }}
+                className="p-1.5 rounded-lg hover:bg-white/8 text-white/25 hover:text-red-400 transition-colors"
+                title="Logout"
+              >
+                <span className="material-symbols-outlined text-[16px]">logout</span>
+              </button>
+            </>
+          )}
         </div>
-      </aside>
+      </div>
     </>
+  );
+
+  if (!isDesktop) {
+    return (
+      <>
+        {open && (
+          <div className="fixed inset-0 bg-black/50 z-40 transition-opacity duration-300" onClick={onClose} />
+        )}
+        <aside
+          className={`fixed top-0 left-0 bottom-0 z-50 w-[280px] bg-gradient-to-b from-[#0f172a] to-[#0b1220] text-white flex flex-col shadow-2xl shadow-black/30 transition-transform duration-300 ease-out ${
+            open ? 'translate-x-0' : '-translate-x-full'
+          }`}
+        >
+          {sidebarContent}
+        </aside>
+      </>
+    );
+  }
+
+  return (
+    <aside
+      className="sticky top-0 h-screen text-white flex flex-col z-auto"
+      style={{
+        width: collapsed ? '72px' : '256px',
+        background: 'linear-gradient(180deg, #0f172a 0%, #0b1220 60%, #090d18 100%)',
+        transition: 'width 300ms ease-out',
+      }}
+    >
+      {sidebarContent}
+    </aside>
   );
 }
 
 function SearchOverlay({ query, setQuery, onClose }: { query: string; setQuery: (v: string) => void; onClose: () => void }) {
   const router = useRouter();
 
-  const allItems = useMemo(() => navSections.flatMap((s) => s.items.map((i) => ({ ...i, section: s.title }))), []);
-
   const results = useMemo(() => {
     if (!query.trim()) return [];
     const q = query.toLowerCase();
-    return allItems.filter((i) => i.label.toLowerCase().includes(q));
-  }, [query, allItems]);
+    return allNavItems.filter((i) => i.label.toLowerCase().includes(q));
+  }, [query]);
 
   useEffect(() => {
     const handleKey = (e: KeyboardEvent) => {
@@ -303,7 +341,7 @@ function SearchOverlay({ query, setQuery, onClose }: { query: string; setQuery: 
   return (
     <div className="fixed inset-0 z-50 bg-black/40 backdrop-blur-sm" onClick={onClose}>
       <div
-        className="absolute top-16 left-1/2 -translate-x-1/2 w-full max-w-lg bg-white rounded-xl shadow-2xl border border-[#eee] overflow-hidden"
+        className="absolute top-[72px] left-1/2 -translate-x-1/2 w-full max-w-lg bg-white rounded-xl shadow-2xl border border-[#eee] overflow-hidden"
         onClick={(e) => e.stopPropagation()}
       >
         <div className="flex items-center gap-3 p-4 border-b border-[#eee]">
@@ -352,6 +390,41 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
   const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
   const [searchOpen, setSearchOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
+  const [mounted, setMounted] = useState(false);
+  const [isDesktop, setIsDesktop] = useState(false);
+
+  useEffect(() => {
+    const checkScreen = () => {
+      setIsDesktop(window.innerWidth >= 1024);
+      if (!localStorage.getItem('adminSidebar')) {
+        if (window.innerWidth >= 768 && window.innerWidth < 1024) {
+          setSidebarCollapsed(true);
+        }
+      }
+    };
+    checkScreen();
+
+    const saved = localStorage.getItem('adminSidebar');
+    if (saved !== null) {
+      setSidebarCollapsed(saved === 'true');
+    }
+
+    setMounted(true);
+
+    const handleResize = () => {
+      setIsDesktop(window.innerWidth >= 1024);
+    };
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
+  }, []);
+
+  const handleToggleCollapse = useCallback(() => {
+    setSidebarCollapsed((prev) => {
+      const next = !prev;
+      try { localStorage.setItem('adminSidebar', String(next)); } catch {}
+      return next;
+    });
+  }, []);
 
   useEffect(() => {
     if (!hydrated) return;
@@ -389,20 +462,36 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
     );
   }
 
-  return (
-    <div className="min-h-screen flex bg-[#f5f5f5]">
-      <Sidebar open={sidebarOpen} onClose={() => setSidebarOpen(false)} collapsed={sidebarCollapsed} onToggleCollapse={() => setSidebarCollapsed(!sidebarCollapsed)} />
+  const sidebarWidth = sidebarCollapsed ? '72px' : '256px';
 
-      <div className={`flex-1 flex flex-col min-w-0 transition-all duration-300 ${sidebarCollapsed ? 'md:ml-16' : 'md:ml-64'}`}>
-        <header className="sticky top-0 z-30 bg-white/80 backdrop-blur-md border-b border-[#e5e5e5] h-16 flex items-center px-4 lg:px-6 gap-3">
+  return (
+    <div
+      className="min-h-screen"
+      style={{
+        display: 'grid',
+        gridTemplateColumns: mounted && isDesktop ? `${sidebarWidth} 1fr` : '1fr',
+        transition: 'grid-template-columns 300ms ease-out',
+      }}
+    >
+      {mounted && (
+        <Sidebar
+          open={sidebarOpen}
+          onClose={() => setSidebarOpen(false)}
+          collapsed={sidebarCollapsed}
+          onToggleCollapse={handleToggleCollapse}
+          isDesktop={isDesktop}
+        />
+      )}
+
+      <div className="flex flex-col min-w-0">
+        <header className="sticky top-0 z-30 h-[72px] bg-white/85 backdrop-blur-md border-b border-slate-200 flex items-center px-4 lg:px-6 gap-3">
           <button
-            className="md:hidden p-2 -ml-2 rounded-lg hover:bg-[#f5f5f5] transition-colors"
+            className="lg:hidden p-2 -ml-2 rounded-lg hover:bg-[#f5f5f5] transition-colors"
             onClick={() => setSidebarOpen(true)}
           >
             <span className="material-symbols-outlined text-[#555]">menu</span>
           </button>
 
-          {/* Desktop search trigger */}
           <button
             onClick={() => setSearchOpen(true)}
             className="hidden sm:flex items-center gap-2 flex-1 max-w-md bg-[#f5f5f5] hover:bg-[#f0f0f0] rounded-lg px-3 py-2 transition-colors group"
@@ -414,7 +503,6 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
             </kbd>
           </button>
 
-          {/* Mobile search icon */}
           <button
             onClick={() => setSearchOpen(true)}
             className="sm:hidden p-2 rounded-lg hover:bg-[#f5f5f5]"
