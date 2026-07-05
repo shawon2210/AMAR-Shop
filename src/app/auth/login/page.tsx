@@ -25,6 +25,8 @@ function LoginForm() {
     const state = useAuthStore.getState();
     if (state.user?.role === 'ADMIN' || state.user?.role === 'SUPER_ADMIN') {
       router.push('/admin');
+    } else if (state.user?.isSeller || state.user?.role === 'SELLER') {
+      router.push('/seller/dashboard');
     } else {
       router.push('/account');
     }
@@ -53,6 +55,8 @@ function LoginForm() {
         const state = useAuthStore.getState();
         if (state.user?.role === 'ADMIN' || state.user?.role === 'SUPER_ADMIN') {
           router.push('/admin');
+        } else if (state.user?.isSeller || state.user?.role === 'SELLER') {
+          router.push('/seller/dashboard');
         } else {
           router.push('/account');
         }
@@ -194,7 +198,7 @@ function LoginForm() {
             </div>
           </div>
 
-          <div className="mt-4 grid grid-cols-2 gap-2 sm:gap-3">
+          <div className="mt-4 grid grid-cols-1 sm:grid-cols-3 gap-2 sm:gap-3">
             <button
               type="button"
               onClick={() => demoLogin({ id: 'demo-admin', name: 'Admin User', email: 'admin@amarshop.com', phone: '01712345678', role: 'SUPER_ADMIN', isSeller: false })}
@@ -202,6 +206,14 @@ function LoginForm() {
             >
               <span className="material-symbols-outlined text-sm sm:text-base">admin_panel_settings</span>
               <span className="whitespace-nowrap">Demo Admin</span>
+            </button>
+            <button
+              type="button"
+              onClick={() => demoLogin({ id: 'demo-seller', name: 'ShopZone BD', email: 'seller@amarshop.com', phone: '01798765432', role: 'SELLER', isSeller: true })}
+              className="flex items-center justify-center gap-1.5 sm:gap-2 py-2 sm:py-2.5 border border-outline rounded-lg hover:bg-surface-container transition-colors text-[11px] sm:text-sm"
+            >
+              <span className="material-symbols-outlined text-sm sm:text-base">storefront</span>
+              <span className="whitespace-nowrap">Demo Seller</span>
             </button>
             <button
               type="button"
