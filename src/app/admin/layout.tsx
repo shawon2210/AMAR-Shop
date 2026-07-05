@@ -600,7 +600,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
 
           <button
             onClick={() => setSearchOpen(true)}
-            className="hidden sm:flex items-center gap-2 w-full max-w-xs bg-[#f5f5f5] hover:bg-[#f0f0f0] rounded-lg px-3 py-2 transition-colors group"
+            className="hidden md:flex items-center gap-2 w-full max-w-xs bg-[#f5f5f5] hover:bg-[#f0f0f0] rounded-lg px-3 py-2 transition-colors group"
           >
             <span className="material-symbols-outlined text-[#888] text-[20px]">search</span>
             <span className="text-sm text-[#aaa] flex-1 text-left">Search...</span>
@@ -611,27 +611,32 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
 
           <button
             onClick={() => setSearchOpen(true)}
-            className="sm:hidden p-2 rounded-lg hover:bg-[#f5f5f5]"
+            className="md:hidden p-2 rounded-lg hover:bg-[#f5f5f5]"
           >
             <span className="material-symbols-outlined text-[#555]">search</span>
           </button>
 
-          <button className="relative p-2 rounded-full hover:bg-[#f5f5f5] transition-colors">
+          <Link
+            href="/admin/notifications"
+            className="relative p-2 rounded-full hover:bg-[#f5f5f5] transition-colors"
+          >
             <span className="material-symbols-outlined text-[#555]">notifications</span>
             <span className="absolute top-1 right-1 w-4 h-4 bg-red-500 text-white text-[9px] font-bold rounded-full flex items-center justify-center shadow-sm">
               3
             </span>
-          </button>
+          </Link>
 
           <div className="flex items-center gap-2 pl-3 border-l border-[#e5e5e5]">
-            <div className="w-8 h-8 rounded-full bg-gradient-to-br from-primary to-primary/60 flex items-center justify-center text-white text-sm font-bold uppercase shadow-sm">
+            <Link 
+              href="/admin/settings"
+              className="w-8 h-8 rounded-full bg-gradient-to-br from-primary to-primary/60 flex items-center justify-center text-white text-sm font-bold uppercase shadow-sm"
+            >
               {user?.name?.charAt(0) || 'A'}
-            </div>
-            <div className="hidden md:block text-left">
+            </Link>
+            <div className="hidden lg:block text-left">
               <p className="text-sm font-medium text-[#333] leading-tight">
                 {user?.name || 'Admin'}
               </p>
-              <p className="text-xs text-[#888]">{user?.phone || ''}</p>
             </div>
             <button
               onClick={() => {

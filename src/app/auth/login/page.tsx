@@ -198,30 +198,30 @@ function LoginForm() {
             </div>
           </div>
 
-          <div className="mt-4 grid grid-cols-1 sm:grid-cols-3 gap-2 sm:gap-3">
+          <div className="mt-4 grid grid-cols-3 gap-2">
             <button
               type="button"
               onClick={() => demoLogin({ id: 'demo-admin', name: 'Admin User', email: 'admin@amarshop.com', phone: '01712345678', role: 'SUPER_ADMIN', isSeller: false })}
-              className="flex items-center justify-center gap-1.5 sm:gap-2 py-2 sm:py-2.5 border border-outline rounded-lg hover:bg-surface-container transition-colors text-[11px] sm:text-sm"
+              className="flex flex-col items-center gap-1 py-2.5 sm:py-3 px-1 border border-outline rounded-lg hover:bg-surface-container active:scale-[0.97] transition-all text-[10px] sm:text-xs leading-tight"
             >
-              <span className="material-symbols-outlined text-sm sm:text-base">admin_panel_settings</span>
-              <span className="whitespace-nowrap">Demo Admin</span>
+              <span className="material-symbols-outlined text-xl sm:text-2xl text-primary">admin_panel_settings</span>
+              <span className="font-medium text-center">Admin</span>
             </button>
             <button
               type="button"
               onClick={() => demoLogin({ id: 'demo-seller', name: 'ShopZone BD', email: 'seller@amarshop.com', phone: '01798765432', role: 'SELLER', isSeller: true })}
-              className="flex items-center justify-center gap-1.5 sm:gap-2 py-2 sm:py-2.5 border border-outline rounded-lg hover:bg-surface-container transition-colors text-[11px] sm:text-sm"
+              className="flex flex-col items-center gap-1 py-2.5 sm:py-3 px-1 border border-outline rounded-lg hover:bg-surface-container active:scale-[0.97] transition-all text-[10px] sm:text-xs leading-tight"
             >
-              <span className="material-symbols-outlined text-sm sm:text-base">storefront</span>
-              <span className="whitespace-nowrap">Demo Seller</span>
+              <span className="material-symbols-outlined text-xl sm:text-2xl text-tertiary">storefront</span>
+              <span className="font-medium text-center">Seller</span>
             </button>
             <button
               type="button"
               onClick={() => demoLogin({ id: 'demo-customer', name: 'Demo Customer', email: 'customer@amarshop.com', phone: '01700000000', role: 'CUSTOMER', isSeller: false })}
-              className="flex items-center justify-center gap-1.5 sm:gap-2 py-2 sm:py-2.5 border border-outline rounded-lg hover:bg-surface-container transition-colors text-[11px] sm:text-sm"
+              className="flex flex-col items-center gap-1 py-2.5 sm:py-3 px-1 border border-outline rounded-lg hover:bg-surface-container active:scale-[0.97] transition-all text-[10px] sm:text-xs leading-tight"
             >
-              <span className="material-symbols-outlined text-sm sm:text-base">person</span>
-              <span className="whitespace-nowrap">Demo Customer</span>
+              <span className="material-symbols-outlined text-xl sm:text-2xl text-green-600">person</span>
+              <span className="font-medium text-center">Customer</span>
             </button>
           </div>
         </div>
