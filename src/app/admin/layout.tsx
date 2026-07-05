@@ -597,59 +597,62 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
           </nav>
 
           <div className="flex-1" />
-
-          <button
-            onClick={() => setSearchOpen(true)}
-            className="hidden md:flex items-center gap-2 w-full max-w-xs bg-[#f5f5f5] hover:bg-[#f0f0f0] rounded-lg px-3 py-2 transition-colors group"
-          >
-            <span className="material-symbols-outlined text-[#888] text-[20px]">search</span>
-            <span className="text-sm text-[#aaa] flex-1 text-left">Search...</span>
-            <kbd className="text-[10px] bg-white px-1.5 py-0.5 rounded text-[#999] font-mono border border-[#ddd]">
-              ⌘K
-            </kbd>
-          </button>
-
-          <button
-            onClick={() => setSearchOpen(true)}
-            className="md:hidden p-2 rounded-lg hover:bg-[#f5f5f5]"
-          >
-            <span className="material-symbols-outlined text-[#555]">search</span>
-          </button>
-
-          <Link
-            href="/admin/notifications"
-            className="relative p-2 rounded-full hover:bg-[#f5f5f5] transition-colors"
-          >
-            <span className="material-symbols-outlined text-[#555]">notifications</span>
-            <span className="absolute top-1 right-1 w-4 h-4 bg-red-500 text-white text-[9px] font-bold rounded-full flex items-center justify-center shadow-sm">
-              3
-            </span>
-          </Link>
-
-          <div className="flex items-center gap-2 pl-3 border-l border-[#e5e5e5]">
-            <Link 
-              href="/admin/settings"
-              className="w-8 h-8 rounded-full bg-gradient-to-br from-primary to-primary/60 flex items-center justify-center text-white text-sm font-bold uppercase shadow-sm"
-            >
-              {user?.name?.charAt(0) || 'A'}
-            </Link>
-            <div className="hidden lg:block text-left">
-              <p className="text-sm font-medium text-[#333] leading-tight">
-                {user?.name || 'Admin'}
-              </p>
-            </div>
+          <div className="flex items-center gap-1 md:gap-3">
             <button
-              onClick={() => {
-                useAuthStore.getState().logout();
-                router.push('/admin/login');
-              }}
-              className="ml-2 p-1.5 rounded-lg hover:bg-red-50 text-[#888] hover:text-red-500 transition-colors"
-              title="Logout"
+              onClick={() => setSearchOpen(true)}
+              className="hidden md:flex items-center gap-2 w-full max-w-xs bg-[#f5f5f5] hover:bg-[#f0f0f0] rounded-lg px-3 py-2 transition-colors group"
             >
-              <span className="material-symbols-outlined text-[18px]">logout</span>
+              <span className="material-symbols-outlined text-[#888] text-[18px]">search</span>
+              <span className="text-xs text-[#aaa] flex-1 text-left">Search...</span>
+              <kbd className="text-[9px] bg-white px-1 py-0.5 rounded text-[#999] font-mono border border-[#ddd]">
+                ⌘K
+              </kbd>
             </button>
+
+            <button
+              onClick={() => setSearchOpen(true)}
+              className="md:hidden p-2 rounded-lg hover:bg-[#f5f5f5]"
+            >
+              <span className="material-symbols-outlined text-[#555] text-[20px]">search</span>
+            </button>
+
+            <Link
+              href="/admin/notifications"
+              className="relative p-2 rounded-full hover:bg-[#f5f5f5] transition-colors shrink-0"
+            >
+              <span className="material-symbols-outlined text-[#555] text-[20px]">notifications</span>
+              <span className="absolute top-1 right-1 w-4 h-4 bg-red-500 text-white text-[9px] font-bold rounded-full flex items-center justify-center shadow-sm">
+                3
+              </span>
+            </Link>
+
+            <div className="flex items-center gap-2 pl-2 md:pl-3 border-l border-[#e5e5e5] shrink-0">
+              <Link 
+                href="/admin/settings"
+                className="w-8 h-8 rounded-full bg-gradient-to-br from-primary to-primary/60 flex items-center justify-center text-white text-xs font-bold uppercase shadow-sm shrink-0"
+              >
+                {user?.name?.charAt(0) || 'A'}
+              </Link>
+              
+              <div className="hidden lg:block text-left min-w-0">
+                <p className="text-xs font-medium text-[#333] truncate leading-tight">
+                  {user?.name || 'Admin'}
+                </p>
+                <p className="text-[10px] text-[#888] truncate">{user?.phone || ''}</p>
+              </div>
+
+              <button
+                onClick={() => {
+                  useAuthStore.getState().logout();
+                  router.push('/admin/login');
+                }}
+                className="ml-1 p-1.5 rounded-lg hover:bg-red-50 text-[#888] hover:text-red-500 transition-colors shrink-0"
+                title="Logout"
+              >
+                <span className="material-symbols-outlined text-[18px]">logout</span>
+              </button>
+            </div>
           </div>
-        </header>
 
         <main className="flex-1 p-4 lg:p-6 overflow-x-hidden">{children}</main>
       </div>
