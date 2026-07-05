@@ -20,7 +20,7 @@ const navSections: NavSection[] = [
   {
     title: 'Dashboard',
     items: [
-      { label: 'Overview', icon: 'dashboard', href: '/admin' },
+      { label: 'Overview', icon: 'dashboard', href: '/admin/overview' },
       { label: 'Analytics', icon: 'analytics', href: '/admin/analytics' },
       { label: 'Reports', icon: 'description', href: '/admin/reports' },
       { label: 'Activity', icon: 'monitoring', href: '/admin/activity' },
@@ -33,7 +33,7 @@ const navSections: NavSection[] = [
       { label: 'Returns', icon: 'assignment_return', href: '/admin/orders/returns' },
       { label: 'Refunds', icon: 'currency_ruble', href: '/admin/orders/refunds' },
       { label: 'Transactions', icon: 'swap_horiz', href: '/admin/transactions' },
-      { label: 'Invoices', icon: 'receipt', href: '/admin/finance/invoices' },
+      { label: 'Invoices', icon: 'receipt', href: '/admin/invoices' },
       { label: 'Payments', icon: 'payments', href: '/admin/payments' },
       { label: 'Coupons', icon: 'confirmation_number', href: '/admin/coupons' },
       { label: 'Flash Sales', icon: 'local_fire_department', href: '/admin/flash-sales' },
@@ -46,33 +46,32 @@ const navSections: NavSection[] = [
       { label: 'Products', icon: 'inventory_2', href: '/admin/products' },
       { label: 'Categories', icon: 'category', href: '/admin/categories' },
       { label: 'Brands', icon: 'branding_watermark', href: '/admin/brands' },
-      { label: 'Inventory', icon: 'warehouse', href: '/admin/warehouse/inventory' },
+      { label: 'Inventory', icon: 'warehouse', href: '/admin/inventory' },
       { label: 'Attributes', icon: 'list_alt', href: '/admin/attributes' },
       { label: 'Reviews', icon: 'star', href: '/admin/reviews' },
       { label: 'Tags', icon: 'sell', href: '/admin/tags' },
       { label: 'Collections', icon: 'collections_bookmark', href: '/admin/collections' },
-      { label: 'Vendors', icon: 'storefront', href: '/admin/vendors' },
     ],
   },
   {
-    title: 'Sellers',
+    title: 'Vendors',
     items: [
-      { label: 'All Sellers', icon: 'store', href: '/admin/sellers' },
+      { label: 'All Vendors', icon: 'storefront', href: '/admin/vendors' },
       { label: 'Approvals', icon: 'verified', href: '/admin/sellers/approvals' },
       { label: 'Commissions', icon: 'percent', href: '/admin/sellers/commissions' },
-      { label: 'Withdrawals', icon: 'account_balance_wallet', href: '/admin/sellers/withdraw-requests' },
+      { label: 'Withdraw Requests', icon: 'account_balance_wallet', href: '/admin/sellers/withdraw-requests' },
       { label: 'Analytics', icon: 'trending_up', href: '/admin/sellers/analytics' },
-      { label: 'Support', icon: 'headset_mic', href: '/admin/sellers/support' },
+      { label: 'Vendor Support', icon: 'headset_mic', href: '/admin/sellers/support' },
     ],
   },
   {
     title: 'Customers',
     items: [
-      { label: 'All Customers', icon: 'group', href: '/admin/customers' },
+      { label: 'Customers', icon: 'group', href: '/admin/customers' },
       { label: 'Segments', icon: 'layers', href: '/admin/customers/segments' },
       { label: 'Wishlists', icon: 'favorite', href: '/admin/customers/wishlists' },
       { label: 'Addresses', icon: 'location_on', href: '/admin/customers/addresses' },
-      { label: 'Support Tickets', icon: 'support', href: '/admin/support' },
+      { label: 'Support Tickets', icon: 'support', href: '/admin/support-tickets' },
     ],
   },
   {
@@ -92,9 +91,9 @@ const navSections: NavSection[] = [
       { label: 'Email Campaigns', icon: 'email', href: '/admin/email-campaigns' },
       { label: 'Push Notifications', icon: 'notifications_active', href: '/admin/push-notifications' },
       { label: 'Promotions', icon: 'discount', href: '/admin/promotions' },
-      { label: 'Affiliates', icon: 'campaign', href: '/admin/affiliates' },
+      { label: 'Affiliate Program', icon: 'campaign', href: '/admin/affiliates' },
       { label: 'SEO', icon: 'travel_explore', href: '/admin/seo' },
-      { label: 'Referrals', icon: 'share', href: '/admin/referral-system' },
+      { label: 'Referral System', icon: 'share', href: '/admin/referral-system' },
     ],
   },
   {
@@ -102,9 +101,9 @@ const navSections: NavSection[] = [
     items: [
       { label: 'Shipping', icon: 'local_shipping', href: '/admin/shipping' },
       { label: 'Delivery Zones', icon: 'map', href: '/admin/delivery-zones' },
-      { label: 'Couriers', icon: 'speed', href: '/admin/fulfillment/courier' },
-      { label: 'Tracking', icon: 'pin_drop', href: '/admin/fulfillment/tracking' },
-      { label: 'Warehouses', icon: 'warehouse', href: '/admin/warehouse' },
+      { label: 'Couriers', icon: 'speed', href: '/admin/couriers' },
+      { label: 'Tracking', icon: 'pin_drop', href: '/admin/tracking' },
+      { label: 'Warehouses', icon: 'warehouse', href: '/admin/warehouses' },
     ],
   },
   {
@@ -112,7 +111,7 @@ const navSections: NavSection[] = [
     items: [
       { label: 'Revenue', icon: 'trending_up', href: '/admin/revenue' },
       { label: 'Taxes', icon: 'receipt_long', href: '/admin/taxes' },
-      { label: 'Settlements', icon: 'account_balance', href: '/admin/finance/settlements' },
+      { label: 'Settlements', icon: 'account_balance', href: '/admin/settlements' },
       { label: 'Payouts', icon: 'payments', href: '/admin/payouts' },
       { label: 'Accounting', icon: 'book', href: '/admin/accounting' },
     ],
@@ -137,9 +136,8 @@ const navSections: NavSection[] = [
   {
     title: 'System',
     items: [
-      { label: 'Notifications', icon: 'notifications', href: '/admin/backups' },
       { label: 'Backups', icon: 'backup', href: '/admin/backups' },
-      { label: 'Monitoring', icon: 'monitoring', href: '/admin/realtime' },
+      { label: 'Monitoring', icon: 'monitoring', href: '/admin/monitoring' },
       { label: 'Jobs', icon: 'hourglass_empty', href: '/admin/jobs' },
       { label: 'Logs', icon: 'terminal', href: '/admin/logs' },
       { label: 'Security', icon: 'security', href: '/admin/security' },
