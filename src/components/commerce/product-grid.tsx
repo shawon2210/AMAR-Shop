@@ -88,12 +88,10 @@ export function ProductGrid({
           initial="hidden"
           whileInView="show"
           viewport={{ once: true }}
-          className={`grid ${columnClasses[columns]} gap-md`}
+          className="grid grid-cols-1 gap-4 gap-y-8 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:gap-6"
         >
           {visibleProducts.map((product) => (
-            <motion.div key={product.id} variants={cardItem} className="h-full">
-              <ProductCard product={product} variant="default" />
-            </motion.div>
+            <ProductCard key={product.id} product={product} variant="default" />
           ))}
         </motion.div>
 

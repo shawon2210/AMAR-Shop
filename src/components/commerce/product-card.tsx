@@ -62,99 +62,79 @@ export function ProductCard({ product, variant = 'default' }: ProductCardProps) 
   };
 
   return (
-    <motion.div
-      whileHover={{ y: -4 }}
-      transition={{ duration: designTokens.animation.duration.hover, ease: designTokens.animation.easing.default }}
-      className="h-full"
-    >
-      <Link
-        href={'/product/' + product.id}
-        className={`bg-surface rounded-2xl overflow-hidden group transition-all duration-300 flex flex-col h-full border hover:border-border-dark hover:shadow-lg ${isFlashVariant ? 'border-border' : 'border-border'}`}
+      <motion.div
+        whileHover={{ y: -6 }}
+        transition={{ type: 'spring', stiffness: 300, damping: 20 }}
+        className="flex flex-col h-full w-full"
       >
-        <div className="relative h-48 w-full overflow-hidden bg-surface-container">
-          {!imgError ? (
-            <motion.img
-              whileHover={{ scale: 1.05 }}
-              transition={{ duration: 0.5 }}
-              className="w-full h-full object-cover"
-              src={product.images[0]}
-              alt={product.name}
-              loading="lazy"
-              onError={() => setImgError(true)}
-            />
-          ) : (
-            <div className="w-full h-full flex items-center justify-center bg-surface-dim text-text-tertiary">
-              <span className="material-symbols-outlined text-4xl">image</span>
-            </div>
-          )}
-
-          <button
-            onClick={handleWishlist}
-            className="absolute top-md right-md w-9 h-9 rounded-full bg-surface/80 backdrop-blur-md flex items-center justify-center shadow-sm hover:bg-surface transition-all z-10"
-            aria-label="Add to wishlist"
-          >
-            <span
-              className={'material-symbols-outlined text-lg ' + (wishlisted ? 'text-error' : 'text-text-tertiary')}
-              style={wishlisted ? { fontVariationSettings: "'FILL' 1" } : undefined}
+        <Link
+          href={'/product/' + product.id}
+          className="flex flex-col h-full w-full overflow-hidden rounded-2xl border border-slate-100 bg-white dark:border-slate-800 dark:bg-slate-950 transition-all duration-300 hover:shadow-xl group"
+        >
+          {/* Media Element */}
+          <div className="relative w-full aspect-square overflow-hidden bg-slate-50">
+            {!imgError ? (
+              <img
+                className="h-full w-full object-cover object-center transition-transform duration-500 group-hover:scale-105"
+                src={product.images[0]}
+                alt={product.name}
+                loading="lazy"
+                onError={() => setImgError(true)}
+              />
+            ) : (
+              <div className="w-full h-full flex items-center justify-center bg-surface-dim text-text-tertiary">
+                <span className="material-symbols-outlined text-4xl">image</span>
+              </div>
+            )}
+            
+            <button
+              onClick={handleWishlist}
+              className="absolute top-3 right-3 w-9 h-9 rounded-full bg-white/90 backdrop-blur-sm flex items-center justify-center shadow-sm hover:bg-white transition-all z-10"
+              aria-label="Add to wishlist"
             >
-              favorite
-            </span>
-          </button>
+              <span
+                className={'material-symbols-outlined text-lg ' + (wishlisted ? 'text-error' : 'text-slate-400')}
+                style={wishlisted ? { fontVariationSettings: "'FILL' 1" } : undefined}
+              >
+                favorite
+              </span>
+            </button>
 
-          {discount > 0 && (
-            <div className={'absolute top-md left-md ' + (isFlashVariant ? 'bg-error' : 'bg-primary') + ' text-on-primary text-xs font-bold px-sm py-xs rounded-lg'}>
-              -{discount}%
-            </div>
-          )}
-        </div>
-
-        <div className="p-md flex flex-col flex-grow gap-sm">
-          {product.brand && (
-            <p className="text-xs text-text-tertiary font-medium truncate uppercase tracking-wide">{product.brand}</p>
-          )}
-
-          <h3 className="text-sm font-medium text-text-primary line-clamp-2 leading-snug">
-            {product.name}
-          </h3>
-
-          <div className="flex items-center gap-sm">
-            {renderStars(product.rating)}
+            {discount > 0 && (
+              <div className="absolute top-3 left-3 bg-primary text-white text-[10px] font-bold px-2 py-1 rounded-lg">
+                -{discount}%
+              </div>
+            )}
           </div>
 
-          <div className="mt-auto">
-            <PriceDisplay price={product.price} originalPrice={product.originalPrice} size="sm" />
-          </div>
+          {/* Text Controls & Footer Wrapper */}
+          <div className="flex-1 flex flex-col p-4">
+            {product.brand && (
+              <p className="text-xs text-slate-500 font-medium uppercase tracking-wider">{product.brand}</p>
+            )}
 
-          {isFlashVariant && product.soldPercent !== undefined && (
-            <div className="space-y-xs pt-sm">
-              <div className="flex justify-between text-xs font-semibold">
-                <span className="text-text-secondary">{product.soldPercent}% Sold</span>
-                {product.stockCount < 20 && (
-                  <span className="text-error">{product.stockCount} left</span>
-                )}
-              </div>
-              <div className="w-full h-1.5 bg-surface-container-high rounded-full overflow-hidden">
-                <motion.div
-                  initial={{ width: 0 }}
-                  whileInView={{ width: product.soldPercent + '%' }}
-                  viewport={{ once: true }}
-                  transition={{ duration: 0.8, delay: 0.2 }}
-                  className={'h-full rounded-full ' + (product.soldPercent >= 80 ? 'bg-error' : 'bg-primary')}
-                />
-              </div>
+            <h3 className="text-sm font-medium text-slate-900 dark:text-white line-clamp-2 min-h-[2.5rem] mt-1">
+              {product.name}
+            </h3>
+
+            <div className="flex items-center gap-1 mt-2 mb-3">
+              {renderStars(product.rating)}
             </div>
-          )}
 
-          <motion.button
-            onClick={handleAddToCart}
-            whileTap={{ scale: 0.95 }}
-            className={`w-full mt-sm min-h-[44px] py-md font-semibold rounded-xl transition-all text-sm flex items-center justify-center gap-sm ${isFlashVariant ? 'bg-error text-on-error hover:bg-error-dark' : 'bg-primary text-on-primary hover:bg-primary-dark'}`}
-          >
-            <ShoppingBag size={16} />
-            {isFlashVariant ? 'Grab Now' : 'Add to Cart'}
-          </motion.button>
-        </div>
-      </Link>
-    </motion.div>
+            {/* Action Elements & Pricing Footer */}
+            <div className="mt-auto pt-2">
+              <PriceDisplay price={product.price} originalPrice={product.originalPrice} size="sm" />
+              
+              <button
+                onClick={handleAddToCart}
+                className="w-full mt-3 h-10 font-semibold rounded-xl bg-slate-900 dark:bg-white text-white dark:text-slate-900 hover:bg-slate-800 transition-colors text-sm flex items-center justify-center gap-2"
+              >
+                <ShoppingBag size={16} />
+                Add to Cart
+              </button>
+            </div>
+          </div>
+        </Link>
+      </motion.div>
   );
 }
