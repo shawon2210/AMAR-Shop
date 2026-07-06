@@ -103,80 +103,63 @@ export function Footer() {
 
       {/* ───── Newsletter ───── */}
       <div className="border-b border-gray-100">
-        <div className="max-w-[1440px] mx-auto px-4 sm:px-6 lg:px-8 py-8 md:py-10">
-          <div className="relative overflow-hidden rounded-[32px] bg-gradient-to-br from-emerald-700 via-emerald-600 to-green-800 px-6 py-14 md:px-12 lg:px-16 shadow-lg hover:shadow-[0_30px_80px_rgba(16,185,129,0.35)] transition-shadow duration-500">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 md:py-10">
+          <motion.div
+            initial={{ opacity: 0, y: 30 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.6, ease: 'easeOut' }}
+            className="relative overflow-hidden rounded-[28px] bg-gradient-to-r from-emerald-700 via-emerald-600 to-green-700 px-6 sm:px-8 lg:px-12 py-8 lg:py-10 shadow-lg hover:shadow-[0_30px_80px_rgba(16,185,129,0.35)] transition-shadow duration-500"
+          >
+            <div className="absolute inset-0 bg-[radial-gradient(circle_at_top_right,rgba(255,255,255,0.15),transparent_45%)]" />
 
-            {/* Background Glows */}
-            <div className="absolute -top-28 -left-24 h-72 w-72 rounded-full bg-white/10 blur-[120px]" />
-            <div className="absolute -bottom-24 right-0 h-72 w-72 rounded-full bg-lime-300/10 blur-[120px]" />
-            <div className="absolute top-1/2 left-1/2 h-96 w-96 -translate-x-1/2 -translate-y-1/2 rounded-full bg-white/5 blur-[150px]" />
+            {/* Glows */}
+            <div className="absolute -top-20 -right-20 w-48 h-48 rounded-full bg-white/10 blur-[90px]" />
+            <div className="absolute -bottom-16 -left-12 w-40 h-40 rounded-full bg-lime-200/10 blur-[90px]" />
 
-            {/* Floating Orbs */}
-            <motion.div
-              animate={{ y: [0, -15, 0] }}
-              transition={{ repeat: Infinity, duration: 6, ease: 'easeInOut' }}
-              className="absolute top-12 right-16 h-24 w-24 rounded-full bg-white/10 blur-xl hidden sm:block"
-            />
-            <motion.div
-              animate={{ y: [0, 18, 0] }}
-              transition={{ repeat: Infinity, duration: 8, ease: 'easeInOut' }}
-              className="absolute bottom-10 left-16 h-20 w-20 rounded-full bg-lime-200/10 blur-xl hidden sm:block"
-            />
-
-            <div className="relative z-10 grid gap-10 lg:grid-cols-[420px_1fr] lg:items-center">
-
-              {/* Left */}
-              <motion.div
-                initial={{ opacity: 0, x: -25 }}
-                whileInView={{ opacity: 1, x: 0 }}
-                viewport={{ once: true }}
-                transition={{ duration: 0.6 }}
-              >
-                <span className="inline-flex rounded-full border border-white/20 bg-white/10 px-4 py-1 text-sm font-medium text-emerald-50 backdrop-blur-md">
+            <div className="relative z-10 flex flex-col lg:flex-row lg:items-center lg:justify-between gap-6 lg:gap-8">
+              {/* Text */}
+              <div className="text-center lg:text-left">
+                <span className="inline-flex rounded-full border border-white/20 bg-white/10 px-3 py-0.5 text-xs font-medium text-emerald-50 backdrop-blur-md">
                   ✨ Stay Updated
                 </span>
-                <h2 className="mt-5 text-3xl md:text-4xl lg:text-5xl font-bold leading-tight text-white">
+                <h2 className="mt-3 text-xl sm:text-2xl lg:text-3xl font-bold leading-tight text-white">
                   Stay in the Loop
                 </h2>
-                <p className="mt-4 max-w-md text-sm md:text-base leading-relaxed md:leading-8 text-emerald-100">
-                  Get exclusive deals, early product launches, seasonal offers, and useful updates delivered directly to your inbox.
+                <p className="mt-1.5 text-sm sm:text-base leading-7 text-emerald-100 max-w-md">
+                  Exclusive deals, launches & offers.
                 </p>
-              </motion.div>
+              </div>
 
-              {/* Right */}
-              <motion.div
-                initial={{ opacity: 0, x: 25 }}
-                whileInView={{ opacity: 1, x: 0 }}
-                viewport={{ once: true }}
-                transition={{ duration: 0.6 }}
-              >
-                <div className="rounded-3xl border border-white/15 bg-white/10 p-3 backdrop-blur-2xl shadow-[0_20px_60px_rgba(0,0,0,0.25)]">
-                  <form onSubmit={(e) => e.preventDefault()} className="flex flex-col gap-3 md:flex-row">
-                    <div className="relative flex-1">
-                      <Mail className="absolute left-5 top-1/2 -translate-y-1/2 text-emerald-200" size={20} />
-                      <input
-                        type="email"
-                        placeholder="Enter your email address"
-                        className="h-14 md:h-16 w-full rounded-2xl border border-white/10 bg-white/10 pl-14 pr-4 text-white text-sm placeholder:text-emerald-100 outline-none transition-all duration-300 focus:border-white/40 focus:bg-white/20"
-                      />
-                    </div>
-                    <button
-                      type="submit"
-                      className="group relative overflow-hidden h-14 md:h-16 flex items-center justify-center gap-2 rounded-2xl bg-white px-8 font-semibold text-emerald-700 shadow-lg transition-all duration-300 hover:scale-[1.03] hover:bg-emerald-50"
-                    >
-                      <span className="absolute inset-0 translate-x-[-120%] bg-gradient-to-r from-transparent via-white/50 to-transparent transition-transform duration-700 group-hover:translate-x-[120%]" />
-                      <span className="relative">Subscribe</span>
-                      <ArrowRight size={18} className="relative transition-transform duration-300 group-hover:translate-x-1" />
-                    </button>
-                  </form>
-                  <p className="mt-4 text-xs md:text-sm text-emerald-100/80">
-                    No spam &bull; Unsubscribe anytime &bull; We respect your privacy
-                  </p>
-                </div>
-              </motion.div>
-
+              {/* Form */}
+              <div className="w-full lg:w-auto shrink-0">
+                <form onSubmit={(e) => e.preventDefault()} className="flex flex-col sm:flex-row gap-3">
+                  <div className="relative flex-1 min-w-[240px]">
+                    <Mail className="absolute left-4 top-1/2 -translate-y-1/2 text-emerald-200" size={18} />
+                    <input
+                      type="email"
+                      placeholder="Email address"
+                      className="h-14 w-full rounded-full border border-white/15 bg-white/10 pl-12 pr-4 text-white text-sm placeholder:text-emerald-100/70 outline-none backdrop-blur-xl transition-all duration-300 focus:ring-4 focus:ring-white/20 focus:border-white/40"
+                    />
+                  </div>
+                  <motion.button
+                    type="submit"
+                    whileHover={{ scale: 1.04, y: -2 }}
+                    className="group relative overflow-hidden h-14 rounded-full bg-white px-7 font-semibold text-emerald-700 shadow-lg whitespace-nowrap transition-all duration-300 hover:bg-emerald-50 hover:shadow-emerald-500/25"
+                  >
+                    <span className="absolute inset-0 translate-x-[-120%] bg-gradient-to-r from-transparent via-white/40 to-transparent transition-transform duration-700 group-hover:translate-x-[120%]" />
+                    <span className="relative flex items-center gap-2">
+                      Subscribe
+                      <ArrowRight size={16} className="transition-transform duration-300 group-hover:translate-x-0.5" />
+                    </span>
+                  </motion.button>
+                </form>
+                <p className="mt-3 text-xs text-emerald-100/70 text-center lg:text-left">
+                  No spam &bull; Unsubscribe anytime &bull; Privacy respected
+                </p>
+              </div>
             </div>
-          </div>
+          </motion.div>
         </div>
       </div>
 
