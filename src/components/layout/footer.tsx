@@ -284,7 +284,7 @@ function FooterSection({ title, links }: { title: string; links: { label: string
         {title}
         <motion.span
           animate={{ rotate: open ? 180 : 0 }}
-          transition={fastTransition}
+          transition={{ duration: 0.2 }}
           className="material-symbols-outlined text-gray-400"
         >
           expand_more
@@ -332,7 +332,6 @@ function FooterSection({ title, links }: { title: string; links: { label: string
         </ul>
       </div>
 
-      {/* Separator on mobile */}
       <div className="lg:hidden border-t border-gray-100 mt-0" />
     </div>
   );

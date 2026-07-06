@@ -1,5 +1,6 @@
 "use client";
 
+import Link from 'next/link';
 import { designTokens } from '@/lib/designTokens';
 import { motion } from 'framer-motion';
 import { HeroSlider } from "./hero-slider";

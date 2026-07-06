@@ -1,7 +1,6 @@
 'use client';
 
-import { useState, useEffect, useRef, useMemo } from 'react';
-import Link from 'next/link';
+import { designTokens } from '@/lib/designTokens';
 import { motion } from 'framer-motion';
 import { ArrowRight } from 'lucide-react';
 import { Product } from '@/types';
@@ -18,9 +17,9 @@ interface ProductGridProps {
 const columnClasses: Record<number, string> = {
   2: 'grid-cols-2',
   3: 'grid-cols-2 sm:grid-cols-3',
-  4: 'grid-cols-2 sm:grid-cols-3 md:grid-cols-4',
-  5: 'grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5',
-  6: 'grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6',
+  4: 'grid-cols-2 sm:grid-cols-3 lg:grid-cols-4',
+  5: 'grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5',
+  6: 'grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-6',
 };
 
 export function ProductGrid({
@@ -61,23 +60,23 @@ export function ProductGrid({
   const hasMore = visibleProducts.length < products.length;
 
   return (
-    <section>
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <section className="py-xl">
+      <div className="max-w-7xl mx-auto px-container">
         {title && (
           <motion.div
             initial={{ opacity: 0, y: 15 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
             transition={{ duration: 0.5 }}
-            className="flex items-center justify-between mb-4"
+            className="flex items-center justify-between mb-md"
           >
-            <h3 className="text-base md:text-lg font-bold text-gray-900">{title}</h3>
+            <h3 className="text-xl font-bold text-text-primary tracking-tight">{title}</h3>
             <Link
               href="/categories"
-              className="group flex items-center gap-1 text-xs md:text-sm font-semibold text-primary hover:text-primary/80 transition-colors"
+              className="group flex items-center gap-sm text-sm font-semibold text-primary hover:text-primary-dark transition-all"
             >
               See All
-              <ArrowRight size={14} className="transition-transform duration-300 group-hover:translate-x-0.5" />
+              <ArrowRight size={16} className="transition-transform duration-300 group-hover:translate-x-1" />
             </Link>
           </motion.div>
         )}
@@ -88,11 +87,11 @@ export function ProductGrid({
           initial="hidden"
           whileInView="show"
           viewport={{ once: true }}
-          className={`grid ${columnClasses[columns]} gap-4`}
+          className={`grid ${columnClasses[columns]} gap-md`}
         >
           {visibleProducts.map((product) => (
             <motion.div key={product.id} variants={cardItem} className="h-full">
-              <ProductCard product={product} variant="compact" />
+              <ProductCard product={product} variant="default" />
             </motion.div>
           ))}
         </motion.div>
@@ -102,9 +101,9 @@ export function ProductGrid({
             onClick={loadMore}
             whileHover={{ scale: 1.01 }}
             whileTap={{ scale: 0.99 }}
-            className="w-full mt-6 min-h-[44px] py-3 sm:py-2.5 sm:min-h-0 border-2 border-primary text-primary font-semibold rounded-xl hover:bg-primary/5 active:scale-[0.99] transition-all cursor-pointer text-xs"
+            className="w-full mt-lg min-h-[48px] py-md border-2 border-primary text-primary font-semibold rounded-xl hover:bg-primary-container transition-all text-sm"
           >
-            Load More
+            Load More Products
           </motion.button>
         )}
       </div>
