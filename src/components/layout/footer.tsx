@@ -102,36 +102,36 @@ export function Footer() {
       {/* ───── Newsletter ───── */}
       <div className="border-b border-gray-100">
         <div className="max-w-[1440px] mx-auto px-4 sm:px-6 lg:px-8 py-8 md:py-10">
-          <div className="rounded-2xl bg-gradient-to-br from-[#0F9D58] via-[#0B8043] to-[#0a7540] p-6 md:p-8 lg:p-10 shadow-lg relative overflow-hidden">
+          <div className="rounded-2xl bg-gradient-to-br from-[#0F9D58] via-[#0B8043] to-[#0a7540] px-5 py-7 sm:px-7 sm:py-9 md:p-8 lg:p-10 shadow-lg relative overflow-hidden">
             <div className="absolute top-0 right-0 w-64 h-64 bg-white/5 rounded-full -translate-y-1/2 translate-x-1/2" />
             <div className="absolute bottom-0 left-0 w-48 h-48 bg-white/5 rounded-full translate-y-1/2 -translate-x-1/2" />
-            <div className="relative flex flex-col md:flex-row md:items-center gap-5 md:gap-8">
-              <div className="md:w-[360px] lg:w-[420px] shrink-0 text-center md:text-left">
-                <h3 className="text-white text-xl sm:text-2xl font-bold leading-tight">
+            <div className="relative flex flex-col lg:flex-row lg:items-center gap-5 lg:gap-10">
+              <div className="w-full lg:w-auto lg:min-w-[300px] xl:min-w-[380px] text-center lg:text-left">
+                <h3 className="text-white text-2xl sm:text-3xl lg:text-2xl xl:text-3xl font-bold leading-tight">
                   Stay in the Loop
                 </h3>
-                <p className="text-white/70 text-sm mt-1.5 max-w-sm mx-auto md:mx-0 leading-relaxed">
+                <p className="text-white/70 text-sm sm:text-base lg:text-sm xl:text-base mt-1.5 max-w-md mx-auto lg:mx-0 leading-relaxed">
                   Exclusive deals, new arrivals, and offers straight to your inbox.
                 </p>
               </div>
-              <div className="flex-1 w-full">
+              <div className="w-full lg:flex-1">
                 <form
                   onSubmit={(e) => e.preventDefault()}
-                  className="flex flex-col sm:flex-row gap-2 sm:gap-3"
+                  className="flex flex-col sm:flex-row gap-3 sm:gap-2 md:gap-3"
                 >
                   <input
                     type="email"
                     placeholder="Enter your email"
-                    className="flex-1 h-12 rounded-full px-5 bg-white/10 backdrop-blur-sm border border-white/20 text-white text-sm placeholder-white/50 outline-none focus:ring-2 focus:ring-white/40 transition-all"
+                    className="flex-1 h-12 sm:h-11 md:h-12 rounded-full px-5 bg-white/10 backdrop-blur-sm border border-white/20 text-white text-sm placeholder-white/50 outline-none focus:ring-2 focus:ring-white/40 transition-all"
                   />
                   <button
                     type="submit"
-                    className="h-12 px-7 rounded-full bg-white text-primary font-bold text-sm hover:bg-gray-100 hover:shadow-lg transition-all whitespace-nowrap shrink-0"
+                    className="w-full sm:w-auto h-12 sm:h-11 md:h-12 px-8 rounded-full bg-white text-primary font-bold text-sm hover:bg-gray-100 hover:shadow-lg transition-all whitespace-nowrap shrink-0"
                   >
                     Subscribe
                   </button>
                 </form>
-                <p className="text-white/50 text-xs mt-2 text-center sm:text-left">
+                <p className="text-white/50 text-xs mt-2.5 text-center lg:text-left">
                   No spam. Unsubscribe anytime.
                 </p>
               </div>
