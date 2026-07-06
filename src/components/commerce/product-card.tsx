@@ -5,6 +5,7 @@ import { useState, useRef } from 'react';
 import { motion } from 'framer-motion';
 import { ShoppingBag } from 'lucide-react';
 import { Product } from '@/types';
+import { designTokens } from '@/lib/designTokens';
 import { PriceDisplay } from '@/components/ui/price-display';
 import { useCartStore } from '@/stores/cart-store';
 import { useUIStore } from '@/stores/ui-store';
@@ -19,7 +20,6 @@ export function ProductCard({ product, variant = 'default' }: ProductCardProps) 
   const [wishlisted, setWishlisted] = useState(false);
   const addItem = useCartStore(s => s.addItem);
   const addToast = useUIStore(s => s.addToast);
-  const cardRef = useRef<HTMLDivElement>(null);
 
   const handleAddToCart = (e: React.MouseEvent) => {
     e.preventDefault();
@@ -48,53 +48,33 @@ export function ProductCard({ product, variant = 'default' }: ProductCardProps) 
         {Array.from({ length: 5 }, (_, i) => (
           <span
             key={i}
-            className={'material-symbols-outlined text-[10px] ' + (i < full ? 'text-amber-400' : 'text-gray-200')}
+            className={'material-symbols-outlined text-xs ' + (i < full ? 'text-amber-400' : 'text-text-tertiary')}
             style={i < full ? { fontVariationSettings: "'FILL' 1" } : undefined}
           >
             star
           </span>
         ))}
-        <span className="text-[10px] text-gray-500 ml-0.5">
+        <span className="text-xs text-text-secondary ml-1">
           {product.reviewCount > 999 ? (product.reviewCount / 1000).toFixed(1) + 'k' : product.reviewCount}
         </span>
       </div>
     );
   };
 
-  const handleMouseMove = (e: React.MouseEvent) => {
-    if (!cardRef.current || window.innerWidth < 1024) return;
-    const rect = cardRef.current.getBoundingClientRect();
-    const x = e.clientX - rect.left;
-    const y = e.clientY - rect.top;
-    const centerX = rect.width / 2;
-    const centerY = rect.height / 2;
-    const rotateX = (y - centerY) / 12;
-    const rotateY = (centerX - x) / 12;
-    cardRef.current.style.transform = 'perspective(1000px) rotateX(' + rotateX + 'deg) rotateY(' + rotateY + 'deg) scale3d(1.02,1.02,1.02)';
-  };
-
-  const handleMouseLeave = () => {
-    if (!cardRef.current) return;
-    cardRef.current.style.transform = 'perspective(1000px) rotateX(0deg) rotateY(0deg) scale3d(1,1,1)';
-  };
-
   return (
     <motion.div
-      ref={cardRef}
       whileHover={{ y: -4 }}
-      transition={{ duration: 0.2 }}
-      onMouseMove={handleMouseMove}
-      onMouseLeave={handleMouseLeave}
-      style={{ perspective: '1000px' }}
+      transition={{ duration: designTokens.animation.duration.hover, ease: designTokens.animation.easing.default }}
+      className="h-full"
     >
       <Link
         href={'/product/' + product.id}
-        className={'bg-white rounded-2xl overflow-hidden group transition-all duration-300 ease-out flex flex-col h-full border hover:border-gray-300 hover:shadow-xl ' + (isFlashVariant ? 'border-gray-100' : 'border-gray-200')}
+        className={`bg-surface rounded-2xl overflow-hidden group transition-all duration-300 flex flex-col h-full border hover:border-border-dark hover:shadow-lg ${isFlashVariant ? 'border-border' : 'border-border'}`}
       >
-        <div className="relative h-36 sm:h-40 md:h-44 w-full overflow-hidden bg-gray-50">
+        <div className="relative h-48 w-full overflow-hidden bg-surface-container">
           {!imgError ? (
             <motion.img
-              whileHover={{ scale: 1.08 }}
+              whileHover={{ scale: 1.05 }}
               transition={{ duration: 0.5 }}
               className="w-full h-full object-cover"
               src={product.images[0]}
@@ -103,96 +83,75 @@ export function ProductCard({ product, variant = 'default' }: ProductCardProps) 
               onError={() => setImgError(true)}
             />
           ) : (
-            <div className="w-full h-full flex items-center justify-center bg-gray-100 text-gray-400">
+            <div className="w-full h-full flex items-center justify-center bg-surface-dim text-text-tertiary">
               <span className="material-symbols-outlined text-4xl">image</span>
             </div>
           )}
 
-          <motion.div whileHover={{ scale: 1.1 }} whileTap={{ scale: 0.9 }} className="absolute top-1.5 right-1.5 z-10">
-            <button
-              onClick={handleWishlist}
-              className="w-9 h-9 lg:w-8 lg:h-8 rounded-full bg-white/90 backdrop-blur-sm flex items-center justify-center shadow-sm hover:bg-white transition-all"
-              aria-label="Add to wishlist"
+          <button
+            onClick={handleWishlist}
+            className="absolute top-md right-md w-9 h-9 rounded-full bg-surface/80 backdrop-blur-md flex items-center justify-center shadow-sm hover:bg-surface transition-all z-10"
+            aria-label="Add to wishlist"
+          >
+            <span
+              className={'material-symbols-outlined text-lg ' + (wishlisted ? 'text-error' : 'text-text-tertiary')}
+              style={wishlisted ? { fontVariationSettings: "'FILL' 1" } : undefined}
             >
-              <span
-                className={'material-symbols-outlined text-base ' + (wishlisted ? 'text-red-500' : 'text-gray-400')}
-                style={wishlisted ? { fontVariationSettings: "'FILL' 1" } : undefined}
-              >
-                favorite
-              </span>
-            </button>
-          </motion.div>
+              favorite
+            </span>
+          </button>
 
           {discount > 0 && (
-            <div className={'absolute top-1.5 left-1.5 ' + (isFlashVariant ? 'bg-red-500' : 'bg-primary') + ' text-white text-[10px] font-bold px-1.5 py-0.5 rounded-md leading-tight'}>
+            <div className={'absolute top-md left-md ' + (isFlashVariant ? 'bg-error' : 'bg-primary') + ' text-on-primary text-xs font-bold px-sm py-xs rounded-lg'}>
               -{discount}%
-            </div>
-          )}
-
-          {product.seller?.isOfficial && (
-            <div className="absolute bottom-1.5 left-1.5 bg-black/60 backdrop-blur-sm text-white text-[9px] font-medium px-1.5 py-0.5 rounded flex items-center gap-1">
-              <span className="material-symbols-outlined text-[10px]" style={{ fontVariationSettings: "'FILL' 1" }}>verified</span>
-              {product.seller.name}
             </div>
           )}
         </div>
 
-        <div className="p-3 flex flex-col flex-grow gap-1">
+        <div className="p-md flex flex-col flex-grow gap-sm">
           {product.brand && (
-            <p className="text-[10px] text-gray-400 font-medium truncate">{product.brand}</p>
+            <p className="text-xs text-text-tertiary font-medium truncate uppercase tracking-wide">{product.brand}</p>
           )}
 
-          <h3 className="text-xs md:text-sm font-medium text-gray-800 line-clamp-2 leading-snug">
+          <h3 className="text-sm font-medium text-text-primary line-clamp-2 leading-snug">
             {product.name}
           </h3>
 
-          <div className="flex items-center gap-1.5">
+          <div className="flex items-center gap-sm">
             {renderStars(product.rating)}
           </div>
 
-          <PriceDisplay price={product.price} originalPrice={product.originalPrice} size="sm" />
+          <div className="mt-auto">
+            <PriceDisplay price={product.price} originalPrice={product.originalPrice} size="sm" />
+          </div>
 
           {isFlashVariant && product.soldPercent !== undefined && (
-            <div className="space-y-0.5">
-              <div className="flex justify-between text-[10px] font-semibold">
-                <span className="text-gray-500">{product.soldPercent}% Sold</span>
+            <div className="space-y-xs pt-sm">
+              <div className="flex justify-between text-xs font-semibold">
+                <span className="text-text-secondary">{product.soldPercent}% Sold</span>
                 {product.stockCount < 20 && (
-                  <span className="text-red-500">{product.stockCount} left</span>
+                  <span className="text-error">{product.stockCount} left</span>
                 )}
               </div>
-              <div className="w-full h-2 bg-gray-100 rounded-full overflow-hidden">
+              <div className="w-full h-1.5 bg-surface-container-high rounded-full overflow-hidden">
                 <motion.div
                   initial={{ width: 0 }}
                   whileInView={{ width: product.soldPercent + '%' }}
                   viewport={{ once: true }}
                   transition={{ duration: 0.8, delay: 0.2 }}
-                  className={'h-full rounded-full ' + (product.soldPercent >= 80 ? 'bg-red-500' : 'bg-primary')}
+                  className={'h-full rounded-full ' + (product.soldPercent >= 80 ? 'bg-error' : 'bg-primary')}
                 />
               </div>
             </div>
           )}
 
-          <div className="flex items-center gap-1 flex-wrap">
-            {product.freeShipping && (
-              <span className="text-[10px] font-semibold text-green-600 bg-green-50 px-1.5 py-0.5 rounded">Free shipping</span>
-            )}
-            {(product.isMall || product.isNew) && (
-              <span className={'text-[10px] font-semibold px-1.5 py-0.5 rounded ' + (product.isMall ? 'text-blue-600 bg-blue-50' : 'text-primary bg-primary/10')}>
-                {product.isMall ? 'Mall' : 'New'}
-              </span>
-            )}
-          </div>
-
           <motion.button
             onClick={handleAddToCart}
-            whileHover={{ scale: 1.02 }}
-            whileTap={{ scale: 0.97 }}
-            className={'w-full mt-auto min-h-[44px] py-2.5 sm:min-h-0 sm:h-9 sm:py-0 font-semibold rounded-lg transition-all text-xs sm:text-xs ' + (isFlashVariant ? 'bg-red-500 text-white hover:bg-red-600' : 'bg-primary text-white hover:bg-primary-dark')}
+            whileTap={{ scale: 0.95 }}
+            className={`w-full mt-sm min-h-[44px] py-md font-semibold rounded-xl transition-all text-sm flex items-center justify-center gap-sm ${isFlashVariant ? 'bg-error text-on-error hover:bg-error-dark' : 'bg-primary text-on-primary hover:bg-primary-dark'}`}
           >
-            <span className="flex items-center justify-center gap-1.5">
-              <ShoppingBag size={14} />
-              {isFlashVariant ? 'Grab Now' : 'Add to Cart'}
-            </span>
+            <ShoppingBag size={16} />
+            {isFlashVariant ? 'Grab Now' : 'Add to Cart'}
           </motion.button>
         </div>
       </Link>

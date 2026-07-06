@@ -2,12 +2,13 @@
 
 import { useState } from 'react';
 import Link from 'next/link';
-import { motion } from 'framer-motion';
+import { motion, AnimatePresence } from 'framer-motion';
 import { Mail, ArrowRight } from 'lucide-react';
+import { staggerContainer, cardItem, fastTransition } from '@/lib/motion-variants';
 
 const trustItems = [
   { icon: 'lock', title: 'Secure Payment', desc: 'SSL encrypted. bKash, Nagad, COD & cards' },
-  { icon: 'local_shipping', title: 'Nationwide Delivery', desc: 'Free shipping over ৳999. 64 districts' },
+  { icon: 'local_shipping', title: 'Nationwide Delivery', desc: 'Free shipping over \u09F3999. 64 districts' },
   { icon: 'assignment_return', title: 'Easy Returns', desc: '7-day return & exchange. No questions' },
   { icon: 'verified', title: 'Verified Sellers', desc: '100% authentic products. Brand warranty' },
 ];
@@ -75,17 +76,24 @@ const appStores = [
   { label: 'App Store', icon: 'apple', href: '#' },
 ];
 
-export function Footer() {
+function Footer() {
   return (
     <footer className="bg-white border-t border-gray-200 mt-12 md:mt-16">
 
       {/* ───── Trust Section ───── */}
       <div className="border-b border-gray-100 bg-gray-50/50">
-        <div className="max-w-[1440px] mx-auto px-4 sm:px-6 lg:px-8 py-8 md:py-10">
-          <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 md:gap-4">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 md:py-10">
+          <motion.div
+            variants={staggerContainer}
+            initial="hidden"
+            whileInView="show"
+            viewport={{ once: true, margin: '-50px' }}
+            className="grid grid-cols-2 lg:grid-cols-4 gap-3 md:gap-4"
+          >
             {trustItems.map((item) => (
-              <div
+              <motion.div
                 key={item.title}
+                variants={cardItem}
                 className="bg-white rounded-xl border border-gray-100 p-4 md:p-5 flex items-start gap-3 hover:border-primary/20 hover:shadow-sm transition-all duration-200"
               >
                 <div className="w-10 h-10 md:w-12 md:h-12 rounded-xl bg-primary/10 flex items-center justify-center shrink-0">
@@ -95,9 +103,9 @@ export function Footer() {
                   <h4 className="font-semibold text-sm text-gray-900 mb-0.5">{item.title}</h4>
                   <p className="text-xs md:text-[13px] text-gray-500 leading-relaxed">{item.desc}</p>
                 </div>
-              </div>
+              </motion.div>
             ))}
-          </div>
+          </motion.div>
         </div>
       </div>
 
@@ -113,12 +121,10 @@ export function Footer() {
           >
             <div className="absolute inset-0 bg-[radial-gradient(circle_at_top_right,rgba(255,255,255,0.15),transparent_45%)]" />
 
-            {/* Glows */}
             <div className="absolute -top-20 -right-20 w-48 h-48 rounded-full bg-white/10 blur-[90px]" />
             <div className="absolute -bottom-16 -left-12 w-40 h-40 rounded-full bg-lime-200/10 blur-[90px]" />
 
             <div className="relative z-10 flex flex-col lg:flex-row lg:items-center lg:justify-between gap-6 lg:gap-8">
-              {/* Text */}
               <div className="text-center lg:text-left">
                 <span className="inline-flex rounded-full border border-white/20 bg-white/10 px-3 py-0.5 text-xs font-medium text-emerald-50 backdrop-blur-md">
                   ✨ Stay Updated
@@ -131,7 +137,6 @@ export function Footer() {
                 </p>
               </div>
 
-              {/* Form */}
               <div className="w-full lg:w-auto shrink-0">
                 <form onSubmit={(e) => e.preventDefault()} className="flex flex-col sm:flex-row gap-3">
                   <div className="relative flex-1 min-w-[240px]">
@@ -165,10 +170,16 @@ export function Footer() {
 
       {/* ───── Main Grid ───── */}
       <div className="border-b border-gray-100">
-        <div className="max-w-[1440px] mx-auto px-4 sm:px-6 lg:px-8 py-8 md:py-10">
-          <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-5 gap-6 md:gap-8">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 md:py-10">
+          <motion.div
+            variants={staggerContainer}
+            initial="hidden"
+            whileInView="show"
+            viewport={{ once: true, margin: '-50px' }}
+            className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-6 md:gap-8"
+          >
             {/* Brand column */}
-            <div className="md:col-span-1">
+            <motion.div variants={cardItem} className="sm:col-span-2 md:col-span-1 lg:col-span-1">
               <Link href="/" className="inline-flex items-center mb-4">
                 <img src="/images/amarshop-logo.png" alt="AmarShop" className="w-[160px] md:w-[180px] lg:w-[200px] h-auto object-contain" />
               </Link>
@@ -178,64 +189,80 @@ export function Footer() {
               {/* Social links */}
               <div className="flex items-center gap-2 mt-5">
                 {socialLinks.map((social) => (
-                  <Link
+                  <motion.div
                     key={social.label}
-                    href={social.href}
-                    className="w-9 h-9 rounded-lg bg-gray-100 flex items-center justify-center text-gray-500 hover:bg-primary hover:text-white transition-all duration-200"
-                    aria-label={social.label}
+                    whileHover={{ scale: 1.1, y: -2 }}
+                    whileTap={{ scale: 0.95 }}
+                    transition={fastTransition}
                   >
-                    <span className="material-symbols-outlined text-lg">{social.icon}</span>
-                  </Link>
+                    <Link
+                      href={social.href}
+                      className="w-9 h-9 rounded-lg bg-gray-100 flex items-center justify-center text-gray-500 hover:bg-primary hover:text-white transition-colors duration-200"
+                      aria-label={social.label}
+                    >
+                      <span className="material-symbols-outlined text-lg">{social.icon}</span>
+                    </Link>
+                  </motion.div>
                 ))}
               </div>
               {/* App badges */}
               <div className="flex flex-wrap gap-2 mt-4">
                 {appStores.map((store) => (
-                  <Link
-                    key={store.label}
-                    href={store.href}
-                    className="inline-flex items-center gap-2 px-3 h-9 rounded-lg border border-gray-200 text-xs font-medium text-gray-600 hover:border-gray-300 hover:bg-gray-50 transition-all"
-                  >
-                    <span className="material-symbols-outlined text-base">{store.icon}</span>
-                    {store.label}
-                  </Link>
+                  <motion.div key={store.label} whileHover={{ scale: 1.03 }} whileTap={{ scale: 0.97 }} transition={fastTransition}>
+                    <Link
+                      href={store.href}
+                      className="inline-flex items-center gap-2 px-3 h-9 rounded-lg border border-gray-200 text-xs font-medium text-gray-600 hover:border-gray-300 hover:bg-gray-50 transition-all"
+                    >
+                      <span className="material-symbols-outlined text-base">{store.icon}</span>
+                      {store.label}
+                    </Link>
+                  </motion.div>
                 ))}
               </div>
-            </div>
+            </motion.div>
 
             {/* Link sections */}
             {footerSections.map((section) => (
-              <FooterSection key={section.title} title={section.title} links={section.links} />
+              <motion.div key={section.title} variants={cardItem}>
+                <FooterSection title={section.title} links={section.links} />
+              </motion.div>
             ))}
-          </div>
+          </motion.div>
         </div>
       </div>
 
       {/* ───── Payment + Bottom ───── */}
-      <div className="max-w-[1440px] mx-auto px-4 sm:px-6 lg:px-8 py-5 md:py-6">
-        <div className="flex flex-wrap items-center justify-center sm:justify-start gap-2 mb-4">
-          <span className="text-xs text-gray-400 font-medium shrink-0">We accept:</span>
-          {paymentMethods.map((method) => (
-            <span
-              key={method}
-              className="px-2.5 py-1 bg-gray-100 rounded-md text-xs text-gray-500 font-medium"
-            >
-              {method}
-            </span>
-          ))}
-        </div>
-
-        <div className="flex flex-col sm:flex-row items-center justify-between gap-3 pt-4 border-t border-gray-100">
-          <p className="text-xs text-gray-400 text-center sm:text-left">
-            &copy; {new Date().getFullYear()} AmarShop. All rights reserved.
-          </p>
-          <div className="flex items-center gap-5 text-xs text-gray-400">
-            <Link href="/terms" className="hover:text-primary transition-colors">Terms</Link>
-            <Link href="/privacy" className="hover:text-primary transition-colors">Privacy</Link>
-            <Link href="/cookies" className="hover:text-primary transition-colors">Cookies</Link>
-            <Link href="/sitemap" className="hover:text-primary transition-colors">Sitemap</Link>
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-5 md:py-6">
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.5 }}
+        >
+          <div className="flex flex-wrap items-center justify-center sm:justify-start gap-2 mb-4">
+            <span className="text-xs text-gray-400 font-medium shrink-0">We accept:</span>
+            {paymentMethods.map((method) => (
+              <span
+                key={method}
+                className="px-2.5 py-1 bg-gray-100 rounded-md text-xs text-gray-500 font-medium"
+              >
+                {method}
+              </span>
+            ))}
           </div>
-        </div>
+
+          <div className="flex flex-col sm:flex-row items-center justify-between gap-3 pt-4 border-t border-gray-100">
+            <p className="text-xs text-gray-400 text-center sm:text-left">
+              &copy; {new Date().getFullYear()} AmarShop. All rights reserved.
+            </p>
+            <div className="flex items-center gap-5 text-xs text-gray-400">
+              <Link href="/terms" className="relative hover:text-primary transition-colors duration-200 after:absolute after:bottom-0 after:left-0 after:h-px after:w-0 after:bg-primary after:transition-all after:duration-300 hover:after:w-full">Terms</Link>
+              <Link href="/privacy" className="relative hover:text-primary transition-colors duration-200 after:absolute after:bottom-0 after:left-0 after:h-px after:w-0 after:bg-primary after:transition-all after:duration-300 hover:after:w-full">Privacy</Link>
+              <Link href="/cookies" className="relative hover:text-primary transition-colors duration-200 after:absolute after:bottom-0 after:left-0 after:h-px after:w-0 after:bg-primary after:transition-all after:duration-300 hover:after:w-full">Cookies</Link>
+              <Link href="/sitemap" className="relative hover:text-primary transition-colors duration-200 after:absolute after:bottom-0 after:left-0 after:h-px after:w-0 after:bg-primary after:transition-all after:duration-300 hover:after:w-full">Sitemap</Link>
+            </div>
+          </div>
+        </motion.div>
       </div>
     </footer>
   );
@@ -246,7 +273,7 @@ function FooterSection({ title, links }: { title: string; links: { label: string
   const [open, setOpen] = useState(false);
 
   return (
-    <div className="lg:block">
+    <div>
       <h5 className="hidden lg:block text-gray-900 font-semibold text-sm mb-4">{title}</h5>
 
       <button
@@ -255,26 +282,48 @@ function FooterSection({ title, links }: { title: string; links: { label: string
         aria-expanded={open}
       >
         {title}
-        <span
-          className={`material-symbols-outlined text-gray-400 transition-transform duration-200 ${
-            open ? 'rotate-180' : ''
-          }`}
+        <motion.span
+          animate={{ rotate: open ? 180 : 0 }}
+          transition={fastTransition}
+          className="material-symbols-outlined text-gray-400"
         >
           expand_more
-        </span>
+        </motion.span>
       </button>
 
-      <div
-        className={`overflow-hidden transition-all duration-200 lg:!max-h-[500px] lg:!opacity-100 ${
-          open ? 'max-h-[500px] opacity-100 pb-3' : 'max-h-0 opacity-0'
-        }`}
-      >
+      <AnimatePresence initial={false}>
+        {open && (
+          <motion.div
+            initial={{ height: 0, opacity: 0 }}
+            animate={{ height: 'auto', opacity: 1 }}
+            exit={{ height: 0, opacity: 0 }}
+            transition={{ duration: 0.25, ease: 'easeInOut' }}
+            className="overflow-hidden lg:hidden"
+          >
+            <ul className="space-y-2.5 pb-3">
+              {links.map((link) => (
+                <li key={link.label}>
+                  <Link
+                    href={link.href}
+                    className="text-sm text-gray-500 hover:text-primary transition-colors duration-200 block py-0.5 relative w-fit after:absolute after:bottom-0 after:left-0 after:h-px after:w-0 after:bg-primary after:transition-all after:duration-300 hover:after:w-full"
+                  >
+                    {link.label}
+                  </Link>
+                </li>
+              ))}
+            </ul>
+          </motion.div>
+        )}
+      </AnimatePresence>
+
+      {/* Desktop links */}
+      <div className="hidden lg:block">
         <ul className="space-y-2.5">
           {links.map((link) => (
             <li key={link.label}>
               <Link
                 href={link.href}
-                className="text-sm text-gray-500 hover:text-primary transition-colors duration-200 block py-0.5"
+                className="text-sm text-gray-500 hover:text-primary transition-colors duration-200 block py-0.5 relative w-fit after:absolute after:bottom-0 after:left-0 after:h-px after:w-0 after:bg-primary after:transition-all after:duration-300 hover:after:w-full"
               >
                 {link.label}
               </Link>
@@ -288,3 +337,5 @@ function FooterSection({ title, links }: { title: string; links: { label: string
     </div>
   );
 }
+
+export { Footer };

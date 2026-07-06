@@ -1,6 +1,6 @@
 "use client";
 
-import Link from 'next/link';
+import { designTokens } from '@/lib/designTokens';
 import { motion } from 'framer-motion';
 import { HeroSlider } from "./hero-slider";
 import { staggerContainer, cardItem } from '@/lib/motion-variants';
@@ -16,13 +16,13 @@ const mobilePills = ['Electronics', 'Fashion', 'Beauty', 'Groceries', 'Home & Li
 
 export function HeroSection() {
   return (
-    <section className="bg-white">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-1 lg:pt-2">
-        <div className="flex flex-col lg:flex-row gap-3 md:gap-4">
+    <section className="bg-surface">
+      <div className="max-w-7xl mx-auto px-container pt-md lg:pt-lg">
+        <div className="flex flex-col lg:flex-row gap-md">
           <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6 }}
+            initial={{ opacity: 0, scale: 0.98 }}
+            animate={{ opacity: 1, scale: 1 }}
+            transition={{ duration: designTokens.animation.duration.entrance, ease: designTokens.animation.easing.default }}
             className="flex-1 min-w-0"
           >
             <HeroSlider />
@@ -32,20 +32,20 @@ export function HeroSection() {
             variants={staggerContainer}
             initial="hidden"
             animate="show"
-            className="grid grid-cols-2 gap-2.5 sm:gap-3 lg:w-[240px] xl:w-[280px] shrink-0"
+            className="grid grid-cols-2 gap-sm lg:w-[280px] shrink-0"
           >
             {campaignCards.map((card) => (
-              <motion.div key={card.label} variants={cardItem}>
+              <motion.div key={card.label} variants={cardItem} whileHover={{ y: -4 }}>
                 <Link
                   href={card.href}
-                  className={`group bg-gradient-to-br ${card.gradient} rounded-2xl sm:rounded-3xl px-3 sm:px-4 py-2.5 sm:py-3 text-white hover:shadow-xl transition-all duration-300 flex flex-col justify-center min-h-[100px] sm:min-h-[130px] lg:min-h-[145px] relative overflow-hidden`}
+                  className={`group bg-gradient-to-br ${card.gradient} rounded-2xl px-md py-md text-white shadow-md hover:shadow-lg transition-all duration-300 flex flex-col justify-center min-h-[120px] relative overflow-hidden`}
                 >
-                  <div className="absolute inset-0 bg-[radial-gradient(circle_at_top_right,rgba(255,255,255,0.1),transparent_50%)]" />
-                  <div className={`w-8 h-8 sm:w-9 sm:h-9 rounded-full ${card.iconBg} flex items-center justify-center mb-1.5 sm:mb-2 backdrop-blur-sm relative`}>
-                    <span className="material-symbols-outlined text-base sm:text-lg">{card.icon}</span>
+                  <div className="absolute inset-0 bg-[radial-gradient(circle_at_top_right,rgba(255,255,255,0.15),transparent_50%)]" />
+                  <div className={`w-10 h-10 rounded-full ${card.iconBg} flex items-center justify-center mb-md backdrop-blur-md relative`}>
+                    <span className="material-symbols-outlined text-xl">{card.icon}</span>
                   </div>
-                  <p className="text-xs sm:text-sm font-semibold leading-tight relative">{card.label}</p>
-                  <p className="text-[10px] sm:text-[11px] text-white/80 mt-0.5 leading-tight relative">{card.desc}</p>
+                  <p className="text-sm font-semibold leading-tight relative">{card.label}</p>
+                  <p className="text-xs text-white/80 mt-1 leading-tight relative">{card.desc}</p>
                 </Link>
               </motion.div>
             ))}
@@ -55,15 +55,15 @@ export function HeroSection() {
         <motion.div
           initial={{ opacity: 0, y: 15 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.4, duration: 0.5 }}
-          className="lg:hidden -mx-4 px-4 pt-3 pb-2 overflow-x-auto hide-scrollbar"
+          transition={{ delay: 0.2, duration: 0.4 }}
+          className="lg:hidden -mx-container px-container pt-md pb-sm overflow-x-auto hide-scrollbar"
         >
-          <div className="flex gap-2.5 w-max">
+          <div className="flex gap-sm w-max">
             {mobilePills.map((name) => (
               <Link
                 key={name}
                 href="/categories"
-                className="flex items-center h-8 px-4 rounded-full bg-gray-50 border border-gray-200 text-xs font-medium text-gray-700 hover:border-primary hover:text-primary hover:bg-primary/5 transition-colors whitespace-nowrap"
+                className="flex items-center h-10 px-md rounded-full bg-surface-container border border-border text-sm font-medium text-text-secondary hover:border-primary hover:text-primary hover:bg-primary/5 transition-all whitespace-nowrap"
               >
                 {name}
               </Link>
