@@ -2,8 +2,11 @@
 
 import { useState, useEffect, useRef, useMemo } from 'react';
 import Link from 'next/link';
+import { motion } from 'framer-motion';
+import { ArrowRight } from 'lucide-react';
 import { Product } from '@/types';
 import { ProductCard } from '@/components/commerce/product-card';
+import { staggerContainer, cardItem } from '@/lib/motion-variants';
 
 interface ProductGridProps {
   products: Product[];
@@ -59,44 +62,50 @@ export function ProductGrid({
 
   return (
     <section>
-      <div className="max-w-[1600px] 2xl:max-w-[1800px] mx-auto px-4 sm:px-6 lg:px-8 xl:px-10">
-        {/* Header */}
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         {title && (
-          <div className="flex items-center justify-between mb-4">
+          <motion.div
+            initial={{ opacity: 0, y: 15 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.5 }}
+            className="flex items-center justify-between mb-4"
+          >
             <h3 className="text-base md:text-lg font-bold text-gray-900">{title}</h3>
             <Link
               href="/categories"
-              className="flex items-center gap-1 text-[12px] md:text-sm font-semibold text-primary hover:text-primary/80 transition-colors"
+              className="group flex items-center gap-1 text-xs md:text-sm font-semibold text-primary hover:text-primary/80 transition-colors"
             >
               See All
-              <span className="material-symbols-outlined text-base">arrow_forward_ios</span>
+              <ArrowRight size={14} className="transition-transform duration-300 group-hover:translate-x-0.5" />
             </Link>
-          </div>
+          </motion.div>
         )}
 
-        <div ref={gridRef} className={`grid ${columnClasses[columns]} gap-4`}>
-          {visibleProducts.map((product, index) => (
-            <div
-              key={product.id}
-              className={`h-full transition-all duration-500 ${
-                isVisible
-                  ? 'opacity-100 translate-y-0'
-                  : 'opacity-0 translate-y-4'
-              }`}
-              style={{ animationDelay: `${(index % ITEMS_PER_PAGE) * 50}ms` }}
-            >
+        <motion.div
+          ref={gridRef}
+          variants={staggerContainer}
+          initial="hidden"
+          whileInView="show"
+          viewport={{ once: true }}
+          className={`grid ${columnClasses[columns]} gap-4`}
+        >
+          {visibleProducts.map((product) => (
+            <motion.div key={product.id} variants={cardItem} className="h-full">
               <ProductCard product={product} variant="compact" />
-            </div>
+            </motion.div>
           ))}
-        </div>
+        </motion.div>
 
         {showLoadMore && hasMore && (
-          <button
+          <motion.button
             onClick={loadMore}
-            className="w-full mt-4 min-h-[44px] py-3 sm:py-2.5 sm:min-h-0 border-2 border-primary text-primary font-semibold rounded-xl lg:hover:bg-primary/5 active:scale-[0.99] transition-all cursor-pointer text-xs"
+            whileHover={{ scale: 1.01 }}
+            whileTap={{ scale: 0.99 }}
+            className="w-full mt-6 min-h-[44px] py-3 sm:py-2.5 sm:min-h-0 border-2 border-primary text-primary font-semibold rounded-xl hover:bg-primary/5 active:scale-[0.99] transition-all cursor-pointer text-xs"
           >
             Load More
-          </button>
+          </motion.button>
         )}
       </div>
     </section>
