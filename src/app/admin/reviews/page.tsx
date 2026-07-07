@@ -1,8 +1,11 @@
 'use client';
 
 import { useState } from 'react';
-import { useAdminData } from '@/lib/api/hooks';
+import { useAdminPage } from '@/lib/api/hooks';
 import { fetchReviews, updateReview, deleteReview } from '@/lib/api/admin';
+import { AdminLoading, AdminError, AdminEmpty } from '@/components/ui/admin-states';
+import { Pagination } from '@/components/ui/pagination';
+import { getErrorMessage } from '@/lib/error-helper';
 
 function formatDate(d: string): string {
   return new Date(d).toLocaleDateString('en-GB', { day: '2-digit', month: 'short', year: 'numeric' });
@@ -27,37 +30,34 @@ function StarRating({ rating }: { rating: number }) {
 }
 
 export default function ReviewsPage() {
-  const [page, setPage] = useState(1);
   const [statusFilter, setStatusFilter] = useState('ALL');
-  const { data, loading, error, refetch } = useAdminData(
-    () => fetchReviews({
+  const { data, loading, error, refetch, page, setPage } = useAdminPage(
+    ({ page, limit }) => fetchReviews({
       page,
-      limit: 20,
+      limit,
       status: statusFilter === 'ALL' ? undefined : statusFilter,
     }),
-    [page, statusFilter],
+    [statusFilter],
   );
 
   const handleApprove = async (id: string) => {
-    try { await updateReview(id, { status: 'APPROVED' }); refetch(); } catch (e: any) { alert(e.message); }
+    try { await updateReview(id, { status: 'APPROVED' }); refetch(); } catch (e) { alert(getErrorMessage(e)); }
   };
 
   const handleHide = async (id: string) => {
-    try { await updateReview(id, { status: 'HIDDEN' }); refetch(); } catch (e: any) { alert(e.message); }
+    try { await updateReview(id, { status: 'HIDDEN' }); refetch(); } catch (e) { alert(getErrorMessage(e)); }
   };
 
   const handleDelete = async (id: string) => {
     if (!confirm('Delete this review?')) return;
-    try { await deleteReview(id); refetch(); } catch (e: any) { alert(e.message); }
+    try { await deleteReview(id); refetch(); } catch (e) { alert(getErrorMessage(e)); }
   };
 
   return (
     <div className="space-y-5">
       <h1 className="text-2xl font-bold text-[#222]">Reviews</h1>
 
-      {error && (
-        <div className="bg-red-50 text-red-600 rounded-lg p-3 text-sm border border-red-200">{error}</div>
-      )}
+      {error && <AdminError message={error} onRetry={refetch} />}
 
       <div className="flex gap-2 flex-wrap">
         {['ALL', 'APPROVED', 'PENDING', 'HIDDEN'].map((tab) => (
@@ -69,11 +69,9 @@ export default function ReviewsPage() {
       </div>
 
       {loading ? (
-        <div className="bg-white rounded-xl border border-[#eee] p-8 text-center text-[#888]">
-          <span className="material-symbols-outlined animate-spin align-middle mr-2">progress_activity</span>Loading...
-        </div>
+        <AdminLoading />
       ) : !data?.reviews || data.reviews.length === 0 ? (
-        <div className="bg-white rounded-xl border border-[#eee] p-8 text-center text-[#888]">No reviews found</div>
+        <AdminEmpty message="No reviews found" />
       ) : (
         <>
           {/* Desktop Table */}
@@ -143,15 +141,7 @@ export default function ReviewsPage() {
       )}
 
       {data && data.totalPages > 1 && (
-        <div className="flex items-center justify-between text-sm">
-          <span className="text-[#888]">Page {data.page} of {data.totalPages}</span>
-          <div className="flex gap-2">
-            <button disabled={page <= 1} onClick={() => setPage((p) => p - 1)}
-              className="px-3 py-1.5 bg-white border border-[#ddd] rounded-lg disabled:opacity-50 hover:bg-[#f5f5f5]">Previous</button>
-            <button disabled={page >= data.totalPages} onClick={() => setPage((p) => p + 1)}
-              className="px-3 py-1.5 bg-white border border-[#ddd] rounded-lg disabled:opacity-50 hover:bg-[#f5f5f5]">Next</button>
-          </div>
-        </div>
+        <Pagination page={page} totalPages={data.totalPages} total={data.total} onPageChange={setPage} />
       )}
     </div>
   );

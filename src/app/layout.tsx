@@ -6,6 +6,7 @@ import { Footer } from "@/components/layout/footer";
 import { BottomNav } from "@/components/layout/bottom-nav";
 import { ToastContainer } from "@/components/ui/toast-container";
 import { PwaPrompt } from "@/components/layout/pwa-prompt";
+import Providers from "@/app/providers";
 
 const inter = Inter({
   subsets: ["latin"],
@@ -63,12 +64,14 @@ export default function RootLayout({
         />
       </head>
       <body className="min-h-screen bg-background text-on-background font-sans antialiased pb-16" suppressHydrationWarning>
-        <Header />
-        <main>{children}</main>
-        <Footer />
-        <BottomNav />
-        <PwaPrompt />
-        <ToastContainer />
+        <Providers>
+          <Header />
+          <main>{children}</main>
+          <Footer />
+          <BottomNav />
+          <PwaPrompt />
+          <ToastContainer />
+        </Providers>
       </body>
     </html>
   );

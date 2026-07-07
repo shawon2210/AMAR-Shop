@@ -3,6 +3,7 @@
 import { useState } from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
+import { ErrorBoundary } from '@/components/ui/error-boundary';
 
 const navItems = [
   { href: '/seller/dashboard', label: 'Dashboard', icon: 'dashboard' },
@@ -105,7 +106,7 @@ export default function SellerLayout({ children }: { children: React.ReactNode }
         </header>
 
         {/* Page content */}
-        <main className="flex-1 p-4 lg:p-6 bg-slate-50">{children}</main>
+        <main className="flex-1 p-4 lg:p-6 bg-slate-50"><ErrorBoundary>{children}</ErrorBoundary></main>
       </div>
     </div>
   );

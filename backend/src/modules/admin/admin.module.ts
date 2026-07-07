@@ -1,14 +1,47 @@
 import { Module, forwardRef } from '@nestjs/common';
-import { AdminController } from './admin.controller';
-import { AdminService } from './admin.service';
 import { PrismaService } from '../../common/prisma.service';
 import { AuthModule } from '../auth/auth.module';
 import { RolesGuard } from '../../common/guards/roles.guard';
+import {
+  AdminDashboardController,
+  AdminUserController,
+  AdminSellerController,
+  AdminCommerceController,
+  AdminMarketingController,
+  AdminSupportController,
+  AdminFinanceController,
+} from './controllers';
+import {
+  AdminDashboardService,
+  AdminUserService,
+  AdminSellerService,
+  AdminCommerceService,
+  AdminMarketingService,
+  AdminSupportService,
+  AdminFinanceService,
+} from './services';
 
 @Module({
   imports: [forwardRef(() => AuthModule)],
-  controllers: [AdminController],
-  providers: [AdminService, PrismaService, RolesGuard],
-  exports: [AdminService],
+  controllers: [
+    AdminDashboardController,
+    AdminUserController,
+    AdminSellerController,
+    AdminCommerceController,
+    AdminMarketingController,
+    AdminSupportController,
+    AdminFinanceController,
+  ],
+  providers: [
+    PrismaService,
+    RolesGuard,
+    AdminDashboardService,
+    AdminUserService,
+    AdminSellerService,
+    AdminCommerceService,
+    AdminMarketingService,
+    AdminSupportService,
+    AdminFinanceService,
+  ],
 })
 export class AdminModule {}

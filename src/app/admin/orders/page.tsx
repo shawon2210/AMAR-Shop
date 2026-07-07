@@ -1,46 +1,28 @@
 'use client';
 
 import { useState } from 'react';
-import { useAdminData } from '@/lib/api/hooks';
+import { useAdminPage } from '@/lib/api/hooks';
 import { fetchOrders, updateOrderStatus, addOrderNote } from '@/lib/api/admin';
-
-const statusColors: Record<string, string> = {
-  DELIVERED: 'bg-green-100 text-green-700',
-  PROCESSING: 'bg-blue-100 text-blue-700',
-  SHIPPED: 'bg-purple-100 text-purple-700',
-  PENDING: 'bg-amber-100 text-amber-700',
-  CANCELLED: 'bg-red-100 text-red-700',
-  CONFIRMED: 'bg-sky-100 text-sky-700',
-  REFUNDED: 'bg-orange-100 text-orange-700',
-  RETURNED: 'bg-pink-100 text-pink-700',
-};
+import type { AdminOrder, OrderItem } from '@/types';
+import { ORDER_STATUS_COLORS, formatBDT, formatDate } from '@/types';
+import { AdminLoading, AdminError, AdminEmpty } from '@/components/ui/admin-states';
 
 const tabs = ['All', 'PENDING', 'CONFIRMED', 'PROCESSING', 'SHIPPED', 'DELIVERED', 'CANCELLED'] as const;
 
-function formatBDT(amount: number): string {
-  return `৳${amount.toLocaleString('en-IN')}`;
-}
-
-function formatDate(d: string): string {
-  return new Date(d).toLocaleDateString('en-GB', { day: '2-digit', month: 'short', year: 'numeric' });
-}
-
 export default function OrdersPage() {
   const [activeTab, setActiveTab] = useState<string>('All');
-  const [page, setPage] = useState(1);
-  const [detailOrder, setDetailOrder] = useState<any>(null);
+  const [detailOrder, setDetailOrder] = useState<AdminOrder | null>(null);
   const [statusUpdating, setStatusUpdating] = useState<string | null>(null);
   const [newNote, setNewNote] = useState('');
-  const limit = 15;
 
-  const { data, loading, error, refetch } = useAdminData(
-    () =>
+  const { data, loading, error, refetch, page, setPage } = useAdminPage(
+    ({ page, limit }) =>
       fetchOrders({
         page,
         limit,
         status: activeTab !== 'All' ? activeTab : undefined,
       }),
-    [page, activeTab],
+    [activeTab],
   );
 
   const handleStatusChange = async (orderId: string, newStatus: string) => {
@@ -49,10 +31,10 @@ export default function OrdersPage() {
       await updateOrderStatus(orderId, newStatus);
       refetch();
       if (detailOrder?.id === orderId) {
-        setDetailOrder((prev: any) => prev ? { ...prev, status: newStatus } : prev);
+        setDetailOrder((prev) => prev ? { ...prev, status: newStatus } : prev);
       }
-    } catch (err: any) {
-      alert(err.message || 'Failed to update order status');
+    } catch (err) {
+      alert(err instanceof Error ? err.message : 'Failed to update order status');
     } finally {
       setStatusUpdating(null);
     }
@@ -64,8 +46,8 @@ export default function OrdersPage() {
       await addOrderNote(orderId, newNote.trim());
       setNewNote('');
       refetch();
-    } catch (err: any) {
-      alert(err.message || 'Failed to add note');
+    } catch (err) {
+      alert(err instanceof Error ? err.message : 'Failed to add note');
     }
   };
 
@@ -87,17 +69,12 @@ export default function OrdersPage() {
         ))}
       </div>
 
-      {error && (
-        <div className="bg-red-50 text-red-600 rounded-lg p-3 text-sm border border-red-200">{error}</div>
-      )}
+      {error && <AdminError message={error} onRetry={refetch} />}
 
       {loading ? (
-        <div className="bg-white rounded-xl border border-[#eee] p-8 text-center text-[#888]">
-          <span className="material-symbols-outlined animate-spin align-middle mr-2">progress_activity</span>
-          Loading...
-        </div>
+        <AdminLoading />
       ) : !data || data.orders.length === 0 ? (
-        <div className="bg-white rounded-xl border border-[#eee] p-8 text-center text-[#888]">No orders found</div>
+        <AdminEmpty message="No orders found" />
       ) : (
         <>
           {/* Desktop Table */}
@@ -115,14 +92,14 @@ export default function OrdersPage() {
                 </tr>
               </thead>
               <tbody>
-                {data.orders.map((o: any) => (
+                {data.orders.map((o: AdminOrder) => (
                   <tr key={o.id} className="border-b border-[#f5f5f5] hover:bg-[#fafafa]">
                     <td className="p-3 font-medium text-[#333]">#{o.orderNumber || o.id.slice(-6)}</td>
                     <td className="p-3 text-[#555]">{o.user?.name || 'N/A'}</td>
                     <td className="p-3 font-medium">{formatBDT(o.total)}</td>
                     <td className="p-3 text-[#666]">{o.items?.length || 0}</td>
                     <td className="p-3">
-                      <span className={`text-[11px] font-semibold px-2 py-0.5 rounded-full ${statusColors[o.status] || 'bg-gray-100 text-gray-700'}`}>
+                      <span className={`text-[11px] font-semibold px-2 py-0.5 rounded-full ${ORDER_STATUS_COLORS[o.status] || 'bg-gray-100 text-gray-700'}`}>
                         {o.status}
                       </span>
                     </td>
@@ -140,11 +117,11 @@ export default function OrdersPage() {
 
           {/* Mobile Cards */}
           <div className="sm:hidden space-y-3">
-            {data.orders.map((o: any) => (
+            {data.orders.map((o: AdminOrder) => (
               <div key={o.id} className="bg-white rounded-xl border border-[#eee] p-3 space-y-2">
                 <div className="flex items-center justify-between">
                   <span className="font-mono text-sm font-medium text-[#333]">#{o.orderNumber || o.id.slice(-6)}</span>
-                  <span className={`text-[10px] font-semibold px-2 py-0.5 rounded-full ${statusColors[o.status] || 'bg-gray-100 text-gray-700'}`}>
+                  <span className={`text-[10px] font-semibold px-2 py-0.5 rounded-full ${ORDER_STATUS_COLORS[o.status] || 'bg-gray-100 text-gray-700'}`}>
                     {o.status}
                   </span>
                 </div>
@@ -165,7 +142,7 @@ export default function OrdersPage() {
       {data && data.totalPages > 1 && (
         <div className="flex items-center justify-between text-sm">
           <span className="text-[#888]">
-            Page {data.page} of {data.totalPages} ({data.total} total)
+            Page {page} of {data.totalPages} ({data.total} total)
           </span>
           <div className="flex gap-2">
             <button
@@ -205,7 +182,7 @@ export default function OrdersPage() {
                 </div>
                 <div>
                   <p className="text-[#888] text-xs mb-1">Status</p>
-                  <span className={`text-[11px] font-semibold px-2 py-0.5 rounded-full ${statusColors[detailOrder.status] || 'bg-gray-100 text-gray-700'}`}>
+                  <span className={`text-[11px] font-semibold px-2 py-0.5 rounded-full ${ORDER_STATUS_COLORS[detailOrder.status] || 'bg-gray-100 text-gray-700'}`}>
                     {detailOrder.status}
                   </span>
                 </div>
@@ -229,7 +206,7 @@ export default function OrdersPage() {
               <div>
                 <p className="text-[#888] text-xs mb-2">Items ({detailOrder.items?.length || 0})</p>
                 <div className="space-y-2">
-                  {(detailOrder.items || []).map((item: any) => (
+                  {(detailOrder.items || []).map((item: OrderItem) => (
                     <div key={item.id} className="flex items-center justify-between bg-[#fafafa] rounded-lg p-3">
                       <div className="flex items-center gap-3">
                         <div className="w-10 h-10 rounded-lg bg-[#f0f0f0] flex items-center justify-center overflow-hidden">

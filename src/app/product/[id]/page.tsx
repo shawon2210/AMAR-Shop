@@ -1,37 +1,30 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import { useParams, useRouter } from 'next/navigation';
 import Link from 'next/link';
-import { getProductById, getProducts } from '@/services/products';
+import { useGetProductById, useGetProducts } from '@/services/products';
 import { PriceDisplay, DiscountBadge } from '@/components/ui/price-display';
 import { Badge } from '@/components/ui/badge';
 import { CountdownTimer } from '@/components/ui/countdown-timer';
 import { ProductGrid } from '@/components/commerce/product-grid';
 import { useCartStore } from '@/stores/cart-store';
 import { useUIStore } from '@/stores/ui-store';
-import type { Product } from '@/types';
 
 export default function ProductDetailPage() {
   const params = useParams();
   const router = useRouter();
   const [selectedImage, setSelectedImage] = useState(0);
   const [quantity, setQuantity] = useState(1);
-  const [product, setProduct] = useState<Product | null | undefined>(undefined);
-  const [related, setRelated] = useState<Product[]>([]);
+  const { data: product, isLoading } = useGetProductById(params.id as string);
+  const { data: allProducts = [] } = useGetProducts(0, 8);
+  const related = product
+    ? allProducts.filter(r => r.id !== product.id).slice(0, 4)
+    : [];
   const addItem = useCartStore(s => s.addItem);
   const addToast = useUIStore(s => s.addToast);
 
-  useEffect(() => {
-    getProductById(params.id as string).then(p => {
-      setProduct(p);
-      if (p) {
-        getProducts(0, 8).then(all => setRelated(all.filter(r => r.id !== p.id).slice(0, 4)));
-      }
-    });
-  }, [params.id]);
-
-  if (product === undefined) {
+  if (isLoading) {
     return (
       <div className="flex flex-col items-center justify-center py-32 px-container-margin">
         <span className="material-symbols-outlined animate-spin text-3xl text-secondary mb-3">progress_activity</span>
@@ -45,7 +38,7 @@ export default function ProductDetailPage() {
       <div className="flex flex-col items-center justify-center py-32 px-container-margin">
         <span className="material-symbols-outlined text-6xl text-secondary mb-4">block</span>
         <h2 className="font-headline-md text-headline-md mb-2">Product Not Found</h2>
-        <p className="text-secondary mb-6">The product you&apos;re looking for doesn&apos;t exist or has been removed.</p>
+        <p className="text-secondary mb-6">The product you're looking for doesn't exist or has been removed.</p>
         <Link
           href="/"
           className="bg-primary text-on-primary px-lg py-md rounded-lg font-label-bold hover:brightness-110 transition-all"

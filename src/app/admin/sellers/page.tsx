@@ -1,7 +1,7 @@
 'use client';
 
 import { useState } from 'react';
-import { useAdminData } from '@/lib/api/hooks';
+import { useAdminPage } from '@/lib/api/hooks';
 import {
   fetchSellers,
   approveSeller,
@@ -9,6 +9,8 @@ import {
   toggleStoreStatus,
   updateSeller,
 } from '@/lib/api/admin';
+import { AdminLoading, AdminError, AdminEmpty } from '@/components/ui/admin-states';
+import type { SellerSummary } from '@/types';
 
 const kycStyles: Record<string, string> = {
   verified: 'bg-green-100 text-green-700',
@@ -24,13 +26,10 @@ function formatBDT(amount: number): string {
 export default function SellersPage() {
   const [rejectModal, setRejectModal] = useState<string | null>(null);
   const [rejectReason, setRejectReason] = useState('');
-  const [page, setPage] = useState(1);
   const [actionLoading, setActionLoading] = useState<string | null>(null);
-  const limit = 15;
 
-  const { data, loading, error, refetch } = useAdminData(
-    () => fetchSellers({ page, limit }),
-    [page],
+  const { data, loading, error, refetch, page, setPage } = useAdminPage(
+    ({ page, limit }) => fetchSellers({ page, limit }),
   );
 
   const handleApprove = async (id: string) => {
@@ -38,8 +37,8 @@ export default function SellersPage() {
     try {
       await approveSeller(id);
       refetch();
-    } catch (err: any) {
-      alert(err.message || 'Failed to approve seller');
+    } catch (err) {
+      alert(err instanceof Error ? err.message : 'Failed to approve seller');
     } finally {
       setActionLoading(null);
     }
@@ -53,8 +52,8 @@ export default function SellersPage() {
       setRejectModal(null);
       setRejectReason('');
       refetch();
-    } catch (err: any) {
-      alert(err.message || 'Failed to reject seller');
+    } catch (err) {
+      alert(err instanceof Error ? err.message : 'Failed to reject seller');
     } finally {
       setActionLoading(null);
     }
@@ -65,8 +64,8 @@ export default function SellersPage() {
     try {
       await toggleStoreStatus(id);
       refetch();
-    } catch (err: any) {
-      alert(err.message || 'Failed to toggle store status');
+    } catch (err) {
+      alert(err instanceof Error ? err.message : 'Failed to toggle store status');
     } finally {
       setActionLoading(null);
     }
@@ -95,17 +94,12 @@ export default function SellersPage() {
         ))}
       </div>
 
-      {error && (
-        <div className="bg-red-50 text-red-600 rounded-lg p-3 text-sm border border-red-200">{error}</div>
-      )}
+      {error && <AdminError message={error} onRetry={refetch} />}
 
       {loading ? (
-        <div className="bg-white rounded-xl border border-[#eee] p-8 text-center text-[#888]">
-          <span className="material-symbols-outlined animate-spin align-middle mr-2">progress_activity</span>
-          Loading...
-        </div>
+        <AdminLoading />
       ) : !data || data.sellers.length === 0 ? (
-        <div className="bg-white rounded-xl border border-[#eee] p-8 text-center text-[#888]">No sellers found</div>
+        <AdminEmpty message="No sellers found" />
       ) : (
         <>
           {/* Desktop Table */}
@@ -126,7 +120,7 @@ export default function SellersPage() {
               <tbody>
                 {data.sellers.map((s) => {
                   const kycStatus = !s.sellerProfile ? 'none' : s.sellerProfile.isKycVerified ? 'verified' : s.sellerProfile.kycSubmittedAt ? 'pending' : 'none';
-                  const storeProductCount = (s.store as any)?._count?.products || 0;
+                  const storeProductCount = (s.store as SellerSummary['store'])?._count?.products ?? 0;
                   return (
                     <tr key={s.id} className="border-b border-[#f5f5f5] hover:bg-[#fafafa]">
                       <td className="p-3">
@@ -204,7 +198,7 @@ export default function SellersPage() {
                     <span className="font-semibold text-[#333]">{s.sellerProfile?.totalRevenue ? formatBDT(s.sellerProfile.totalRevenue) : '৳0'}</span>
                   </div>
                   <div className="flex items-center justify-between text-xs text-[#888]">
-                    <span>{(s.store as any)?._count?.products || 0} products</span>
+                    <span>{(s.store as SellerSummary['store'])?._count?.products ?? 0} products</span>
                     <span>Followers: {s.store?.followerCount || 0}</span>
                   </div>
                   {kycStatus === 'pending' && (
@@ -223,7 +217,7 @@ export default function SellersPage() {
       {data && data.totalPages > 1 && (
         <div className="flex items-center justify-between text-sm">
           <span className="text-[#888]">
-            Page {data.page} of {data.totalPages} ({data.total} total)
+            Page {page} of {data.totalPages} ({data.total} total)
           </span>
           <div className="flex gap-2">
             <button

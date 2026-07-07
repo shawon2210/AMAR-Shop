@@ -34,7 +34,7 @@ function LoginForm() {
 
   const isEmail = identity.includes('@');
   const identityError =
-    identity.length > 0 && !isEmail && !/^(\+?88)?01[3-9]\d{8}$/.test(identity)
+    identity.length > 0 && !isEmail && !/^(\+?88|88)?0?1[3-9]\d{8}$/.test(identity.replace(/\s/g, ''))
       ? 'Enter a valid email or Bangladeshi phone number'
       : '';
   const passwordError =

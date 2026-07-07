@@ -3,7 +3,9 @@
 import { useState } from 'react';
 import { useAdminData } from '@/lib/api/hooks';
 import { fetchBanners, createBanner, updateBanner, deleteBanner } from '@/lib/api/admin';
-import type { AdminBanner } from '@/lib/api/admin';
+import { AdminLoading, AdminError, AdminEmpty } from '@/components/ui/admin-states';
+import type { AdminBanner } from '@/types';
+import { getErrorMessage } from '@/lib/error-helper';
 
 const positionColors: Record<string, string> = {
   HOME_TOP: 'bg-purple-100 text-purple-700',
@@ -42,8 +44,8 @@ export default function BannersPage() {
       }
       resetForm();
       refetch();
-    } catch (err: any) {
-      alert(err.message || 'Failed to save banner');
+    } catch (err) {
+      alert(getErrorMessage(err, 'Failed to save banner'));
     } finally {
       setSubmitting(false);
     }
@@ -59,8 +61,8 @@ export default function BannersPage() {
     try {
       await updateBanner(b.id, { isActive: !b.isActive });
       refetch();
-    } catch (err: any) {
-      alert(err.message || 'Failed to toggle banner');
+    } catch (err) {
+      alert(getErrorMessage(err, 'Failed to toggle banner'));
     }
   };
 
@@ -69,8 +71,8 @@ export default function BannersPage() {
     try {
       await deleteBanner(id);
       refetch();
-    } catch (err: any) {
-      alert(err.message || 'Failed to delete banner');
+    } catch (err) {
+      alert(getErrorMessage(err, 'Failed to delete banner'));
     }
   };
 
@@ -83,9 +85,7 @@ export default function BannersPage() {
         </button>
       </div>
 
-      {error && (
-        <div className="bg-red-50 text-red-600 rounded-lg p-3 text-sm border border-red-200">{error}</div>
-      )}
+      {error && <AdminError message={error} onRetry={refetch} />}
 
       {showForm && (
         <form onSubmit={handleSubmit} className="bg-white rounded-xl border border-[#eee] p-5">
@@ -131,11 +131,9 @@ export default function BannersPage() {
       )}
 
       {loading ? (
-        <div className="bg-white rounded-xl border border-[#eee] p-8 text-center text-[#888]">
-          <span className="material-symbols-outlined animate-spin align-middle mr-2">progress_activity</span>Loading...
-        </div>
+        <AdminLoading />
       ) : !data || data.length === 0 ? (
-        <div className="bg-white rounded-xl border border-[#eee] p-8 text-center text-[#888]">No banners found</div>
+        <AdminEmpty message="No banners found" />
       ) : (
         <div className="grid grid-cols-1 gap-4">
           {data.map((banner) => (

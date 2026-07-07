@@ -1,8 +1,11 @@
 'use client';
 
 import { useState } from 'react';
-import { useAdminData } from '@/lib/api/hooks';
+import { useAdminPage } from '@/lib/api/hooks';
 import { fetchAdminAffiliates, updateAdminAffiliate } from '@/lib/api/admin';
+import { AdminLoading, AdminError, AdminEmpty } from '@/components/ui/admin-states';
+import { Pagination } from '@/components/ui/pagination';
+import { getErrorMessage } from '@/lib/error-helper';
 
 function formatDate(d: string): string {
   return new Date(d).toLocaleDateString('en-GB', { day: '2-digit', month: 'short', year: 'numeric' });
@@ -19,23 +22,22 @@ const statusStyles: Record<string, string> = {
 };
 
 export default function AdminAffiliatesPage() {
-  const [page, setPage] = useState(1);
   const [statusFilter, setStatusFilter] = useState('ALL');
-  const { data, loading, error, refetch } = useAdminData(
-    () => fetchAdminAffiliates({
+  const { data, loading, error, refetch, page, setPage } = useAdminPage(
+    ({ page, limit }) => fetchAdminAffiliates({
       page,
-      limit: 20,
+      limit,
       status: statusFilter === 'ALL' ? undefined : statusFilter,
     }),
-    [page, statusFilter],
+    [statusFilter],
   );
 
   const handleStatusChange = async (id: string, status: string) => {
     try {
       await updateAdminAffiliate(id, { status });
       refetch();
-    } catch (e: any) {
-      alert(e.message || 'Failed to update affiliate');
+    } catch (e) {
+      alert(getErrorMessage(e, 'Failed to update affiliate'));
     }
   };
 
@@ -43,9 +45,7 @@ export default function AdminAffiliatesPage() {
     <div className="space-y-6">
       <h1 className="text-2xl font-bold text-[#222]">Affiliate Management</h1>
 
-      {error && (
-        <div className="bg-red-50 text-red-600 rounded-lg p-3 text-sm border border-red-200">{error}</div>
-      )}
+      {error && <AdminError message={error} onRetry={refetch} />}
 
       <div className="grid grid-cols-1 sm:grid-cols-4 gap-4">
         {[
@@ -55,7 +55,7 @@ export default function AdminAffiliatesPage() {
           { label: 'Suspended', value: data?.affiliates?.filter((a) => a.status === 'SUSPENDED').length.toString() || '...', color: 'text-red-600' },
         ].map((s) => (
           <div key={s.label} className="bg-white rounded-xl p-4 border border-[#eee]">
-            <p className={`text-2xl font-bold ${(s as any).color || 'text-[#222]'}`}>{s.value}</p>
+            <p className={`text-2xl font-bold ${(s as { color?: string }).color || 'text-[#222]'}`}>{s.value}</p>
             <p className="text-sm text-[#888] mt-1">{s.label}</p>
           </div>
         ))}
@@ -71,11 +71,9 @@ export default function AdminAffiliatesPage() {
       </div>
 
       {loading ? (
-        <div className="bg-white rounded-xl border border-[#eee] p-8 text-center text-[#888]">
-          <span className="material-symbols-outlined animate-spin align-middle mr-2">progress_activity</span>Loading...
-        </div>
+        <AdminLoading />
       ) : !data?.affiliates || data.affiliates.length === 0 ? (
-        <div className="bg-white rounded-xl border border-[#eee] p-8 text-center text-[#888]">No affiliates found</div>
+        <AdminEmpty message="No affiliates found" />
       ) : (
         <>
           {/* Desktop Table */}
@@ -144,15 +142,7 @@ export default function AdminAffiliatesPage() {
       )}
 
       {data && data.totalPages > 1 && (
-        <div className="flex items-center justify-between text-sm">
-          <span className="text-[#888]">Page {data.page} of {data.totalPages}</span>
-          <div className="flex gap-2">
-            <button disabled={page <= 1} onClick={() => setPage((p) => p - 1)}
-              className="px-3 py-1.5 bg-white border border-[#ddd] rounded-lg disabled:opacity-50 hover:bg-[#f5f5f5]">Previous</button>
-            <button disabled={page >= data.totalPages} onClick={() => setPage((p) => p + 1)}
-              className="px-3 py-1.5 bg-white border border-[#ddd] rounded-lg disabled:opacity-50 hover:bg-[#f5f5f5]">Next</button>
-          </div>
-        </div>
+        <Pagination page={page} totalPages={data.totalPages} total={data.total} onPageChange={setPage} />
       )}
     </div>
   );

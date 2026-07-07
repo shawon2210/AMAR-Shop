@@ -2,11 +2,13 @@
 
 import { useState } from 'react';
 import { useAdminData } from '@/lib/api/hooks';
+import { AdminLoading, AdminError, AdminEmpty } from '@/components/ui/admin-states';
 import {
   fetchCMSPages, createCMSPage, updateCMSPage, deleteCMSPage,
   fetchAnnouncements, createAnnouncement, updateAnnouncement, deleteAnnouncement,
 } from '@/lib/api/admin';
 import type { CMSPage, Announcement } from '@/lib/api/admin';
+import { getErrorMessage } from '@/lib/error-helper';
 
 function formatDate(d: string): string {
   return new Date(d).toLocaleDateString('en-GB', { day: '2-digit', month: 'short', year: 'numeric' });
@@ -37,8 +39,8 @@ function PagesSection({ onError }: { onError: (msg: string) => void }) {
       }
       resetForm();
       refetch();
-    } catch (err: any) {
-      alert(err.message || 'Failed to save page');
+    } catch (err) {
+      alert(getErrorMessage(err, 'Failed to save page'));
     } finally {
       setSubmitting(false);
     }
@@ -52,11 +54,11 @@ function PagesSection({ onError }: { onError: (msg: string) => void }) {
 
   const handleDelete = async (id: string) => {
     if (!confirm('Delete this page?')) return;
-    try { await deleteCMSPage(id); refetch(); } catch (err: any) { alert(err.message); }
+    try { await deleteCMSPage(id); refetch(); } catch (err) { alert(getErrorMessage(err)); }
   };
 
   const handleToggleActive = async (p: CMSPage) => {
-    try { await updateCMSPage(p.id, { isActive: !p.isActive }); refetch(); } catch (err: any) { alert(err.message); }
+    try { await updateCMSPage(p.id, { isActive: !p.isActive }); refetch(); } catch (err) { alert(getErrorMessage(err)); }
   };
 
   return (
@@ -105,9 +107,9 @@ function PagesSection({ onError }: { onError: (msg: string) => void }) {
       )}
 
       {loading ? (
-        <div className="bg-white rounded-xl border border-[#eee] p-8 text-center text-[#888]"><span className="material-symbols-outlined animate-spin align-middle mr-2">progress_activity</span>Loading...</div>
+        <AdminLoading />
       ) : !pages || pages.length === 0 ? (
-        <div className="bg-white rounded-xl border border-[#eee] p-8 text-center text-[#888]">No pages found</div>
+        <AdminEmpty message="No pages found" />
       ) : (
         <>
           {/* Desktop Table */}
@@ -193,8 +195,8 @@ function AnnouncementsSection({ onError }: { onError: (msg: string) => void }) {
       }
       resetForm();
       refetch();
-    } catch (err: any) {
-      alert(err.message || 'Failed to save announcement');
+    } catch (err) {
+      alert(getErrorMessage(err, 'Failed to save announcement'));
     } finally {
       setSubmitting(false);
     }
@@ -208,11 +210,11 @@ function AnnouncementsSection({ onError }: { onError: (msg: string) => void }) {
 
   const handleDelete = async (id: string) => {
     if (!confirm('Delete this announcement?')) return;
-    try { await deleteAnnouncement(id); refetch(); } catch (err: any) { alert(err.message); }
+    try { await deleteAnnouncement(id); refetch(); } catch (err) { alert(getErrorMessage(err)); }
   };
 
   const handleToggleActive = async (a: Announcement) => {
-    try { await updateAnnouncement(a.id, { isActive: !a.isActive }); refetch(); } catch (err: any) { alert(err.message); }
+    try { await updateAnnouncement(a.id, { isActive: !a.isActive }); refetch(); } catch (err) { alert(getErrorMessage(err)); }
   };
 
   return (
@@ -255,11 +257,9 @@ function AnnouncementsSection({ onError }: { onError: (msg: string) => void }) {
       )}
 
       {loading ? (
-        <div className="bg-white rounded-xl border border-[#eee] p-8 text-center text-[#888]">
-          <span className="material-symbols-outlined animate-spin align-middle mr-2">progress_activity</span>Loading...
-        </div>
+        <AdminLoading />
       ) : !announcements || announcements.length === 0 ? (
-        <div className="bg-white rounded-xl border border-[#eee] p-8 text-center text-[#888]">No announcements</div>
+        <AdminEmpty message="No announcements" />
       ) : (
         announcements.map((a) => (
           <div key={a.id} className="bg-white rounded-xl border border-[#eee] p-4">
@@ -317,9 +317,7 @@ export default function CMSPage() {
         ))}
       </div>
 
-      {globalError && (
-        <div className="bg-red-50 text-red-600 rounded-lg p-3 text-sm border border-red-200">{globalError}</div>
-      )}
+      {globalError && <AdminError message={globalError} />}
 
       {activeSection === 'pages' && <PagesSection onError={setGlobalError} />}
       {activeSection === 'announcements' && <AnnouncementsSection onError={setGlobalError} />}

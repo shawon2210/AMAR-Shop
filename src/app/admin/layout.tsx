@@ -4,6 +4,7 @@ import { useState, useMemo, useEffect, useCallback } from 'react';
 import Link from 'next/link';
 import { usePathname, useRouter } from 'next/navigation';
 import { useAuthStore, useAuthHydrated } from '@/stores/auth-store';
+import { ErrorBoundary } from '@/components/ui/error-boundary';
 
 interface NavItem {
   label: string;
@@ -646,7 +647,9 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
           </div>
         </header>
 
-        <main className="flex-1 p-4 lg:p-6 overflow-x-hidden">{children}</main>
+        <main className="flex-1 p-4 lg:p-6 max-w-7xl mx-auto">
+          <ErrorBoundary>{children}</ErrorBoundary>
+        </main>
       </div>
 
       {searchOpen && (

@@ -1,8 +1,9 @@
 'use client';
 
 import { useState } from 'react';
-import { useAdminData } from '@/lib/api/hooks';
+import { useAdminPage } from '@/lib/api/hooks';
 import { fetchProducts, approveProduct, rejectProduct } from '@/lib/api/admin';
+import { AdminLoading, AdminError, AdminEmpty } from '@/components/ui/admin-states';
 
 const statusStyles: Record<string, string> = {
   active: 'bg-green-100 text-green-700',
@@ -18,26 +19,24 @@ function formatBDT(amount: number): string {
 export default function ProductsPage() {
   const [search, setSearch] = useState('');
   const [statusFilter, setStatusFilter] = useState('All');
-  const [page, setPage] = useState(1);
-  const limit = 15;
 
-  const { data, loading, error, refetch } = useAdminData(
-    () =>
+  const { data, loading, error, refetch, page, setPage } = useAdminPage(
+    ({ page, limit }) =>
       fetchProducts({
         page,
         limit,
         search: search || undefined,
         status: statusFilter !== 'All' ? statusFilter.toLowerCase() : undefined,
       }),
-    [page, search, statusFilter],
+    [search, statusFilter],
   );
 
   const handleApprove = async (id: string) => {
     try {
       await approveProduct(id);
       refetch();
-    } catch (err: any) {
-      alert(err.message || 'Failed to approve product');
+    } catch (err) {
+      alert(err instanceof Error ? err.message : 'Failed to approve product');
     }
   };
 
@@ -47,8 +46,8 @@ export default function ProductsPage() {
     try {
       await rejectProduct(id, reason);
       refetch();
-    } catch (err: any) {
-      alert(err.message || 'Failed to reject product');
+    } catch (err) {
+      alert(err instanceof Error ? err.message : 'Failed to reject product');
     }
   };
 
@@ -87,18 +86,12 @@ export default function ProductsPage() {
         </select>
       </div>
 
-      {error && (
-        <div className="bg-red-50 text-red-600 rounded-lg p-3 text-sm border border-red-200">{error}</div>
-      )}
+      {error && <AdminError message={error} onRetry={refetch} />}
 
-      {/* Loading State */}
       {loading ? (
-        <div className="bg-white rounded-xl border border-[#eee] p-8 text-center text-[#888]">
-          <span className="material-symbols-outlined animate-spin align-middle mr-2">progress_activity</span>
-          Loading...
-        </div>
+        <AdminLoading />
       ) : !data || data.products.length === 0 ? (
-        <div className="bg-white rounded-xl border border-[#eee] p-8 text-center text-[#888]">No products found</div>
+        <AdminEmpty message="No products found" />
       ) : (
         <>
           {/* Desktop Table */}
@@ -205,7 +198,7 @@ export default function ProductsPage() {
       {data && data.totalPages > 1 && (
         <div className="flex items-center justify-between text-sm">
           <span className="text-[#888]">
-            Page {data.page} of {data.totalPages} ({data.total} total)
+            Page {page} of {data.totalPages} ({data.total} total)
           </span>
           <div className="flex gap-2">
             <button

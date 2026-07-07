@@ -1,81 +1,16 @@
 'use client';
 
-import { useState } from 'react';
 import Link from 'next/link';
-import { motion, AnimatePresence } from 'framer-motion';
+import { motion } from 'framer-motion';
 import { Mail, ArrowRight } from 'lucide-react';
 import { staggerContainer, cardItem, fastTransition } from '@/lib/motion-variants';
+import { Footer as NewFooter } from './footer/Footer';
 
 const trustItems = [
   { icon: 'lock', title: 'Secure Payment', desc: 'SSL encrypted. bKash, Nagad, COD & cards' },
   { icon: 'local_shipping', title: 'Nationwide Delivery', desc: 'Free shipping over \u09F3999. 64 districts' },
   { icon: 'assignment_return', title: 'Easy Returns', desc: '7-day return & exchange. No questions' },
   { icon: 'verified', title: 'Verified Sellers', desc: '100% authentic products. Brand warranty' },
-];
-
-const footerSections = [
-  {
-    title: 'Customer Service',
-    links: [
-      { label: 'Help Center', href: '/help' },
-      { label: 'Returns & Refunds', href: '/help/returns' },
-      { label: 'Shipping Info', href: '/help/shipping' },
-      { label: 'Order Tracking', href: '/orders' },
-      { label: 'Payment Methods', href: '/help/payment' },
-      { label: 'Contact Us', href: '/contact' },
-    ],
-  },
-  {
-    title: 'Shop Categories',
-    links: [
-      { label: 'Electronics', href: '/category/electronics' },
-      { label: 'Fashion', href: '/category/fashion' },
-      { label: 'Beauty', href: '/category/beauty' },
-      { label: 'Groceries', href: '/category/groceries' },
-      { label: 'Home & Living', href: '/category/home' },
-      { label: 'Sports', href: '/category/sports' },
-    ],
-  },
-  {
-    title: 'Seller Center',
-    links: [
-      { label: 'Become a Seller', href: '/seller/dashboard' },
-      { label: 'Seller Dashboard', href: '/seller/dashboard' },
-      { label: 'Seller Analytics', href: '/seller/analytics' },
-      { label: 'Seller Finance', href: '/seller/finance' },
-      { label: 'Seller Policy', href: '/seller/policy' },
-      { label: 'Seller Support', href: '/support/chat' },
-    ],
-  },
-  {
-    title: 'Company',
-    links: [
-      { label: 'About Us', href: '/about' },
-      { label: 'Careers', href: '/careers' },
-      { label: 'Press & Media', href: '/press' },
-      { label: 'Blog', href: '/blog' },
-      { label: 'Terms of Service', href: '/terms' },
-      { label: 'Privacy Policy', href: '/privacy' },
-    ],
-  },
-];
-
-const paymentMethods = [
-  'bKash', 'Nagad', 'Rocket', 'Visa', 'Mastercard', 'COD',
-];
-
-const socialLinks = [
-  { icon: 'facebook', label: 'Facebook', href: '#', type: 'material' },
-  { icon: 'youtube_activity', label: 'YouTube', href: '#', type: 'material' },
-  { icon: 'instagram', label: 'Instagram', href: '#', type: 'material' },
-  { icon: 'X', label: 'X (Twitter)', href: '#', type: 'material' },
-  { icon: 'github', label: 'GitHub', href: 'https://github.com/shawon2210', type: 'lucide' },
-  { icon: 'linkedin', label: 'LinkedIn', href: 'https://www.linkedin.com/in/md-shawon-molla-2a3877293/', type: 'lucide' },
-];
-
-const appStores = [
-  { label: 'Google Play', icon: 'play_store', href: '#' },
-  { label: 'App Store', icon: 'apple', href: '#' },
 ];
 
 function Footer() {
@@ -170,189 +105,14 @@ function Footer() {
         </div>
       </div>
 
-      {/* ───── Main Grid ───── */}
+      {/* ───── Main Grid + Bottom (modular) ───── */}
       <div className="border-b border-gray-100">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 md:py-12 lg:py-16">
-          <motion.div
-            variants={staggerContainer}
-            initial="hidden"
-            whileInView="show"
-            viewport={{ once: true, margin: '-50px' }}
-            className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-8 md:gap-10 lg:gap-12"
-          >
-            {/* Brand column */}
-            <motion.div variants={cardItem} className="sm:col-span-2 lg:col-span-1 text-center lg:text-left">
-              <Link href="/" className="inline-flex items-center mb-4">
-                <img src="/images/amarshop-logo.png" alt="AmarShop" className="w-[160px] md:w-[180px] lg:w-[200px] h-auto object-contain mx-auto lg:mx-0" />
-              </Link>
-              <p className="text-sm text-gray-500 leading-6 max-w-[320px] mx-auto lg:mx-0">
-                Bangladesh&apos;s premium online marketplace. Shop millions of products from trusted sellers with fast delivery and the best deals.
-              </p>
-
-              {/* Follow Us */}
-              <p className="text-xs font-semibold text-gray-400 uppercase tracking-wider mt-6 mb-3">Follow Us</p>
-              <div className="flex flex-wrap justify-center lg:justify-start gap-3">
-                {socialLinks.map((social) => (
-                  <motion.div
-                    key={social.label}
-                    whileHover={{ scale: 1.1, y: -2 }}
-                    whileTap={{ scale: 0.95 }}
-                    transition={fastTransition}
-                  >
-                    <Link
-                      href={social.href}
-                      target={social.href.startsWith('http') ? '_blank' : undefined}
-                      rel={social.href.startsWith('http') ? 'noopener noreferrer' : undefined}
-                      className="w-10 h-10 sm:w-11 sm:h-11 rounded-full bg-gray-100 flex items-center justify-center text-gray-500 hover:bg-primary hover:text-white transition-colors duration-200"
-                      aria-label={social.label}
-                    >
-                      {social.type === 'lucide' ? (
-                        social.icon === 'github' ? (
-                          <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z"/></svg>
-                        ) : (
-                          <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433a2.062 2.062 0 01-2.063-2.065 2.064 2.064 0 112.063 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/></svg>
-                        )
-                      ) : (
-                        <span className="material-symbols-outlined text-xl">{social.icon}</span>
-                      )}
-                    </Link>
-                  </motion.div>
-                ))}
-              </div>
-
-              {/* Download App */}
-              <p className="text-xs font-semibold text-gray-400 uppercase tracking-wider mt-6 mb-3">Download App</p>
-              <div className="flex flex-col sm:flex-row lg:flex-col gap-3 justify-center lg:justify-start">
-                {appStores.map((store) => (
-                  <motion.div key={store.label} whileHover={{ scale: 1.03 }} whileTap={{ scale: 0.97 }} transition={fastTransition} className="w-full sm:w-auto lg:w-full">
-                    <Link
-                      href={store.href}
-                      className="inline-flex items-center justify-center gap-2 w-full sm:w-auto lg:w-full px-4 h-10 rounded-lg border border-gray-200 text-xs font-medium text-gray-600 hover:border-gray-300 hover:bg-gray-50 transition-all"
-                    >
-                      <span className="material-symbols-outlined text-lg">{store.icon}</span>
-                      {store.label}
-                    </Link>
-                  </motion.div>
-                ))}
-              </div>
-            </motion.div>
-
-            {/* Link sections */}
-            {footerSections.map((section) => (
-              <motion.div key={section.title} variants={cardItem}>
-                <FooterSection title={section.title} links={section.links} />
-              </motion.div>
-            ))}
-          </motion.div>
+        <div className="max-w-[1400px] mx-auto px-5 md:px-10 lg:px-16 py-8 md:py-12 lg:py-16">
+          <NewFooter />
         </div>
       </div>
 
-      {/* ───── Payment + Bottom ───── */}
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 md:py-8">
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.5 }}
-        >
-          {/* Accepted Payments */}
-          <div className="text-center sm:text-left">
-            <p className="text-xs font-semibold text-gray-400 uppercase tracking-wider mb-3">Accepted Payments</p>
-            <div className="flex flex-wrap justify-center sm:justify-start gap-2">
-              {paymentMethods.map((method) => (
-                <span
-                  key={method}
-                  className="px-3 h-7 sm:h-8 inline-flex items-center bg-gray-100 rounded-md text-xs text-gray-500 font-medium"
-                >
-                  {method}
-                </span>
-              ))}
-            </div>
-          </div>
-
-          <div className="flex flex-col sm:flex-row items-center justify-between gap-4 pt-6 mt-6 border-t border-gray-100">
-            <p className="text-xs text-gray-400 text-center sm:text-left">
-              &copy; {new Date().getFullYear()} AmarShop. All rights reserved.
-            </p>
-            <div className="flex flex-wrap justify-center gap-4 sm:gap-5 text-xs text-gray-400">
-              <Link href="/terms" className="relative hover:text-primary transition-colors duration-200 after:absolute after:bottom-0 after:left-0 after:h-px after:w-0 after:bg-primary after:transition-all after:duration-300 hover:after:w-full">Terms</Link>
-              <Link href="/privacy" className="relative hover:text-primary transition-colors duration-200 after:absolute after:bottom-0 after:left-0 after:h-px after:w-0 after:bg-primary after:transition-all after:duration-300 hover:after:w-full">Privacy</Link>
-              <Link href="/cookies" className="relative hover:text-primary transition-colors duration-200 after:absolute after:bottom-0 after:left-0 after:h-px after:w-0 after:bg-primary after:transition-all after:duration-300 hover:after:w-full">Cookies</Link>
-              <Link href="/sitemap" className="relative hover:text-primary transition-colors duration-200 after:absolute after:bottom-0 after:left-0 after:h-px after:w-0 after:bg-primary after:transition-all after:duration-300 hover:after:w-full">Sitemap</Link>
-            </div>
-          </div>
-        </motion.div>
-      </div>
     </footer>
-  );
-}
-
-/* ───── Mobile Accordion Section ───── */
-function FooterSection({ title, links }: { title: string; links: { label: string; href: string }[] }) {
-  const [open, setOpen] = useState(false);
-
-  return (
-    <div>
-      <h5 className="hidden lg:block text-gray-900 font-semibold text-sm mb-4">{title}</h5>
-
-      <button
-        onClick={() => setOpen(!open)}
-        className="lg:hidden flex items-center justify-between w-full min-h-[48px] py-3 text-gray-900 font-semibold text-sm"
-        aria-expanded={open}
-      >
-        {title}
-        <motion.span
-          animate={{ rotate: open ? 180 : 0 }}
-          transition={{ duration: 0.2 }}
-          className="material-symbols-outlined text-gray-400"
-        >
-          expand_more
-        </motion.span>
-      </button>
-
-      <AnimatePresence initial={false}>
-        {open && (
-          <motion.div
-            initial={{ height: 0, opacity: 0 }}
-            animate={{ height: 'auto', opacity: 1 }}
-            exit={{ height: 0, opacity: 0 }}
-            transition={{ duration: 0.25, ease: 'easeInOut' }}
-            className="overflow-hidden lg:hidden"
-          >
-            <ul className="space-y-2.5 pb-3">
-              {links.map((link) => (
-                <li key={link.label}>
-                  <Link
-                    href={link.href}
-                    className="text-sm text-gray-500 hover:text-primary transition-colors duration-200 block py-0.5 relative w-fit after:absolute after:bottom-0 after:left-0 after:h-px after:w-0 after:bg-primary after:transition-all after:duration-300 hover:after:w-full"
-                  >
-                    {link.label}
-                  </Link>
-                </li>
-              ))}
-            </ul>
-          </motion.div>
-        )}
-      </AnimatePresence>
-
-      {/* Desktop links */}
-      <div className="hidden lg:block">
-        <ul className="space-y-2.5">
-          {links.map((link) => (
-            <li key={link.label}>
-              <Link
-                href={link.href}
-                className="text-sm text-gray-500 hover:text-primary transition-colors duration-200 block py-0.5 relative w-fit after:absolute after:bottom-0 after:left-0 after:h-px after:w-0 after:bg-primary after:transition-all after:duration-300 hover:after:w-full"
-              >
-                {link.label}
-              </Link>
-            </li>
-          ))}
-        </ul>
-      </div>
-
-      <div className="lg:hidden border-t border-gray-100 mt-0" />
-    </div>
   );
 }
 

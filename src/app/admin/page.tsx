@@ -4,6 +4,11 @@ import { useMemo } from 'react';
 import Link from 'next/link';
 import { useAdminData } from '@/lib/api/hooks';
 import { fetchDashboard } from '@/lib/api/admin';
+import type { RecentOrder } from '@/types';
+import { PageHeader } from '@/components/ui/page-header';
+import { StatCard } from '@/components/ui/stat-card';
+import { StatusBadge } from '@/components/ui/status-badge';
+import { DataTable } from '@/components/ui/data-table';
 
 function formatBDT(amount: number): string {
   const num = Math.round(amount);
@@ -12,30 +17,6 @@ function formatBDT(amount: number): string {
   if (num >= 1000) return `৳${num.toLocaleString('en-IN')}`;
   return `৳${num}`;
 }
-
-const statusStyles: Record<string, string> = {
-  delivered: 'bg-green-100 text-green-700',
-  processing: 'bg-blue-100 text-blue-700',
-  shipped: 'bg-purple-100 text-purple-700',
-  pending: 'bg-amber-100 text-amber-700',
-  cancelled: 'bg-red-100 text-red-700',
-};
-
-const statIcons: Record<string, string> = {
-  'Total Revenue': 'payments',
-  'Total Orders': 'receipt_long',
-  'Total Users': 'group',
-  'Total Sellers': 'store',
-  'Total Products': 'inventory_2',
-};
-
-const statGradients: Record<string, string> = {
-  'Total Revenue': 'from-green-500 to-emerald-600',
-  'Total Orders': 'from-blue-500 to-indigo-600',
-  'Total Users': 'from-violet-500 to-purple-600',
-  'Total Sellers': 'from-orange-500 to-amber-600',
-  'Total Products': 'from-cyan-500 to-teal-600',
-};
 
 function RevenueChart({ data }: { data: { date: string; revenue: number }[] }) {
   if (!data || data.length === 0) {
@@ -116,36 +97,20 @@ export default function AdminDashboard() {
 
   return (
     <div className="space-y-5 sm:space-y-6">
-      {/* Header */}
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
-        <div>
-          <h1 className="text-xl sm:text-2xl font-bold text-[#222]">Dashboard</h1>
-          <p className="text-sm text-[#888] mt-0.5">Welcome back, Admin</p>
-        </div>
-        <div className="flex items-center gap-2 text-xs text-[#888]">
-          <span className="material-symbols-outlined text-base">calendar_today</span>
-          <span>{new Date().toLocaleDateString('en-GB', { day: 'numeric', month: 'long', year: 'numeric' })}</span>
-        </div>
-      </div>
+      <PageHeader
+        title="Dashboard"
+        subtitle="Welcome back, Admin"
+        actions={
+          <div className="flex items-center gap-2 text-xs text-[#888]">
+            <span className="material-symbols-outlined text-base">calendar_today</span>
+            <span>{new Date().toLocaleDateString('en-GB', { day: 'numeric', month: 'long', year: 'numeric' })}</span>
+          </div>
+        }
+      />
 
-      {/* Stat Cards */}
       <div className="grid grid-cols-2 xl:grid-cols-5 gap-3 sm:gap-4">
         {stats.map(s => (
-          <div
-            key={s.label}
-            className="group bg-white rounded-xl border border-[#eee] overflow-hidden hover:shadow-md hover:border-[#ddd] transition-all duration-200"
-          >
-            <div className="p-3 sm:p-4">
-              <div className="flex items-center justify-between mb-2 sm:mb-3">
-                <div className={`w-8 h-8 sm:w-10 sm:h-10 rounded-lg bg-gradient-to-br ${statGradients[s.label]} flex items-center justify-center shadow-sm`}>
-                  <span className="material-symbols-outlined text-white text-lg sm:text-xl">{statIcons[s.label]}</span>
-                </div>
-                <span className={`text-[10px] sm:text-xs font-semibold ${s.color}`}>{s.change}</span>
-              </div>
-              <p className="text-lg sm:text-2xl font-bold text-[#222] truncate">{s.value}</p>
-              <p className="text-xs sm:text-sm text-[#888] mt-0.5">{s.label}</p>
-            </div>
-          </div>
+          <StatCard key={s.label} variant="gradient" label={s.label} value={s.value} trend={s.change} color={s.color} />
         ))}
       </div>
 
@@ -231,71 +196,59 @@ export default function AdminDashboard() {
             </Link>
           </div>
 
-          {/* Desktop Table */}
-          <div className="hidden sm:block overflow-x-auto">
-            <table className="w-full text-sm">
-              <thead>
-                <tr className="text-left text-[#888] text-xs uppercase tracking-wider border-b border-[#eee]">
-                  <th className="p-3 font-medium">Order</th>
-                  <th className="p-3 font-medium">Customer</th>
-                  <th className="p-3 font-medium">Amount</th>
-                  <th className="p-3 font-medium">Status</th>
-                  <th className="p-3 font-medium">Date</th>
-                </tr>
-              </thead>
-              <tbody>
-                {(data.recentOrders as any[])?.slice(0, 10).map((o: any) => (
-                  <tr key={o.id} className="border-b border-[#f5f5f5] hover:bg-[#fafafa] transition-colors">
-                    <td className="p-3 font-medium text-[#333]">
-                      <Link href={`/admin/orders/${o.id}`} className="hover:text-primary transition-colors">
-                        #{o.orderNumber || o.id.slice(-6)}
-                      </Link>
-                    </td>
-                    <td className="p-3 text-[#555]">{o.user?.name || 'N/A'}</td>
-                    <td className="p-3 font-medium">{formatBDT(o.total)}</td>
-                    <td className="p-3">
-                      <span className={`text-[11px] font-semibold px-2 py-0.5 rounded-full ${statusStyles[o.status?.toLowerCase()] || 'bg-gray-100 text-gray-700'}`}>
-                        {o.status || 'N/A'}
-                      </span>
-                    </td>
-                    <td className="p-3 text-[#888] text-xs">
+          <div className="p-4">
+            <DataTable<RecentOrder>
+              columns={[
+                {
+                  key: 'order',
+                  header: 'Order',
+                  render: (o) => (
+                    <Link href={`/admin/orders/${o.id}`} className="font-medium text-[#333] hover:text-primary transition-colors">
+                      #{o.orderNumber || o.id.slice(-6)}
+                    </Link>
+                  ),
+                },
+                { key: 'customer', header: 'Customer', render: (o) => <span className="text-[#555]">{o.user?.name || 'N/A'}</span> },
+                { key: 'amount', header: 'Amount', render: (o) => <span className="font-medium">{formatBDT(o.total)}</span> },
+                {
+                  key: 'status',
+                  header: 'Status',
+                  render: (o) => <StatusBadge status={o.status || 'N/A'} />,
+                },
+                {
+                  key: 'date',
+                  header: 'Date',
+                  render: (o) => (
+                    <span className="text-[#888] text-xs">
                       {o.createdAt
                         ? new Date(o.createdAt).toLocaleDateString('en-GB', { day: '2-digit', month: 'short', year: 'numeric' })
                         : 'N/A'}
-                    </td>
-                  </tr>
-                ))}
-                {(!data.recentOrders || (data.recentOrders as any[]).length === 0) && (
-                  <tr><td colSpan={5} className="p-6 text-center text-[#888] text-sm">No recent orders</td></tr>
-                )}
-              </tbody>
-            </table>
-          </div>
-
-          {/* Mobile Cards */}
-          <div className="sm:hidden divide-y divide-[#f5f5f5]">
-            {(data.recentOrders as any[])?.slice(0, 5).map((o: any) => (
-              <div key={o.id} className="p-3 space-y-2">
-                <div className="flex items-center justify-between">
-                  <Link href={`/admin/orders/${o.id}`} className="font-medium text-sm text-primary">
-                    #{o.orderNumber || o.id.slice(-6)}
-                  </Link>
-                  <span className={`text-[10px] font-semibold px-2 py-0.5 rounded-full ${statusStyles[o.status?.toLowerCase()] || 'bg-gray-100 text-gray-700'}`}>
-                    {o.status || 'N/A'}
-                  </span>
+                    </span>
+                  ),
+                  hideOnMobile: true,
+                },
+              ]}
+              data={data.recentOrders?.slice(0, 10)}
+              loading={false}
+              emptyMessage="No recent orders"
+              mobileCard={(o) => (
+                <div className="p-3 space-y-2">
+                  <div className="flex items-center justify-between">
+                    <Link href={`/admin/orders/${o.id}`} className="font-medium text-sm text-primary">
+                      #{o.orderNumber || o.id.slice(-6)}
+                    </Link>
+                    <StatusBadge status={o.status || 'N/A'} />
+                  </div>
+                  <div className="flex items-center justify-between text-xs text-[#666]">
+                    <span>{o.user?.name || 'N/A'}</span>
+                    <span>{formatBDT(o.total)}</span>
+                  </div>
+                  <div className="text-[10px] text-[#999]">
+                    {o.createdAt ? new Date(o.createdAt).toLocaleDateString('en-GB', { day: '2-digit', month: 'short' }) : ''}
+                  </div>
                 </div>
-                <div className="flex items-center justify-between text-xs text-[#666]">
-                  <span>{o.user?.name || 'N/A'}</span>
-                  <span>{formatBDT(o.total)}</span>
-                </div>
-                <div className="text-[10px] text-[#999]">
-                  {o.createdAt ? new Date(o.createdAt).toLocaleDateString('en-GB', { day: '2-digit', month: 'short' }) : ''}
-                </div>
-              </div>
-            ))}
-            {(!data.recentOrders || (data.recentOrders as any[]).length === 0) && (
-              <div className="p-6 text-center text-[#888] text-sm">No recent orders</div>
-            )}
+              )}
+            />
           </div>
         </div>
 
@@ -305,7 +258,7 @@ export default function AdminDashboard() {
           <div className="bg-white rounded-xl border border-[#eee] p-4 sm:p-5">
             <h2 className="text-base sm:text-lg font-semibold text-[#222] mb-4">Top Sellers</h2>
             <div className="space-y-3">
-              {(data.recentOrders as any[])?.slice(0, 5).map((o: any, i: number) => (
+              {data.recentOrders?.slice(0, 5).map((o: RecentOrder, i: number) => (
                 <div key={o.id} className="flex items-center justify-between py-1">
                   <div className="flex items-center gap-3">
                     <span className={`w-6 h-6 rounded-full flex items-center justify-center text-xs font-bold ${i === 0 ? 'bg-amber-100 text-amber-700' : i === 1 ? 'bg-gray-100 text-gray-600' : i === 2 ? 'bg-orange-100 text-orange-700' : 'bg-[#f5f5f5] text-[#999]'}`}>
@@ -316,7 +269,7 @@ export default function AdminDashboard() {
                   <span className="text-sm font-semibold text-[#333]">{formatBDT(o.total)}</span>
                 </div>
               ))}
-              {(!data.recentOrders || (data.recentOrders as any[]).length === 0) && (
+              {(!data.recentOrders || data.recentOrders.length === 0) && (
                 <p className="text-sm text-[#888] text-center py-4">No seller data</p>
               )}
             </div>

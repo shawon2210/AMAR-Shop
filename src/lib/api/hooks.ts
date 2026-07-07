@@ -1,6 +1,7 @@
 'use client';
 
 import { useState, useEffect, useCallback, useRef } from 'react';
+import { getErrorMessage } from '@/lib/error-helper';
 
 export interface AsyncState<T> {
   data: T | null;
@@ -32,9 +33,9 @@ export function useAdminData<T>(
         setData(result);
         setLoading(false);
       }
-    } catch (err: any) {
+    } catch (err: unknown) {
       if (id === fetchId.current) {
-        setError(err.message || 'An error occurred');
+        setError(getErrorMessage(err));
         setLoading(false);
       }
     }
@@ -45,4 +46,24 @@ export function useAdminData<T>(
   }, [fetch]);
 
   return { data, loading, error, refetch: fetch };
+}
+
+/**
+ * Like useAdminData but manages pagination (page/limit) internally.
+ * Passes `{ page, limit }` to the fetcher. `deps` should NOT include `page`.
+ */
+export function useAdminPage<T>(
+  fetcher: (params: { page: number; limit: number }) => Promise<T>,
+  deps: unknown[] = [],
+  options?: { limit?: number; defaultPage?: number },
+) {
+  const limit = options?.limit ?? 15;
+  const [page, setPage] = useState(options?.defaultPage ?? 1);
+
+  const { data, loading, error, refetch } = useAdminData(
+    () => fetcher({ page, limit }),
+    [page, limit, ...deps],
+  );
+
+  return { data, loading, error, refetch, page, setPage, limit };
 }

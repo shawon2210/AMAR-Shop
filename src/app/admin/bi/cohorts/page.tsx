@@ -3,6 +3,12 @@
 import { useState } from 'react';
 import { useAdminData } from '@/lib/api/hooks';
 import { fetchCohortAnalysis } from '@/lib/api/admin';
+import type { CohortRow } from '@/types';
+
+function getCohortValue(c: CohortRow, col: string): number {
+  const val = (c as unknown as Record<string, unknown>)[col];
+  return typeof val === 'number' ? val : parseInt(val as string) || 0;
+}
 
 export default function CohortsPage() {
   const [period, setPeriod] = useState('month');
@@ -57,8 +63,7 @@ export default function CohortsPage() {
                     <td className="py-3 px-4 font-medium text-[#333]">{c.cohort}</td>
                     <td className="py-3 px-4 text-center text-[#555]">{c.base}</td>
                     {cols.map((col, j) => {
-                      const val = (c as any)[col];
-                      const pct = typeof val === 'number' ? val : parseInt(val);
+                      const pct = getCohortValue(c, col);
                       return (
                         <td key={j} className="py-3 px-4 text-center">
                           <span className={`px-2 py-1 rounded text-xs font-semibold ${
@@ -85,8 +90,7 @@ export default function CohortsPage() {
                 </div>
                 <div className="grid grid-cols-2 gap-2">
                   {cols.map((col, j) => {
-                    const val = (c as any)[col];
-                    const pct = typeof val === 'number' ? val : parseInt(val);
+                    const pct = getCohortValue(c, col);
                     return (
                       <div key={j} className="flex items-center justify-between p-2 bg-[#fafafa] rounded-lg">
                         <span className="text-xs text-[#888]">P{j}</span>
@@ -106,11 +110,7 @@ export default function CohortsPage() {
             <h2 className="font-semibold text-[#222] mb-4">Retention Curve (Average)</h2>
             <div className="flex items-end gap-3 h-48">
               {['Period 0', 'Period 1', 'Period 2', 'Period 3'].map((p, i) => {
-                const vals = cohorts.map((c) => {
-                  const col = cols[i];
-                  const val = (c as any)[col];
-                  return typeof val === 'number' ? val : parseInt(val);
-                }).filter((v) => !isNaN(v));
+                const vals = cohorts.map((c) => getCohortValue(c, cols[i])).filter((v) => !isNaN(v));
                 const avg = vals.length > 0 ? vals.reduce((a, b) => a + b, 0) / vals.length : 100 - i * 18;
                 return (
                   <div key={i} className="flex-1 flex flex-col items-center gap-2">

@@ -3,6 +3,7 @@
 import { useState } from 'react';
 import { useAdminData } from '@/lib/api/hooks';
 import { fetchTaxReport } from '@/lib/api/admin';
+import type { TaxMonthly } from '@/types';
 
 function formatBDT(v: number): string {
   return `৳${Math.round(v).toLocaleString('en-IN')}`;
@@ -91,7 +92,7 @@ export default function TaxReportPage() {
                       </tr>
                     </thead>
                     <tbody>
-                      {data.monthly.map((m: any, i: number) => (
+                      {data.monthly.map((m: TaxMonthly, i: number) => (
                         <tr key={i} className="border-b border-[#eee]/50 hover:bg-[#fafafa]">
                           <td className="py-3 px-4 font-medium text-[#333]">{m.month}</td>
                           <td className="py-3 px-4 text-right">{formatBDT(m.revenue)}</td>
@@ -105,7 +106,7 @@ export default function TaxReportPage() {
 
                 {/* Mobile Cards */}
                 <div className="sm:hidden p-3 space-y-2">
-                  {data.monthly.map((m: any, i: number) => (
+                  {data.monthly.map((m: TaxMonthly, i: number) => (
                     <div key={i} className="border border-[#eee] rounded-lg p-3 flex items-center justify-between">
                       <div>
                         <p className="text-sm font-medium text-[#333]">{m.month}</p>

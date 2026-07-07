@@ -3,6 +3,8 @@
 import { useState, useMemo } from 'react';
 import { useAdminData, useAdminData as useAdminDataRaw } from '@/lib/api/hooks';
 import { fetchCategories, createCategory, updateCategory, deleteCategory } from '@/lib/api/admin';
+import { AdminError, AdminLoading, AdminEmpty } from '@/components/ui/admin-states';
+import type { AdminCategory } from '@/types';
 
 interface CatNode {
   id: string;
@@ -15,7 +17,7 @@ interface CatNode {
   children: CatNode[];
 }
 
-function buildTree(cats: any[]): CatNode[] {
+function buildTree(cats: AdminCategory[]): CatNode[] {
   const map = new Map<string, CatNode>();
   const roots: CatNode[] = [];
 
@@ -23,7 +25,7 @@ function buildTree(cats: any[]): CatNode[] {
     map.set(c.id, {
       id: c.id,
       name: c.name,
-      bnName: (c as any).bnName || null,
+      bnName: (c as AdminCategory).icon || null,
       slug: c.slug,
       icon: c.icon || 'category',
       productCount: c._count?.products || 0,
@@ -125,8 +127,8 @@ export default function CategoriesPage() {
       }
       resetForm();
       refetch();
-    } catch (err: any) {
-      alert(err.message || 'Failed to save category');
+    } catch (err) {
+      alert(err instanceof Error ? err.message : 'Failed to save category');
     } finally {
       setSubmitting(false);
     }
@@ -149,8 +151,8 @@ export default function CategoriesPage() {
     try {
       await deleteCategory(id);
       refetch();
-    } catch (err: any) {
-      alert(err.message || 'Failed to delete category');
+    } catch (err) {
+      alert(err instanceof Error ? err.message : 'Failed to delete category');
     }
   };
 
@@ -167,9 +169,7 @@ export default function CategoriesPage() {
         </div>
       </div>
 
-      {error && (
-        <div className="bg-red-50 text-red-600 rounded-lg p-3 text-sm border border-red-200">{error}</div>
-      )}
+      {error && <AdminError message={error} onRetry={refetch} />}
 
       {formMode !== 'none' && (
         <form onSubmit={handleSubmit} className="bg-white rounded-xl border border-[#eee] p-5">
@@ -227,16 +227,13 @@ export default function CategoriesPage() {
       )}
 
       {loading ? (
-        <div className="bg-white rounded-xl border border-[#eee] p-8 text-center text-[#888]">
-          <span className="material-symbols-outlined animate-spin align-middle mr-2">progress_activity</span>
-          Loading...
-        </div>
+        <AdminLoading />
       ) : (
         <div className="bg-white rounded-xl border border-[#eee]">
           {view === 'tree' ? (
             <div className="p-2">
               {tree.length === 0 ? (
-                <p className="p-6 text-center text-[#888] text-sm">No categories found</p>
+                <AdminEmpty message="No categories found" icon="category" />
               ) : (
                 tree.map((node) => (
                   <TreeNode key={node.id} node={node} depth={0} onEdit={handleEdit} onDelete={handleDelete} />
@@ -257,7 +254,7 @@ export default function CategoriesPage() {
                 </tr>
               </thead>
               <tbody>
-                {allCats.map((c: any) => (
+                {allCats.map((c: AdminCategory) => (
                   <tr key={c.id} className="border-b border-[#f5f5f5] hover:bg-[#fafafa]">
                     <td className="p-3 font-medium text-[#333]">{c.name}</td>
                     <td className="p-3 text-[#666]">{c.bnName || '—'}</td>

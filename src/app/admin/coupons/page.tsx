@@ -1,9 +1,11 @@
 'use client';
 
 import { useState } from 'react';
-import { useAdminData } from '@/lib/api/hooks';
+import { useAdminPage } from '@/lib/api/hooks';
 import { fetchCoupons, createCoupon, updateCoupon, deleteCoupon } from '@/lib/api/admin';
-import type { AdminCoupon } from '@/lib/api/admin';
+import { AdminLoading, AdminError, AdminEmpty } from '@/components/ui/admin-states';
+import type { AdminCoupon } from '@/types';
+import { getErrorMessage } from '@/lib/error-helper';
 
 const tabs = ['Active', 'Upcoming', 'Expired'] as const;
 
@@ -33,8 +35,9 @@ export default function CouponsPage() {
   });
   const [submitting, setSubmitting] = useState(false);
 
-  const { data, loading, error, refetch } = useAdminData(() =>
-    fetchCoupons({ page: 1, limit: 100 }),
+  const { data, loading, error, refetch, page, setPage } = useAdminPage(
+    ({ page, limit }) => fetchCoupons({ page, limit }),
+    [],
   );
 
   const filtered = !data ? [] : activeTab === 'All'
@@ -59,8 +62,8 @@ export default function CouponsPage() {
       setShowCreate(false);
       setForm({ code: '', type: 'PERCENTAGE', value: '', minPurchase: '', maxUses: '', maxPerUser: '1', startsAt: '', expiresAt: '' });
       refetch();
-    } catch (err: any) {
-      alert(err.message || 'Failed to create coupon');
+    } catch (err) {
+      alert(getErrorMessage(err, 'Failed to create coupon'));
     } finally {
       setSubmitting(false);
     }
@@ -70,8 +73,8 @@ export default function CouponsPage() {
     try {
       await updateCoupon(c.id, { isActive: !c.isActive });
       refetch();
-    } catch (err: any) {
-      alert(err.message || 'Failed to update coupon');
+    } catch (err) {
+      alert(getErrorMessage(err, 'Failed to update coupon'));
     }
   };
 
@@ -80,8 +83,8 @@ export default function CouponsPage() {
     try {
       await deleteCoupon(id);
       refetch();
-    } catch (err: any) {
-      alert(err.message || 'Failed to delete coupon');
+    } catch (err) {
+      alert(getErrorMessage(err, 'Failed to delete coupon'));
     }
   };
 
@@ -101,9 +104,7 @@ export default function CouponsPage() {
         ))}
       </div>
 
-      {error && (
-        <div className="bg-red-50 text-red-600 rounded-lg p-3 text-sm border border-red-200">{error}</div>
-      )}
+      {error && <AdminError message={error} onRetry={refetch} />}
 
       {showCreate && (
         <form onSubmit={handleCreate} className="bg-white rounded-xl border border-[#eee] p-5">
@@ -164,11 +165,9 @@ export default function CouponsPage() {
       )}
 
       {loading ? (
-        <div className="bg-white rounded-xl border border-[#eee] p-8 text-center text-[#888]">
-          <span className="material-symbols-outlined animate-spin align-middle mr-2">progress_activity</span>Loading...
-        </div>
+        <AdminLoading />
       ) : filtered.length === 0 ? (
-        <div className="bg-white rounded-xl border border-[#eee] p-8 text-center text-[#888]">No coupons found</div>
+        <AdminEmpty message="No coupons found" />
       ) : (
         <>
           {/* Desktop Table */}
@@ -189,7 +188,7 @@ export default function CouponsPage() {
               <tbody>
                 {filtered.map((c) => {
                   const status = getStatus(c);
-                  const usagePct = c.maxUses ? Math.min(100, ((c as any).usedCount || 0) / c.maxUses * 100) : 0;
+                  const usagePct = c.maxUses ? Math.min(100, ((c as AdminCoupon & { usedCount?: number }).usedCount || 0) / c.maxUses * 100) : 0;
                   return (
                     <tr key={c.id} className="border-b border-[#f5f5f5] hover:bg-[#fafafa]">
                       <td className="p-3 font-mono font-bold text-[#333]">{c.code}</td>
@@ -198,7 +197,7 @@ export default function CouponsPage() {
                       <td className="p-3 text-[#666]">{c.minPurchase > 0 ? formatBDT(c.minPurchase) : '—'}</td>
                       <td className="p-3">
                         <div className="flex items-center gap-2">
-                          <span>{(c as any).usedCount || 0}/{c.maxUses || '∞'}</span>
+                          <span>{(c as AdminCoupon & { usedCount?: number }).usedCount || 0}/{c.maxUses || '∞'}</span>
                           {c.maxUses && (
                             <div className="w-16 h-1.5 bg-[#eee] rounded-full overflow-hidden">
                               <div className="h-full bg-primary rounded-full" style={{ width: `${usagePct}%` }} />
@@ -255,7 +254,7 @@ export default function CouponsPage() {
                     }`}>{status}</span>
                   </div>
                   <div className="flex items-center justify-between text-[10px] text-[#999]">
-                    <span>{(c as any).usedCount || 0}/{c.maxUses || '∞'} uses · Min: {c.minPurchase > 0 ? formatBDT(c.minPurchase) : '—'}</span>
+                    <span>{(c as AdminCoupon & { usedCount?: number }).usedCount || 0}/{c.maxUses || '∞'} uses · Min: {c.minPurchase > 0 ? formatBDT(c.minPurchase) : '—'}</span>
                     <span>{formatDate(c.expiresAt)}</span>
                   </div>
                 </div>

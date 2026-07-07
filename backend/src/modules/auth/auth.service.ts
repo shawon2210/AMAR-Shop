@@ -85,6 +85,7 @@ export class AuthService {
             { phone: normalizedPhone },
             { phone: `+88${normalizedPhone}` },
             { phone: `+880${normalizedPhone}` },
+            { phone: `880${normalizedPhone}` },
             { phone: identity },
           ],
         },

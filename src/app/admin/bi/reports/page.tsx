@@ -3,6 +3,8 @@
 import { useState } from 'react';
 import { useAdminData } from '@/lib/api/hooks';
 import { fetchReport } from '@/lib/api/admin';
+import type { ReportData, AdminProduct, SellerSummary } from '@/types';
+import { getErrorMessage } from '@/lib/error-helper';
 
 function formatBDT(v: number): string {
   return `৳${v.toLocaleString('en-IN')}`;
@@ -22,7 +24,7 @@ export default function ReportsPage() {
     () => queryParams.from ? fetchReport(queryParams.type, { from: queryParams.from, to: queryParams.to }) : Promise.resolve(null),
     [queryParams],
   );
-  const data = rawData as any;
+  const data = (rawData ?? {}) as ReportData;
 
   const handleGenerate = () => {
     setQueryParams({ type: reportType, from, to });
@@ -104,7 +106,7 @@ export default function ReportsPage() {
             <div className="bg-white rounded-xl border border-[#eee] p-5">
               <h3 className="font-semibold text-[#222] mb-3">Top Products</h3>
               <div className="space-y-3">
-                {(data.products || []).slice(0, 10).map((p: any, i: number) => (
+                {(data.products || []).slice(0, 10).map((p: AdminProduct, i: number) => (
                   <div key={p.id || i} className="flex items-center gap-3">
                     <span className="w-5 h-5 rounded-full bg-[#eee] flex items-center justify-center text-[10px] font-bold text-[#888]">{i + 1}</span>
                     <div className="flex-1 min-w-0">
@@ -125,7 +127,7 @@ export default function ReportsPage() {
             <div className="bg-white rounded-xl border border-[#eee] p-5">
               <h3 className="font-semibold text-[#222] mb-3">Top Sellers</h3>
               <div className="space-y-3">
-                {(data.sellers || []).slice(0, 10).map((s: any, i: number) => (
+                {(data.sellers || []).slice(0, 10).map((s: SellerSummary, i: number) => (
                   <div key={s.id || i} className="flex items-center gap-3">
                     <span className="w-5 h-5 rounded-full bg-[#eee] flex items-center justify-center text-[10px] font-bold text-[#888]">{i + 1}</span>
                     <div className="flex-1 min-w-0">

@@ -1,8 +1,11 @@
 'use client';
 
 import { useState } from 'react';
-import { useAdminData } from '@/lib/api/hooks';
+import { useAdminPage } from '@/lib/api/hooks';
 import { fetchSettlements, processSettlement } from '@/lib/api/admin';
+import { AdminLoading, AdminError, AdminEmpty } from '@/components/ui/admin-states';
+import { Pagination } from '@/components/ui/pagination';
+import { getErrorMessage } from '@/lib/error-helper';
 
 function formatBDT(v: number): string {
   return `৳${Math.round(v).toLocaleString('en-IN')}`;
@@ -20,18 +23,17 @@ const statusStyles: Record<string, string> = {
 };
 
 export default function SettlementsPage() {
-  const [page, setPage] = useState(1);
-  const { data, loading, error, refetch } = useAdminData(
-    () => fetchSettlements({ page, limit: 20 }),
-    [page],
+  const { data, loading, error, refetch, page, setPage } = useAdminPage(
+    ({ page, limit }) => fetchSettlements({ page, limit }),
+    [],
   );
 
   const handleProcess = async (id: string, status: string) => {
     try {
       await processSettlement(id, { status });
       refetch();
-    } catch (err: any) {
-      alert(err.message || 'Failed to process settlement');
+    } catch (err) {
+      alert(getErrorMessage(err, 'Failed to process settlement'));
     }
   };
 
@@ -45,16 +47,12 @@ export default function SettlementsPage() {
         </a>
       </div>
 
-      {error && (
-        <div className="bg-red-50 text-red-600 rounded-lg p-3 text-sm border border-red-200">{error}</div>
-      )}
+      {error && <AdminError message={error} onRetry={refetch} />}
 
       {loading ? (
-        <div className="bg-white rounded-xl border border-[#eee] p-8 text-center text-[#888]">
-          <span className="material-symbols-outlined animate-spin align-middle mr-2">progress_activity</span>Loading...
-        </div>
+        <AdminLoading />
       ) : !data || data.settlements.length === 0 ? (
-        <div className="bg-white rounded-xl border border-[#eee] p-8 text-center text-[#888]">No settlements found</div>
+        <AdminEmpty message="No settlements found" />
       ) : (
         <>
           {/* Desktop Table */}
@@ -122,15 +120,7 @@ export default function SettlementsPage() {
       )}
 
       {data && data.totalPages > 1 && (
-        <div className="flex items-center justify-between text-sm">
-          <span className="text-[#888]">Page {data.page} of {data.totalPages}</span>
-          <div className="flex gap-2">
-            <button disabled={page <= 1} onClick={() => setPage((p) => p - 1)}
-              className="px-3 py-1.5 bg-white border border-[#ddd] rounded-lg disabled:opacity-50 hover:bg-[#f5f5f5]">Previous</button>
-            <button disabled={page >= data.totalPages} onClick={() => setPage((p) => p + 1)}
-              className="px-3 py-1.5 bg-white border border-[#ddd] rounded-lg disabled:opacity-50 hover:bg-[#f5f5f5]">Next</button>
-          </div>
-        </div>
+        <Pagination page={page} totalPages={data.totalPages} total={data.total} onPageChange={setPage} />
       )}
     </div>
   );

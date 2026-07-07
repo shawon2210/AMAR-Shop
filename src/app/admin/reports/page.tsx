@@ -3,6 +3,8 @@
 import { useState, useMemo } from 'react';
 import { useAdminData } from '@/lib/api/hooks';
 import { fetchReport } from '@/lib/api/admin';
+import type { ReportData, AdminProduct, SellerSummary } from '@/types';
+import { getErrorMessage } from '@/lib/error-helper';
 
 function formatBDT(v: number): string {
   return `৳${Math.round(v).toLocaleString('en-IN')}`;
@@ -54,18 +56,22 @@ export default function ReportsPage() {
   const [queryFrom, setQueryFrom] = useState(range.from);
   const [queryTo, setQueryTo] = useState(range.to);
 
-  const { data, loading, error } = useAdminData(
+  const { data: rawData, loading, error } = useAdminData(
     () => fetchReport(tab, { from: queryFrom, to: queryTo }),
     [tab, queryFrom, queryTo],
   );
+  const data = (rawData ?? {}) as ReportData;
 
   const salesData = useMemo(() => {
-    if (tab === 'sales' && data && typeof data === 'object' && 'orders' in data) {
-      const orders = (data as any).orders || [];
+    if (tab === 'sales') {
+      const orders = (data.orders || []) as Record<string, unknown>[];
       const grouped: Record<string, number> = {};
-      orders.forEach((o: any) => {
-        const d = o.createdAt?.split('T')[0] || o.paidAt?.split('T')[0];
-        if (d) grouped[d] = (grouped[d] || 0) + o.total;
+      orders.forEach((o) => {
+        const createdAt = o.createdAt as string | undefined;
+        const paidAt = o.paidAt as string | undefined;
+        const total = o.total as number | undefined;
+        const day = createdAt?.split('T')[0] || paidAt?.split('T')[0];
+        if (day && total) grouped[day] = (grouped[day] || 0) + total;
       });
       return Object.entries(grouped)
         .sort(([a], [b]) => a.localeCompare(b))
@@ -101,10 +107,10 @@ export default function ReportsPage() {
             <>
               <div className="grid grid-cols-1 sm:grid-cols-4 gap-4">
                 {[
-                  { label: 'Total Sales', value: formatBDT((data as any).totalSales || 0) },
-                  { label: 'Order Count', value: ((data as any).totalOrders || 0).toLocaleString() },
-                  { label: 'Avg Order Value', value: formatBDT((data as any).avgOrderValue || 0) },
-                  { label: 'Period Orders', value: ((data as any).orders?.length || 0).toLocaleString() },
+                  { label: 'Total Sales', value: formatBDT(data.totalSales || 0) },
+                  { label: 'Order Count', value: (data.totalOrders || 0).toLocaleString() },
+                  { label: 'Avg Order Value', value: formatBDT(data.avgOrderValue || 0) },
+                  { label: 'Period Orders', value: (data.orders?.length || 0).toLocaleString() },
                 ].map((s) => (
                   <div key={s.label} className="bg-white rounded-xl p-4 border border-[#eee]">
                     <p className="text-2xl font-bold text-[#222]">{s.value}</p>
@@ -153,20 +159,20 @@ export default function ReportsPage() {
               <>
                 <div className="flex justify-between py-2 border-b border-[#eee]">
                   <span className="text-[#888]">Total Products</span>
-                  <span className="font-semibold">{(data as any).totalProducts || 0}</span>
+                  <span className="font-semibold">{data.totalProducts || 0}</span>
                 </div>
                 <div className="flex justify-between py-2 border-b border-[#eee]">
                   <span className="text-[#888]">Total Units Sold</span>
-                  <span className="font-semibold">{((data as any).totalSold || 0).toLocaleString()}</span>
+                  <span className="font-semibold">{(data.totalSold || 0).toLocaleString()}</span>
                 </div>
                 <div className="flex justify-between py-2">
                   <span className="text-[#888]">Period</span>
-                  <span className="text-sm text-[#666]">{(data as any).period?.from?.split('T')[0]} - {(data as any).period?.to?.split('T')[0]}</span>
+                  <span className="text-sm text-[#666]">{data.period?.from?.split('T')[0]} - {data.period?.to?.split('T')[0]}</span>
                 </div>
 
                 <h3 className="text-sm font-semibold text-[#333] mt-6 mb-3">Top Products</h3>
                 <div className="space-y-3">
-                  {((data as any).products || []).slice(0, 10).map((p: any, i: number) => (
+                  {(data.products || []).slice(0, 10).map((p: AdminProduct, i: number) => (
                     <div key={p.id || i} className="flex items-center gap-3">
                       <span className="w-5 h-5 rounded-full bg-[#eee] flex items-center justify-center text-[10px] font-bold text-[#888]">{i + 1}</span>
                       <div className="flex-1 min-w-0">
@@ -176,7 +182,7 @@ export default function ReportsPage() {
                       <p className="text-sm font-semibold">{p.price ? formatBDT(p.price) : '—'}</p>
                     </div>
                   ))}
-                  {(!(data as any).products || (data as any).products.length === 0) && (
+                  {(!data.products || data.products.length === 0) && (
                     <p className="text-sm text-[#888] text-center py-4">No products found</p>
                   )}
                 </div>
@@ -211,16 +217,16 @@ export default function ReportsPage() {
               <>
                 <div className="flex justify-between py-2 border-b border-[#eee]">
                   <span className="text-[#888]">Total Sellers</span>
-                  <span className="font-semibold">{(data as any).totalSellers || 0}</span>
+                  <span className="font-semibold">{data.totalSellers || 0}</span>
                 </div>
                 <div className="flex justify-between py-2">
                   <span className="text-[#888]">Period</span>
-                  <span className="text-sm text-[#666]">{(data as any).period?.from?.split('T')[0]} - {(data as any).period?.to?.split('T')[0]}</span>
+                  <span className="text-sm text-[#666]">{data.period?.from?.split('T')[0]} - {data.period?.to?.split('T')[0]}</span>
                 </div>
 
                 <h3 className="text-sm font-semibold text-[#333] mt-6 mb-3">Sellers Registered</h3>
                 <div className="space-y-3">
-                  {((data as any).sellers || []).slice(0, 10).map((s: any, i: number) => (
+                  {(data.sellers || []).slice(0, 10).map((s: SellerSummary, i: number) => (
                     <div key={s.id || i} className="flex items-center gap-3">
                       <span className="w-5 h-5 rounded-full bg-[#eee] flex items-center justify-center text-[10px] font-bold text-[#888]">{i + 1}</span>
                       <div className="flex-1 min-w-0">
@@ -230,7 +236,7 @@ export default function ReportsPage() {
                       <p className="text-sm font-semibold">{s.sellerProfile?.totalRevenue ? formatBDT(s.sellerProfile.totalRevenue) : '—'}</p>
                     </div>
                   ))}
-                  {(!(data as any).sellers || (data as any).sellers.length === 0) && (
+                  {(!data.sellers || data.sellers.length === 0) && (
                     <p className="text-sm text-[#888] text-center py-4">No sellers found</p>
                   )}
                 </div>

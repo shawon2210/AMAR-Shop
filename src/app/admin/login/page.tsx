@@ -3,6 +3,7 @@
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { useAuthStore } from '@/stores/auth-store';
+import { getErrorMessage } from '@/lib/error-helper';
 
 export default function AdminLoginPage() {
   const router = useRouter();
@@ -43,8 +44,8 @@ export default function AdminLoginPage() {
         return;
       }
       router.push('/admin');
-    } catch (err: any) {
-      setError(err.message || 'Login failed. Please try again.');
+    } catch (err) {
+      setError(getErrorMessage(err, 'Login failed. Please try again.'));
     } finally {
       setLoading(false);
     }

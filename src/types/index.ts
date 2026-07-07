@@ -1,3 +1,11 @@
+export * from './common';
+export * from './admin';
+export * from './marketing';
+export * from './finance';
+export * from './support';
+export * from './cms';
+export * from './operations';
+
 export interface Product {
   id: string;
   name: string;

@@ -1,25 +1,15 @@
 'use client';
 
-import { useState, useEffect } from 'react';
 import { useParams } from 'next/navigation';
-import { getProducts } from '@/services/products';
+import { useGetProducts } from '@/services/products';
 import { ProductCard } from '@/components/commerce/product-card';
 import Link from 'next/link';
-import type { Product } from '@/types';
 
 export default function CategoryPage() {
   const params = useParams();
   const slug = params.slug as string;
 
-  const [categoryProducts, setCategoryProducts] = useState<Product[]>([]);
-  const [loading, setLoading] = useState(true);
-
-  useEffect(() => {
-    setLoading(true);
-    getProducts(0, 50, slug)
-      .then(setCategoryProducts)
-      .finally(() => setLoading(false));
-  }, [slug]);
+  const { data: categoryProducts = [], isLoading: loading } = useGetProducts(0, 50, slug);
 
   return (
     <div className="px-container-margin pt-md space-y-md pb-24">

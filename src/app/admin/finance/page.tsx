@@ -3,6 +3,8 @@
 import Link from 'next/link';
 import { useAdminData } from '@/lib/api/hooks';
 import { fetchFinanceDashboard } from '@/lib/api/admin';
+import type { PendingSettlement } from '@/types';
+import { getErrorMessage } from '@/lib/error-helper';
 
 function formatBDT(v: number): string {
   return `৳${Math.round(v).toLocaleString('en-IN')}`;
@@ -103,7 +105,7 @@ export default function FinancePage() {
           ) : !data?.pendingSettlements || data.pendingSettlements.length === 0 ? (
             <p className="text-sm text-[#888] text-center py-8">No pending settlements</p>
           ) : (
-            data.pendingSettlements.map((s: any) => (
+            data.pendingSettlements.map((s: PendingSettlement) => (
               <div key={s.id} className="flex items-center justify-between py-2.5 border-b border-[#eee]/50 last:border-0">
                 <div>
                   <p className="text-sm font-medium text-[#333]">{s.seller?.name || 'Seller'}</p>

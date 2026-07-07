@@ -1,7 +1,9 @@
 'use client';
 
 import { useState, useCallback } from 'react';
-import { useAdminData } from '@/lib/api/hooks';
+import { useAdminData, useAdminPage } from '@/lib/api/hooks';
+import { AdminLoading, AdminError, AdminEmpty } from '@/components/ui/admin-states';
+import { Pagination } from '@/components/ui/pagination';
 import {
   fetchSupportTickets,
   fetchSupportTicket,
@@ -9,6 +11,7 @@ import {
   updateSupportTicket,
   type SupportTicket,
 } from '@/lib/api/admin';
+import { getErrorMessage } from '@/lib/error-helper';
 
 function formatDate(d: string): string {
   return new Date(d).toLocaleDateString('en-GB', { day: '2-digit', month: 'short', year: 'numeric' });
@@ -33,18 +36,17 @@ const statusStyles: Record<string, string> = {
 };
 
 export default function SupportPage() {
-  const [page, setPage] = useState(1);
   const [statusFilter, setStatusFilter] = useState('ALL');
   const [selectedId, setSelectedId] = useState<string | null>(null);
   const [replyText, setReplyText] = useState('');
 
-  const { data: listData, loading, error, refetch } = useAdminData(
-    () => fetchSupportTickets({
+  const { data: listData, loading, error, refetch, page, setPage } = useAdminPage(
+    ({ page, limit }) => fetchSupportTickets({
       page,
-      limit: 20,
+      limit,
       status: statusFilter === 'ALL' ? undefined : statusFilter,
     }),
-    [page, statusFilter],
+    [statusFilter],
   );
 
   const { data: ticket, loading: loadingTicket, refetch: refetchTicket } = useAdminData(
@@ -65,8 +67,8 @@ export default function SupportPage() {
       setReplyText('');
       refetchTicket();
       refetch();
-    } catch (err: any) {
-      alert(err.message || 'Failed to send reply');
+    } catch (err) {
+      alert(getErrorMessage(err, 'Failed to send reply'));
     }
   }, [selectedId, replyText, refetchTicket, refetch]);
 
@@ -76,8 +78,8 @@ export default function SupportPage() {
       await updateSupportTicket(selectedId, { status });
       refetchTicket();
       refetch();
-    } catch (err: any) {
-      alert(err.message || 'Failed to update ticket');
+    } catch (err) {
+      alert(getErrorMessage(err, 'Failed to update ticket'));
     }
   }, [selectedId, refetchTicket, refetch]);
 
@@ -100,9 +102,7 @@ export default function SupportPage() {
         </div>
       </div>
 
-      {error && (
-        <div className="bg-red-50 text-red-600 rounded-lg p-3 text-sm border border-red-200">{error}</div>
-      )}
+      {error && <AdminError message={error} onRetry={refetch} />}
 
       <div className="flex gap-2 flex-wrap">
         {['ALL', 'OPEN', 'IN_PROGRESS', 'RESOLVED', 'CLOSED'].map((t) => (
@@ -182,11 +182,9 @@ export default function SupportPage() {
       ) : (
         <>
           {loading ? (
-            <div className="bg-white rounded-xl border border-[#eee] p-8 text-center text-[#888]">
-              <span className="material-symbols-outlined animate-spin align-middle mr-2">progress_activity</span>Loading...
-            </div>
+            <AdminLoading />
           ) : !listData?.tickets || listData.tickets.length === 0 ? (
-            <div className="bg-white rounded-xl border border-[#eee] p-8 text-center text-[#888]">No tickets found</div>
+            <AdminEmpty message="No tickets found" />
           ) : (
             <>
               {/* Desktop Table */}
@@ -244,15 +242,7 @@ export default function SupportPage() {
           )}
 
           {listData && listData.totalPages > 1 && (
-            <div className="flex items-center justify-between text-sm">
-              <span className="text-[#888]">Page {listData.page} of {listData.totalPages}</span>
-              <div className="flex gap-2">
-                <button disabled={page <= 1} onClick={() => setPage((p) => p - 1)}
-                  className="px-3 py-1.5 bg-white border border-[#ddd] rounded-lg disabled:opacity-50 hover:bg-[#f5f5f5]">Previous</button>
-                <button disabled={page >= listData.totalPages} onClick={() => setPage((p) => p + 1)}
-                  className="px-3 py-1.5 bg-white border border-[#ddd] rounded-lg disabled:opacity-50 hover:bg-[#f5f5f5]">Next</button>
-              </div>
-            </div>
+            <Pagination page={page} totalPages={listData.totalPages} total={listData.total} onPageChange={setPage} />
           )}
         </>
       )}

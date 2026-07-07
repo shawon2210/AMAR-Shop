@@ -3,7 +3,9 @@
 import { useState } from 'react';
 import { useAdminData } from '@/lib/api/hooks';
 import { fetchFlashSales, createFlashSale, updateFlashSale, deleteFlashSale } from '@/lib/api/admin';
-import type { FlashSaleCampaign } from '@/lib/api/admin';
+import { AdminLoading, AdminError, AdminEmpty } from '@/components/ui/admin-states';
+import type { FlashSaleCampaign } from '@/types';
+import { getErrorMessage } from '@/lib/error-helper';
 
 const statusStyles: Record<string, string> = {
   ACTIVE: 'bg-green-100 text-green-700',
@@ -60,8 +62,8 @@ export default function FlashSalesPage() {
       }
       resetForm();
       refetch();
-    } catch (err: any) {
-      alert(err.message || 'Failed to save flash sale');
+    } catch (err) {
+      alert(getErrorMessage(err, 'Failed to save flash sale'));
     } finally {
       setSubmitting(false);
     }
@@ -72,9 +74,9 @@ export default function FlashSalesPage() {
     setForm({
       title: c.title,
       banner: c.banner || '',
-      description: (c as any).description || '',
+      description: c.description || '',
       discount: c.discount?.toString() || '',
-      maxProducts: (c as any).maxProducts?.toString() || '',
+      maxProducts: c.maxProducts?.toString() || '',
       startsAt: c.startsAt ? new Date(c.startsAt).toISOString().slice(0, 16) : '',
       endsAt: c.endsAt ? new Date(c.endsAt).toISOString().slice(0, 16) : '',
     });
@@ -86,8 +88,8 @@ export default function FlashSalesPage() {
     try {
       await deleteFlashSale(id);
       refetch();
-    } catch (err: any) {
-      alert(err.message || 'Failed to delete campaign');
+    } catch (err) {
+      alert(getErrorMessage(err, 'Failed to delete campaign'));
     }
   };
 
@@ -115,9 +117,7 @@ export default function FlashSalesPage() {
         ))}
       </div>
 
-      {error && (
-        <div className="bg-red-50 text-red-600 rounded-lg p-3 text-sm border border-red-200">{error}</div>
-      )}
+      {error && <AdminError message={error} onRetry={refetch} />}
 
       {showCreate && (
         <form onSubmit={handleSubmit} className="bg-white rounded-xl border border-[#eee] p-5">
@@ -164,11 +164,9 @@ export default function FlashSalesPage() {
       )}
 
       {loading ? (
-        <div className="bg-white rounded-xl border border-[#eee] p-8 text-center text-[#888]">
-          <span className="material-symbols-outlined animate-spin align-middle mr-2">progress_activity</span>Loading...
-        </div>
+        <AdminLoading />
       ) : filtered.length === 0 ? (
-        <div className="bg-white rounded-xl border border-[#eee] p-8 text-center text-[#888]">No flash sales found</div>
+        <AdminEmpty message="No flash sales found" />
       ) : (
         <div className="grid grid-cols-1 gap-4">
           {filtered.map((c) => (

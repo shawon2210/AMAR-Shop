@@ -1,8 +1,11 @@
 'use client';
 
 import React, { useState } from 'react';
-import { useAdminData } from '@/lib/api/hooks';
+import { useAdminPage } from '@/lib/api/hooks';
 import { fetchUsers, updateUser } from '@/lib/api/admin';
+import { AdminLoading, AdminError, AdminEmpty } from '@/components/ui/admin-states';
+import { Pagination } from '@/components/ui/pagination';
+import { getErrorMessage } from '@/lib/error-helper';
 
 const roleBadge: Record<string, string> = {
   ADMIN: 'bg-purple-100 text-purple-700',
@@ -19,27 +22,25 @@ function formatDate(d: string): string {
 export default function UsersPage() {
   const [search, setSearch] = useState('');
   const [roleFilter, setRoleFilter] = useState('All');
-  const [page, setPage] = useState(1);
   const [expandedRow, setExpandedRow] = useState<string | null>(null);
-  const limit = 15;
 
-  const { data, loading, error, refetch } = useAdminData(
-    () =>
+  const { data, loading, error, refetch, page, setPage } = useAdminPage(
+    ({ page, limit }) =>
       fetchUsers({
         page,
         limit,
         search: search || undefined,
         role: roleFilter !== 'All' ? roleFilter : undefined,
       }),
-    [page, search, roleFilter],
+    [search, roleFilter],
   );
 
   const handleToggleBan = async (userId: string, currentlyActive: boolean) => {
     try {
       await updateUser(userId, { isActive: !currentlyActive });
       refetch();
-    } catch (err: any) {
-      alert(err.message || 'Failed to update user');
+    } catch (err) {
+      alert(getErrorMessage(err, 'Failed to update user'));
     }
   };
 
@@ -77,9 +78,7 @@ export default function UsersPage() {
         )}
       </div>
 
-      {error && (
-        <div className="bg-red-50 text-red-600 rounded-lg p-3 text-sm border border-red-200">{error}</div>
-      )}
+      {error && <AdminError message={error} onRetry={refetch} />}
 
       <div className="bg-white rounded-xl border border-[#eee] overflow-x-auto">
         <table className="w-full text-sm">
@@ -96,16 +95,9 @@ export default function UsersPage() {
           </thead>
           <tbody>
             {loading ? (
-              <tr>
-                <td colSpan={7} className="p-8 text-center text-[#888]">
-                  <span className="material-symbols-outlined animate-spin align-middle mr-2">progress_activity</span>
-                  Loading...
-                </td>
-              </tr>
+              <AdminLoading />
             ) : !data || data.users.length === 0 ? (
-              <tr>
-                <td colSpan={7} className="p-8 text-center text-[#888]">No users found</td>
-              </tr>
+              <AdminEmpty message="No users found" />
             ) : (
               data.users.map((u) => (
                 <React.Fragment key={u.id}>
@@ -178,27 +170,7 @@ export default function UsersPage() {
       </div>
 
       {data && data.totalPages > 1 && (
-        <div className="flex items-center justify-between text-sm">
-          <span className="text-[#888]">
-            Page {data.page} of {data.totalPages} ({data.total} total)
-          </span>
-          <div className="flex gap-2">
-            <button
-              disabled={page <= 1}
-              onClick={() => setPage((p) => Math.max(1, p - 1))}
-              className="px-3 py-1.5 bg-white border border-[#ddd] rounded-lg disabled:opacity-50 hover:bg-[#f5f5f5]"
-            >
-              Previous
-            </button>
-            <button
-              disabled={page >= data.totalPages}
-              onClick={() => setPage((p) => p + 1)}
-              className="px-3 py-1.5 bg-white border border-[#ddd] rounded-lg disabled:opacity-50 hover:bg-[#f5f5f5]"
-            >
-              Next
-            </button>
-          </div>
-        </div>
+        <Pagination page={page} totalPages={data.totalPages} total={data.total} onPageChange={setPage} />
       )}
     </div>
   );

@@ -1,7 +1,10 @@
 'use client';
 
-import { useAdminData } from '@/lib/api/hooks';
+import { useAdminData, useAdminPage } from '@/lib/api/hooks';
 import { fetchPayments, fetchFinanceDashboard } from '@/lib/api/admin';
+import { AdminLoading, AdminError, AdminEmpty } from '@/components/ui/admin-states';
+import type { AdminPayment, FinanceDashboard, PendingSettlement } from '@/types';
+import { getErrorMessage } from '@/lib/error-helper';
 
 const statusStyles: Record<string, string> = {
   COMPLETED: 'bg-green-100 text-green-700',
@@ -19,8 +22,9 @@ function formatDate(d: string): string {
 }
 
 export default function PaymentsPage() {
-  const { data: payments, loading, error } = useAdminData(() =>
-    fetchPayments({ page: 1, limit: 50 }),
+  const { data: payments, loading, error, refetch, page, setPage } = useAdminPage(
+    ({ page, limit }) => fetchPayments({ page, limit }),
+    [],
   );
   const { data: finance } = useAdminData(fetchFinanceDashboard);
 
@@ -40,7 +44,7 @@ export default function PaymentsPage() {
             ].map((s) => (
               <div key={s.label} className="flex justify-between">
                 <span className="text-[#888]">{s.label}</span>
-                <span className={`font-medium ${(s as any).bold ? 'text-lg text-[#222]' : 'text-[#444]'}`}>{s.value}</span>
+                <span className={`font-medium ${(s as { bold?: boolean }).bold ? 'text-lg text-[#222]' : 'text-[#444]'}`}>{s.value}</span>
               </div>
             ))}
           </div>
@@ -55,7 +59,7 @@ export default function PaymentsPage() {
               { label: 'COD', count: 0, color: 'bg-[#007f9f]' },
               { label: 'SSLCommerz', count: 0, color: 'bg-[#5f5e5e]' },
             ].map((d) => {
-              const methodCount = payments?.payments?.filter((p: any) => p.method === d.label.toUpperCase()).length || 0;
+              const methodCount = payments?.payments?.filter((p: AdminPayment) => p.method === d.label.toUpperCase()).length || 0;
               const total = payments?.payments?.length || 1;
               const pct = Math.round((methodCount / total) * 100);
               return (
@@ -76,7 +80,7 @@ export default function PaymentsPage() {
           <h2 className="text-lg font-semibold text-[#222] mb-4">Pending Settlements</h2>
           <div className="space-y-3">
             {finance?.pendingSettlements && finance.pendingSettlements.length > 0 ? (
-              finance.pendingSettlements.slice(0, 3).map((s: any) => (
+              finance.pendingSettlements.slice(0, 3).map((s: PendingSettlement) => (
                 <div key={s.id} className="flex items-center justify-between p-3 bg-[#fafafa] rounded-lg text-sm">
                   <div>
                     <p className="font-medium text-[#333]">{s.seller?.name || 'Seller'}</p>
@@ -97,16 +101,12 @@ export default function PaymentsPage() {
         </div>
       </div>
 
-      {error && (
-        <div className="bg-red-50 text-red-600 rounded-lg p-3 text-sm border border-red-200">{error}</div>
-      )}
+      {error && <AdminError message={error} onRetry={refetch} />}
 
       {loading ? (
-        <div className="bg-white rounded-xl border border-[#eee] p-8 text-center text-[#888]">
-          <span className="material-symbols-outlined animate-spin align-middle mr-2">progress_activity</span>Loading...
-        </div>
+        <AdminLoading />
       ) : !payments?.payments || payments.payments.length === 0 ? (
-        <div className="bg-white rounded-xl border border-[#eee] p-8 text-center text-[#888]">No transactions found</div>
+        <AdminEmpty message="No transactions found" />
       ) : (
         <>
           {/* Desktop Table */}
@@ -123,7 +123,7 @@ export default function PaymentsPage() {
                 </tr>
               </thead>
               <tbody>
-                {payments.payments.map((t: any) => (
+                {payments.payments.map((t: AdminPayment) => (
                   <tr key={t.id} className="border-b border-[#f5f5f5] hover:bg-[#fafafa]">
                     <td className="p-3 font-mono text-xs font-medium text-[#333]">{t.id.slice(0, 8)}...</td>
                     <td className="p-3 text-[#555]">#{t.order?.orderNumber || t.orderId?.slice(-6) || 'N/A'}</td>
@@ -141,7 +141,7 @@ export default function PaymentsPage() {
 
           {/* Mobile Cards */}
           <div className="sm:hidden space-y-3">
-            {payments.payments.map((t: any) => (
+            {payments.payments.map((t: AdminPayment) => (
               <div key={t.id} className="bg-white rounded-xl border border-[#eee] p-3 space-y-2">
                 <div className="flex items-center justify-between">
                   <span className="font-mono text-xs font-medium text-[#333]">{t.id.slice(0, 8)}...</span>

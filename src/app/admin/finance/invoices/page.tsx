@@ -1,8 +1,11 @@
 'use client';
 
 import { useState } from 'react';
-import { useAdminData } from '@/lib/api/hooks';
+import { useAdminPage } from '@/lib/api/hooks';
 import { fetchInvoices, updateInvoice } from '@/lib/api/admin';
+import { AdminLoading, AdminError, AdminEmpty } from '@/components/ui/admin-states';
+import { Pagination } from '@/components/ui/pagination';
+import { getErrorMessage } from '@/lib/error-helper';
 
 function formatBDT(v: number): string {
   return `৳${Math.round(v).toLocaleString('en-IN')}`;
@@ -20,18 +23,17 @@ const statusStyles: Record<string, string> = {
 };
 
 export default function InvoicesPage() {
-  const [page, setPage] = useState(1);
-  const { data, loading, error, refetch } = useAdminData(
-    () => fetchInvoices({ page, limit: 20 }),
-    [page],
+  const { data, loading, error, refetch, page, setPage } = useAdminPage(
+    ({ page, limit }) => fetchInvoices({ page, limit }),
+    [],
   );
 
   const handleStatusChange = async (id: string, status: string) => {
     try {
       await updateInvoice(id, { status });
       refetch();
-    } catch (err: any) {
-      alert(err.message || 'Failed to update invoice');
+    } catch (err) {
+      alert(getErrorMessage(err, 'Failed to update invoice'));
     }
   };
 
@@ -45,9 +47,7 @@ export default function InvoicesPage() {
         </a>
       </div>
 
-      {error && (
-        <div className="bg-red-50 text-red-600 rounded-lg p-3 text-sm border border-red-200">{error}</div>
-      )}
+      {error && <AdminError message={error} onRetry={refetch} />}
 
       <div className="bg-white rounded-xl border border-[#eee] overflow-hidden">
         <table className="w-full text-sm">
@@ -64,11 +64,9 @@ export default function InvoicesPage() {
           </thead>
           <tbody>
             {loading ? (
-              <tr><td colSpan={7} className="p-8 text-center text-[#888]">
-                <span className="material-symbols-outlined animate-spin align-middle mr-2">progress_activity</span>Loading...
-              </td></tr>
+              <AdminLoading />
             ) : !data || data.invoices.length === 0 ? (
-              <tr><td colSpan={7} className="p-8 text-center text-[#888]">No invoices found</td></tr>
+              <AdminEmpty message="No invoices found" />
             ) : (
               data.invoices.map((inv) => (
                 <tr key={inv.id} className="border-b border-[#eee]/50 hover:bg-[#fafafa]">
@@ -100,15 +98,7 @@ export default function InvoicesPage() {
       </div>
 
       {data && data.totalPages > 1 && (
-        <div className="flex items-center justify-between text-sm">
-          <span className="text-[#888]">Page {data.page} of {data.totalPages}</span>
-          <div className="flex gap-2">
-            <button disabled={page <= 1} onClick={() => setPage((p) => p - 1)}
-              className="px-3 py-1.5 bg-white border border-[#ddd] rounded-lg disabled:opacity-50 hover:bg-[#f5f5f5]">Previous</button>
-            <button disabled={page >= data.totalPages} onClick={() => setPage((p) => p + 1)}
-              className="px-3 py-1.5 bg-white border border-[#ddd] rounded-lg disabled:opacity-50 hover:bg-[#f5f5f5]">Next</button>
-          </div>
-        </div>
+        <Pagination page={page} totalPages={data.totalPages} total={data.total} onPageChange={setPage} />
       )}
     </div>
   );

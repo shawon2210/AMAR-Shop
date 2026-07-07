@@ -2,6 +2,7 @@
 
 import { useState } from 'react';
 import { updateSettings } from '@/lib/api/admin';
+import { getErrorMessage } from '@/lib/error-helper';
 
 type SettingsTab = 'general' | 'commission' | 'shipping' | 'payment' | 'email' | 'seo' | 'security';
 
@@ -17,8 +18,8 @@ export default function SettingsPage() {
     try {
       await updateSettings({ commissionRate: parseFloat(commissionRate) });
       setMessage({ type: 'success', text: 'Commission rate updated successfully.' });
-    } catch (err: any) {
-      setMessage({ type: 'error', text: err.message || 'Failed to update settings' });
+    } catch (err) {
+      setMessage({ type: 'error', text: getErrorMessage(err, 'Failed to update settings') });
     } finally {
       setSaving(false);
     }
