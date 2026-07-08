@@ -11,8 +11,8 @@ export class PrismaService
 {
   constructor(private configService: ConfigService) {
     const databaseUrl =
-      configService.get<string>('DATABASE_URL') ||
-      'postgresql://postgres:shawon12@localhost:5433/amarshop?schema=public';
+      configService.get<string>('DATABASE_URL')?.replace(/^["']|["']$/g, '') ||
+      'postgresql://postgres:***@localhost:5433/amarshop?schema=public';
 
     const url = new URL(databaseUrl);
     const pool = new Pool({

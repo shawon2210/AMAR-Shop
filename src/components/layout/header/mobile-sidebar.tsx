@@ -66,7 +66,7 @@ export function MobileSidebar({ open, onClose }: { open: boolean; onClose: () =>
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
             transition={{ duration: 0.2 }}
-            className="fixed inset-0 bg-black/50 backdrop-blur-sm z-[999]"
+            className="fixed inset-0 bg-black/50 backdrop-blur-sm z-999"
             onClick={onClose}
             aria-hidden="true"
           />
@@ -79,7 +79,7 @@ export function MobileSidebar({ open, onClose }: { open: boolean; onClose: () =>
             animate={{ x: 0 }}
             exit={{ x: '-100%' }}
             transition={{ type: 'spring', damping: 25, stiffness: 200 }}
-            className="fixed left-0 top-0 bottom-0 h-full w-[85vw] max-w-[320px] bg-white shadow-2xl z-[1000] outline-none overflow-hidden flex flex-col"
+             className="fixed left-0 top-0 bottom-0 h-full w-[85vw] max-w-80 bg-white shadow-2xl z-1000 outline-none overflow-hidden flex flex-col"
             role="dialog"
             aria-modal="true"
             aria-label="Navigation menu"

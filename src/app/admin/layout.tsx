@@ -647,7 +647,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
           </div>
         </header>
 
-        <main className="flex-1 p-4 lg:p-6 app-container">
+        <main className="flex-1 p-4 lg:p-6 min-w-0">
           <ErrorBoundary>{children}</ErrorBoundary>
         </main>
       </div>

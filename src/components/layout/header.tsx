@@ -7,8 +7,6 @@ import { useAuthStore, useAuthHydrated } from '@/stores/auth-store';
 import { useCartStore } from '@/stores/cart-store';
 import { MobileSidebar } from '@/components/layout/header/mobile-sidebar';
 
-const iconBtnClasses = 'flex items-center justify-center w-11 h-11 min-w-[44px] min-h-[44px] rounded-lg text-gray-600 hover:bg-gray-100 hover:text-primary transition-colors';
-
 export function Header() {
   const pathname = usePathname();
   const [mobileSearchOpen, setMobileSearchOpen] = useState(false);
@@ -49,22 +47,21 @@ export function Header() {
       {/* Main header - Three column layout for desktop, flexible for mobile */}
       <div className="app-container h-16 md:h-[72px] lg:h-20">
         <div className="grid grid-cols-[auto_1fr_auto] items-center gap-3 lg:gap-6 h-full">
-          {/* Logo - Fixed width that scales within limits */}
-          <div className="flex items-center gap-2 min-w-0">
+          {/* Logo col: menu button (mobile) + logo */}
+          <div className="flex items-center gap-1 min-w-0">
             <button
               onClick={() => setSidebarOpen(true)}
-              className="lg:hidden flex items-center justify-center w-11 h-11 min-w-[44px] min-h-[44px] -ml-1 rounded-lg text-gray-600 hover:bg-gray-100 transition-colors touch-target"
+              className="lg:hidden flex items-center justify-center w-12 h-12 min-w-[48px] min-h-[48px] rounded-lg text-gray-600 hover:bg-gray-100 transition-colors"
               aria-label="Open menu"
             >
               <span className="material-symbols-outlined text-xl">menu</span>
             </button>
-            <Link href="/" className="flex items-center group">
+            <Link href="/" className="flex items-center group shrink-0">
               <img
                 src="/images/amarshop-logo.png"
                 alt="AmarShop"
-                className="h-8 md:h-10 lg:h-12 w-auto object-contain transition-all duration-300 group-hover:scale-105"
-                style={{ maxWidth: '200px', minWidth: '120px' }}
-                priority="true"
+                className="h-8 md:h-10 lg:h-12 w-auto object-contain transition-transform duration-300 group-hover:scale-105"
+                style={{ maxWidth: '180px', minWidth: '100px' }}
               />
             </Link>
           </div>
@@ -89,18 +86,18 @@ export function Header() {
           {/* Actions - Fixed width container */}
           <div className="flex items-center justify-end gap-2 lg:gap-3 min-w-0">
             {/* Mobile search toggle - Only visible on mobile */}
-            <button
-              onClick={() => setMobileSearchOpen(!mobileSearchOpen)}
-              className="md:hidden flex items-center justify-center w-11 h-11 min-w-[44px] min-h-[44px] rounded-lg text-gray-600 hover:bg-gray-100 transition-all touch-target"
-              aria-label="Toggle search"
-            >
+<button
+                onClick={() => setMobileSearchOpen(!mobileSearchOpen)}
+                className="md:hidden flex items-center justify-center w-12 h-12 min-w-[48px] min-h-[48px] rounded-lg text-gray-600 hover:bg-gray-100 transition-all touch-target"
+                aria-label="Toggle search"
+              >
               <span className="material-symbols-outlined text-xl">search</span>
             </button>
 
             {/* Desktop notification - Hidden on mobile, visible on sm+ */}
             <Link
               href="/notifications"
-              className="hidden sm:flex relative items-center justify-center w-11 h-11 min-w-[44px] min-h-[44px] rounded-lg transition-all hover:bg-gray-100 text-gray-600 hover:text-primary touch-target"
+              className="hidden sm:flex relative items-center justify-center w-12 h-12 min-w-[48px] min-h-[48px] rounded-lg transition-all hover:bg-gray-100 text-gray-600 hover:text-primary touch-target"
               aria-label="Notifications"
             >
               <span className="material-symbols-outlined text-xl">notifications</span>
@@ -110,7 +107,7 @@ export function Header() {
             {/* Cart */}
             <Link
               href="/cart"
-              className="relative flex items-center justify-center w-11 h-11 min-w-[44px] min-h-[44px] rounded-lg transition-all hover:bg-gray-100 text-gray-600 hover:text-primary touch-target"
+              className="relative flex items-center justify-center w-12 h-12 min-w-[48px] min-h-[48px] rounded-lg transition-all hover:bg-gray-100 text-gray-600 hover:text-primary touch-target"
               aria-label="Shopping cart"
             >
               <span className="material-symbols-outlined text-xl">shopping_cart</span>
@@ -132,7 +129,7 @@ export function Header() {
             ) : (
               <Link
                 href={user?.role === 'ADMIN' || user?.role === 'SUPER_ADMIN' ? '/admin' : user?.isSeller ? '/seller/dashboard' : '/account'}
-                className="hidden md:flex items-center justify-center w-11 h-11 min-w-[44px] min-h-[44px] rounded-lg transition-all hover:bg-gray-100 text-gray-600 hover:text-primary touch-target"
+                className="hidden md:flex items-center justify-center w-12 h-12 min-w-[48px] min-h-[48px] rounded-lg transition-all hover:bg-gray-100 text-gray-600 hover:text-primary touch-target"
                 aria-label="My account"
               >
                 <span className="material-symbols-outlined text-xl">person</span>

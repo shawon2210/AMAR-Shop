@@ -64,7 +64,7 @@ function Footer() {
 
       {/* ───── Main Grid + Bottom ───── */}
       <div className="border-b border-gray-100">
-        <div className="app-container py-6 md:py-8 lg:py-10">
+        <div className="app-container py-5 md:py-6 lg:py-8">
           <NewFooter />
         </div>
       </div>

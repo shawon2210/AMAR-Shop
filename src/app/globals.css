@@ -444,12 +444,16 @@
 
 /* Clamp-based hero height */
 .h-hero {
-  height: clamp(340px, 36vw, 480px);
+  height: clamp(280px, 36vw, 480px);
+  aspect-ratio: auto;
 }
 
-@media (max-width: 768px) {
+@media (max-width: 640px) {
   .h-hero {
-    height: 300px;
+    height: auto;
+    aspect-ratio: 16 / 9;
+    min-height: 200px;
+    max-height: 320px;
   }
 }
 
@@ -512,6 +516,12 @@
 .text-responsive-small {
   font-size: clamp(11px, 0.8vw, 14px);
   line-height: 1.4;
+}
+
+.text-section-title {
+  font-size: clamp(16px, 2vw, 22px);
+  line-height: 1.25;
+  font-weight: 700;
 }
 
 /* ───── Focus Ring ───── */

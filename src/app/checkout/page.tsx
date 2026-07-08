@@ -94,7 +94,7 @@ export default function CheckoutPage() {
       {items.length === 0 ? (
         <EmptyCart />
       ) : (
-    <div className="px-container-margin pt-md space-y-md pb-32">
+    <div className="app-container pt-4 md:pt-6 space-y-4 md:space-y-6 pb-32">
       <h1 className="font-headline-md text-headline-md text-slate-900 dark:text-white">
         Checkout
       </h1>

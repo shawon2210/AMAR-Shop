@@ -108,7 +108,7 @@ export default function AdminDashboard() {
         }
       />
 
-      <div className="grid grid-cols-2 xl:grid-cols-5 gap-3 sm:gap-4">
+      <div className="grid grid-cols-2 sm:grid-cols-3 xl:grid-cols-5 gap-3 sm:gap-4">
         {stats.map(s => (
           <StatCard key={s.label} variant="gradient" label={s.label} value={s.value} trend={s.change} color={s.color} />
         ))}

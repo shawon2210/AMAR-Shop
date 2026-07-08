@@ -1,10 +1,8 @@
 'use client';
 
 import Link from 'next/link';
-import { useState } from 'react';
-import { ShoppingBag } from 'lucide-react';
+import { useState, memo } from 'react';
 import { Product } from '@/types';
-import { PriceDisplay } from '@/components/ui/price-display';
 import { useCartStore } from '@/stores/cart-store';
 import { useUIStore } from '@/stores/ui-store';
 
@@ -13,117 +11,176 @@ interface ProductCardProps {
   variant?: 'default' | 'flash-sale' | 'compact';
 }
 
-export function ProductCard({ product, variant: _variant = 'default' }: ProductCardProps) {
+function StarRating({ rating, count }: { rating: number; count: number }) {
+  return (
+    <div className="flex items-center gap-1">
+      <div className="flex items-center gap-0.5">
+        {Array.from({ length: 5 }, (_, i) => (
+          <span
+            key={i}
+            className={'material-symbols-outlined leading-none ' + (i < Math.floor(rating) ? 'text-amber-400 text-[13px]' : 'text-gray-200 text-[13px]')}
+            style={i < Math.floor(rating) ? { fontVariationSettings: "'FILL' 1" } : undefined}
+          >
+            star
+          </span>
+        ))}
+      </div>
+      <span className="text-[11px] text-gray-400 leading-none">
+        ({count > 999 ? (count / 1000).toFixed(1) + 'k' : count})
+      </span>
+    </div>
+  );
+}
+
+export const ProductCard = memo(function ProductCard({ product, variant = 'default' }: ProductCardProps) {
   const [imgError, setImgError] = useState(false);
   const [wishlisted, setWishlisted] = useState(false);
+  const [addedToCart, setAddedToCart] = useState(false);
   const addItem = useCartStore(s => s.addItem);
   const addToast = useUIStore(s => s.addToast);
+
+  const discount = product.originalPrice
+    ? Math.round(((product.originalPrice - product.price) / product.originalPrice) * 100)
+    : (product.discount ?? 0);
 
   const handleAddToCart = (e: React.MouseEvent) => {
     e.preventDefault();
     e.stopPropagation();
     addItem(product);
+    setAddedToCart(true);
     addToast(product.name + ' added to cart!');
+    setTimeout(() => setAddedToCart(false), 1500);
   };
 
   const handleWishlist = (e: React.MouseEvent) => {
     e.preventDefault();
     e.stopPropagation();
-    setWishlisted(!wishlisted);
+    setWishlisted(w => !w);
     addToast(wishlisted ? 'Removed from wishlist' : 'Added to wishlist!');
-  };
-
-  const discount = product.originalPrice
-    ? Math.round(((product.originalPrice - product.price) / product.originalPrice) * 100)
-    : 0;
-
-  const renderStars = (rating: number) => {
-    const full = Math.floor(rating);
-    return (
-      <div className="flex items-center gap-0.5">
-        {Array.from({ length: 5 }, (_, i) => (
-          <span
-            key={i}
-            className={'material-symbols-outlined text-xs ' + (i < full ? 'text-amber-400' : 'text-gray-300')}
-            style={i < full ? { fontVariationSettings: "'FILL' 1" } : undefined}
-          >
-            star
-          </span>
-        ))}
-        <span className="text-xs text-gray-500 ml-1">
-          {product.reviewCount > 999 ? (product.reviewCount / 1000).toFixed(1) + 'k' : product.reviewCount}
-        </span>
-      </div>
-    );
   };
 
   return (
     <Link
       href={'/product/' + product.id}
-      className="flex flex-col h-full w-full overflow-hidden rounded-2xl border border-gray-100 bg-white transition-all duration-300 hover:shadow-xl hover:-translate-y-1 group"
+      className="group relative flex flex-col h-full w-full overflow-hidden rounded-xl bg-white border border-gray-100 transition-all duration-200 hover:shadow-lg hover:-translate-y-0.5"
     >
-      {/* Image container */}
-      <div className="relative w-full aspect-square overflow-hidden bg-gray-50">
+      {/* Image */}
+      <div className="relative w-full aspect-square overflow-hidden bg-gray-50 shrink-0">
         {!imgError ? (
           <img
-            className="h-full w-full object-cover object-center transition-transform duration-500 group-hover:scale-105"
+            className="h-full w-full object-cover object-center transition-transform duration-300 group-hover:scale-105"
             src={product.images[0]}
             alt={product.name}
             loading="lazy"
             onError={() => setImgError(true)}
           />
         ) : (
-          <div className="w-full h-full flex items-center justify-center bg-gray-100 text-gray-400">
-            <span className="material-symbols-outlined text-4xl">image</span>
+          <div className="w-full h-full flex items-center justify-center bg-gray-100">
+            <span className="material-symbols-outlined text-3xl text-gray-300">image</span>
           </div>
         )}
 
+        {/* Badges — top left */}
+        <div className="absolute top-2 left-2 flex flex-col gap-1 z-10">
+          {discount > 0 && (
+            <span className="bg-red-500 text-white text-[10px] font-bold px-1.5 py-0.5 rounded-md leading-none">
+              -{discount}%
+            </span>
+          )}
+          {product.isNew && (
+            <span className="bg-blue-500 text-white text-[10px] font-bold px-1.5 py-0.5 rounded-md leading-none">
+              NEW
+            </span>
+          )}
+          {product.isMall && (
+            <span className="bg-primary text-white text-[10px] font-bold px-1.5 py-0.5 rounded-md leading-none">
+              MALL
+            </span>
+          )}
+        </div>
+
+        {/* Wishlist — top right, always visible */}
         <button
           onClick={handleWishlist}
-          className="absolute top-2 right-2 w-11 h-11 rounded-full bg-white/95 backdrop-blur-sm flex items-center justify-center shadow-sm hover:bg-white transition-all z-20 border border-gray-200/50"
-          aria-label="Add to wishlist"
+          className="absolute top-2 right-2 z-20 w-8 h-8 rounded-full bg-white/90 backdrop-blur-sm flex items-center justify-center shadow-sm border border-gray-100 transition-all duration-150 hover:scale-110 active:scale-95"
+          aria-label={wishlisted ? 'Remove from wishlist' : 'Add to wishlist'}
         >
           <span
-            className={'material-symbols-outlined text-base ' + (wishlisted ? 'text-red-500' : 'text-gray-600')}
+            className={'material-symbols-outlined text-[16px] ' + (wishlisted ? 'text-red-500' : 'text-gray-400')}
             style={wishlisted ? { fontVariationSettings: "'FILL' 1" } : undefined}
           >
             favorite
           </span>
         </button>
 
-        {discount > 0 && (
-          <div className="absolute top-3 left-3 bg-primary text-white text-[11px] font-bold px-2.5 py-1 rounded-lg shadow-sm z-10">
-            -{discount}%
-          </div>
-        )}
-      </div>
-
-      {/* Content */}
-      <div className="flex-1 flex flex-col p-3 md:p-4">
-        {product.brand && (
-          <p className="text-[10px] md:text-xs text-gray-500 font-medium uppercase tracking-wider">{product.brand}</p>
-        )}
-
-        <h3 className="text-sm font-medium text-gray-900 line-clamp-2 min-h-[2.5rem] mt-1">
-          {product.name}
-        </h3>
-
-        <div className="flex items-center gap-1 mt-1.5 mb-2">
-          {renderStars(product.rating)}
-        </div>
-
-        <div className="mt-auto pt-2">
-          <PriceDisplay price={product.price} originalPrice={product.originalPrice} size="sm" />
-
+        {/* Add to Cart overlay — desktop hover reveal, always visible on mobile */}
+        <div className="absolute bottom-0 left-0 right-0 translate-y-full group-hover:translate-y-0 transition-transform duration-200 md:block hidden">
           <button
             onClick={handleAddToCart}
-            className="w-full mt-2 h-11 min-h-[44px] font-semibold rounded-xl bg-gray-900 text-white hover:bg-gray-800 transition-colors text-sm flex items-center justify-center gap-2"
+            className={
+              'w-full h-10 font-semibold text-sm flex items-center justify-center gap-1.5 transition-colors duration-150 ' +
+              (addedToCart
+                ? 'bg-primary text-white'
+                : 'bg-gray-900/90 backdrop-blur-sm text-white hover:bg-gray-900')
+            }
           >
-            <ShoppingBag size={15} />
-            Add to Cart
+            <span className="material-symbols-outlined text-[16px]">
+              {addedToCart ? 'check' : 'shopping_bag'}
+            </span>
+            {addedToCart ? 'Added!' : 'Add to Cart'}
           </button>
         </div>
       </div>
+
+      {/* Content */}
+      <div className="flex flex-col flex-1 p-2.5 md:p-3 gap-1">
+        {product.brand && (
+          <p className="text-[10px] font-semibold text-gray-400 uppercase tracking-wide truncate leading-none">
+            {product.brand}
+          </p>
+        )}
+
+        <h3 className="text-[13px] md:text-sm font-medium text-gray-800 line-clamp-2 leading-snug min-h-[2.4em]">
+          {product.name}
+        </h3>
+
+        <StarRating rating={product.rating} count={product.reviewCount} />
+
+        {/* Price row */}
+        <div className="mt-auto pt-1">
+          <div className="flex items-baseline gap-1.5 flex-wrap">
+            <span className="text-[15px] md:text-base font-bold text-gray-900 leading-none">
+              ৳{product.price.toLocaleString('en-BD')}
+            </span>
+            {product.originalPrice && product.originalPrice > product.price && (
+              <span className="text-[11px] text-gray-400 line-through leading-none">
+                ৳{product.originalPrice.toLocaleString('en-BD')}
+              </span>
+            )}
+          </div>
+          {discount > 0 && (
+            <p className="text-[11px] text-red-500 font-medium mt-0.5 leading-none">
+              Save ৳{(( product.originalPrice ?? product.price) - product.price).toLocaleString('en-BD')}
+            </p>
+          )}
+        </div>
+
+        {/* Mobile add to cart — always visible */}
+        <button
+          onClick={handleAddToCart}
+          className={
+            'md:hidden mt-1.5 w-full h-9 rounded-lg font-semibold text-xs flex items-center justify-center gap-1 transition-colors duration-150 ' +
+            (addedToCart
+              ? 'bg-primary text-white'
+              : 'bg-gray-900 text-white hover:bg-gray-800 active:scale-95')
+          }
+        >
+          <span className="material-symbols-outlined text-[14px]">
+            {addedToCart ? 'check' : 'shopping_bag'}
+          </span>
+          {addedToCart ? 'Added!' : 'Add to Cart'}
+        </button>
+      </div>
     </Link>
   );
-}
+});

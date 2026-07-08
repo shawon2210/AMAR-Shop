@@ -126,7 +126,7 @@ export default function CartPage() {
         variants={fadeUp}
         initial="hidden"
         animate="visible"
-        className="fixed left-0 right-0 z-40 bg-white/95 backdrop-blur-md border-t border-gray-200 shadow-[0px_-4px_12px_rgba(0,0,0,0.08)] bottom-0 pb-[calc(0.375rem+env(safe-area-inset-bottom,0px))]"
+        className="fixed left-0 right-0 z-40 bg-white/95 backdrop-blur-md border-t border-gray-200 shadow-[0px_-4px_12px_rgba(0,0,0,0.08)] bottom-14 md:bottom-0 pb-[calc(0.375rem+env(safe-area-inset-bottom,0px))]"
       >
         <div className="app-container flex items-center justify-between py-3">
           <div className="flex items-center gap-3">

@@ -35,7 +35,7 @@ export function FlashSaleSection() {
                     <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-white opacity-60" />
                     <span className="relative inline-flex rounded-full h-3 w-3 bg-white" />
                   </span>
-                  <h3 className="text-white text-sm md:text-base font-bold">Flash Sale</h3>
+                  <h3 className="text-white text-[clamp(13px,1.5vw,16px)] font-bold">Flash Sale</h3>
                 </div>
                 <div className="bg-white/15 backdrop-blur-sm rounded-full px-4 py-0.5">
                   <CountdownTimer targetDate={FLASH_SALE_END} variant="flash-sale" />
