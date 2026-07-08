@@ -31,20 +31,20 @@ export function Footer() {
 
       {/* ───── Horizontal strip: Download App | Accepted Payments | Delivery Partners ───── */}
       <div className="mt-8 pt-8 border-t border-gray-100">
-        <div className="flex flex-row flex-wrap items-start gap-6 md:gap-8 lg:gap-12">
-          <div className="flex-1 min-w-[200px]">
+        <div className="flex flex-row items-start gap-3 sm:gap-6 md:gap-8 lg:gap-12">
+          <div className="flex-1 min-w-0">
             <h4 className="text-xs font-semibold uppercase tracking-wide text-gray-900 mb-3">
               Download App
             </h4>
             <AppDownload />
           </div>
-          <div className="flex-1 min-w-[200px]">
+          <div className="flex-1 min-w-0">
             <h4 className="text-xs font-semibold uppercase tracking-wide text-gray-900 mb-3">
               Accepted Payments
             </h4>
             <PaymentMethods />
           </div>
-          <div className="flex-1 min-w-[200px]">
+          <div className="flex-1 min-w-0">
             <DeliveryPartners />
           </div>
         </div>
