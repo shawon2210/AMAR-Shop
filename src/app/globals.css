@@ -342,6 +342,11 @@
   animation: fadeInUp 0.5s ease-out forwards;
 }
 
+@keyframes slideProgress {
+  from { transform: scaleX(0); }
+  to { transform: scaleX(1); }
+}
+
 @keyframes ping {
   75%, 100% { transform: scale(2); opacity: 0; }
 }
@@ -554,7 +559,23 @@
   transition: box-shadow 150ms ease, transform 150ms ease, border-color 150ms ease;
 }
 .card-hover:hover {
-  box-shadow: 0 4px 16px 0 rgb(0 0 0 / 0.08);
-  transform: translateY(-1px);
+  box-shadow: 0 8px 30px 0 rgb(0 0 0 / 0.10);
+  transform: translateY(-2px);
   border-color: #e5e7eb;
+}
+
+/* ───── Section header accent ───── */
+.section-accent {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+.section-accent::before {
+  content: '';
+  display: block;
+  width: 4px;
+  height: 22px;
+  background: var(--color-primary);
+  border-radius: 9999px;
+  flex-shrink: 0;
 }

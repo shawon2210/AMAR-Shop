@@ -14,14 +14,14 @@ export default async function HomePage() {
   const productsData = await getProducts(0, 16).catch(() => products.slice(0, 16));
 
   return (
-    <div className="flex flex-col gap-4 md:gap-5 lg:gap-6 pb-6">
+    <div className="flex flex-col gap-4 md:gap-5 lg:gap-6 pb-8">
       <HeroSection />
       <FlashSaleSection />
       <CategoryGrid />
       <ProductGrid products={productsData.slice(0, 7)} title="Trending Now" columns={7} />
+      <LocalBanners />
       <TopBrands />
       <SellerCta />
-      <LocalBanners />
       <ProductGrid products={productsData} title="Just For You" columns={7} />
     </div>
   );

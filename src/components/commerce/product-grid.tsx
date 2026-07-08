@@ -34,9 +34,12 @@ export function ProductGrid({ products, title, columns = 4, showLoadMore = true 
       <div className="app-container">
         {title && (
           <div className="flex items-center justify-between mb-4">
-            <h2 className="font-bold text-gray-900 tracking-tight" style={{ fontSize: 'clamp(16px, 1.8vw, 22px)' }}>
-              {title}
-            </h2>
+            <div className="flex items-center gap-3">
+              <div className="w-1 h-6 bg-primary rounded-full" />
+              <h2 className="font-bold text-gray-900 tracking-tight" style={{ fontSize: 'clamp(16px, 1.8vw, 22px)' }}>
+                {title}
+              </h2>
+            </div>
             <Link
               href="/categories"
               className="flex items-center gap-1 text-sm font-semibold text-primary hover:text-primary-dark transition-colors duration-150"
@@ -46,7 +49,7 @@ export function ProductGrid({ products, title, columns = 4, showLoadMore = true 
           </div>
         )}
 
-        <div className={`grid gap-2.5 md:gap-3 lg:gap-4 ${colClasses[columns] ?? colClasses[4]}`}>
+        <div className={`grid gap-3 md:gap-3.5 lg:gap-4 ${colClasses[columns] ?? colClasses[4]}`}>
           {visible.map(product => (
             <ProductCard key={product.id} product={product} />
           ))}
@@ -55,7 +58,7 @@ export function ProductGrid({ products, title, columns = 4, showLoadMore = true 
         {showLoadMore && hasMore && (
           <button
             onClick={() => setPage(p => p + 1)}
-            className="w-full mt-5 h-11 border-2 border-primary text-primary font-semibold rounded-xl hover:bg-primary/5 transition-colors duration-150 text-sm"
+            className="w-full mt-5 h-11 border-2 border-primary text-primary font-semibold rounded-xl hover:bg-primary hover:text-white transition-all duration-200 text-sm"
           >
             Load More Products
           </button>
