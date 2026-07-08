@@ -31,20 +31,24 @@ export function Footer() {
 
       {/* Strip: Download App | Accepted Payments | Delivery Partners */}
       <div className="mt-6 pt-6 border-t border-gray-100">
-        <div className="flex flex-col md:flex-row items-start gap-6 md:gap-6 lg:gap-10">
-          <div className="w-full md:flex-1 md:min-w-0">
-            <h4 className="text-xs font-semibold uppercase tracking-wide text-gray-900 mb-2.5 text-center md:text-left">
+        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
+          <div className="text-center md:text-left">
+            <h4 className="text-xs font-semibold uppercase tracking-wide text-gray-900 mb-2.5">
               Download App
             </h4>
-            <AppDownload />
+            <div className="flex justify-center md:justify-start">
+              <AppDownload />
+            </div>
           </div>
-          <div className="w-full md:flex-1 md:min-w-0">
-            <h4 className="text-xs font-semibold uppercase tracking-wide text-gray-900 mb-2.5 text-center md:text-left">
+          <div className="text-center md:text-left">
+            <h4 className="text-xs font-semibold uppercase tracking-wide text-gray-900 mb-2.5">
               Accepted Payments
             </h4>
-            <PaymentMethods />
+            <div className="flex justify-center md:justify-start">
+              <PaymentMethods />
+            </div>
           </div>
-          <div className="w-full md:flex-1 md:min-w-0">
+          <div className="sm:col-span-2 md:col-span-1 text-center md:text-left">
             <DeliveryPartners />
           </div>
         </div>

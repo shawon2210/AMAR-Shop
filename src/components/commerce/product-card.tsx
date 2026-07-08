@@ -13,7 +13,7 @@ interface ProductCardProps {
   variant?: 'default' | 'flash-sale' | 'compact';
 }
 
-export function ProductCard({ product, variant = 'default' }: ProductCardProps) {
+export function ProductCard({ product, variant: _variant = 'default' }: ProductCardProps) {
   const [imgError, setImgError] = useState(false);
   const [wishlisted, setWishlisted] = useState(false);
   const addItem = useCartStore(s => s.addItem);
@@ -80,11 +80,11 @@ export function ProductCard({ product, variant = 'default' }: ProductCardProps) 
 
         <button
           onClick={handleWishlist}
-          className="absolute top-3 right-3 w-8 h-8 rounded-full bg-white/90 backdrop-blur-sm flex items-center justify-center shadow-sm hover:bg-white transition-all z-10"
+          className="absolute top-2 right-2 w-11 h-11 rounded-full bg-white/95 backdrop-blur-sm flex items-center justify-center shadow-sm hover:bg-white transition-all z-20 border border-gray-200/50"
           aria-label="Add to wishlist"
         >
           <span
-            className={'material-symbols-outlined text-base ' + (wishlisted ? 'text-red-500' : 'text-gray-400')}
+            className={'material-symbols-outlined text-base ' + (wishlisted ? 'text-red-500' : 'text-gray-600')}
             style={wishlisted ? { fontVariationSettings: "'FILL' 1" } : undefined}
           >
             favorite
@@ -92,7 +92,7 @@ export function ProductCard({ product, variant = 'default' }: ProductCardProps) 
         </button>
 
         {discount > 0 && (
-          <div className="absolute top-3 left-3 bg-primary text-white text-[10px] font-bold px-2 py-1 rounded-lg">
+          <div className="absolute top-3 left-3 bg-primary text-white text-[11px] font-bold px-2.5 py-1 rounded-lg shadow-sm z-10">
             -{discount}%
           </div>
         )}
@@ -117,7 +117,7 @@ export function ProductCard({ product, variant = 'default' }: ProductCardProps) 
 
           <button
             onClick={handleAddToCart}
-            className="w-full mt-2 h-9 font-semibold rounded-xl bg-gray-900 text-white hover:bg-gray-800 transition-colors text-sm flex items-center justify-center gap-2"
+            className="w-full mt-2 h-11 min-h-[44px] font-semibold rounded-xl bg-gray-900 text-white hover:bg-gray-800 transition-colors text-sm flex items-center justify-center gap-2"
           >
             <ShoppingBag size={15} />
             Add to Cart

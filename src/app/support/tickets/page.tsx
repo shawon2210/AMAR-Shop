@@ -97,11 +97,11 @@ export default function TicketsPage() {
   };
 
   return (
-    <div className="px-container-margin pt-md space-y-md pb-24">
+    <div className="app-container py-6 space-y-6 pb-24">
       {/* Header */}
       <div className="flex items-center justify-between">
-        <h1 className="font-headline-md text-headline-md">My Tickets</h1>
-        <button className="flex items-center gap-1.5 bg-primary text-on-primary px-4 py-2 rounded-lg font-label-bold text-sm hover:brightness-110 transition-all active:scale-95">
+        <h1 className="text-xl font-bold">My Tickets</h1>
+        <button className="flex items-center gap-1.5 bg-primary text-on-primary px-4 py-2 rounded-lg font-semibold text-sm hover:brightness-110 transition-all active:scale-95">
           <span className="material-symbols-outlined text-lg">add</span>
           Create Ticket
         </button>
@@ -127,15 +127,15 @@ export default function TicketsPage() {
               >
                 <button
                   onClick={() => toggleExpand(ticket.id)}
-                  className="w-full p-md text-left"
+                  className="w-full p-4 text-left"
                 >
                   <div className="flex items-center justify-between mb-1.5">
                     <span className="text-xs text-secondary font-mono">{ticket.id}</span>
                     <div className="flex items-center gap-1.5">
-                      <span className={`text-[10px] font-label-bold px-2 py-0.5 rounded-full ${status.class}`}>
+                      <span className={`text-[10px] font-semibold px-2 py-0.5 rounded-full ${status.class}`}>
                         {status.label}
                       </span>
-                      <span className={`text-[10px] font-label-bold ${priority.class}`}>
+                      <span className={`text-[10px] font-semibold ${priority.class}`}>
                         {priority.label}
                       </span>
                     </div>
@@ -153,13 +153,13 @@ export default function TicketsPage() {
                 {isExpanded && (
                   <div className="border-t border-outline-variant">
                     {/* Description */}
-                    <div className="p-md bg-surface-container-low">
+                    <div className="p-4 bg-surface-container-low">
                       <p className="text-sm text-secondary">{ticket.description}</p>
                     </div>
 
                     {/* Messages */}
                     {ticket.messages.length > 0 && (
-                      <div className="p-md space-y-3">
+                      <div className="p-4 space-y-3">
                         {ticket.messages.map((msg, i) => (
                           <div
                             key={i}
@@ -181,7 +181,7 @@ export default function TicketsPage() {
                     )}
 
                     {/* Reply Form */}
-                    <div className="border-t border-outline-variant p-md">
+                    <div className="border-t border-outline-variant p-4">
                       <div className="flex items-end gap-2">
                         <textarea
                           value={replyText}

@@ -9,7 +9,7 @@ import { ProductCard } from '@/components/commerce/product-card';
 interface ProductGridProps {
   products: Product[];
   title?: string;
-  columns?: 2 | 3 | 4 | 5 | 6;
+  columns?: 2 | 3 | 4 | 5 | 6 | 7;
   showLoadMore?: boolean;
 }
 
@@ -19,6 +19,7 @@ const columnClasses: Record<number, string> = {
   4: 'grid-cols-2 sm:grid-cols-3 lg:grid-cols-4',
   5: 'grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5',
   6: 'grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6',
+  7: 'grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 2xl:grid-cols-7',
 };
 
 export function ProductGrid({
@@ -53,7 +54,7 @@ export function ProductGrid({
 
   return (
     <section>
-      <div className="max-w-[1600px] mx-auto px-4 sm:px-6 lg:px-8 xl:px-10">
+      <div className="app-container">
         {title && (
           <div className="flex items-center justify-between mb-4 md:mb-5">
             <h3 className="text-lg md:text-xl font-bold text-gray-900 tracking-tight">{title}</h3>

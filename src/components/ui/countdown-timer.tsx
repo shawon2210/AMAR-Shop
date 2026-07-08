@@ -44,20 +44,20 @@ export function CountdownTimer({ targetDate, variant = 'default', onEnd }: Count
 
   if (variant === 'flash-sale') {
     return (
-      <div className="flex gap-sm">
-        <div className="bg-white/20 backdrop-blur-md rounded-lg p-sm min-w-[60px] text-center">
+      <div className="flex gap-2">
+        <div className="bg-white/20 backdrop-blur-md rounded-lg p-3 min-w-[60px] text-center">
           <span className="block font-display-lg-mobile">{pad(timeLeft.hours)}</span>
-          <span className="text-[10px] font-label-bold uppercase">Hours</span>
+          <span className="text-[10px] font-semibold uppercase">Hours</span>
         </div>
         <span className="font-display-lg-mobile self-center">:</span>
-        <div className="bg-white/20 backdrop-blur-md rounded-lg p-sm min-w-[60px] text-center">
+        <div className="bg-white/20 backdrop-blur-md rounded-lg p-3 min-w-[60px] text-center">
           <span className="block font-display-lg-mobile">{pad(timeLeft.minutes)}</span>
-          <span className="text-[10px] font-label-bold uppercase">Mins</span>
+          <span className="text-[10px] font-semibold uppercase">Mins</span>
         </div>
         <span className="font-display-lg-mobile self-center">:</span>
-        <div className="bg-white/20 backdrop-blur-md rounded-lg p-sm min-w-[60px] text-center">
+        <div className="bg-white/20 backdrop-blur-md rounded-lg p-3 min-w-[60px] text-center">
           <span className="block font-display-lg-mobile">{pad(timeLeft.seconds)}</span>
-          <span className="text-[10px] font-label-bold uppercase">Secs</span>
+          <span className="text-[10px] font-semibold uppercase">Secs</span>
         </div>
       </div>
     );

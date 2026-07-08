@@ -42,7 +42,7 @@ export function SocialLinks() {
           href={s.href}
           target={s.href.startsWith('http') ? '_blank' : undefined}
           rel={s.href.startsWith('http') ? 'noopener noreferrer' : undefined}
-          className="flex items-center justify-center w-10 h-10 rounded-full bg-gray-50 border border-gray-200 text-gray-500 hover:bg-primary hover:text-white hover:border-primary transition-colors"
+          className="flex items-center justify-center w-[38px] h-[38px] md:w-10 md:h-10 lg:w-11 lg:h-11 rounded-full bg-gray-50 border border-gray-200 text-gray-500 hover:bg-primary hover:text-white hover:border-primary transition-colors"
           aria-label={s.label}
         >
           <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor">

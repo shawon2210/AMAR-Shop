@@ -82,19 +82,19 @@ export function AIRecommendations({
 
   return (
     <section className="mt-xl">
-      <div className="flex items-center justify-between mb-md">
-        <h3 className="font-headline-md text-headline-md text-on-surface">
+      <div className="flex items-center justify-between mb-4">
+        <h3 className="text-xl font-bold text-on-surface">
           {title || defaultTitle}
         </h3>
         <Link
           href={productId ? `/product/${productId}` : '#'}
-          className="text-primary font-label-bold text-label-bold flex items-center hover:underline"
+          className="text-primary font-semibold text-label-bold flex items-center hover:underline"
         >
           View All <span className="material-symbols-outlined text-sm ml-0.5">chevron_right</span>
         </Link>
       </div>
 
-      <div className="flex overflow-x-auto hide-scrollbar gap-md pb-2">
+      <div className="flex overflow-x-auto hide-scrollbar gap-4 pb-2">
         {products.map(product => (
           <Link
             key={product.id}

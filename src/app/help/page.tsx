@@ -48,10 +48,10 @@ export default function HelpPage() {
   );
 
   return (
-    <div className="px-container-margin pt-md space-y-md pb-24">
+    <div className="app-container py-6 space-y-6 pb-24">
       {/* Header */}
       <div className="text-center space-y-2">
-        <h1 className="font-display-lg-mobile text-display-lg-mobile">How can we help you?</h1>
+        <h1 className="text-2xl font-bold">How can we help you?</h1>
         <p className="text-secondary text-sm">Find answers and support for everything AmarShop</p>
       </div>
 
@@ -68,11 +68,11 @@ export default function HelpPage() {
       </div>
 
       {/* Category Cards */}
-      <div className="grid grid-cols-2 gap-md">
+      <div className="grid grid-cols-2 gap-4">
         {categories.map(cat => (
           <button
             key={cat.id}
-            className="bg-surface-container-lowest rounded-xl p-md shadow-sm hover:shadow-md transition-shadow text-left"
+            className="bg-surface-container-lowest rounded-xl p-4 shadow-sm hover:shadow-md transition-shadow text-left"
           >
             <div className="w-10 h-10 rounded-full bg-primary/10 flex items-center justify-center mb-2">
               <span className="material-symbols-outlined text-primary">{cat.icon}</span>
@@ -85,7 +85,7 @@ export default function HelpPage() {
 
       {/* Popular FAQs */}
       <div>
-        <h2 className="font-headline-md text-headline-md mb-3">Popular FAQs</h2>
+        <h2 className="text-xl font-bold mb-3">Popular FAQs</h2>
         <div className="space-y-2">
           {filteredFaqs.map(faq => (
             <div
@@ -94,9 +94,9 @@ export default function HelpPage() {
             >
               <button
                 onClick={() => setOpenFaq(openFaq === faq.q ? null : faq.q)}
-                className="w-full flex items-center justify-between p-md text-left"
+                className="w-full flex items-center justify-between p-4 text-left"
               >
-                <span className="font-label-bold text-sm flex-1 pr-2">{faq.q}</span>
+                <span className="font-semibold text-sm flex-1 pr-2">{faq.q}</span>
                 <span className={`material-symbols-outlined text-secondary transition-transform ${
                   openFaq === faq.q ? 'rotate-180' : ''
                 }`}>
@@ -104,7 +104,7 @@ export default function HelpPage() {
                 </span>
               </button>
               {openFaq === faq.q && (
-                <div className="px-md pb-md text-sm text-secondary border-t border-outline-variant pt-3">
+                <div className="px-4 pb-4 text-sm text-secondary border-t border-outline-variant pt-3">
                   {faq.a}
                 </div>
               )}
@@ -115,34 +115,34 @@ export default function HelpPage() {
 
       {/* Contact Options */}
       <div>
-        <h2 className="font-headline-md text-headline-md mb-3">Still need help?</h2>
-        <div className="grid grid-cols-1 gap-md">
-          <button className="flex items-center gap-3 bg-surface-container-lowest rounded-xl p-md shadow-sm hover:shadow-md transition-shadow">
+        <h2 className="text-xl font-bold mb-3">Still need help?</h2>
+        <div className="grid grid-cols-1 gap-4">
+          <button className="flex items-center gap-3 bg-surface-container-lowest rounded-xl p-4 shadow-sm hover:shadow-md transition-shadow">
             <div className="w-10 h-10 rounded-full bg-primary/10 flex items-center justify-center">
               <span className="material-symbols-outlined text-primary">chat</span>
             </div>
             <div className="text-left flex-1">
-              <p className="font-label-bold text-sm">Live Chat</p>
+              <p className="font-semibold text-sm">Live Chat</p>
               <p className="text-xs text-secondary">Chat with our support team</p>
             </div>
             <span className="material-symbols-outlined text-secondary">chevron_right</span>
           </button>
-          <button className="flex items-center gap-3 bg-surface-container-lowest rounded-xl p-md shadow-sm hover:shadow-md transition-shadow">
+          <button className="flex items-center gap-3 bg-surface-container-lowest rounded-xl p-4 shadow-sm hover:shadow-md transition-shadow">
             <div className="w-10 h-10 rounded-full bg-tertiary/10 flex items-center justify-center">
               <span className="material-symbols-outlined text-tertiary">mail</span>
             </div>
             <div className="text-left flex-1">
-              <p className="font-label-bold text-sm">Email Support</p>
+              <p className="font-semibold text-sm">Email Support</p>
               <p className="text-xs text-secondary">support@amarshop.com</p>
             </div>
             <span className="material-symbols-outlined text-secondary">chevron_right</span>
           </button>
-          <button className="flex items-center gap-3 bg-surface-container-lowest rounded-xl p-md shadow-sm hover:shadow-md transition-shadow">
+          <button className="flex items-center gap-3 bg-surface-container-lowest rounded-xl p-4 shadow-sm hover:shadow-md transition-shadow">
             <div className="w-10 h-10 rounded-full bg-error/10 flex items-center justify-center">
               <span className="material-symbols-outlined text-error">call</span>
             </div>
             <div className="text-left flex-1">
-              <p className="font-label-bold text-sm">Call Center</p>
+              <p className="font-semibold text-sm">Call Center</p>
               <p className="text-xs text-secondary">09612-XXXXXX (10AM - 10PM)</p>
             </div>
             <span className="material-symbols-outlined text-secondary">chevron_right</span>

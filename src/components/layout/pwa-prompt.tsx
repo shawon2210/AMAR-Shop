@@ -43,7 +43,7 @@ export function PwaPrompt() {
   if (!showPrompt) return null;
 
   return (
-    <div className="fixed bottom-20 left-0 right-0 z-50 px-container-margin animate-fade-in-up">
+    <div className="fixed bottom-20 left-0 right-0 z-50 app-container animate-fade-in-up">
       <div className="bg-surface-container-lowest rounded-xl shadow-lg border border-outline-variant p-md flex items-center gap-3">
         <span className="material-symbols-outlined text-primary text-3xl">install_mobile</span>
         <div className="flex-1 min-w-0">
@@ -53,13 +53,13 @@ export function PwaPrompt() {
         <div className="flex items-center gap-2">
           <button
             onClick={handleDismiss}
-            className="px-3 py-1.5 text-sm font-label-bold text-secondary hover:bg-surface-container rounded-lg transition-colors"
+            className="px-3 py-1.5 text-sm font-semibold text-secondary hover:bg-surface-container rounded-lg transition-colors"
           >
             Not now
           </button>
           <button
             onClick={handleInstall}
-            className="px-4 py-1.5 text-sm font-label-bold bg-primary text-on-primary rounded-lg hover:brightness-110 transition-all"
+            className="px-4 py-1.5 text-sm font-semibold bg-primary text-on-primary rounded-lg hover:brightness-110 transition-all"
           >
             Install
           </button>

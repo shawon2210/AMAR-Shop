@@ -6,7 +6,7 @@ import { categories } from '@/lib/data/categories';
 export function CategoryGrid() {
   return (
     <section>
-      <div className="max-w-[1600px] mx-auto px-4 sm:px-6 lg:px-8 xl:px-10">
+      <div className="app-container">
         <div className="relative overflow-hidden rounded-[24px] border border-gray-200/50 bg-white/80 backdrop-blur-xl p-4 md:p-6 shadow-sm">
           <div className="flex items-center justify-between mb-4">
             <h3 className="text-sm md:text-base font-bold text-gray-900">Shop by Category</h3>

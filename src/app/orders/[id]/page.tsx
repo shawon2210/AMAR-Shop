@@ -76,7 +76,7 @@ export default function OrderDetailPage() {
   if (loading) {
     return (
       <AuthGuard>
-      <div className="px-container-margin pt-md pb-24">
+      <div className="app-container py-6 pb-24">
         <div className="flex flex-col items-center justify-center py-20">
           <span className="material-symbols-outlined animate-spin text-3xl text-secondary mb-3">
             progress_activity
@@ -94,9 +94,9 @@ export default function OrderDetailPage() {
 
   return (
     <AuthGuard>
-    <div className="px-container-margin pt-md pb-24 space-y-md">
+    <div className="app-container py-6 pb-24 space-y-6">
       {/* Success Banner */}
-      <div className="bg-green-50 border border-green-200 rounded-xl p-md flex items-start gap-3">
+      <div className="bg-green-50 border border-green-200 rounded-xl p-4 flex items-start gap-3">
         <span className="material-symbols-outlined text-green-600 text-2xl">check_circle</span>
         <div>
           <h2 className="font-title-md text-title-md text-green-800">Order Placed Successfully!</h2>
@@ -109,7 +109,7 @@ export default function OrderDetailPage() {
       {/* Back Link */}
       <Link
         href="/orders"
-        className="flex items-center gap-1 text-sm text-primary font-label-bold w-fit"
+        className="flex items-center gap-1 text-sm text-primary font-semibold w-fit"
       >
         <span className="material-symbols-outlined text-base">arrow_back</span>
         Back to Orders
@@ -117,17 +117,17 @@ export default function OrderDetailPage() {
 
       {/* Order Info */}
       <section className="bg-surface-container-lowest rounded-xl overflow-hidden shadow-sm">
-        <div className="px-md py-sm bg-surface-container-low flex items-center justify-between">
+        <div className="px-4 py-3 bg-surface-container-low flex items-center justify-between">
           <div className="flex items-center gap-2">
             <span className="material-symbols-outlined text-secondary">receipt_long</span>
             <span className="font-title-sm text-title-sm">Order Info</span>
           </div>
-          <span className={`text-xs font-label-bold px-2 py-0.5 rounded-full flex items-center gap-1 ${cfg.color}`}>
+          <span className={`text-xs font-semibold px-2 py-0.5 rounded-full flex items-center gap-1 ${cfg.color}`}>
             <span className="material-symbols-outlined text-base">{cfg.icon}</span>
             {cfg.label}
           </span>
         </div>
-        <div className="p-md space-y-2 text-sm">
+        <div className="p-4 space-y-2 text-sm">
           <div className="flex justify-between">
             <span className="text-secondary">Order Number</span>
             <span className="font-mono font-medium">{order.orderNumber}</span>
@@ -145,11 +145,11 @@ export default function OrderDetailPage() {
 
       {/* Shipping Address */}
       <section className="bg-surface-container-lowest rounded-xl overflow-hidden shadow-sm">
-        <div className="px-md py-sm bg-surface-container-low flex items-center gap-2">
+        <div className="px-4 py-3 bg-surface-container-low flex items-center gap-2">
           <span className="material-symbols-outlined text-secondary">location_on</span>
           <span className="font-title-sm text-title-sm">Shipping Address</span>
         </div>
-        <div className="p-md text-sm space-y-1">
+        <div className="p-4 text-sm space-y-1">
           <p className="font-medium">{order.address.fullName}</p>
           <p className="text-secondary">{order.address.phone}</p>
           <p className="text-secondary">
@@ -160,11 +160,11 @@ export default function OrderDetailPage() {
 
       {/* Order Items */}
       <section className="bg-surface-container-lowest rounded-xl overflow-hidden shadow-sm">
-        <div className="px-md py-sm bg-surface-container-low flex items-center gap-2">
+        <div className="px-4 py-3 bg-surface-container-low flex items-center gap-2">
           <span className="material-symbols-outlined text-secondary">shopping_bag</span>
           <span className="font-title-sm text-title-sm">Items ({order.items.length})</span>
         </div>
-        <div className="p-md space-y-3">
+        <div className="p-4 space-y-3">
           {order.items.map(item => (
             <div key={item.id} className="flex items-center gap-3">
               <div className="w-14 h-14 bg-surface-container rounded-lg overflow-hidden flex-shrink-0">
@@ -194,7 +194,7 @@ export default function OrderDetailPage() {
       {/* Note */}
       {order.note && (
         <section className="bg-surface-container-lowest rounded-xl overflow-hidden shadow-sm">
-          <div className="p-md text-sm">
+          <div className="p-4 text-sm">
             <span className="font-medium block mb-1">Order Note</span>
             <p className="text-secondary">{order.note}</p>
           </div>
@@ -203,7 +203,7 @@ export default function OrderDetailPage() {
 
       {/* Price Summary */}
       <section className="bg-surface-container-lowest rounded-xl overflow-hidden shadow-sm">
-        <div className="p-md space-y-2 text-sm">
+        <div className="p-4 space-y-2 text-sm">
           <div className="flex justify-between">
             <span className="text-secondary">Subtotal ({order.items.reduce((s, i) => s + i.quantity, 0)} items)</span>
             <span>৳{order.subtotal.toLocaleString('en-BD')}</span>
@@ -231,13 +231,13 @@ export default function OrderDetailPage() {
       <div className="flex gap-3">
         <Link
           href="/orders"
-          className="flex-1 py-3 text-center border border-outline rounded-lg font-label-bold text-sm hover:bg-surface-container transition-colors"
+          className="flex-1 py-3 text-center border border-outline rounded-lg font-semibold text-sm hover:bg-surface-container transition-colors"
         >
           All Orders
         </Link>
         <Link
           href="/"
-          className="flex-1 py-3 text-center bg-primary text-on-primary rounded-lg font-label-bold text-sm hover:brightness-110 transition-colors"
+          className="flex-1 py-3 text-center bg-primary text-on-primary rounded-lg font-semibold text-sm hover:brightness-110 transition-colors"
         >
           Continue Shopping
         </Link>

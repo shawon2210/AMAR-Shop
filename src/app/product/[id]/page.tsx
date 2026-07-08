@@ -26,7 +26,7 @@ export default function ProductDetailPage() {
 
   if (isLoading) {
     return (
-      <div className="flex flex-col items-center justify-center py-32 px-container-margin">
+      <div className="flex flex-col items-center justify-center py-32 app-container">
         <span className="material-symbols-outlined animate-spin text-3xl text-secondary mb-3">progress_activity</span>
         <p className="text-secondary">Loading product...</p>
       </div>
@@ -35,13 +35,13 @@ export default function ProductDetailPage() {
 
   if (!product) {
     return (
-      <div className="flex flex-col items-center justify-center py-32 px-container-margin">
+      <div className="flex flex-col items-center justify-center py-32 app-container">
         <span className="material-symbols-outlined text-6xl text-secondary mb-4">block</span>
-        <h2 className="font-headline-md text-headline-md mb-2">Product Not Found</h2>
+        <h2 className="text-xl font-bold mb-2">Product Not Found</h2>
         <p className="text-secondary mb-6">The product you're looking for doesn't exist or has been removed.</p>
         <Link
           href="/"
-          className="bg-primary text-on-primary px-lg py-md rounded-lg font-label-bold hover:brightness-110 transition-all"
+          className="bg-primary text-on-primary px-lg py-4 rounded-lg font-semibold hover:brightness-110 transition-all"
         >
           Back to Home
         </Link>
@@ -64,7 +64,7 @@ export default function ProductDetailPage() {
   };
 
   return (
-    <div className="px-container-margin pt-md space-y-lg pb-24">
+    <div className="app-container py-6 space-y-6 pb-24">
       {/* Breadcrumb */}
       <nav className="flex items-center gap-1 text-xs text-secondary">
         <Link href="/" className="hover:text-primary">Home</Link>
@@ -75,7 +75,7 @@ export default function ProductDetailPage() {
       </nav>
 
       {/* Product Gallery + Info */}
-      <div className="grid grid-cols-1 md:grid-cols-12 gap-md md:gap-lg">
+      <div className="grid grid-cols-1 md:grid-cols-12 gap-4 md:gap-lg">
         {/* Gallery */}
         <section className="md:col-span-5 space-y-md">
           <div className="overflow-hidden rounded-xl bg-white aspect-square flex items-center justify-center relative cursor-zoom-in border border-outline-variant">
@@ -91,7 +91,7 @@ export default function ProductDetailPage() {
             )}
           </div>
 
-          <div className="flex gap-sm overflow-x-auto hide-scrollbar pb-1">
+          <div className="flex gap-2 overflow-x-auto hide-scrollbar pb-1">
             {product.images.map((img, idx) => (
               <button
                 key={idx}
@@ -108,7 +108,7 @@ export default function ProductDetailPage() {
 
         {/* Product Info */}
         <section className="md:col-span-7 space-y-md">
-          <div className="bg-surface-container-lowest p-md rounded-xl space-y-3">
+          <div className="bg-surface-container-lowest p-4 rounded-xl space-y-3">
             <div className="flex items-center gap-1.5 flex-wrap">
               {product.isMall && <Badge variant="primary">Mall</Badge>}
               {product.isNew && <Badge variant="tertiary">New</Badge>}
@@ -116,7 +116,7 @@ export default function ProductDetailPage() {
               {discount > 0 && <DiscountBadge discount={discount} />}
             </div>
 
-            <h1 className="font-headline-md text-headline-md leading-tight text-on-surface">
+            <h1 className="text-xl font-bold leading-tight text-on-surface">
               {product.name}
             </h1>
 
@@ -140,7 +140,7 @@ export default function ProductDetailPage() {
                   </span>
                 ))}
               </div>
-              <span className="text-sm text-secondary font-label-bold">
+              <span className="text-sm text-secondary font-semibold">
                 {product.rating} ({product.reviewCount.toLocaleString()} reviews)
               </span>
             </div>
@@ -154,12 +154,12 @@ export default function ProductDetailPage() {
 
             {/* Flash Sale Timer */}
             {product.isFlashSale && product.flashSaleEndsAt && (
-              <div className="bg-primary-fixed rounded-lg p-md flex items-center gap-3">
+              <div className="bg-primary-fixed rounded-lg p-4 flex items-center gap-3">
                 <span className="material-symbols-outlined text-primary" style={{ fontVariationSettings: "'FILL' 1" }}>
                   bolt
                 </span>
                 <div className="flex-1">
-                  <p className="font-label-bold text-primary">Flash Sale ends in</p>
+                  <p className="font-semibold text-primary">Flash Sale ends in</p>
                 </div>
                 <CountdownTimer targetDate={product.flashSaleEndsAt} />
               </div>
@@ -194,7 +194,7 @@ export default function ProductDetailPage() {
             {/* Quantity + Actions */}
             <div className="border-t border-outline-variant pt-3 space-y-3">
               <div className="flex items-center gap-3">
-                <span className="font-label-bold">Quantity:</span>
+                <span className="font-semibold">Quantity:</span>
                 <div className="flex items-center border border-outline rounded-lg overflow-hidden">
                   <button
                     onClick={() => setQuantity(Math.max(1, quantity - 1))}
@@ -202,7 +202,7 @@ export default function ProductDetailPage() {
                   >
                     <span className="material-symbols-outlined text-base">remove</span>
                   </button>
-                  <span className="px-4 font-label-bold border-x border-outline">{quantity}</span>
+                  <span className="px-4 font-semibold border-x border-outline">{quantity}</span>
                   <button
                     onClick={() => setQuantity(Math.min(product.stockCount, quantity + 1))}
                     className="px-3 py-1.5 hover:bg-surface-container-high transition-colors"
@@ -216,13 +216,13 @@ export default function ProductDetailPage() {
               <div className="flex gap-3">
                 <button
                   onClick={handleAddToCart}
-                  className="flex-1 py-3 border-2 border-primary text-primary font-label-bold rounded-lg hover:bg-primary-fixed transition-all active:scale-95"
+                  className="flex-1 py-3 border-2 border-primary text-primary font-semibold rounded-lg hover:bg-primary-fixed transition-all active:scale-95"
                 >
                   Add to Cart
                 </button>
                 <button
                   onClick={handleBuyNow}
-                  className="flex-1 py-3 bg-primary text-on-primary font-label-bold rounded-lg hover:bg-primary-container transition-all active:scale-95"
+                  className="flex-1 py-3 bg-primary text-on-primary font-semibold rounded-lg hover:bg-primary-container transition-all active:scale-95"
                 >
                   Buy Now
                 </button>

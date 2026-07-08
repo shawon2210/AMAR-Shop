@@ -19,15 +19,15 @@ export default function SettingsPage() {
 
   return (
     <AuthGuard>
-      <div className="px-container-margin pt-md pb-24 space-y-md">
+      <div className="app-container py-6 pb-24 space-y-6">
         <div className="flex items-center gap-2">
           <Link href="/account" className="text-secondary hover:text-on-surface transition-colors">
             <span className="material-symbols-outlined">arrow_back</span>
           </Link>
-          <h1 className="font-headline-md text-headline-md">Settings</h1>
+          <h1 className="text-xl font-bold">Settings</h1>
         </div>
 
-        <div className="bg-surface-container-lowest rounded-xl p-md space-y-4 shadow-sm">
+        <div className="bg-surface-container-lowest rounded-xl p-4 space-y-4 shadow-sm">
           <div>
             <label className="text-sm text-secondary block mb-1">Name</label>
             <input
@@ -54,7 +54,7 @@ export default function SettingsPage() {
           </div>
           <button
             onClick={handleSave}
-            className="w-full py-2.5 bg-primary text-on-primary font-label-bold text-sm rounded-lg hover:brightness-110 transition-all"
+            className="w-full py-2.5 bg-primary text-on-primary font-semibold text-sm rounded-lg hover:brightness-110 transition-all"
           >
             Save Changes
           </button>

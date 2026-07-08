@@ -15,7 +15,7 @@ const mobilePills = ['Electronics', 'Fashion', 'Beauty', 'Groceries', 'Home & Li
 export function HeroSection() {
   return (
     <section className="bg-background">
-      <div className="max-w-[1600px] mx-auto px-4 sm:px-6 lg:px-8 xl:px-10 pt-4 md:pt-6">
+      <div className="app-container pt-4 md:pt-6">
         {/* Desktop: 70/30 grid, Tablet: 2 promo cards below slider, Mobile: slider only */}
         <div className="grid grid-cols-1 lg:grid-cols-[1fr_280px] gap-4">
           {/* Slider — full width on mobile/tablet */}
@@ -60,8 +60,8 @@ export function HeroSection() {
           </div>
         </div>
 
-        {/* Mobile horizontal scrollable pills */}
-        <div className="lg:hidden mt-4 -mx-4 px-4 overflow-x-auto hide-scrollbar">
+        {/* Mobile horizontal scrollable pills — overflow to match app-container padding */}
+        <div className="lg:hidden mt-4 overflow-x-auto hide-scrollbar" style={{ marginLeft: 'calc(var(--container-padding) * -1)', marginRight: 'calc(var(--container-padding) * -1)', paddingLeft: 'var(--container-padding)', paddingRight: 'var(--container-padding)' }}>
           <div className="flex gap-2 w-max">
             {mobilePills.map((name) => (
               <Link

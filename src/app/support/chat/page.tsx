@@ -99,15 +99,15 @@ export default function ChatPage() {
     <div className="flex h-[calc(100vh-8rem)]">
       {/* Chat History Sidebar - Desktop */}
       <div className="hidden md:flex w-80 flex-shrink-0 border-r border-outline-variant flex-col bg-surface-container-low">
-        <div className="p-md border-b border-outline-variant">
-          <h2 className="font-headline-md text-headline-md">Chats</h2>
+        <div className="p-4 border-b border-outline-variant">
+          <h2 className="text-xl font-bold">Chats</h2>
         </div>
         <div className="flex-1 overflow-y-auto">
           {conversations.map(conv => (
             <button
               key={conv.id}
               onClick={() => switchConversation(conv.id)}
-              className={`w-full flex items-center gap-3 p-md text-left hover:bg-surface-container transition-colors ${
+              className={`w-full flex items-center gap-3 p-4 text-left hover:bg-surface-container transition-colors ${
                 activeConv === conv.id ? 'bg-surface-container-highest' : ''
               }`}
             >
@@ -121,7 +121,7 @@ export default function ChatPage() {
               </div>
               <div className="flex-1 min-w-0">
                 <div className="flex items-center justify-between">
-                  <span className="font-label-bold text-sm truncate">{conv.name}</span>
+                  <span className="font-semibold text-sm truncate">{conv.name}</span>
                   <span className="text-[10px] text-secondary flex-shrink-0">{conv.lastTime}</span>
                 </div>
                 <p className="text-xs text-secondary truncate mt-0.5">{conv.lastMessage}</p>
@@ -139,7 +139,7 @@ export default function ChatPage() {
       {/* Active Chat */}
       <div className="flex-1 flex flex-col bg-surface-container-lowest">
         {/* Chat Header */}
-        <div className="flex items-center gap-3 p-md border-b border-outline-variant bg-surface">
+        <div className="flex items-center gap-3 p-4 border-b border-outline-variant bg-surface">
           <button className="md:hidden p-1" onClick={() => {}}>
             <span className="material-symbols-outlined">arrow_back</span>
           </button>
@@ -152,7 +152,7 @@ export default function ChatPage() {
             )}
           </div>
           <div className="flex-1 min-w-0">
-            <p className="font-label-bold text-sm">{activeConversation?.name}</p>
+            <p className="font-semibold text-sm">{activeConversation?.name}</p>
             <p className="text-[10px] text-secondary">
               {activeConversation?.isOnline ? 'Online' : 'Offline'}
               {activeConversation?.isSupport ? ' · Support' : ' · Store'}
@@ -164,7 +164,7 @@ export default function ChatPage() {
         </div>
 
         {/* Messages */}
-        <div className="flex-1 overflow-y-auto p-md space-y-3">
+        <div className="flex-1 overflow-y-auto p-4 space-y-3">
           {messages.map(msg => (
             <div
               key={msg.id}
@@ -215,7 +215,7 @@ export default function ChatPage() {
         )}
 
         {/* Input */}
-        <div className="p-md border-t border-outline-variant bg-surface">
+        <div className="p-4 border-t border-outline-variant bg-surface">
           <div className="flex items-end gap-2">
             <button className="p-2 flex-shrink-0">
               <span className="material-symbols-outlined text-secondary">attach_file</span>

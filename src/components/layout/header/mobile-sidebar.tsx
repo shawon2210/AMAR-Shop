@@ -28,7 +28,7 @@ export function MobileSidebar({ open, onClose }: { open: boolean; onClose: () =>
   // Close on route change
   useEffect(() => {
     if (open) onClose();
-  }, [pathname]);
+  }, [open, onClose, pathname]);
 
   // Body scroll lock + focus trap
   useEffect(() => {
@@ -60,33 +60,33 @@ export function MobileSidebar({ open, onClose }: { open: boolean; onClose: () =>
     <AnimatePresence>
       {open && (
         <>
-          {/* Overlay — positioned above header */}
+            {/* Overlay */}
           <motion.div
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
             transition={{ duration: 0.2 }}
-            className="fixed inset-0 bg-black/40 z-[100]"
+            className="fixed inset-0 bg-black/50 backdrop-blur-sm z-[999]"
             onClick={onClose}
             aria-hidden="true"
           />
 
-          {/* Drawer panel — slides in from left */}
+          {/* Drawer panel */}
           <motion.div
             ref={drawerRef}
             tabIndex={-1}
             initial={{ x: '-100%' }}
             animate={{ x: 0 }}
             exit={{ x: '-100%' }}
-            transition={{ type: 'spring', stiffness: 300, damping: 30 }}
-            className="fixed left-0 top-0 h-full w-80 max-w-[85vw] bg-white shadow-2xl z-[110] outline-none"
+            transition={{ type: 'spring', damping: 25, stiffness: 200 }}
+            className="fixed left-0 top-0 bottom-0 h-full w-[85vw] max-w-[320px] bg-white shadow-2xl z-[1000] outline-none overflow-hidden flex flex-col"
             role="dialog"
             aria-modal="true"
             aria-label="Navigation menu"
           >
             {/* Header with logo + close */}
-            <div className="flex items-center justify-between px-5 h-16 md:h-[72px] border-b border-gray-100">
-              <img src="/images/amarshop-logo.png" alt="AmarShop" className="w-[110px] h-auto" />
+            <div className="flex items-center justify-between px-5 h-16 md:h-18 border-b border-gray-100">
+              <img src="/images/amarshop-logo.png" alt="AmarShop" className="w-27.5 h-auto" />
               <button
                 onClick={onClose}
                 className="flex items-center justify-center w-9 h-9 rounded-lg text-gray-500 hover:bg-gray-100 transition-colors"

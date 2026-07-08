@@ -68,7 +68,7 @@ function AccordionItem({ title, links }: Column) {
     <div className="border-b border-gray-200">
       <button
         onClick={() => setOpen(!open)}
-        className="flex items-center justify-between w-full py-3 text-sm font-semibold text-gray-900"
+        className="flex items-center justify-between w-full min-h-[44px] py-3 text-sm font-semibold text-gray-900"
         aria-expanded={open}
       >
         {title}

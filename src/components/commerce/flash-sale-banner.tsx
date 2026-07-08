@@ -23,7 +23,7 @@ export function FlashSaleBanner({
       viewport={{ once: true }}
       className="w-full bg-gradient-to-r from-primary to-primary/80 text-white py-4 md:py-6 px-4 sm:px-6 md:px-8 overflow-hidden relative"
     >
-      <div className="max-w-7xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-4 relative z-10">
+      <div className="app-container flex flex-col sm:flex-row items-center justify-between gap-4 relative z-10">
         <div className="flex items-center gap-3">
           <motion.span
             animate={{ rotate: [0, -10, 10, -10, 0] }}

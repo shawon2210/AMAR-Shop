@@ -94,18 +94,18 @@ export default function AddressesPage() {
 
   return (
     <AuthGuard>
-      <div className="px-container-margin pt-md pb-24 space-y-md">
+      <div className="app-container py-6 pb-24 space-y-6">
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-2">
             <Link href="/account" className="text-secondary hover:text-on-surface transition-colors">
               <span className="material-symbols-outlined">arrow_back</span>
             </Link>
-            <h1 className="font-headline-md text-headline-md">My Addresses</h1>
+            <h1 className="text-xl font-bold">My Addresses</h1>
           </div>
           {!showForm && (
             <button
               onClick={() => setShowForm(true)}
-              className="text-primary font-label-bold text-sm flex items-center gap-1"
+              className="text-primary font-semibold text-sm flex items-center gap-1"
             >
               <span className="material-symbols-outlined text-lg">add</span>
               Add New
@@ -118,7 +118,7 @@ export default function AddressesPage() {
             <span className="material-symbols-outlined animate-spin text-3xl text-secondary">progress_activity</span>
           </div>
         ) : showForm ? (
-          <div className="bg-surface-container-lowest rounded-xl p-md space-y-3 shadow-sm">
+          <div className="bg-surface-container-lowest rounded-xl p-4 space-y-3 shadow-sm">
             <h2 className="font-title-sm text-title-sm">New Address</h2>
             <input
               type="text" value={form.fullName}
@@ -161,7 +161,7 @@ export default function AddressesPage() {
             <div className="flex gap-2 pt-1">
               <button
                 onClick={handleSave} disabled={saving}
-                className="flex-1 py-2.5 bg-primary text-on-primary font-label-bold text-sm rounded-lg hover:brightness-110 transition-all disabled:opacity-70 flex items-center justify-center gap-2"
+                className="flex-1 py-2.5 bg-primary text-on-primary font-semibold text-sm rounded-lg hover:brightness-110 transition-all disabled:opacity-70 flex items-center justify-center gap-2"
               >
                 {saving ? (
                   <span className="material-symbols-outlined animate-spin text-base">progress_activity</span>
@@ -181,7 +181,7 @@ export default function AddressesPage() {
             <p className="text-secondary">No saved addresses yet</p>
             <button
               onClick={() => setShowForm(true)}
-              className="mt-4 text-primary font-label-bold text-sm"
+              className="mt-4 text-primary font-semibold text-sm"
             >
               Add your first address
             </button>
@@ -189,13 +189,13 @@ export default function AddressesPage() {
         ) : (
           <div className="space-y-3">
             {addresses.map(addr => (
-              <div key={addr.id} className="bg-surface-container-lowest rounded-xl p-md shadow-sm">
+              <div key={addr.id} className="bg-surface-container-lowest rounded-xl p-4 shadow-sm">
                 <div className="flex items-start justify-between">
                   <div className="flex items-center gap-2">
                     <span className="material-symbols-outlined text-secondary">location_on</span>
                     <div>
                       <div className="flex items-center gap-1.5">
-                        <span className="font-label-bold">{addr.fullName}</span>
+                        <span className="font-semibold">{addr.fullName}</span>
                         {addr.label && (
                           <span className="text-xs bg-surface-container px-1.5 py-0.5 rounded">{addr.label}</span>
                         )}

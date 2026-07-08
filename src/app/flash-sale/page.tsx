@@ -37,10 +37,10 @@ const categories = [
 const PhaseTab = ({ active, type, title, subtitle, onClick }: TabProps) => (
   <button
     onClick={onClick}
-    className={`flex-1 py-md border-b-2 font-label-bold text-center transition-colors ${
+    className={`flex-1 py-4 border-b-2 text-sm font-semibold text-center transition-colors ${
       active === type
         ? 'border-primary text-primary'
-        : 'border-transparent text-secondary hover:bg-surface-container-high'
+        : 'border-transparent text-gray-500 hover:bg-gray-100'
     }`}
     type="button"
   >
@@ -51,16 +51,16 @@ const PhaseTab = ({ active, type, title, subtitle, onClick }: TabProps) => (
 
 // Extracted category filter component
 const CategoryFilter = ({ categories: cats, activeCategory, onCategoryChange }: CategoryFilterProps) => (
-  <section className="bg-surface py-sm px-container-margin shadow-sm overflow-x-auto whitespace-nowrap hide-scrollbar">
-    <div className="max-w-7xl mx-auto flex gap-sm">
+  <section className="bg-white py-3 border-b border-gray-100 overflow-x-auto whitespace-nowrap hide-scrollbar">
+    <div className="app-container flex gap-2">
       {cats.map(cat => (
         <button
           key={cat}
           onClick={() => onCategoryChange(cat)}
-          className={`px-md py-1.5 rounded-full font-label-bold text-sm transition-colors whitespace-nowrap ${
+          className={`px-4 py-1.5 rounded-full text-sm font-medium transition-colors whitespace-nowrap ${
             activeCategory === cat
               ? 'bg-primary text-white'
-              : 'bg-surface-container-high text-on-surface hover:bg-surface-container-highest'
+              : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
           }`}
           type="button"
         >
@@ -77,37 +77,37 @@ const UpcomingProductCard = ({ product }: { product: (typeof flashSaleProducts)[
 
   return (
     <article
-      className="bg-surface border border-outline-variant rounded-lg overflow-hidden group opacity-90"
+      className="bg-white border border-gray-200 rounded-xl overflow-hidden group opacity-90"
     >
-      <div className="relative aspect-square overflow-hidden filter grayscale-[0.2]">
+      <div className="relative aspect-square overflow-hidden grayscale-[0.2]">
         <img
           className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
           src={product.images[0]}
           alt={product.name}
         />
         <div className="absolute inset-0 bg-black/20 flex items-center justify-center">
-          <div className="bg-white/90 px-md py-1 rounded-full text-primary font-label-bold text-xs">
+          <div className="bg-white/90 px-4 py-1 rounded-full text-primary font-semibold text-xs">
             Starts at 12:00
           </div>
         </div>
       </div>
-      <div className="p-sm space-y-1">
-        <h3 className="font-body-md text-body-md text-on-surface line-clamp-2 h-10">
+      <div className="p-3 space-y-1">
+        <h3 className="text-sm text-gray-900 line-clamp-2 h-10">
           {product.name}
         </h3>
         <div className="flex items-baseline gap-1">
-          <span className="font-price-lg text-primary-container">
+          <span className="text-lg font-bold text-primary">
             ৳{product.price.toLocaleString('en-BD')}
           </span>
-          <span className="text-[10px] text-secondary italic">Special Price</span>
+          <span className="text-[10px] text-gray-500 italic">Special Price</span>
         </div>
         <div className="pt-1">
-          <div className="flex items-center gap-1 text-[10px] font-label-bold text-secondary">
+          <div className="flex items-center gap-1 text-[10px] font-semibold text-gray-500">
             <span className="material-symbols-outlined text-sm">notifications</span>
             <span>{interestText}</span>
           </div>
         </div>
-        <button className="w-full mt-2 py-2 border-2 border-primary text-primary font-label-bold rounded-lg hover:bg-primary/5 active:scale-95 transition-all flex items-center justify-center gap-1">
+        <button className="w-full mt-2 h-11 min-h-11 border-2 border-primary text-primary font-semibold rounded-xl hover:bg-primary/5 active:scale-95 transition-all flex items-center justify-center gap-1 text-sm">
           <span className="material-symbols-outlined text-[18px]">alarm</span>
           Remind Me
         </button>
@@ -138,8 +138,8 @@ export default function FlashSalePage() {
       <FlashSaleBanner endDate={FLASH_SALE_END} />
 
       {/* Phase Selector Tabs */}
-      <nav className="sticky top-14 z-40 bg-surface border-b border-outline-variant">
-        <div className="max-w-7xl mx-auto flex">
+      <nav className="sticky top-14 z-40 bg-white border-b border-gray-100">
+        <div className="app-container flex">
           <PhaseTab
             active={activeTab}
             type="active"
@@ -164,8 +164,8 @@ export default function FlashSalePage() {
       />
 
       {/* Product Grid */}
-      <main className="max-w-7xl mx-auto px-container-margin py-md pb-24">
-        <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-5 gap-grid-gutter">
+      <main className="app-container py-6 pb-24">
+        <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-5 gap-3 md:gap-4">
           {activeTab === 'active'
             ? filteredProducts.map(product => (
                 <ProductCard key={product.id} product={product} variant="flash-sale" />

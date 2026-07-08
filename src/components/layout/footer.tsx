@@ -1,6 +1,5 @@
 'use client';
 
-import Link from 'next/link';
 import { Mail, ArrowRight } from 'lucide-react';
 import { Footer as NewFooter } from './footer/Footer';
 

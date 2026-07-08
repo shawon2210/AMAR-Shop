@@ -66,10 +66,10 @@ export default function RootLayout({
         />
       </head>
       <body className="bg-background text-on-background font-sans antialiased" suppressHydrationWarning>
-        <div className="grid min-h-screen grid-rows-[auto_1fr_auto]">
+        <div className="flex flex-col min-h-screen min-w-0 overflow-x-hidden">
           <Providers>
             <Header />
-            <main className="pb-16 md:pb-0">{children}</main>
+            <main className="flex-1 pb-16 md:pb-0 min-w-0">{children}</main>
             <Footer />
             <BottomNav />
             <PwaPrompt />

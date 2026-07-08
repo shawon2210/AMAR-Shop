@@ -11,7 +11,7 @@ import { products } from '@/lib/data/products';
 export const dynamic = 'force-dynamic';
 
 export default async function HomePage() {
-  let productsData = await getProducts(0, 16).catch(() => products.slice(0, 16));
+  const productsData = await getProducts(0, 16).catch(() => products.slice(0, 16));
 
   return (
     <div className="space-y-4 md:space-y-6 lg:space-y-8 pb-4 md:pb-6">
@@ -31,7 +31,7 @@ export default async function HomePage() {
       <CategoryGrid />
 
       {/* Trending Now */}
-      <ProductGrid products={productsData.slice(0, 6)} title="Trending Now" columns={6} />
+      <ProductGrid products={productsData.slice(0, 7)} title="Trending Now" columns={7} />
 
       {/* Top Brands */}
       <TopBrands />
@@ -43,7 +43,7 @@ export default async function HomePage() {
       <LocalBanners />
 
       {/* Just For You — full catalog */}
-      <ProductGrid products={productsData} title="Just For You" columns={6} />
+      <ProductGrid products={productsData} title="Just For You" columns={7} />
     </div>
   );
 }

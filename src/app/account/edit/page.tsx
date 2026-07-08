@@ -44,7 +44,7 @@ export default function EditAccountPage() {
   };
 
   return (
-    <div className="px-container-margin pt-md space-y-md pb-24">
+    <div className="app-container py-6 space-y-6 pb-24">
       <button
         onClick={() => router.back()}
         className="flex items-center gap-1 text-sm text-secondary hover:text-primary transition-colors"
@@ -53,7 +53,7 @@ export default function EditAccountPage() {
         Back
       </button>
 
-      <div className="bg-surface-container-lowest rounded-xl p-md shadow-sm space-y-4">
+      <div className="bg-surface-container-lowest rounded-xl p-4 shadow-sm space-y-4">
         <h2 className="font-title-sm text-title-sm">Edit Profile</h2>
 
         {error && (
@@ -71,7 +71,7 @@ export default function EditAccountPage() {
         )}
 
         <div>
-          <label className="text-sm font-label-bold block mb-1.5">Full Name</label>
+          <label className="text-sm font-semibold block mb-1.5">Full Name</label>
           <input
             type="text"
             value={name}
@@ -81,7 +81,7 @@ export default function EditAccountPage() {
         </div>
 
         <div>
-          <label className="text-sm font-label-bold block mb-1.5">Email</label>
+          <label className="text-sm font-semibold block mb-1.5">Email</label>
           <input
             type="email"
             value={email}
@@ -91,7 +91,7 @@ export default function EditAccountPage() {
         </div>
 
         <div>
-          <label className="text-sm font-label-bold block mb-1.5">Phone</label>
+          <label className="text-sm font-semibold block mb-1.5">Phone</label>
           <input
             type="tel"
             value={phone}
@@ -100,11 +100,11 @@ export default function EditAccountPage() {
           />
         </div>
 
-        <div className="flex gap-sm pt-2">
+        <div className="flex gap-2 pt-2">
           <button
             onClick={handleSave}
             disabled={saving}
-            className="flex-1 py-2.5 bg-primary text-on-primary rounded-lg font-label-bold text-sm hover:brightness-110 disabled:opacity-70 transition-all flex items-center justify-center gap-2"
+            className="flex-1 py-2.5 bg-primary text-on-primary rounded-lg font-semibold text-sm hover:brightness-110 disabled:opacity-70 transition-all flex items-center justify-center gap-2"
           >
             {saving ? (
               <>

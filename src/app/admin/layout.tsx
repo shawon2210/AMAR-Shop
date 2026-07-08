@@ -230,7 +230,7 @@ function Sidebar({
         {!isDesktop && (
           <button
             onClick={onClose}
-            className="p-1 rounded-lg hover:bg-white/10 text-white/50"
+            className="p-2 rounded-lg hover:bg-white/10 text-white/50"
           >
             <span className="material-symbols-outlined text-[20px]">close</span>
           </button>
@@ -292,7 +292,7 @@ function Sidebar({
               <div key={section.title} className="px-2">
                 <button
                   onClick={() => toggleSection(section.title)}
-                  className="flex items-center justify-between w-full h-9 px-3 text-xs uppercase tracking-wide text-white/40 hover:text-white/60 transition-colors"
+                  className="flex items-center justify-between w-full min-h-[44px] px-3 text-xs uppercase tracking-wide text-white/40 hover:text-white/60 transition-colors"
                 >
                   <span className="opacity-70">{section.title}</span>
                   <span
@@ -348,7 +348,7 @@ function Sidebar({
                   useAuthStore.getState().logout();
                   window.location.href = '/admin/login';
                 }}
-                className="p-1.5 rounded-lg hover:bg-white/8 text-white/25 hover:text-red-400 transition-colors"
+                className="p-2.5 rounded-lg hover:bg-white/8 text-white/25 hover:text-red-400 transition-colors"
                 title="Logout"
               >
                 <span className="material-symbols-outlined text-[16px]">logout</span>
@@ -370,7 +370,7 @@ function Sidebar({
           />
         )}
         <aside
-          className={`fixed top-0 left-0 bottom-0 z-50 w-[280px] bg-gradient-to-b from-[#0f172a] to-[#0b1220] text-white flex flex-col shadow-2xl shadow-black/30 transition-transform duration-300 ease-out ${
+          className={`fixed top-0 left-0 bottom-0 z-50 w-[280px] max-w-[85vw] bg-gradient-to-b from-[#0f172a] to-[#0b1220] text-white flex flex-col shadow-2xl shadow-black/30 transition-transform duration-300 ease-out ${
             open ? 'translate-x-0' : '-translate-x-full'
           }`}
         >
@@ -574,7 +574,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
       <div className="flex flex-col min-w-0 overflow-hidden">
         <header className="sticky top-0 z-30 h-[72px] bg-white/80 backdrop-blur-md border-b border-slate-200 flex items-center px-4 lg:px-6 gap-3">
           <button
-            className="lg:hidden p-2 -ml-2 rounded-lg hover:bg-[#f5f5f5] transition-colors"
+            className="lg:hidden p-2.5 -ml-2 rounded-lg hover:bg-[#f5f5f5] transition-colors"
             onClick={() => setSidebarOpen(true)}
           >
             <span className="material-symbols-outlined text-[#555]">menu</span>
@@ -647,7 +647,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
           </div>
         </header>
 
-        <main className="flex-1 p-4 lg:p-6 max-w-7xl mx-auto">
+        <main className="flex-1 p-4 lg:p-6 app-container">
           <ErrorBoundary>{children}</ErrorBoundary>
         </main>
       </div>

@@ -23,7 +23,7 @@ export function FlashSaleSection() {
   return (
     <section>
       <div className="app-container">
-        <div className="relative overflow-hidden rounded-[24px] bg-linear-to-r from-red-500 to-red-600 p-4 md:p-6 shadow-lg">
+        <div className="relative overflow-hidden rounded-2xl bg-linear-to-r from-red-500 to-red-600 p-4 md:p-6 shadow-lg">
           <div className="absolute inset-0 bg-[radial-gradient(circle_at_top_right,rgba(255,255,255,0.1),transparent_45%)]" />
           <div className="absolute -top-16 -right-16 w-48 h-48 rounded-full bg-white/5 blur-[80px]" />
 

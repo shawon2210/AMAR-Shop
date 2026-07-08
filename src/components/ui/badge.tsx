@@ -23,7 +23,7 @@ const sizeStyles: Record<string, string> = {
 export function Badge({ children, variant = 'primary', size = 'sm', className = '' }: BadgeProps) {
   return (
     <span
-      className={`inline-block font-label-bold rounded-full ${variantStyles[variant]} ${sizeStyles[size]} ${className}`}
+      className={`inline-block font-semibold rounded-full ${variantStyles[variant]} ${sizeStyles[size]} ${className}`}
     >
       {children}
     </span>
