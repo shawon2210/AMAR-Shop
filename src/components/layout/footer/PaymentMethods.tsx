@@ -7,7 +7,7 @@ const methods: PaymentMethod[] = [
   {
     label: 'bKash',
     svg: (
-      <svg viewBox="0 0 48 48" fill="none" className="w-5 h-5">
+      <svg viewBox="0 0 48 48" fill="none" className="w-[18px] h-[18px]">
         <rect width="48" height="48" rx="8" fill="#E2136E" />
         <text x="24" y="30" textAnchor="middle" fill="white" fontSize="9" fontWeight="700" fontFamily="system-ui">bKash</text>
       </svg>
@@ -16,7 +16,7 @@ const methods: PaymentMethod[] = [
   {
     label: 'Nagad',
     svg: (
-      <svg viewBox="0 0 48 48" fill="none" className="w-5 h-5">
+      <svg viewBox="0 0 48 48" fill="none" className="w-[18px] h-[18px]">
         <rect width="48" height="48" rx="8" fill="#F27A00" />
         <text x="24" y="30" textAnchor="middle" fill="white" fontSize="9" fontWeight="700" fontFamily="system-ui">Nagad</text>
       </svg>
@@ -25,7 +25,7 @@ const methods: PaymentMethod[] = [
   {
     label: 'Rocket',
     svg: (
-      <svg viewBox="0 0 48 48" fill="none" className="w-5 h-5">
+      <svg viewBox="0 0 48 48" fill="none" className="w-[18px] h-[18px]">
         <rect width="48" height="48" rx="8" fill="#CE1126" />
         <text x="24" y="30" textAnchor="middle" fill="white" fontSize="8" fontWeight="700" fontFamily="system-ui">Rocket</text>
       </svg>
@@ -34,7 +34,7 @@ const methods: PaymentMethod[] = [
   {
     label: 'Visa',
     svg: (
-      <svg viewBox="0 0 48 48" fill="none" className="w-5 h-5">
+      <svg viewBox="0 0 48 48" fill="none" className="w-[18px] h-[18px]">
         <rect width="48" height="48" rx="8" fill="#1A1F71" />
         <text x="24" y="30" textAnchor="middle" fill="white" fontSize="9" fontWeight="700" fontFamily="system-ui">VISA</text>
       </svg>
@@ -43,7 +43,7 @@ const methods: PaymentMethod[] = [
   {
     label: 'Mastercard',
     svg: (
-      <svg viewBox="0 0 48 48" fill="none" className="w-5 h-5">
+      <svg viewBox="0 0 48 48" fill="none" className="w-[18px] h-[18px]">
         <rect width="48" height="48" rx="8" fill="white" stroke="#E5E7EB" />
         <circle cx="18" cy="24" r="9" fill="#EB001B" opacity="0.8" />
         <circle cx="30" cy="24" r="9" fill="#F79E1B" opacity="0.8" />
@@ -53,7 +53,7 @@ const methods: PaymentMethod[] = [
   {
     label: 'American Express',
     svg: (
-      <svg viewBox="0 0 48 48" fill="none" className="w-5 h-5">
+      <svg viewBox="0 0 48 48" fill="none" className="w-[18px] h-[18px]">
         <rect width="48" height="48" rx="8" fill="#2E77BC" />
         <text x="24" y="30" textAnchor="middle" fill="white" fontSize="7.5" fontWeight="700" fontFamily="system-ui">AMEX</text>
       </svg>
@@ -62,7 +62,7 @@ const methods: PaymentMethod[] = [
   {
     label: 'PayPal',
     svg: (
-      <svg viewBox="0 0 48 48" fill="none" className="w-5 h-5">
+      <svg viewBox="0 0 48 48" fill="none" className="w-[18px] h-[18px]">
         <rect width="48" height="48" rx="8" fill="#003087" />
         <text x="24" y="30" textAnchor="middle" fill="white" fontSize="8" fontWeight="700" fontFamily="system-ui">PayPal</text>
       </svg>
@@ -71,7 +71,7 @@ const methods: PaymentMethod[] = [
   {
     label: 'COD',
     svg: (
-      <svg viewBox="0 0 48 48" fill="none" className="w-5 h-5">
+      <svg viewBox="0 0 48 48" fill="none" className="w-[18px] h-[18px]">
         <rect width="48" height="48" rx="8" fill="#059669" />
         <text x="24" y="30" textAnchor="middle" fill="white" fontSize="8" fontWeight="700" fontFamily="system-ui">COD</text>
       </svg>
@@ -81,14 +81,14 @@ const methods: PaymentMethod[] = [
 
 export function PaymentMethods() {
   return (
-    <div className="flex flex-wrap items-center gap-2">
+    <div className="flex flex-row flex-nowrap items-center gap-1.5 overflow-x-auto pb-1">
       {methods.map((method) => (
         <span
           key={method.label}
-          className="inline-flex items-center gap-1.5 h-10 px-3 rounded-lg border border-gray-200 bg-white text-xs font-medium text-gray-600 shrink-0"
+          title={method.label}
+          className="inline-flex items-center justify-center w-8 h-8 rounded-lg border border-gray-200 bg-white shrink-0"
         >
           {method.svg}
-          <span className="text-[11px]">{method.label}</span>
         </span>
       ))}
     </div>

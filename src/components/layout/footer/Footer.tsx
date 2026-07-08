@@ -7,7 +7,7 @@ export function Footer() {
   return (
     <>
       {/* Desktop: 5-column grid */}
-      <div className="hidden lg:grid grid-cols-[260px_repeat(4,1fr)] gap-x-10">
+      <div className="hidden lg:grid grid-cols-[320px_repeat(4,1fr)] gap-x-8">
         <FooterBrand />
         <FooterLinks />
       </div>
