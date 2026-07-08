@@ -71,7 +71,9 @@ export function HeroSlider() {
   const prev = useCallback(() => setCurrent(c => (c - 1 + slides.length) % slides.length), []);
 
   useEffect(() => {
-    timerRef.current = setInterval(() => { if (!paused.current) next(); }, AUTO_PLAY_MS);
+    timerRef.current = setInterval(() => {
+      if (!paused.current) { next(); }
+    }, AUTO_PLAY_MS);
     return () => { if (timerRef.current) clearInterval(timerRef.current); };
   }, [next]);
 
@@ -83,7 +85,7 @@ export function HeroSlider() {
       onTouchStart={e => { touchStartX.current = e.touches[0].clientX; }}
       onTouchEnd={e => {
         const diff = touchStartX.current - e.changedTouches[0].clientX;
-        if (Math.abs(diff) > 48) diff > 0 ? next() : prev();
+        if (Math.abs(diff) > 48) { if (diff > 0) { next(); } else { prev(); } }
       }}
     >
       {slides.map((slide, i) => (

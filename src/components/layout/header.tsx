@@ -37,6 +37,7 @@ export function Header() {
     return () => window.removeEventListener('scroll', onScroll);
   }, []);
 
+  // eslint-disable-next-line react-hooks/set-state-in-effect
   useEffect(() => { setMobileSearchOpen(false); }, [pathname]);
 
   return (
