@@ -1,8 +1,4 @@
-'use client';
-
 import Link from 'next/link';
-import { motion } from 'framer-motion';
-import { fastTransition } from '@/lib/motion-variants';
 
 const socials = [
   {
@@ -39,32 +35,20 @@ const socials = [
 
 export function SocialLinks() {
   return (
-    <div className="flex flex-wrap justify-center lg:justify-start gap-[14px]">
+    <div className="flex items-center gap-2.5">
       {socials.map((s) => (
-        <motion.div
+        <Link
           key={s.label}
-          whileHover={{ scale: 1.08, y: -2 }}
-          whileTap={{ scale: 0.95 }}
-          transition={fastTransition}
+          href={s.href}
+          target={s.href.startsWith('http') ? '_blank' : undefined}
+          rel={s.href.startsWith('http') ? 'noopener noreferrer' : undefined}
+          className="flex items-center justify-center w-10 h-10 rounded-full bg-gray-50 border border-gray-200 text-gray-500 hover:bg-primary hover:text-white hover:border-primary transition-colors"
+          aria-label={s.label}
         >
-          <Link
-            href={s.href}
-            target={s.href.startsWith('http') ? '_blank' : undefined}
-            rel={s.href.startsWith('http') ? 'noopener noreferrer' : undefined}
-            className="flex items-center justify-center w-[38px] h-[38px] sm:w-10 sm:h-10 lg:w-[44px] lg:h-[44px] rounded-full bg-[#F8FAFC] border border-gray-200 text-gray-500 hover:bg-primary hover:text-white hover:border-primary transition-all duration-[250ms]"
-            aria-label={s.label}
-          >
-            <svg
-              width="20"
-              height="20"
-              viewBox="0 0 24 24"
-              fill="currentColor"
-              className="lg:w-[22px] lg:h-[22px]"
-            >
-              {s.svg}
-            </svg>
-          </Link>
-        </motion.div>
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor">
+            {s.svg}
+          </svg>
+        </Link>
       ))}
     </div>
   );

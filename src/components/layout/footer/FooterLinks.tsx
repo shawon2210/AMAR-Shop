@@ -62,15 +62,15 @@ export function FooterLinks() {
     <>
       {columns.map((col) => (
         <div key={col.title}>
-          <h3 className="text-[15px] font-bold uppercase tracking-[0.05em] text-gray-900 mb-[22px]">
+          <h3 className="text-sm font-semibold uppercase tracking-wide text-gray-900 mb-5">
             {col.title}
           </h3>
-          <ul className="space-y-[14px]">
+          <ul className="space-y-3">
             {col.links.map((link) => (
               <li key={link.label}>
                 <Link
                   href={link.href}
-                  className="text-[15px] text-gray-600 hover:text-primary hover:translate-x-[3px] inline-block transition-all duration-200"
+                  className="text-sm text-gray-500 leading-6 hover:text-primary transition-colors"
                 >
                   {link.label}
                 </Link>

@@ -1,21 +1,96 @@
-const methods = ['bKash', 'Nagad', 'Rocket', 'Visa', 'Mastercard', 'American Express', 'PayPal', 'COD'];
+interface PaymentMethod {
+  label: string;
+  svg: React.ReactNode;
+}
+
+const methods: PaymentMethod[] = [
+  {
+    label: 'bKash',
+    svg: (
+      <svg viewBox="0 0 48 48" fill="none" className="w-5 h-5">
+        <rect width="48" height="48" rx="8" fill="#E2136E" />
+        <text x="24" y="30" textAnchor="middle" fill="white" fontSize="9" fontWeight="700" fontFamily="system-ui">bKash</text>
+      </svg>
+    ),
+  },
+  {
+    label: 'Nagad',
+    svg: (
+      <svg viewBox="0 0 48 48" fill="none" className="w-5 h-5">
+        <rect width="48" height="48" rx="8" fill="#F27A00" />
+        <text x="24" y="30" textAnchor="middle" fill="white" fontSize="9" fontWeight="700" fontFamily="system-ui">Nagad</text>
+      </svg>
+    ),
+  },
+  {
+    label: 'Rocket',
+    svg: (
+      <svg viewBox="0 0 48 48" fill="none" className="w-5 h-5">
+        <rect width="48" height="48" rx="8" fill="#CE1126" />
+        <text x="24" y="30" textAnchor="middle" fill="white" fontSize="8" fontWeight="700" fontFamily="system-ui">Rocket</text>
+      </svg>
+    ),
+  },
+  {
+    label: 'Visa',
+    svg: (
+      <svg viewBox="0 0 48 48" fill="none" className="w-5 h-5">
+        <rect width="48" height="48" rx="8" fill="#1A1F71" />
+        <text x="24" y="30" textAnchor="middle" fill="white" fontSize="9" fontWeight="700" fontFamily="system-ui">VISA</text>
+      </svg>
+    ),
+  },
+  {
+    label: 'Mastercard',
+    svg: (
+      <svg viewBox="0 0 48 48" fill="none" className="w-5 h-5">
+        <rect width="48" height="48" rx="8" fill="white" stroke="#E5E7EB" />
+        <circle cx="18" cy="24" r="9" fill="#EB001B" opacity="0.8" />
+        <circle cx="30" cy="24" r="9" fill="#F79E1B" opacity="0.8" />
+      </svg>
+    ),
+  },
+  {
+    label: 'American Express',
+    svg: (
+      <svg viewBox="0 0 48 48" fill="none" className="w-5 h-5">
+        <rect width="48" height="48" rx="8" fill="#2E77BC" />
+        <text x="24" y="30" textAnchor="middle" fill="white" fontSize="7.5" fontWeight="700" fontFamily="system-ui">AMEX</text>
+      </svg>
+    ),
+  },
+  {
+    label: 'PayPal',
+    svg: (
+      <svg viewBox="0 0 48 48" fill="none" className="w-5 h-5">
+        <rect width="48" height="48" rx="8" fill="#003087" />
+        <text x="24" y="30" textAnchor="middle" fill="white" fontSize="8" fontWeight="700" fontFamily="system-ui">PayPal</text>
+      </svg>
+    ),
+  },
+  {
+    label: 'COD',
+    svg: (
+      <svg viewBox="0 0 48 48" fill="none" className="w-5 h-5">
+        <rect width="48" height="48" rx="8" fill="#059669" />
+        <text x="24" y="30" textAnchor="middle" fill="white" fontSize="8" fontWeight="700" fontFamily="system-ui">COD</text>
+      </svg>
+    ),
+  },
+];
 
 export function PaymentMethods() {
   return (
-    <div className="text-center lg:text-left">
-      <p className="text-[13px] font-bold uppercase tracking-[0.08em] text-gray-900 mb-[18px]">
-        Accepted Payments
-      </p>
-      <div className="flex flex-wrap justify-center lg:justify-start gap-3">
-        {methods.map((method) => (
-          <span
-            key={method}
-            className="inline-flex items-center h-10 px-[18px] rounded-full bg-[#F8FAFC] border border-gray-200 text-sm font-medium text-gray-600"
-          >
-            {method}
-          </span>
-        ))}
-      </div>
+    <div className="flex flex-wrap items-center gap-2">
+      {methods.map((method) => (
+        <span
+          key={method.label}
+          className="inline-flex items-center gap-1.5 h-10 px-3 rounded-lg border border-gray-200 bg-white text-xs font-medium text-gray-600 shrink-0"
+        >
+          {method.svg}
+          <span className="text-[11px]">{method.label}</span>
+        </span>
+      ))}
     </div>
   );
 }

@@ -2,11 +2,12 @@ import Link from 'next/link';
 import { SocialLinks } from './SocialLinks';
 import { AppDownload } from './AppDownload';
 import { PaymentMethods } from './PaymentMethods';
+import { DeliveryPartners } from './DeliveryPartners';
 
 export function FooterBrand() {
   return (
     <div className="text-center lg:text-left">
-      <Link href="/" className="inline-flex items-center mb-6">
+      <Link href="/" className="inline-flex items-center mb-4">
         <img
           src="/images/amarshop-logo.png"
           alt="AmarShop"
@@ -14,26 +15,33 @@ export function FooterBrand() {
         />
       </Link>
 
-      <p className="text-base leading-[1.8] text-gray-600 max-w-[260px] mx-auto lg:mx-0">
+      <p className="text-[15px] leading-7 text-gray-500 max-w-[240px] mx-auto lg:mx-0 line-clamp-3">
         Bangladesh&apos;s premium online marketplace. Shop millions of products from trusted sellers with fast delivery and the best deals.
       </p>
 
-      <div className="mt-8 space-y-8">
+      <div className="mt-5 space-y-4">
         <div>
-          <p className="text-[13px] font-bold uppercase tracking-[0.08em] text-gray-900 mb-4">
+          <h4 className="text-xs font-semibold uppercase tracking-wide text-gray-900 mb-2.5">
             Follow Us
-          </p>
+          </h4>
           <SocialLinks />
         </div>
 
         <div>
-          <p className="text-[13px] font-bold uppercase tracking-[0.08em] text-gray-900 mb-4">
+          <h4 className="text-xs font-semibold uppercase tracking-wide text-gray-900 mb-2.5">
             Download App
-          </p>
+          </h4>
           <AppDownload />
         </div>
 
-        <PaymentMethods />
+        <div>
+          <h4 className="text-xs font-semibold uppercase tracking-wide text-gray-900 mb-2.5">
+            Accepted Payments
+          </h4>
+          <PaymentMethods />
+        </div>
+
+        <DeliveryPartners />
       </div>
     </div>
   );
