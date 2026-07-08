@@ -30,7 +30,7 @@ export default function CartPage() {
         variants={fadeUp}
         initial="hidden"
         animate="visible"
-        className="flex flex-col justify-center min-h-[calc(100dvh-10rem)] px-4 sm:px-6 md:px-8"
+        className="flex flex-col justify-center min-h-[calc(100dvh-10rem)] app-container"
       >
         <div className="w-20 h-20 bg-primary/10 rounded-full flex items-center justify-center self-center mb-4">
           <span className="material-symbols-outlined text-4xl text-primary">shopping_cart</span>
@@ -50,7 +50,7 @@ export default function CartPage() {
   }
 
   return (
-    <div className="px-4 sm:px-6 md:px-8 pt-4 md:pt-6 space-y-4 md:space-y-6 pb-28">
+    <div className="app-container pt-4 md:pt-6 space-y-4 md:space-y-6 pb-28">
       <motion.h1 variants={fadeUp} initial="hidden" animate="visible" className="text-xl md:text-2xl font-bold">
         Shopping Cart
       </motion.h1>

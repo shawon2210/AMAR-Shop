@@ -16,7 +16,7 @@ function Footer() {
     <footer className="bg-white border-t border-gray-200">
       {/* ───── Trust Section ───── */}
       <div className="border-b border-gray-100 bg-gray-50/50">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 md:py-8">
+        <div className="app-container py-5 md:py-6">
           <div className="grid grid-cols-2 lg:grid-cols-4 gap-3">
             {trustItems.map((item) => (
               <div key={item.title} className="flex items-start gap-2.5">
@@ -33,7 +33,7 @@ function Footer() {
 
       {/* ───── Newsletter ───── */}
       <div className="border-b border-gray-100">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 md:py-8">
+        <div className="app-container py-5 md:py-6">
           <div className="relative overflow-hidden rounded-2xl bg-gradient-to-r from-emerald-700 via-emerald-600 to-green-700 px-6 py-6 md:py-8">
             <div className="absolute inset-0 bg-[radial-gradient(circle_at_top_right,rgba(255,255,255,0.15),transparent_45%)]" />
             <div className="relative z-10 flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4 lg:gap-6">
@@ -65,7 +65,7 @@ function Footer() {
 
       {/* ───── Main Grid + Bottom ───── */}
       <div className="border-b border-gray-100">
-        <div className="max-w-[1600px] mx-auto px-5 md:px-10 lg:px-16 py-8 md:py-10 lg:py-12">
+        <div className="app-container py-6 md:py-8 lg:py-10">
           <NewFooter />
         </div>
       </div>

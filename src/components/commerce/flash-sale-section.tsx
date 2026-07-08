@@ -2,13 +2,11 @@
 
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
-import { motion } from 'framer-motion';
 import { ArrowRight } from 'lucide-react';
 import { CountdownTimer } from '@/components/ui/countdown-timer';
 import { ProductCard } from '@/components/commerce/product-card';
 import { getFlashSaleProducts } from '@/services/products';
 import { flashSaleProducts } from '@/lib/data/products';
-import { staggerContainer, cardItem } from '@/lib/motion-variants';
 import type { Product } from '@/types';
 
 const FLASH_SALE_END = '2026-06-30T23:59:59Z';
@@ -24,38 +22,28 @@ export function FlashSaleSection() {
 
   return (
     <section>
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <motion.div
-          initial={{ opacity: 0, y: 30 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.6 }}
-          className="relative overflow-hidden rounded-[28px] bg-linear-to-r from-red-500 to-red-600 p-5 md:p-6 shadow-lg"
-        >
+      <div className="app-container">
+        <div className="relative overflow-hidden rounded-[24px] bg-linear-to-r from-red-500 to-red-600 p-4 md:p-6 shadow-lg">
           <div className="absolute inset-0 bg-[radial-gradient(circle_at_top_right,rgba(255,255,255,0.1),transparent_45%)]" />
           <div className="absolute -top-16 -right-16 w-48 h-48 rounded-full bg-white/5 blur-[80px]" />
 
           <div className="relative z-10">
             <div className="flex items-center justify-between mb-4">
               <div className="flex items-center gap-3">
-                <motion.div
-                  animate={{ scale: [1, 1.2, 1] }}
-                  transition={{ repeat: Infinity, duration: 2, ease: 'easeInOut' }}
-                  className="flex items-center gap-1.5"
-                >
+                <div className="flex items-center gap-1.5">
                   <span className="relative flex h-3 w-3">
                     <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-white opacity-60" />
                     <span className="relative inline-flex rounded-full h-3 w-3 bg-white" />
                   </span>
                   <h3 className="text-white text-sm md:text-base font-bold">Flash Sale</h3>
-                </motion.div>
+                </div>
                 <div className="bg-white/15 backdrop-blur-sm rounded-full px-4 py-0.5">
                   <CountdownTimer targetDate={FLASH_SALE_END} variant="flash-sale" />
                 </div>
               </div>
               <Link
                 href="/flash-sale"
-                className="group flex items-center gap-1 text-white/90 hover:text-white text-xs font-semibold transition-colors bg-white/15 hover:bg-white/25 rounded-lg px-3 py-1.5"
+                className="flex items-center gap-1 text-white/90 hover:text-white text-xs font-semibold transition-colors bg-white/15 hover:bg-white/25 rounded-lg px-3 py-1.5"
               >
                 See All
                 <ArrowRight size={14} className="transition-transform duration-300 group-hover:translate-x-0.5" />
@@ -63,19 +51,11 @@ export function FlashSaleSection() {
             </div>
 
             {displayProducts.length > 0 ? (
-              <motion.div
-                variants={staggerContainer}
-                initial="hidden"
-                whileInView="show"
-                viewport={{ once: true }}
-                className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-2 sm:gap-3"
-              >
+              <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-2 sm:gap-3">
                 {displayProducts.map(product => (
-                  <motion.div key={product.id} variants={cardItem}>
-                    <ProductCard product={product} variant="flash-sale" />
-                  </motion.div>
+                  <ProductCard key={product.id} product={product} variant="flash-sale" />
                 ))}
-              </motion.div>
+              </div>
             ) : (
               <div className="flex items-center justify-center py-12">
                 <div className="text-center">
@@ -85,7 +65,7 @@ export function FlashSaleSection() {
               </div>
             )}
           </div>
-        </motion.div>
+        </div>
       </div>
     </section>
   );

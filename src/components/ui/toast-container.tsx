@@ -3,12 +3,6 @@
 import { AnimatePresence, motion } from 'framer-motion';
 import { useUIStore } from '@/stores/ui-store';
 
-const toastVariants = {
-  initial: { opacity: 0, y: -20, scale: 0.9 },
-  animate: { opacity: 1, y: 0, scale: 1, transition: { type: 'spring', stiffness: 300, damping: 20 } },
-  exit: { opacity: 0, y: -20, scale: 0.9, transition: { duration: 0.2 } },
-};
-
 export function ToastContainer() {
   const toasts = useUIStore(s => s.toasts);
   const removeToast = useUIStore(s => s.removeToast);
@@ -19,18 +13,18 @@ export function ToastContainer() {
         {toasts.map(toast => (
           <motion.div
             key={toast.id}
-            variants={toastVariants}
-            initial="initial"
-            animate="animate"
-            exit="exit"
+            initial={{ opacity: 0, y: -20, scale: 0.9 }}
+            animate={{ opacity: 1, y: 0, scale: 1 }}
+            exit={{ opacity: 0, y: -20, scale: 0.9 }}
+            transition={{ duration: 0.2 }}
             layout
-            className={'bg-inverse-surface text-inverse-on-surface px-lg py-2.5 rounded-full shadow-lg flex items-center gap-2 pointer-events-auto cursor-pointer shadow-black/10'}
+            className="bg-gray-900 text-white px-5 py-2.5 rounded-full shadow-lg flex items-center gap-2 pointer-events-auto cursor-pointer"
             onClick={() => removeToast(toast.id)}
           >
-            <span className="material-symbols-outlined text-primary-fixed-dim text-sm">
+            <span className="material-symbols-outlined text-emerald-400 text-sm">
               {toast.type === 'success' ? 'check_circle' : toast.type === 'error' ? 'error' : 'info'}
             </span>
-            <span className="font-label-bold text-sm whitespace-nowrap">{toast.message}</span>
+            <span className="text-sm font-medium whitespace-nowrap">{toast.message}</span>
           </motion.div>
         ))}
       </AnimatePresence>

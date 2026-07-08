@@ -85,7 +85,7 @@ export function MobileSidebar({ open, onClose }: { open: boolean; onClose: () =>
             aria-label="Navigation menu"
           >
             {/* Header with logo + close */}
-            <div className="flex items-center justify-between px-5 h-[72px] md:h-[84px] border-b border-gray-100">
+            <div className="flex items-center justify-between px-5 h-16 md:h-[72px] border-b border-gray-100">
               <img src="/images/amarshop-logo.png" alt="AmarShop" className="w-[110px] h-auto" />
               <button
                 onClick={onClose}
@@ -97,7 +97,7 @@ export function MobileSidebar({ open, onClose }: { open: boolean; onClose: () =>
             </div>
 
             {/* Scrollable content */}
-            <div className="overflow-y-auto h-[calc(100%-72px)] md:h-[calc(100%-84px)] p-5">
+            <div className="overflow-y-auto h-[calc(100%-64px)] md:h-[calc(100%-72px)] p-5">
               {/* Auth section */}
               {showAuth && isAuthenticated ? (
                 <div className="mb-6 pb-4 border-b border-gray-100">
