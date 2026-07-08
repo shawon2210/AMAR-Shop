@@ -88,7 +88,7 @@ export function ProductGrid({
           initial="hidden"
           whileInView="show"
           viewport={{ once: true }}
-          className="grid grid-cols-1 gap-4 gap-y-8 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:gap-6"
+          className={`grid gap-4 gap-y-8 xl:gap-6 ${columnClasses[columns] || 'grid-cols-2 sm:grid-cols-3 lg:grid-cols-4'}`}
         >
           {visibleProducts.map((product) => (
             <ProductCard key={product.id} product={product} variant="default" />

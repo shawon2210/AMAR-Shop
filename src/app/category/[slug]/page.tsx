@@ -3,6 +3,7 @@
 import { useParams } from 'next/navigation';
 import { useGetProducts } from '@/services/products';
 import { ProductCard } from '@/components/commerce/product-card';
+import { CategoryFilterSidebar } from '@/components/commerce/category-filter-sidebar';
 import Link from 'next/link';
 
 export default function CategoryPage() {
@@ -25,6 +26,13 @@ export default function CategoryPage() {
         <span className="text-xs text-secondary">{loading ? '...' : `${categoryProducts.length} products`}</span>
       </div>
 
+      {/* Filter bar — mobile */}
+      <div className="lg:hidden -mx-container-margin px-container-margin overflow-x-auto whitespace-nowrap hide-scrollbar pb-2">
+        <div className="flex items-center gap-2">
+          <CategoryFilterSidebar />
+        </div>
+      </div>
+
       {loading ? (
         <div className="flex items-center justify-center py-20">
           <span className="material-symbols-outlined animate-spin text-3xl text-secondary">progress_activity</span>
@@ -35,10 +43,17 @@ export default function CategoryPage() {
           <p className="text-secondary">No products in this category yet</p>
         </div>
       ) : (
-        <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 xl:grid-cols-6 gap-grid-gutter">
-          {categoryProducts.map(product => (
-            <ProductCard key={product.id} product={product} variant="compact" />
-          ))}
+        <div className="flex gap-6">
+          {/* Desktop sidebar */}
+          <div className="hidden lg:block">
+            <CategoryFilterSidebar />
+          </div>
+          {/* Product grid */}
+          <div className="flex-1 min-w-0 grid grid-cols-2 sm:grid-cols-3 md:grid-cols-3 xl:grid-cols-4 gap-3 sm:gap-4">
+            {categoryProducts.map(product => (
+              <ProductCard key={product.id} product={product} variant="compact" />
+            ))}
+          </div>
         </div>
       )}
     </div>

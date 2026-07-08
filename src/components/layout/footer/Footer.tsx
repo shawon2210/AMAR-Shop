@@ -21,7 +21,7 @@ export function Footer() {
         initial="hidden"
         whileInView="show"
         viewport={{ once: true, margin: '-50px' }}
-        className="hidden lg:grid grid-cols-[320px_repeat(4,1fr)] gap-[72px]"
+        className="hidden lg:grid grid-cols-[320px_repeat(4,1fr)] gap-12"
       >
         <motion.div variants={cardItem}>
           <FooterBrand />
