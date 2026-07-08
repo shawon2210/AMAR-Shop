@@ -112,7 +112,7 @@ export function CategoryFilterSidebar() {
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
               transition={{ duration: 0.2 }}
-              className="fixed inset-0 bg-black/40 backdrop-blur-sm z-50"
+              className="fixed inset-0 bg-black/40 backdrop-blur-sm z-[100]"
               onClick={() => setMobileOpen(false)}
             />
             <motion.div
@@ -120,7 +120,7 @@ export function CategoryFilterSidebar() {
               animate={{ x: 0 }}
               exit={{ x: '-100%' }}
               transition={{ type: 'spring', stiffness: 300, damping: 30 }}
-              className="fixed left-0 top-0 h-full w-[280px] max-w-[80vw] bg-white z-50 shadow-2xl"
+              className="fixed left-0 top-0 h-full w-[280px] max-w-[80vw] bg-white z-[110] shadow-2xl"
             >
               <div className="flex items-center justify-between px-5 h-16 border-b border-gray-200">
                 <div className="flex items-center gap-2 text-sm font-semibold text-gray-900">
