@@ -3,64 +3,71 @@
 import Link from 'next/link';
 import { categories } from '@/lib/data/categories';
 
+const categoryColors: Record<string, { bg: string; icon: string; hover: string }> = {
+  'cat-1':  { bg: 'bg-pink-50',    icon: 'text-pink-500',    hover: 'group-hover:bg-pink-500' },
+  'cat-2':  { bg: 'bg-blue-50',    icon: 'text-blue-500',    hover: 'group-hover:bg-blue-500' },
+  'cat-3':  { bg: 'bg-green-50',   icon: 'text-green-600',   hover: 'group-hover:bg-green-600' },
+  'cat-4':  { bg: 'bg-amber-50',   icon: 'text-amber-600',   hover: 'group-hover:bg-amber-600' },
+  'cat-5':  { bg: 'bg-rose-50',    icon: 'text-rose-500',    hover: 'group-hover:bg-rose-500' },
+  'cat-6':  { bg: 'bg-purple-50',  icon: 'text-purple-500',  hover: 'group-hover:bg-purple-500' },
+  'cat-7':  { bg: 'bg-orange-50',  icon: 'text-orange-500',  hover: 'group-hover:bg-orange-500' },
+  'cat-8':  { bg: 'bg-indigo-50',  icon: 'text-indigo-500',  hover: 'group-hover:bg-indigo-500' },
+  'cat-9':  { bg: 'bg-teal-50',    icon: 'text-teal-600',    hover: 'group-hover:bg-teal-600' },
+  'cat-10': { bg: 'bg-cyan-50',    icon: 'text-cyan-600',    hover: 'group-hover:bg-cyan-600' },
+  'cat-11': { bg: 'bg-slate-100',  icon: 'text-slate-600',   hover: 'group-hover:bg-slate-600' },
+  'cat-12': { bg: 'bg-emerald-50', icon: 'text-emerald-600', hover: 'group-hover:bg-emerald-600' },
+};
+
+function formatCount(n: number) {
+  if (n >= 10000) return `${(n / 1000).toFixed(0)}k+`;
+  if (n >= 1000) return `${(n / 1000).toFixed(1)}k`;
+  return String(n);
+}
+
 export function CategoryGrid() {
   return (
     <section>
       <div className="app-container">
-        <div className="relative overflow-hidden rounded-[24px] border border-gray-200/50 bg-white/80 backdrop-blur-xl p-4 md:p-6 shadow-sm">
+        <div className="bg-white rounded-2xl border border-gray-100 p-4 md:p-5 shadow-sm">
           <div className="flex items-center justify-between mb-4">
-            <h3 className="text-[clamp(14px,1.5vw,18px)] font-bold text-gray-900">Shop by Category</h3>
+            <h2 className="font-bold text-gray-900 tracking-tight" style={{ fontSize: 'clamp(15px, 1.6vw, 20px)' }}>
+              Shop by Category
+            </h2>
             <Link
               href="/categories"
-              className="flex items-center gap-1 text-xs font-semibold text-primary hover:text-primary/80 transition-colors"
+              className="flex items-center gap-0.5 text-xs font-semibold text-primary hover:text-primary-dark transition-colors duration-150"
             >
               View All
-              <span className="material-symbols-outlined text-sm">arrow_forward_ios</span>
+              <span className="material-symbols-outlined text-[13px]">chevron_right</span>
             </Link>
           </div>
 
-          {/* Desktop: 8-column grid */}
-          <div className="hidden md:grid md:grid-cols-4 lg:grid-cols-6 xl:grid-cols-8 gap-2">
-            {categories.map(cat => (
-              <Link
-                key={cat.id}
-                href={`/category/${cat.slug}`}
-                className="group flex flex-col items-center gap-1.5 p-3 rounded-2xl hover:bg-white transition-all duration-300"
-              >
-                <div className="w-10 h-10 sm:w-12 sm:h-12 rounded-2xl bg-gradient-to-br from-primary/10 to-primary/5 flex items-center justify-center text-primary group-hover:from-primary group-hover:to-primary-dark group-hover:text-white group-hover:shadow-md transition-all duration-300">
-                  <span className="material-symbols-outlined text-lg sm:text-xl">{cat.icon}</span>
-                </div>
-                <span className="text-[10px] sm:text-xs font-medium text-gray-700 group-hover:text-primary text-center leading-tight line-clamp-1">
-                  {cat.name}
-                </span>
-                <span className="text-[9px] sm:text-[10px] font-medium text-gray-400 bg-gray-100/80 px-1.5 py-0.5 rounded-full">
-                  {cat.productCount > 999 ? `${(cat.productCount / 1000).toFixed(0)}k+` : `${cat.productCount}`}
-                </span>
-              </Link>
-            ))}
-          </div>
-
-          {/* Mobile: horizontal scroll */}
-          <div className="md:hidden -mx-4 px-4 overflow-x-auto hide-scrollbar">
-            <div className="flex gap-2 w-max">
-              {categories.map(cat => (
+          {/* 3-col mobile → 4-col tablet → 6-col desktop */}
+          <div className="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-4 lg:grid-cols-6 xl:grid-cols-6 gap-2 md:gap-2.5">
+            {categories.map(cat => {
+              const colors = categoryColors[cat.id] ?? { bg: 'bg-gray-50', icon: 'text-gray-500', hover: 'group-hover:bg-gray-500' };
+              return (
                 <Link
                   key={cat.id}
                   href={`/category/${cat.slug}`}
-                  className="group flex flex-col items-center gap-1.5 p-3 rounded-2xl hover:bg-white transition-all min-w-[90px]"
+                  className="group flex flex-col items-center gap-2 p-2.5 md:p-3 rounded-xl hover:bg-gray-50 transition-all duration-200"
                 >
-                  <div className="w-12 h-12 rounded-2xl bg-gradient-to-br from-primary/10 to-primary/5 flex items-center justify-center text-primary">
-                    <span className="material-symbols-outlined text-xl">{cat.icon}</span>
+                  <div className={`relative w-12 h-12 md:w-14 md:h-14 rounded-2xl ${colors.bg} ${colors.hover} flex items-center justify-center text-gray-500 transition-all duration-200 group-hover:shadow-lg group-hover:scale-105`}>
+                    <span className={`material-symbols-outlined text-[22px] md:text-[24px] ${colors.icon} group-hover:text-white transition-colors duration-200`}>
+                      {cat.icon}
+                    </span>
                   </div>
-                  <span className="text-[11px] font-medium text-gray-700 text-center leading-tight line-clamp-1">
-                    {cat.name}
-                  </span>
-                  <span className="text-[9px] font-medium text-gray-400 bg-gray-100/80 px-1.5 py-0.5 rounded-full">
-                    {cat.productCount > 999 ? `${(cat.productCount / 1000).toFixed(0)}k+` : `${cat.productCount}`}
-                  </span>
+                  <div className="text-center">
+                    <p className="text-[11px] md:text-[12px] font-semibold text-gray-700 group-hover:text-primary transition-colors duration-150 line-clamp-1 leading-tight">
+                      {cat.name}
+                    </p>
+                    <span className="text-[10px] text-gray-400 leading-none mt-0.5 block">
+                      {formatCount(cat.productCount)}
+                    </span>
+                  </div>
                 </Link>
-              ))}
-            </div>
+              );
+            })}
           </div>
         </div>
       </div>

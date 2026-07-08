@@ -529,3 +529,32 @@
   @apply outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2;
   border-radius: 8px;
 }
+
+/* ───── Unified transition durations ───── */
+.transition-150 { transition-duration: 150ms; }
+.transition-200 { transition-duration: 200ms; }
+
+/* ───── Header scroll shadow ───── */
+.header-shadow {
+  box-shadow: 0 1px 0 0 rgb(0 0 0 / 0.06), 0 2px 8px 0 rgb(0 0 0 / 0.04);
+}
+
+/* ───── Section divider rhythm ───── */
+.section-gap {
+  margin-top: clamp(16px, 3vw, 32px);
+}
+
+/* ───── Card system ───── */
+.card {
+  background: #fff;
+  border: 1px solid #f3f4f6;
+  border-radius: 12px;
+}
+.card-hover {
+  transition: box-shadow 150ms ease, transform 150ms ease, border-color 150ms ease;
+}
+.card-hover:hover {
+  box-shadow: 0 4px 16px 0 rgb(0 0 0 / 0.08);
+  transform: translateY(-1px);
+  border-color: #e5e7eb;
+}

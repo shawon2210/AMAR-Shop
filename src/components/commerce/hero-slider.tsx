@@ -1,229 +1,194 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import Link from "next/link";
-import { motion, AnimatePresence } from "framer-motion";
 import { ChevronLeft, ChevronRight, ArrowRight } from "lucide-react";
 
 interface HeroSlide {
   image: string;
+  badge: string;
+  badgeColor: string;
   title: string;
   subtitle: string;
   cta: string;
   ctaHref: string;
-  hideContent?: boolean;
+  accentColor: string;
 }
 
 const slides: HeroSlide[] = [
   {
     image: "/images/poster.png",
-    title: "Shop Smart, Live Better",
-    subtitle: "Discover millions of products with fast delivery across Bangladesh.",
+    badge: "🔥 Flash Sale — Up to 70% Off",
+    badgeColor: "bg-red-500/90",
+    title: "Shop Smart,\nLive Better",
+    subtitle: "Millions of products. Fast delivery across Bangladesh.",
     cta: "Shop Now",
     ctaHref: "/categories",
-    hideContent: true,
+    accentColor: "from-slate-900/80 via-slate-900/50 to-transparent",
   },
   {
     image: "/images/hero-poster.png",
-    title: "Eid Mubarak! Huge Savings Await",
+    badge: "🎉 Eid Special Offers",
+    badgeColor: "bg-violet-600/90",
+    title: "Huge Savings\nAwait You",
     subtitle: "Exclusive deals on fashion, electronics & home — up to 50% off.",
     cta: "Explore Deals",
     ctaHref: "/flash-sale",
-    hideContent: true,
+    accentColor: "from-slate-900/80 via-slate-900/50 to-transparent",
   },
   {
     image: "/images/poster.png",
-    title: "Summer Mega Sale",
-    subtitle: "Up to 70% off on top brands. Limited time offers on everything you love!",
+    badge: "☀️ Summer Sale",
+    badgeColor: "bg-amber-500/90",
+    title: "Up to 70% Off\nTop Brands",
+    subtitle: "Limited time offers on everything you love. Free shipping included.",
     cta: "Shop Summer Deals",
     ctaHref: "/flash-sale",
-    hideContent: true,
+    accentColor: "from-slate-900/80 via-slate-900/50 to-transparent",
   },
   {
     image: "/images/hero-poster.png",
-    title: "Tech Fest 2026",
-    subtitle: "Latest gadgets, smartphones & laptops at unbeatable prices. Free shipping!",
+    badge: "💻 Tech Fest 2026",
+    badgeColor: "bg-blue-600/90",
+    title: "Latest Gadgets\nUnbeatable Prices",
+    subtitle: "Smartphones, laptops & accessories. Free shipping on all tech.",
     cta: "Explore Tech",
-    ctaHref: "/categories",
-    hideContent: true,
+    ctaHref: "/category/electronics",
+    accentColor: "from-slate-900/80 via-slate-900/50 to-transparent",
   },
 ];
 
-const AUTO_PLAY = 5000;
+const AUTO_PLAY_MS = 5500;
 
 export function HeroSlider() {
-  const [[current, direction], setPage] = useState([0, 0]);
+  const [current, setCurrent] = useState(0);
   const [imgErrors, setImgErrors] = useState<Record<number, boolean>>({});
   const paused = useRef(false);
   const touchStartX = useRef(0);
-  const touchEndX = useRef(0);
+  const timerRef = useRef<ReturnType<typeof setInterval> | null>(null);
 
-  const handleImgError = (index: number) => {
-    setImgErrors(prev => ({ ...prev, [index]: true }));
-  };
-
-  const paginate = (newDirection: number) => {
-    setPage(([prev]) => [(prev + newDirection + slides.length) % slides.length, newDirection]);
-  };
-
-  const prev = () => paginate(-1);
-  const next = () => paginate(1);
+  const next = useCallback(() => setCurrent(c => (c + 1) % slides.length), []);
+  const prev = useCallback(() => setCurrent(c => (c - 1 + slides.length) % slides.length), []);
 
   useEffect(() => {
-    const timer = setInterval(() => {
-      if (!paused.current) {
-        paginate(1);
-      }
-    }, AUTO_PLAY);
-    return () => clearInterval(timer);
-  }, [current]);
-
-  const handleTouchStart = (e: React.TouchEvent) => {
-    touchStartX.current = e.touches[0].clientX;
-  };
-
-  const handleTouchMove = (e: React.TouchEvent) => {
-    touchEndX.current = e.touches[0].clientX;
-  };
-
-  const handleTouchEnd = () => {
-    const diff = touchStartX.current - touchEndX.current;
-    if (Math.abs(diff) > 50) {
-      if (diff > 0) next();
-      else prev();
-    }
-  };
-
-  const variants = {
-    enter: (direction: number) => ({
-      x: direction > 0 ? 300 : -300,
-      opacity: 0,
-      scale: 0.98,
-    }),
-    center: {
-      x: 0,
-      opacity: 1,
-      scale: 1,
-    },
-    exit: (direction: number) => ({
-      x: direction > 0 ? -300 : 300,
-      opacity: 0,
-      scale: 0.98,
-    }),
-  };
+    timerRef.current = setInterval(() => { if (!paused.current) next(); }, AUTO_PLAY_MS);
+    return () => { if (timerRef.current) clearInterval(timerRef.current); };
+  }, [next]);
 
   return (
     <div
-      className="relative overflow-hidden rounded-2xl lg:rounded-3xl bg-linear-to-br from-gray-100 to-white w-full h-hero group"
-      onTouchStart={handleTouchStart}
-      onTouchMove={handleTouchMove}
-      onTouchEnd={handleTouchEnd}
+      className="relative overflow-hidden rounded-2xl w-full h-hero bg-gray-900 group"
+      onMouseEnter={() => { paused.current = true; }}
+      onMouseLeave={() => { paused.current = false; }}
+      onTouchStart={e => { touchStartX.current = e.touches[0].clientX; }}
+      onTouchEnd={e => {
+        const diff = touchStartX.current - e.changedTouches[0].clientX;
+        if (Math.abs(diff) > 48) diff > 0 ? next() : prev();
+      }}
     >
-      <AnimatePresence initial={false} custom={direction} mode="popLayout">
-        <motion.div
-          key={current}
-          custom={direction}
-          variants={variants}
-          initial="enter"
-          animate="center"
-          exit="exit"
-          transition={{ type: 'spring', stiffness: 180, damping: 26, mass: 0.8 }}
-          className="absolute inset-0"
-          onMouseEnter={() => { paused.current = true; }}
-          onMouseLeave={() => { paused.current = false; }}
+      {slides.map((slide, i) => (
+        <div
+          key={i}
+          className={"absolute inset-0 transition-opacity duration-500 " + (i === current ? "opacity-100 z-10" : "opacity-0 z-0")}
+          aria-hidden={i !== current}
         >
-          {imgErrors[current] ? (
-            <div className="absolute inset-0 bg-linear-to-br from-primary/10 to-primary-fixed flex items-center justify-center">
-              <div className="text-center p-4 sm:p-6">
-                <span className="material-symbols-outlined text-4xl sm:text-5xl text-primary/40">shopping_bag</span>
-                <p className="text-primary/60 font-semibold mt-1 sm:mt-2 text-xs sm:text-sm">{slides[current].title}</p>
-              </div>
-            </div>
+          {imgErrors[i] ? (
+            <div className="absolute inset-0 bg-gradient-to-br from-primary/20 to-primary-fixed" />
           ) : (
             <img
-              src={slides[current].image}
-              alt={slides[current].title}
-              loading={current === 0 ? "eager" : "lazy"}
-              decoding="async"
-              fetchPriority={current === 0 ? "high" : "auto"}
+              src={slide.image}
+              alt=""
+              loading={i === 0 ? "eager" : "lazy"}
+              fetchPriority={i === 0 ? "high" : "auto"}
               className="absolute inset-0 h-full w-full object-cover"
-              onError={() => handleImgError(current)}
+              onError={() => setImgErrors(p => ({ ...p, [i]: true }))}
             />
           )}
 
-          {slides[current].hideContent ? (
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.3, duration: 0.5 }}
-              className="absolute bottom-3 sm:bottom-4 right-3 sm:right-4 z-10"
-            >
-              <Link
-                href={slides[current].ctaHref}
-                className="group inline-flex items-center justify-center h-11 px-5 md:px-6 rounded-full bg-primary text-white text-xs md:text-sm font-semibold shadow-lg hover:brightness-110 hover:shadow-xl transition-all"
-              >
-                <span>{slides[current].cta}</span>
-                <ArrowRight size={16} className="ml-1 transition-transform duration-300 group-hover:translate-x-0.5" />
-              </Link>
-            </motion.div>
-          ) : (
-            <div className="absolute inset-0 p-3 sm:p-4 md:p-5">
-              <div className="flex h-full flex-col justify-center">
-                <motion.div
-                  initial={{ opacity: 0, y: 30 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ delay: 0.2, duration: 0.6 }}
-                  className="max-w-full sm:max-w-130 bg-black/30 backdrop-blur-sm rounded-2xl p-4 sm:p-5 md:p-6"
-                >
-                  <div className="flex flex-col gap-2 sm:gap-3">
-                    <h2 className="text-[clamp(28px,2.5vw,48px)] font-bold leading-tight text-white">
-                      {slides[current].title}
-                    </h2>
-                    <p className="text-[clamp(14px,1vw,18px)] text-white/85">
-                      {slides[current].subtitle}
-                    </p>
-                    <Link
-                      href={slides[current].ctaHref}
-                      className="group inline-flex items-center justify-center h-11 px-5 md:px-6 rounded-full bg-primary text-white text-xs md:text-sm font-semibold shadow-lg hover:brightness-110 transition-all w-fit"
-                    >
-                      <span>{slides[current].cta}</span>
-                      <ArrowRight size={16} className="ml-1 transition-transform duration-300 group-hover:translate-x-0.5" />
-                    </Link>
-                  </div>
-                </motion.div>
-              </div>
-            </div>
-          )}
-        </motion.div>
-      </AnimatePresence>
+          {/* Layered gradient for depth */}
+          <div className={`absolute inset-0 bg-gradient-to-r ${slide.accentColor}`} />
+          <div className="absolute inset-0 bg-gradient-to-t from-black/40 via-transparent to-transparent" />
 
+          {/* Content */}
+          <div
+            className={
+              "absolute inset-0 flex flex-col justify-end pb-7 pl-6 pr-6 sm:pb-9 sm:pl-10 md:pb-11 md:pl-12 lg:pb-14 lg:pl-14 transition-all duration-600 " +
+              (i === current ? "opacity-100 translate-y-0" : "opacity-0 translate-y-4")
+            }
+          >
+            <span className={`inline-flex items-center self-start mb-3 px-3 py-1.5 rounded-full ${slide.badgeColor} backdrop-blur-sm text-white text-xs font-semibold leading-none tracking-wide`}>
+              {slide.badge}
+            </span>
+            <h2
+              className="font-bold text-white leading-[1.1] mb-3 tracking-tight drop-shadow-sm"
+              style={{ fontSize: "clamp(26px, 4vw, 54px)", whiteSpace: "pre-line" }}
+            >
+              {slide.title}
+            </h2>
+            <p
+              className="text-white/85 mb-6 max-w-xs md:max-w-md leading-relaxed drop-shadow-sm"
+              style={{ fontSize: "clamp(13px, 1.1vw, 16px)" }}
+            >
+              {slide.subtitle}
+            </p>
+            <Link
+              href={slide.ctaHref}
+              className="self-start inline-flex items-center gap-2.5 h-11 md:h-12 px-6 md:px-7 rounded-full bg-white text-gray-900 font-bold text-sm shadow-xl hover:bg-gray-50 hover:shadow-2xl hover:gap-3.5 transition-all duration-200 active:scale-95"
+            >
+              {slide.cta}
+              <ArrowRight size={15} />
+            </Link>
+          </div>
+        </div>
+      ))}
+
+      {/* Nav arrows */}
       <button
         onClick={prev}
-        aria-label="Previous Slide"
-        className="absolute left-2 sm:left-3 top-1/2 -translate-y-1/2 size-8 sm:size-9 md:size-10 rounded-full bg-white/20 backdrop-blur-md text-white opacity-0 group-hover:opacity-85 transition-opacity hover:bg-white/35 flex items-center justify-center"
+        aria-label="Previous slide"
+        className="absolute left-3 top-1/2 -translate-y-1/2 z-20 w-10 h-10 rounded-full bg-black/25 backdrop-blur-md text-white flex items-center justify-center opacity-0 group-hover:opacity-100 transition-all duration-200 hover:bg-black/45 hover:scale-105 border border-white/10"
       >
-        <ChevronLeft size={18} />
+        <ChevronLeft size={20} />
       </button>
       <button
         onClick={next}
-        aria-label="Next Slide"
-        className="absolute right-2 sm:right-3 top-1/2 -translate-y-1/2 size-8 sm:size-9 md:size-10 rounded-full bg-white/20 backdrop-blur-md text-white opacity-0 group-hover:opacity-85 transition-opacity hover:bg-white/35 flex items-center justify-center"
+        aria-label="Next slide"
+        className="absolute right-3 top-1/2 -translate-y-1/2 z-20 w-10 h-10 rounded-full bg-black/25 backdrop-blur-md text-white flex items-center justify-center opacity-0 group-hover:opacity-100 transition-all duration-200 hover:bg-black/45 hover:scale-105 border border-white/10"
       >
-        <ChevronRight size={18} />
+        <ChevronRight size={20} />
       </button>
 
-      <div className="absolute bottom-2 sm:bottom-3 left-1/2 flex -translate-x-1/2 gap-2">
-        {slides.map((_, index) => (
+      {/* Progress bar indicators */}
+      <div className="absolute bottom-4 left-6 z-20 flex items-center gap-2">
+        {slides.map((_, i) => (
           <button
-            key={index}
-            aria-label={`Slide ${index + 1}`}
-            onClick={() => setPage([index, index > current ? 1 : -1])}
-            className={`rounded-full transition-all duration-300 bg-white/70 hover:bg-white ${
-              current === index ? "w-8" : "w-2"
-            } h-2`}
-          />
+            key={i}
+            aria-label={`Slide ${i + 1}`}
+            onClick={() => setCurrent(i)}
+            className="relative h-1 rounded-full overflow-hidden transition-all duration-300 bg-white/30"
+            style={{ width: i === current ? "32px" : "8px" }}
+          >
+            {i === current && (
+              <span
+                className="absolute inset-0 bg-white rounded-full origin-left"
+                style={{ animation: `slideProgress ${AUTO_PLAY_MS}ms linear forwards` }}
+              />
+            )}
+          </button>
         ))}
       </div>
+
+      {/* Slide counter */}
+      <div className="absolute bottom-4 right-4 z-20 text-white/60 text-xs font-medium tabular-nums">
+        {String(current + 1).padStart(2, "0")} / {String(slides.length).padStart(2, "0")}
+      </div>
+
+      <style>{`
+        @keyframes slideProgress {
+          from { transform: scaleX(0); }
+          to { transform: scaleX(1); }
+        }
+      `}</style>
     </div>
   );
 }

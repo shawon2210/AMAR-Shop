@@ -14,35 +14,14 @@ export default async function HomePage() {
   const productsData = await getProducts(0, 16).catch(() => products.slice(0, 16));
 
   return (
-    <div className="space-y-4 md:space-y-6 lg:space-y-8 pb-4 md:pb-6">
-      {/* Floating background glows */}
-      <div className="fixed inset-0 pointer-events-none -z-10 overflow-hidden">
-        <div className="absolute -top-40 left-0 h-80 w-80 rounded-full bg-emerald-200/20 blur-[120px]" />
-        <div className="absolute right-0 bottom-0 h-96 w-96 rounded-full bg-green-100/20 blur-[120px]" />
-      </div>
-
-      {/* Hero + Campaigns */}
+    <div className="flex flex-col gap-4 md:gap-5 lg:gap-6 pb-6">
       <HeroSection />
-
-      {/* Flash Sale — urgency first */}
       <FlashSaleSection />
-
-      {/* Shop by Category */}
       <CategoryGrid />
-
-      {/* Trending Now */}
       <ProductGrid products={productsData.slice(0, 7)} title="Trending Now" columns={7} />
-
-      {/* Top Brands */}
       <TopBrands />
-
-      {/* Seller CTA */}
       <SellerCta />
-
-      {/* Trust Layer */}
       <LocalBanners />
-
-      {/* Just For You — full catalog */}
       <ProductGrid products={productsData} title="Just For You" columns={7} />
     </div>
   );

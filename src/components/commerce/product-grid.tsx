@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useRef, useMemo, useEffect } from 'react';
+import { useState, useMemo } from 'react';
 import Link from 'next/link';
 import { ArrowRight } from 'lucide-react';
 import { Product } from '@/types';
@@ -13,7 +13,7 @@ interface ProductGridProps {
   showLoadMore?: boolean;
 }
 
-const columnClasses: Record<number, string> = {
+const colClasses: Record<number, string> = {
   7: 'grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-4 xl:grid-cols-5 2xl:grid-cols-6 min-[1728px]:grid-cols-7',
   6: 'grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-4 xl:grid-cols-5 2xl:grid-cols-6',
   5: 'grid-cols-2 sm:grid-cols-3 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5',
@@ -22,65 +22,40 @@ const columnClasses: Record<number, string> = {
   2: 'grid-cols-2',
 };
 
-export function ProductGrid({
-  products,
-  title,
-  columns = 4,
-  showLoadMore = true,
-}: ProductGridProps) {
+const ITEMS_PER_PAGE = 12;
+
+export function ProductGrid({ products, title, columns = 4, showLoadMore = true }: ProductGridProps) {
   const [page, setPage] = useState(1);
-  const gridRef = useRef<HTMLDivElement>(null);
-  const ITEMS_PER_PAGE = 12;
-
-  const visibleProducts = useMemo(() => products.slice(0, page * ITEMS_PER_PAGE), [products, page]);
-
-  useEffect(() => {
-    const observer = new IntersectionObserver(
-      ([entry]) => {
-        if (entry.isIntersecting) {
-          observer.disconnect();
-        }
-      },
-      { threshold: 0.1 }
-    );
-    if (gridRef.current) {
-      observer.observe(gridRef.current);
-    }
-    return () => observer.disconnect();
-  }, []);
-
-  const loadMore = () => setPage(page + 1);
-  const hasMore = visibleProducts.length < products.length;
+  const visible = useMemo(() => products.slice(0, page * ITEMS_PER_PAGE), [products, page]);
+  const hasMore = visible.length < products.length;
 
   return (
     <section>
       <div className="app-container">
         {title && (
-          <div className="flex items-center justify-between mb-4 md:mb-5">
-            <h3 className="text-[clamp(16px,2vw,22px)] font-bold text-gray-900 tracking-tight">{title}</h3>
+          <div className="flex items-center justify-between mb-4">
+            <h2 className="font-bold text-gray-900 tracking-tight" style={{ fontSize: 'clamp(16px, 1.8vw, 22px)' }}>
+              {title}
+            </h2>
             <Link
               href="/categories"
-              className="flex items-center gap-1 text-sm font-semibold text-primary hover:text-primary-dark transition-all"
+              className="flex items-center gap-1 text-sm font-semibold text-primary hover:text-primary-dark transition-colors duration-150"
             >
-              See All
-              <ArrowRight size={16} className="transition-transform duration-300 group-hover:translate-x-1" />
+              See All <ArrowRight size={15} />
             </Link>
           </div>
         )}
 
-        <div
-          ref={gridRef}
-          className={`grid gap-3 md:gap-4 xl:gap-6 ${columnClasses[columns] || 'grid-cols-2 sm:grid-cols-3 lg:grid-cols-4'}`}
-        >
-          {visibleProducts.map((product) => (
-            <ProductCard key={product.id} product={product} variant="default" />
+        <div className={`grid gap-2.5 md:gap-3 lg:gap-4 ${colClasses[columns] ?? colClasses[4]}`}>
+          {visible.map(product => (
+            <ProductCard key={product.id} product={product} />
           ))}
         </div>
 
         {showLoadMore && hasMore && (
           <button
-            onClick={loadMore}
-            className="w-full mt-6 min-h-[48px] py-3 border-2 border-primary text-primary font-semibold rounded-xl hover:bg-primary/5 transition-all text-sm"
+            onClick={() => setPage(p => p + 1)}
+            className="w-full mt-5 h-11 border-2 border-primary text-primary font-semibold rounded-xl hover:bg-primary/5 transition-colors duration-150 text-sm"
           >
             Load More Products
           </button>
