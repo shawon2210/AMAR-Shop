@@ -81,12 +81,12 @@ const methods: PaymentMethod[] = [
 
 export function PaymentMethods() {
   return (
-    <div className="flex flex-row flex-nowrap items-center gap-1.5 overflow-x-auto pb-1">
+    <div className="flex flex-row flex-wrap justify-center md:justify-start items-center gap-2">
       {methods.map((method) => (
         <span
           key={method.label}
           title={method.label}
-          className="inline-flex items-center justify-center w-8 h-8 rounded-lg border border-gray-200 bg-white shrink-0"
+          className="inline-flex items-center justify-center w-9 h-9 rounded-xl border border-gray-200 bg-white hover:border-gray-300 transition-colors"
         >
           {method.svg}
         </span>

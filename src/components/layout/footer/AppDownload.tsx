@@ -23,17 +23,17 @@ const stores = [
 
 export function AppDownload() {
   return (
-    <div className="flex flex-row flex-nowrap items-center gap-2 overflow-x-auto pb-1">
+    <div className="flex flex-row flex-wrap justify-center md:justify-start items-center gap-3">
       {stores.map((store) => (
         <Link
           key={store.label}
           href={store.href}
-          className="inline-flex items-center justify-center gap-1.5 w-[130px] h-9 rounded-lg border border-gray-200 bg-white hover:bg-gray-50 hover:border-gray-300 transition-colors text-gray-700 shrink-0"
+          className="inline-flex items-center justify-center gap-2 w-[140px] h-10 rounded-xl border border-gray-200 bg-white hover:bg-gray-50 hover:border-gray-300 transition-colors text-gray-700"
         >
           <span className="w-4 h-4 flex items-center justify-center shrink-0">{store.svg}</span>
           <div className="text-left leading-tight">
-            <p className="text-[8px] text-gray-400">Download on</p>
-            <p className="text-[11px] font-semibold leading-none">{store.label}</p>
+            <p className="text-[9px] text-gray-400">Download on</p>
+            <p className="text-xs font-semibold leading-none">{store.label}</p>
           </div>
         </Link>
       ))}
