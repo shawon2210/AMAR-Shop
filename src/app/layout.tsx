@@ -55,6 +55,8 @@ export default function RootLayout({
     <html lang="en" className={`${inter.variable}`} data-scroll-behavior="smooth">
       <head>
         <link rel="manifest" href="/manifest.webmanifest" />
+        <link rel="icon" type="image/svg+xml" href="/images/icon-192.svg" />
+        <link rel="apple-touch-icon" href="/images/icon-192.svg" />
         <meta name="theme-color" content="#a63600" />
         <link rel="preconnect" href="https://fonts.googleapis.com" />
         <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />

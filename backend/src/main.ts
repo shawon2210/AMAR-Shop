@@ -15,9 +15,15 @@ async function bootstrap() {
 
   // Enable CORS for frontend
   app.enableCors({
-    origin: ['http://localhost:3000', 'https://amarshop.vercel.app'],
-    methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH'],
+    origin: [
+      'http://localhost:3000',
+      'https://amarshop.vercel.app',
+      'https://amarshop-eight.vercel.app',
+      'https://amarshop-gfwxp70kk-shawon2210s-projects.vercel.app',
+    ],
+    methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH', 'OPTIONS'],
     credentials: true,
+    allowedHeaders: ['Content-Type', 'Authorization', 'X-Requested-With'],
   });
 
   // Global validation

@@ -1,10 +1,11 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { useParams } from 'next/navigation';
 import { motion, AnimatePresence } from 'framer-motion';
-import { SlidersHorizontal, X, ChevronDown } from 'lucide-react';
+import { createPortal } from 'react-dom';
+import { SlidersHorizontal, X } from 'lucide-react';
 
 const categories = [
   { name: 'Electronics', slug: 'electronics' },
@@ -32,6 +33,19 @@ export function CategoryFilterSidebar() {
   const currentSlug = params.slug as string;
   const [mobileOpen, setMobileOpen] = useState(false);
   const [selectedSort, setSelectedSort] = useState('popular');
+  const [mounted, setMounted] = useState(false);
+
+  useEffect(() => { setMounted(true); }, []);
+
+  // Lock body scroll when drawer is open
+  useEffect(() => {
+    if (mobileOpen) {
+      document.body.style.overflow = 'hidden';
+    } else {
+      document.body.style.overflow = '';
+    }
+    return () => { document.body.style.overflow = ''; };
+  }, [mobileOpen]);
 
   const filterContent = (
     <div className="space-y-8">
@@ -103,45 +117,48 @@ export function CategoryFilterSidebar() {
         </div>
       </aside>
 
-      {/* Mobile Drawer */}
-      <AnimatePresence>
-        {mobileOpen && (
-          <>
-            <motion.div
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              exit={{ opacity: 0 }}
-              transition={{ duration: 0.2 }}
-              className="fixed inset-0 bg-black/40 backdrop-blur-sm z-[100]"
-              onClick={() => setMobileOpen(false)}
-            />
-            <motion.div
-              initial={{ x: '-100%' }}
-              animate={{ x: 0 }}
-              exit={{ x: '-100%' }}
-              transition={{ type: 'spring', stiffness: 300, damping: 30 }}
-              className="fixed left-0 top-0 h-full w-[280px] max-w-[80vw] bg-white z-[110] shadow-2xl"
-            >
-              <div className="flex items-center justify-between px-5 h-16 border-b border-gray-200">
-                <div className="flex items-center gap-2 text-sm font-semibold text-gray-900">
-                  <SlidersHorizontal size={16} />
-                  Filters
+      {/* Mobile Drawer — portal to body to avoid z-index/clipping issues */}
+      {mounted && mobileOpen && createPortal(
+        <AnimatePresence>
+          {mobileOpen && (
+            <>
+              <motion.div
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                exit={{ opacity: 0 }}
+                transition={{ duration: 0.2 }}
+                className="fixed inset-0 bg-black/40 backdrop-blur-sm z-[200]"
+                onClick={() => setMobileOpen(false)}
+              />
+              <motion.div
+                initial={{ x: '-100%' }}
+                animate={{ x: 0 }}
+                exit={{ x: '-100%' }}
+                transition={{ type: 'spring', stiffness: 300, damping: 30 }}
+                className="fixed left-0 top-0 h-full w-[280px] max-w-[80vw] bg-white z-[210] shadow-2xl"
+              >
+                <div className="flex items-center justify-between px-5 h-16 border-b border-gray-200">
+                  <div className="flex items-center gap-2 text-sm font-semibold text-gray-900">
+                    <SlidersHorizontal size={16} />
+                    Filters
+                  </div>
+                  <button
+                    onClick={() => setMobileOpen(false)}
+                    className="w-8 h-8 flex items-center justify-center rounded-lg text-gray-400 hover:bg-gray-100 transition-colors"
+                    aria-label="Close filters"
+                  >
+                    <X size={18} />
+                  </button>
                 </div>
-                <button
-                  onClick={() => setMobileOpen(false)}
-                  className="w-8 h-8 flex items-center justify-center rounded-lg text-gray-400 hover:bg-gray-100 transition-colors"
-                  aria-label="Close filters"
-                >
-                  <X size={18} />
-                </button>
-              </div>
-              <div className="p-5 overflow-y-auto h-[calc(100%-64px)]">
-                {filterContent}
-              </div>
-            </motion.div>
-          </>
-        )}
-      </AnimatePresence>
+                <div className="p-5 overflow-y-auto h-[calc(100%-64px)]">
+                  {filterContent}
+                </div>
+              </motion.div>
+            </>
+          )}
+        </AnimatePresence>,
+        document.body
+      )}
     </>
   );
 }
