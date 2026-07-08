@@ -1,21 +1,13 @@
 'use client';
 
 import Link from 'next/link';
-import { motion } from 'framer-motion';
 import { categories } from '@/lib/data/categories';
-import { staggerContainer, cardItem } from '@/lib/motion-variants';
 
 export function CategoryGrid() {
   return (
     <section>
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <motion.div
-          initial={{ opacity: 0, y: 30 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.6 }}
-          className="relative overflow-hidden rounded-[28px] border border-white/30 bg-white/70 backdrop-blur-xl p-5 md:p-6 shadow-sm"
-        >
+      <div className="max-w-[1600px] mx-auto px-4 sm:px-6 lg:px-8 xl:px-10">
+        <div className="relative overflow-hidden rounded-[24px] border border-gray-200/50 bg-white/80 backdrop-blur-xl p-4 md:p-6 shadow-sm">
           <div className="flex items-center justify-between mb-4">
             <h3 className="text-sm md:text-base font-bold text-gray-900">Shop by Category</h3>
             <Link
@@ -27,37 +19,50 @@ export function CategoryGrid() {
             </Link>
           </div>
 
-          <motion.div
-            variants={staggerContainer}
-            initial="hidden"
-            whileInView="show"
-            viewport={{ once: true }}
-            className="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-6 gap-3"
-          >
+          {/* Desktop: 8-column grid */}
+          <div className="hidden md:grid md:grid-cols-4 lg:grid-cols-6 xl:grid-cols-8 gap-2">
             {categories.map(cat => (
-              <motion.div key={cat.id} variants={cardItem}>
+              <Link
+                key={cat.id}
+                href={`/category/${cat.slug}`}
+                className="group flex flex-col items-center gap-1.5 p-3 rounded-2xl hover:bg-white transition-all duration-300"
+              >
+                <div className="w-10 h-10 sm:w-12 sm:h-12 rounded-2xl bg-gradient-to-br from-primary/10 to-primary/5 flex items-center justify-center text-primary group-hover:from-primary group-hover:to-primary-dark group-hover:text-white group-hover:shadow-md transition-all duration-300">
+                  <span className="material-symbols-outlined text-lg sm:text-xl">{cat.icon}</span>
+                </div>
+                <span className="text-[10px] sm:text-xs font-medium text-gray-700 group-hover:text-primary text-center leading-tight line-clamp-1">
+                  {cat.name}
+                </span>
+                <span className="text-[9px] sm:text-[10px] font-medium text-gray-400 bg-gray-100/80 px-1.5 py-0.5 rounded-full">
+                  {cat.productCount > 999 ? `${(cat.productCount / 1000).toFixed(0)}k+` : `${cat.productCount}`}
+                </span>
+              </Link>
+            ))}
+          </div>
+
+          {/* Mobile: horizontal scroll */}
+          <div className="md:hidden -mx-4 px-4 overflow-x-auto hide-scrollbar">
+            <div className="flex gap-2 w-max">
+              {categories.map(cat => (
                 <Link
+                  key={cat.id}
                   href={`/category/${cat.slug}`}
-                  className="group flex flex-col items-center gap-2 p-4 rounded-2xl hover:bg-white/80 transition-all duration-300"
+                  className="group flex flex-col items-center gap-1.5 p-3 rounded-2xl hover:bg-white transition-all min-w-[90px]"
                 >
-                  <motion.div
-                    whileHover={{ rotate: [0, -5, 5, 0], scale: 1.1 }}
-                    transition={{ duration: 0.3 }}
-                    className="w-12 h-12 sm:w-14 sm:h-14 rounded-2xl bg-gradient-to-br from-primary/10 to-primary/5 flex items-center justify-center text-primary group-hover:from-primary group-hover:to-primary-dark group-hover:text-white group-hover:shadow-md transition-all duration-300"
-                  >
-                    <span className="material-symbols-outlined text-xl sm:text-2xl">{cat.icon}</span>
-                  </motion.div>
-                  <span className="text-[10px] sm:text-[11px] md:text-xs font-medium text-gray-700 group-hover:text-primary text-center leading-tight line-clamp-1">
+                  <div className="w-12 h-12 rounded-2xl bg-gradient-to-br from-primary/10 to-primary/5 flex items-center justify-center text-primary">
+                    <span className="material-symbols-outlined text-xl">{cat.icon}</span>
+                  </div>
+                  <span className="text-[11px] font-medium text-gray-700 text-center leading-tight line-clamp-1">
                     {cat.name}
                   </span>
-                  <span className="inline-flex items-center text-[10px] font-medium text-gray-400 bg-gray-100/80 px-2 py-0.5 rounded-full">
+                  <span className="text-[9px] font-medium text-gray-400 bg-gray-100/80 px-1.5 py-0.5 rounded-full">
                     {cat.productCount > 999 ? `${(cat.productCount / 1000).toFixed(0)}k+` : `${cat.productCount}`}
                   </span>
                 </Link>
-              </motion.div>
-            ))}
-          </motion.div>
-        </motion.div>
+              ))}
+            </div>
+          </div>
+        </div>
       </div>
     </section>
   );

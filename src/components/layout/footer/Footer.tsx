@@ -24,22 +24,22 @@ export function Footer() {
       </div>
 
       {/* Mobile: brand + accordion */}
-      <div className="md:hidden space-y-6">
+      <div className="md:hidden space-y-4">
         <FooterBrand />
         <AccordionFooter />
       </div>
 
-      {/* ───── Strip: Download App | Accepted Payments | Delivery Partners ───── */}
-      <div className="mt-8 pt-8 border-t border-gray-100">
-        <div className="flex flex-col md:flex-row items-start gap-8 md:gap-6 lg:gap-12">
+      {/* Strip: Download App | Accepted Payments | Delivery Partners */}
+      <div className="mt-6 pt-6 border-t border-gray-100">
+        <div className="flex flex-col md:flex-row items-start gap-6 md:gap-6 lg:gap-10">
           <div className="w-full md:flex-1 md:min-w-0">
-            <h4 className="text-xs font-semibold uppercase tracking-wide text-gray-900 mb-3 text-center md:text-left">
+            <h4 className="text-xs font-semibold uppercase tracking-wide text-gray-900 mb-2.5 text-center md:text-left">
               Download App
             </h4>
             <AppDownload />
           </div>
           <div className="w-full md:flex-1 md:min-w-0">
-            <h4 className="text-xs font-semibold uppercase tracking-wide text-gray-900 mb-3 text-center md:text-left">
+            <h4 className="text-xs font-semibold uppercase tracking-wide text-gray-900 mb-2.5 text-center md:text-left">
               Accepted Payments
             </h4>
             <PaymentMethods />
@@ -51,7 +51,7 @@ export function Footer() {
       </div>
 
       {/* Divider */}
-      <div className="my-8 border-t border-slate-200" />
+      <div className="my-6 border-t border-slate-200" />
 
       {/* Bottom bar */}
       <FooterBottom />

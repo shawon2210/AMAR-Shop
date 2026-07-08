@@ -65,15 +65,17 @@ export default function RootLayout({
           rel="stylesheet"
         />
       </head>
-      <body className="min-h-screen bg-background text-on-background font-sans antialiased pb-16" suppressHydrationWarning>
-        <Providers>
-          <Header />
-          <main>{children}</main>
-          <Footer />
-          <BottomNav />
-          <PwaPrompt />
-          <ToastContainer />
-        </Providers>
+      <body className="bg-background text-on-background font-sans antialiased" suppressHydrationWarning>
+        <div className="grid min-h-screen grid-rows-[auto_1fr_auto]">
+          <Providers>
+            <Header />
+            <main className="pb-16 md:pb-0">{children}</main>
+            <Footer />
+            <BottomNav />
+            <PwaPrompt />
+            <ToastContainer />
+          </Providers>
+        </div>
       </body>
     </html>
   );

@@ -7,7 +7,6 @@ import { ChevronLeft, ChevronRight, ArrowRight } from "lucide-react";
 
 interface HeroSlide {
   image: string;
-  imageFallback?: string;
   title: string;
   subtitle: string;
   cta: string;
@@ -33,8 +32,7 @@ const slides: HeroSlide[] = [
     hideContent: true,
   },
   {
-    image: "/images/summer-sale.png",
-    imageFallback: "/images/poster.png",
+    image: "/images/poster.png",
     title: "Summer Mega Sale",
     subtitle: "Up to 70% off on top brands. Limited time offers on everything you love!",
     cta: "Shop Summer Deals",
@@ -42,8 +40,7 @@ const slides: HeroSlide[] = [
     hideContent: true,
   },
   {
-    image: "/images/tech-fest.png",
-    imageFallback: "/images/hero-poster.png",
+    image: "/images/hero-poster.png",
     title: "Tech Fest 2026",
     subtitle: "Latest gadgets, smartphones & laptops at unbeatable prices. Free shipping!",
     cta: "Explore Tech",

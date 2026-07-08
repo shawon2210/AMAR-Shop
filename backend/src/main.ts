@@ -14,13 +14,17 @@ async function bootstrap() {
   const app = await NestFactory.create(AppModule);
 
   // Enable CORS for frontend
+  const allowedOrigins = process.env.CORS_ORIGINS
+    ? process.env.CORS_ORIGINS.split(',').map(o => o.trim())
+    : [
+        'http://localhost:3000',
+        'https://amarshop.vercel.app',
+        'https://amarshop-eight.vercel.app',
+        'https://amarshop-gfwxp70kk-shawon2210s-projects.vercel.app',
+      ];
+
   app.enableCors({
-    origin: [
-      'http://localhost:3000',
-      'https://amarshop.vercel.app',
-      'https://amarshop-eight.vercel.app',
-      'https://amarshop-gfwxp70kk-shawon2210s-projects.vercel.app',
-    ],
+    origin: allowedOrigins,
     methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH', 'OPTIONS'],
     credentials: true,
     allowedHeaders: ['Content-Type', 'Authorization', 'X-Requested-With'],

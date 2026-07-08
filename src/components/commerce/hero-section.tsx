@@ -1,10 +1,7 @@
-"use client";
+'use client';
 
 import Link from 'next/link';
-import { designTokens } from '@/lib/designTokens';
-import { motion } from 'framer-motion';
-import { HeroSlider } from "./hero-slider";
-import { staggerContainer, cardItem } from '@/lib/motion-variants';
+import { HeroSlider } from './hero-slider';
 
 const campaignCards = [
   { icon: 'flash_on', label: 'Flash Sale', desc: 'Up to 70% off', href: '/flash-sale', gradient: 'from-rose-500/90 to-red-600/85', iconBg: 'bg-rose-500/25' },
@@ -17,60 +14,66 @@ const mobilePills = ['Electronics', 'Fashion', 'Beauty', 'Groceries', 'Home & Li
 
 export function HeroSection() {
   return (
-    <section className="bg-surface">
-      <div className="max-w-7xl mx-auto px-container pt-md lg:pt-lg">
-        <div className="flex flex-col lg:flex-row gap-md">
-          <motion.div
-            initial={{ opacity: 0, scale: 0.98 }}
-            animate={{ opacity: 1, scale: 1 }}
-            transition={{ duration: designTokens.animation.duration.entrance, ease: designTokens.animation.easing.default }}
-            className="flex-1 min-w-0"
-          >
+    <section className="bg-background">
+      <div className="max-w-[1600px] mx-auto px-4 sm:px-6 lg:px-8 xl:px-10 pt-4 md:pt-6">
+        {/* Desktop: 70/30 grid, Tablet: 2 promo cards below slider, Mobile: slider only */}
+        <div className="grid grid-cols-1 lg:grid-cols-[1fr_280px] gap-4">
+          {/* Slider — full width on mobile/tablet */}
+          <div className="min-w-0">
             <HeroSlider />
-          </motion.div>
+          </div>
 
-          <motion.aside
-            variants={staggerContainer}
-            initial="hidden"
-            animate="show"
-            className="grid grid-cols-2 gap-sm lg:w-[280px] shrink-0"
-          >
+          {/* Campaign cards — sidebar on desktop, 2-col grid on tablet */}
+          <div className="hidden lg:flex flex-col gap-3">
             {campaignCards.map((card) => (
-              <motion.div key={card.label} variants={cardItem} whileHover={{ y: -4 }}>
-                <Link
-                  href={card.href}
-                  className={`group bg-gradient-to-br ${card.gradient} rounded-2xl px-md py-md text-white shadow-md hover:shadow-lg transition-all duration-300 flex flex-col justify-center min-h-[120px] relative overflow-hidden`}
-                >
-                  <div className="absolute inset-0 bg-[radial-gradient(circle_at_top_right,rgba(255,255,255,0.15),transparent_50%)]" />
-                  <div className={`w-10 h-10 rounded-full ${card.iconBg} flex items-center justify-center mb-md backdrop-blur-md relative`}>
-                    <span className="material-symbols-outlined text-xl">{card.icon}</span>
-                  </div>
-                  <p className="text-sm font-semibold leading-tight relative">{card.label}</p>
-                  <p className="text-xs text-white/80 mt-1 leading-tight relative">{card.desc}</p>
-                </Link>
-              </motion.div>
+              <Link
+                key={card.label}
+                href={card.href}
+                className={`group bg-gradient-to-br ${card.gradient} rounded-2xl p-4 text-white shadow-md hover:shadow-lg transition-all duration-300 flex flex-col justify-center min-h-[100px] relative overflow-hidden flex-1`}
+              >
+                <div className="absolute inset-0 bg-[radial-gradient(circle_at_top_right,rgba(255,255,255,0.15),transparent_50%)]" />
+                <div className={`w-9 h-9 rounded-full ${card.iconBg} flex items-center justify-center mb-2 backdrop-blur-md relative`}>
+                  <span className="material-symbols-outlined text-lg">{card.icon}</span>
+                </div>
+                <p className="text-sm font-semibold leading-tight relative">{card.label}</p>
+                <p className="text-xs text-white/80 mt-0.5 leading-tight relative">{card.desc}</p>
+              </Link>
             ))}
-          </motion.aside>
+          </div>
+
+          {/* Tablet: 2 promo cards in a row below slider */}
+          <div className="lg:hidden grid grid-cols-2 sm:grid-cols-4 gap-3">
+            {campaignCards.slice(0, 4).map((card) => (
+              <Link
+                key={card.label}
+                href={card.href}
+                className={`group bg-gradient-to-br ${card.gradient} rounded-xl p-3 text-white shadow-sm hover:shadow-md transition-all duration-300 relative overflow-hidden`}
+              >
+                <div className="absolute inset-0 bg-[radial-gradient(circle_at_top_right,rgba(255,255,255,0.15),transparent_50%)]" />
+                <div className={`w-8 h-8 rounded-full ${card.iconBg} flex items-center justify-center mb-1.5 backdrop-blur-md relative`}>
+                  <span className="material-symbols-outlined text-base">{card.icon}</span>
+                </div>
+                <p className="text-xs font-semibold leading-tight relative">{card.label}</p>
+                <p className="text-[10px] text-white/80 mt-0.5 leading-tight relative">{card.desc}</p>
+              </Link>
+            ))}
+          </div>
         </div>
 
-        <motion.div
-          initial={{ opacity: 0, y: 15 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.2, duration: 0.4 }}
-          className="lg:hidden -mx-container px-container pt-md pb-sm overflow-x-auto hide-scrollbar"
-        >
-          <div className="flex gap-sm w-max">
+        {/* Mobile horizontal scrollable pills */}
+        <div className="lg:hidden mt-4 -mx-4 px-4 overflow-x-auto hide-scrollbar">
+          <div className="flex gap-2 w-max">
             {mobilePills.map((name) => (
               <Link
                 key={name}
                 href="/categories"
-                className="flex items-center h-10 px-md rounded-full bg-surface-container border border-border text-sm font-medium text-text-secondary hover:border-primary hover:text-primary hover:bg-primary/5 transition-all whitespace-nowrap"
+                className="flex items-center h-9 px-4 rounded-full bg-white border border-gray-200 text-sm font-medium text-gray-600 hover:border-primary hover:text-primary hover:bg-primary/5 transition-all whitespace-nowrap shadow-sm"
               >
                 {name}
               </Link>
             ))}
           </div>
-        </motion.div>
+        </div>
       </div>
     </section>
   );

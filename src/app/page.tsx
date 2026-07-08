@@ -14,7 +14,7 @@ export default async function HomePage() {
   let productsData = await getProducts(0, 16).catch(() => products.slice(0, 16));
 
   return (
-    <div className="pb-4 md:pb-6 space-y-3 sm:space-y-4 md:space-y-6">
+    <div className="space-y-4 md:space-y-6 lg:space-y-8 pb-4 md:pb-6">
       {/* Floating background glows */}
       <div className="fixed inset-0 pointer-events-none -z-10 overflow-hidden">
         <div className="absolute -top-40 left-0 h-80 w-80 rounded-full bg-emerald-200/20 blur-[120px]" />

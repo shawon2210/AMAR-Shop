@@ -26,7 +26,7 @@ interface RateLimitEntry {
 @Injectable()
 @WebSocketGateway({
   cors: {
-    origin: ['http://localhost:3000', 'https://amarshop.vercel.app'],
+    origin: (process.env.CORS_ORIGINS || 'http://localhost:3000,https://amarshop.vercel.app,https://amarshop-eight.vercel.app').split(',').map(o => o.trim()),
     credentials: true,
   },
   namespace: /\/\w+/,

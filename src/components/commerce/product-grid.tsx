@@ -2,11 +2,9 @@
 
 import { useState, useRef, useMemo, useEffect } from 'react';
 import Link from 'next/link';
-import { motion } from 'framer-motion';
 import { ArrowRight } from 'lucide-react';
 import { Product } from '@/types';
 import { ProductCard } from '@/components/commerce/product-card';
-import { staggerContainer, cardItem } from '@/lib/motion-variants';
 
 interface ProductGridProps {
   products: Product[];
@@ -20,7 +18,7 @@ const columnClasses: Record<number, string> = {
   3: 'grid-cols-2 sm:grid-cols-3',
   4: 'grid-cols-2 sm:grid-cols-3 lg:grid-cols-4',
   5: 'grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5',
-  6: 'grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-6',
+  6: 'grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6',
 };
 
 export function ProductGrid({
@@ -30,7 +28,6 @@ export function ProductGrid({
   showLoadMore = true,
 }: ProductGridProps) {
   const [page, setPage] = useState(1);
-  const [isVisible, setIsVisible] = useState(false);
   const gridRef = useRef<HTMLDivElement>(null);
   const ITEMS_PER_PAGE = 12;
 
@@ -40,70 +37,52 @@ export function ProductGrid({
     const observer = new IntersectionObserver(
       ([entry]) => {
         if (entry.isIntersecting) {
-          setIsVisible(true);
           observer.disconnect();
         }
       },
       { threshold: 0.1 }
     );
-
     if (gridRef.current) {
       observer.observe(gridRef.current);
     }
-
     return () => observer.disconnect();
   }, []);
 
-  const loadMore = () => {
-    setPage(page + 1);
-  };
-
+  const loadMore = () => setPage(page + 1);
   const hasMore = visibleProducts.length < products.length;
 
   return (
-    <section className="py-xl">
-      <div className="max-w-7xl mx-auto px-container">
+    <section>
+      <div className="max-w-[1600px] mx-auto px-4 sm:px-6 lg:px-8 xl:px-10">
         {title && (
-          <motion.div
-            initial={{ opacity: 0, y: 15 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.5 }}
-            className="flex items-center justify-between mb-md"
-          >
-            <h3 className="text-xl font-bold text-text-primary tracking-tight">{title}</h3>
+          <div className="flex items-center justify-between mb-4 md:mb-5">
+            <h3 className="text-lg md:text-xl font-bold text-gray-900 tracking-tight">{title}</h3>
             <Link
               href="/categories"
-              className="group flex items-center gap-sm text-sm font-semibold text-primary hover:text-primary-dark transition-all"
+              className="flex items-center gap-1 text-sm font-semibold text-primary hover:text-primary-dark transition-all"
             >
               See All
               <ArrowRight size={16} className="transition-transform duration-300 group-hover:translate-x-1" />
             </Link>
-          </motion.div>
+          </div>
         )}
 
-        <motion.div
+        <div
           ref={gridRef}
-          variants={staggerContainer}
-          initial="hidden"
-          whileInView="show"
-          viewport={{ once: true }}
-          className={`grid gap-4 gap-y-8 xl:gap-6 ${columnClasses[columns] || 'grid-cols-2 sm:grid-cols-3 lg:grid-cols-4'}`}
+          className={`grid gap-3 md:gap-4 xl:gap-6 ${columnClasses[columns] || 'grid-cols-2 sm:grid-cols-3 lg:grid-cols-4'}`}
         >
           {visibleProducts.map((product) => (
             <ProductCard key={product.id} product={product} variant="default" />
           ))}
-        </motion.div>
+        </div>
 
         {showLoadMore && hasMore && (
-          <motion.button
+          <button
             onClick={loadMore}
-            whileHover={{ scale: 1.01 }}
-            whileTap={{ scale: 0.99 }}
-            className="w-full mt-lg min-h-[48px] py-md border-2 border-primary text-primary font-semibold rounded-xl hover:bg-primary-container transition-all text-sm"
+            className="w-full mt-6 min-h-[48px] py-3 border-2 border-primary text-primary font-semibold rounded-xl hover:bg-primary/5 transition-all text-sm"
           >
             Load More Products
-          </motion.button>
+          </button>
         )}
       </div>
     </section>

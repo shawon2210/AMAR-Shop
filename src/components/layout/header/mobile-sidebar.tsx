@@ -1,15 +1,10 @@
 'use client';
 
+import { useEffect, useRef } from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useAuthStore, useAuthHydrated } from '@/stores/auth-store';
-
-const sidebarVariants = {
-  hidden: { x: '-100%', opacity: 0 },
-  visible: { x: 0, opacity: 1, transition: { type: 'spring', stiffness: 200, damping: 24 } },
-  exit: { x: '-100%', opacity: 0, transition: { duration: 0.2, ease: 'easeIn' } },
-};
 
 const categoryNav = [
   { href: '/category/fashion', label: 'Fashion' },
@@ -27,27 +22,70 @@ export function MobileSidebar({ open, onClose }: { open: boolean; onClose: () =>
   const isAuthenticated = useAuthStore((s) => s.isAuthenticated);
   const logout = useAuthStore((s) => s.logout);
   const showAuth = hydrated;
+  const drawerRef = useRef<HTMLDivElement>(null);
+  const previousFocusRef = useRef<HTMLElement | null>(null);
+
+  // Close on route change
+  useEffect(() => {
+    if (open) onClose();
+  }, [pathname]);
+
+  // Body scroll lock + focus trap
+  useEffect(() => {
+    if (open) {
+      previousFocusRef.current = document.activeElement as HTMLElement;
+      document.body.style.overflow = 'hidden';
+      // Focus the drawer
+      setTimeout(() => drawerRef.current?.focus(), 50);
+    } else {
+      document.body.style.overflow = '';
+      previousFocusRef.current?.focus();
+    }
+    return () => {
+      document.body.style.overflow = '';
+    };
+  }, [open]);
+
+  // ESC close
+  useEffect(() => {
+    if (!open) return;
+    const handleKey = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') onClose();
+    };
+    document.addEventListener('keydown', handleKey);
+    return () => document.removeEventListener('keydown', handleKey);
+  }, [open, onClose]);
 
   return (
     <AnimatePresence>
       {open && (
         <>
+          {/* Overlay — positioned above header */}
           <motion.div
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
             transition={{ duration: 0.2 }}
-            className="fixed inset-0 bg-black/40 backdrop-blur-sm z-[100] md:hidden"
+            className="fixed inset-0 bg-black/40 z-[100]"
             onClick={onClose}
+            aria-hidden="true"
           />
+
+          {/* Drawer panel — slides in from left */}
           <motion.div
-            variants={sidebarVariants}
-            initial="hidden"
-            animate="visible"
-            exit="exit"
-            className="fixed left-0 top-0 h-full w-[280px] max-w-[85vw] bg-white shadow-2xl z-[110] md:hidden"
+            ref={drawerRef}
+            tabIndex={-1}
+            initial={{ x: '-100%' }}
+            animate={{ x: 0 }}
+            exit={{ x: '-100%' }}
+            transition={{ type: 'spring', stiffness: 300, damping: 30 }}
+            className="fixed left-0 top-0 h-full w-80 max-w-[85vw] bg-white shadow-2xl z-[110] outline-none"
+            role="dialog"
+            aria-modal="true"
+            aria-label="Navigation menu"
           >
-            <div className="flex items-center justify-between px-5 h-16 border-b border-gray-100">
+            {/* Header with logo + close */}
+            <div className="flex items-center justify-between px-5 h-[72px] md:h-[84px] border-b border-gray-100">
               <img src="/images/amarshop-logo.png" alt="AmarShop" className="w-[110px] h-auto" />
               <button
                 onClick={onClose}
@@ -57,14 +95,17 @@ export function MobileSidebar({ open, onClose }: { open: boolean; onClose: () =>
                 <span className="material-symbols-outlined text-2xl">close</span>
               </button>
             </div>
-            <div className="p-5 overflow-y-auto h-[calc(100%-64px)]">
+
+            {/* Scrollable content */}
+            <div className="overflow-y-auto h-[calc(100%-72px)] md:h-[calc(100%-84px)] p-5">
+              {/* Auth section */}
               {showAuth && isAuthenticated ? (
-                <div className="mb-6">
+                <div className="mb-6 pb-4 border-b border-gray-100">
                   <p className="text-sm font-semibold text-gray-900">{user?.name || 'User'}</p>
-                  <p className="text-xs text-gray-500">{user?.email || user?.phone}</p>
+                  <p className="text-xs text-gray-500 mt-0.5">{user?.email || user?.phone}</p>
                 </div>
               ) : (
-                <div className="mb-6 flex gap-2">
+                <div className="mb-6 pb-4 border-b border-gray-100 flex gap-2">
                   <Link
                     href="/auth/login"
                     onClick={onClose}
@@ -81,6 +122,8 @@ export function MobileSidebar({ open, onClose }: { open: boolean; onClose: () =>
                   </Link>
                 </div>
               )}
+
+              {/* Categories */}
               <p className="text-[11px] font-semibold text-gray-400 uppercase tracking-wider mb-2">Categories</p>
               <nav className="flex flex-col gap-1 mb-4">
                 {categoryNav.map((cat) => (
@@ -96,26 +139,29 @@ export function MobileSidebar({ open, onClose }: { open: boolean; onClose: () =>
                   </Link>
                 ))}
               </nav>
-              <hr className="mb-4" />
+
+              <hr className="mb-4 border-gray-100" />
+
+              {/* Quick links */}
               <div className="flex flex-col gap-1">
-                <Link href="/help" onClick={onClose} className="px-3 py-2.5 text-sm text-gray-600 rounded-lg hover:bg-gray-100 transition-colors">
+                <Link href="/help" onClick={onClose} className="px-3 py-2.5 text-sm font-medium text-gray-700 hover:bg-gray-100 rounded-lg transition-colors">
                   Help Center
                 </Link>
-                <Link href="/orders" onClick={onClose} className="px-3 py-2.5 text-sm text-gray-600 rounded-lg hover:bg-gray-100 transition-colors">
+                <Link href="/orders" onClick={onClose} className="px-3 py-2.5 text-sm font-medium text-gray-700 hover:bg-gray-100 rounded-lg transition-colors">
                   Track Order
                 </Link>
-                <Link href="/notifications" onClick={onClose} className="px-3 py-2.5 text-sm text-gray-600 rounded-lg hover:bg-gray-100 transition-colors">
+                <Link href="/notifications" onClick={onClose} className="px-3 py-2.5 text-sm font-medium text-gray-700 hover:bg-gray-100 rounded-lg transition-colors">
                   Offers
                 </Link>
                 {!isAuthenticated && (
-                  <Link href="/seller/dashboard" onClick={onClose} className="px-3 py-2.5 text-sm text-gray-600 rounded-lg hover:bg-gray-100 transition-colors">
+                  <Link href="/seller/dashboard" onClick={onClose} className="px-3 py-2.5 text-sm font-medium text-gray-700 hover:bg-gray-100 rounded-lg transition-colors">
                     Become a Seller
                   </Link>
                 )}
                 {showAuth && isAuthenticated && (
                   <button
                     onClick={() => { logout(); onClose(); }}
-                    className="px-3 py-2.5 text-sm text-red-600 rounded-lg hover:bg-red-50 transition-colors text-left"
+                    className="px-3 py-2.5 text-sm font-medium text-red-600 hover:bg-red-50 rounded-lg transition-colors text-left"
                   >
                     Logout
                   </button>
