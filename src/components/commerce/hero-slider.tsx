@@ -65,6 +65,13 @@ export function HeroSlider() {
     setImgErrors(prev => ({ ...prev, [index]: true }));
   };
 
+  const paginate = (newDirection: number) => {
+    setPage(([prev]) => [(prev + newDirection + slides.length) % slides.length, newDirection]);
+  };
+
+  const prev = () => paginate(-1);
+  const next = () => paginate(1);
+
   useEffect(() => {
     const timer = setInterval(() => {
       if (!paused.current) {
@@ -73,13 +80,6 @@ export function HeroSlider() {
     }, AUTO_PLAY);
     return () => clearInterval(timer);
   }, [current]);
-
-  const paginate = (newDirection: number) => {
-    setPage(([prev]) => [(prev + newDirection + slides.length) % slides.length, newDirection]);
-  };
-
-  const prev = () => paginate(-1);
-  const next = () => paginate(1);
 
   const handleTouchStart = (e: React.TouchEvent) => {
     touchStartX.current = e.touches[0].clientX;
@@ -117,7 +117,7 @@ export function HeroSlider() {
 
   return (
     <div
-      className="relative overflow-hidden rounded-2xl lg:rounded-3xl bg-gradient-to-br from-gray-100 to-white w-full h-hero group"
+      className="relative overflow-hidden rounded-2xl lg:rounded-3xl bg-linear-to-br from-gray-100 to-white w-full h-hero group"
       onTouchStart={handleTouchStart}
       onTouchMove={handleTouchMove}
       onTouchEnd={handleTouchEnd}
@@ -136,7 +136,7 @@ export function HeroSlider() {
           onMouseLeave={() => { paused.current = false; }}
         >
           {imgErrors[current] ? (
-            <div className="absolute inset-0 bg-gradient-to-br from-primary/10 to-primary-fixed flex items-center justify-center">
+            <div className="absolute inset-0 bg-linear-to-br from-primary/10 to-primary-fixed flex items-center justify-center">
               <div className="text-center p-4 sm:p-6">
                 <span className="material-symbols-outlined text-4xl sm:text-5xl text-primary/40">shopping_bag</span>
                 <p className="text-primary/60 font-semibold mt-1 sm:mt-2 text-xs sm:text-sm">{slides[current].title}</p>
@@ -176,7 +176,7 @@ export function HeroSlider() {
                   initial={{ opacity: 0, y: 30 }}
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ delay: 0.2, duration: 0.6 }}
-                  className="max-w-full sm:max-w-[520px] bg-black/30 backdrop-blur-sm rounded-2xl p-4 sm:p-5 md:p-6"
+                  className="max-w-full sm:max-w-130 bg-black/30 backdrop-blur-sm rounded-2xl p-4 sm:p-5 md:p-6"
                 >
                   <div className="flex flex-col gap-2 sm:gap-3">
                     <h2 className="text-[clamp(28px,2.5vw,48px)] font-bold leading-tight text-white">

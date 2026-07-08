@@ -49,8 +49,9 @@ export function Footer() {
         </motion.div>
       </motion.div>
 
-      {/* Mobile: accordion */}
-      <div className="md:hidden">
+      {/* Mobile: brand + accordion */}
+      <div className="md:hidden space-y-8">
+        <FooterBrand />
         <AccordionFooter />
       </div>
 

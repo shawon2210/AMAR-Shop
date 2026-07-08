@@ -30,7 +30,7 @@ export function FlashSaleSection() {
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
           transition={{ duration: 0.6 }}
-          className="relative overflow-hidden rounded-[28px] bg-gradient-to-r from-red-500 to-red-600 p-5 md:p-6 shadow-lg"
+          className="relative overflow-hidden rounded-[28px] bg-linear-to-r from-red-500 to-red-600 p-5 md:p-6 shadow-lg"
         >
           <div className="absolute inset-0 bg-[radial-gradient(circle_at_top_right,rgba(255,255,255,0.1),transparent_45%)]" />
           <div className="absolute -top-16 -right-16 w-48 h-48 rounded-full bg-white/5 blur-[80px]" />
