@@ -1,8 +1,5 @@
 import Link from 'next/link';
 import { SocialLinks } from './SocialLinks';
-import { AppDownload } from './AppDownload';
-import { PaymentMethods } from './PaymentMethods';
-import { DeliveryPartners } from './DeliveryPartners';
 
 export function FooterBrand() {
   return (
@@ -19,29 +16,11 @@ export function FooterBrand() {
         Bangladesh&apos;s premium online marketplace. Shop millions of products from trusted sellers with fast delivery and the best deals.
       </p>
 
-      <div className="mt-5 space-y-4">
-        <div>
-          <h4 className="text-xs font-semibold uppercase tracking-wide text-gray-900 mb-2.5">
-            Follow Us
-          </h4>
-          <SocialLinks />
-        </div>
-
-        <div>
-          <h4 className="text-xs font-semibold uppercase tracking-wide text-gray-900 mb-2.5">
-            Download App
-          </h4>
-          <AppDownload />
-        </div>
-
-        <div>
-          <h4 className="text-xs font-semibold uppercase tracking-wide text-gray-900 mb-2.5">
-            Accepted Payments
-          </h4>
-          <PaymentMethods />
-        </div>
-
-        <DeliveryPartners />
+      <div className="mt-5">
+        <h4 className="text-xs font-semibold uppercase tracking-wide text-gray-900 mb-2.5">
+          Follow Us
+        </h4>
+        <SocialLinks />
       </div>
     </div>
   );

@@ -2,6 +2,9 @@ import { FooterBrand } from './FooterBrand';
 import { FooterLinks } from './FooterLinks';
 import { AccordionFooter } from './AccordionFooter';
 import { FooterBottom } from './FooterBottom';
+import { AppDownload } from './AppDownload';
+import { PaymentMethods } from './PaymentMethods';
+import { DeliveryPartners } from './DeliveryPartners';
 
 export function Footer() {
   return (
@@ -24,6 +27,27 @@ export function Footer() {
       <div className="md:hidden space-y-6">
         <FooterBrand />
         <AccordionFooter />
+      </div>
+
+      {/* ───── Horizontal strip: Download App | Accepted Payments | Delivery Partners ───── */}
+      <div className="mt-8 pt-8 border-t border-gray-100">
+        <div className="flex flex-row flex-wrap items-start gap-6 md:gap-8 lg:gap-12">
+          <div className="flex-1 min-w-[200px]">
+            <h4 className="text-xs font-semibold uppercase tracking-wide text-gray-900 mb-3">
+              Download App
+            </h4>
+            <AppDownload />
+          </div>
+          <div className="flex-1 min-w-[200px]">
+            <h4 className="text-xs font-semibold uppercase tracking-wide text-gray-900 mb-3">
+              Accepted Payments
+            </h4>
+            <PaymentMethods />
+          </div>
+          <div className="flex-1 min-w-[200px]">
+            <DeliveryPartners />
+          </div>
+        </div>
       </div>
 
       {/* Divider */}
