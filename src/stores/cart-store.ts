@@ -4,25 +4,38 @@ import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
 import { CartItem, Product } from '@/types';
 
+const FREE_SHIPPING_THRESHOLD = 999;
+
 interface CartState {
   items: CartItem[];
+  removedItems: { item: CartItem; timestamp: number }[];
+  couponCode: string;
+  couponDiscount: number;
   addItem: (product: Product, quantity?: number, sellerName?: string, sellerId?: string) => void;
   removeItem: (itemId: string) => void;
+  undoRemoveItem: (itemId: string) => void;
+  clearRemovedItems: () => void;
   updateQuantity: (itemId: string, quantity: number) => void;
   toggleSelect: (itemId: string) => void;
   toggleSelectAll: (selected: boolean) => void;
   clearCart: () => void;
+  setCoupon: (code: string, discount?: number) => void;
+  clearCoupon: () => void;
   getSelectedItems: () => CartItem[];
   getTotal: () => number;
   getSelectedTotal: () => number;
   getItemCount: () => number;
   getSelectedCount: () => number;
+  getShippingProgress: () => { current: number; target: number; remaining: number; percent: number };
 }
 
 export const useCartStore = create<CartState>()(
   persist(
     (set, get) => ({
       items: [],
+      removedItems: [],
+      couponCode: '',
+      couponDiscount: 0,
 
       addItem: (product, quantity = 1, sellerName?: string, sellerId?: string) => {
         const items = get().items;
@@ -50,8 +63,27 @@ export const useCartStore = create<CartState>()(
       },
 
       removeItem: (itemId) => {
-        set({ items: get().items.filter(item => item.id !== itemId) });
+        const item = get().items.find(i => i.id === itemId);
+        if (!item) return;
+        set({
+          items: get().items.filter(i => i.id !== itemId),
+          removedItems: [
+            { item, timestamp: Date.now() },
+            ...get().removedItems,
+          ].slice(0, 10), // Keep last 10 removed items
+        });
       },
+
+      undoRemoveItem: (itemId) => {
+        const removed = get().removedItems.find(r => r.item.id === itemId);
+        if (!removed) return;
+        set({
+          items: [...get().items, removed.item],
+          removedItems: get().removedItems.filter(r => r.item.id !== itemId),
+        });
+      },
+
+      clearRemovedItems: () => set({ removedItems: [] }),
 
       updateQuantity: (itemId, quantity) => {
         if (quantity < 1) return;
@@ -76,7 +108,13 @@ export const useCartStore = create<CartState>()(
         });
       },
 
-      clearCart: () => set({ items: [] }),
+      clearCart: () => set({ items: [], couponCode: '', couponDiscount: 0 }),
+
+      setCoupon: (code, discount = 0) => {
+        set({ couponCode: code, couponDiscount: discount });
+      },
+
+      clearCoupon: () => set({ couponCode: '', couponDiscount: 0 }),
 
       getSelectedItems: () => get().items.filter(item => item.selected),
 
@@ -86,10 +124,12 @@ export const useCartStore = create<CartState>()(
           0
         ),
 
-      getSelectedTotal: () =>
-        get()
+      getSelectedTotal: () => {
+        const subtotal = get()
           .items.filter(item => item.selected)
-          .reduce((total, item) => total + item.product.price * item.quantity, 0),
+          .reduce((total, item) => total + item.product.price * item.quantity, 0);
+        return Math.max(0, subtotal - get().couponDiscount);
+      },
 
       getItemCount: () =>
         get().items.reduce((count, item) => count + item.quantity, 0),
@@ -98,7 +138,28 @@ export const useCartStore = create<CartState>()(
         get()
           .items.filter(item => item.selected)
           .reduce((count, item) => count + item.quantity, 0),
+
+      getShippingProgress: () => {
+        const selectedTotal = get()
+          .items.filter(item => item.selected)
+          .reduce((total, item) => total + item.product.price * item.quantity, 0);
+        const remaining = Math.max(0, FREE_SHIPPING_THRESHOLD - selectedTotal);
+        const percent = Math.min(100, (selectedTotal / FREE_SHIPPING_THRESHOLD) * 100);
+        return {
+          current: selectedTotal,
+          target: FREE_SHIPPING_THRESHOLD,
+          remaining,
+          percent,
+        };
+      },
     }),
-    { name: 'amarshop-cart' }
+    {
+      name: 'amarshop-cart',
+      partialize: (state) => ({
+        items: state.items,
+        couponCode: state.couponCode,
+        couponDiscount: state.couponDiscount,
+      }),
+    }
   )
 );

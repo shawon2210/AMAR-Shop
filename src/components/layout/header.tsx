@@ -5,7 +5,9 @@ import { usePathname } from 'next/navigation';
 import { useState, useEffect, useRef } from 'react';
 import { useAuthStore, useAuthHydrated } from '@/stores/auth-store';
 import { useCartStore } from '@/stores/cart-store';
+import { useSearchStore } from '@/stores/search-store';
 import { MobileSidebar } from '@/components/layout/header/mobile-sidebar';
+import { SearchOverlay } from '@/components/commerce/search-overlay';
 
 const categoryNav = [
   { href: '/category/fashion', label: 'Fashion' },
@@ -19,10 +21,10 @@ const categoryNav = [
 
 export function Header() {
   const pathname = usePathname();
-  const [mobileSearchOpen, setMobileSearchOpen] = useState(false);
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
   const [searchFocused, setSearchFocused] = useState(false);
+  const setIsSearchOpen = useSearchStore(s => s.setIsOpen);
   const hydrated = useAuthHydrated();
   const headerRef = useRef<HTMLElement>(null);
 
@@ -37,8 +39,7 @@ export function Header() {
     return () => window.removeEventListener('scroll', onScroll);
   }, []);
 
-  // eslint-disable-next-line react-hooks/set-state-in-effect
-  useEffect(() => { setMobileSearchOpen(false); }, [pathname]);
+  useEffect(() => { setIsSearchOpen(false); }, [pathname, setIsSearchOpen]);
 
   return (
     <header
@@ -103,34 +104,29 @@ export function Header() {
 
           {/* Search — prominent */}
           <div className="hidden md:flex justify-center">
-            <div
-              className={`relative w-full max-w-[580px] lg:max-w-[700px] transition-all duration-200 ${searchFocused ? 'max-w-[640px] lg:max-w-[760px]' : ''}`}
+            <button
+              onClick={() => setIsSearchOpen(true)}
+              className="relative w-full max-w-[580px] lg:max-w-[700px] group"
             >
-              <span className="absolute left-4 top-1/2 -translate-y-1/2 material-symbols-outlined text-gray-400 text-[20px] pointer-events-none transition-colors duration-150" style={searchFocused ? { color: 'var(--color-primary)' } : {}}>
-                search
-              </span>
-              <input
-                className="w-full h-11 rounded-full border-2 border-gray-200 bg-white pl-11 pr-14 text-sm text-gray-900 placeholder:text-gray-400 outline-none transition-all duration-200 focus:border-primary focus:ring-4 focus:ring-primary/8 focus:shadow-[0_0_0_4px_rgb(15_157_88/0.08)]"
-                placeholder="Search products, brands & categories..."
-                type="text"
-                aria-label="Search"
-                onFocus={() => setSearchFocused(true)}
-                onBlur={() => setSearchFocused(false)}
-              />
-              <button
-                className="absolute right-1.5 top-1/2 -translate-y-1/2 w-8 h-8 flex items-center justify-center rounded-full bg-primary text-white hover:bg-primary-dark transition-all duration-150 hover:scale-105"
-                aria-label="Submit search"
-              >
-                <span className="material-symbols-outlined text-[17px]">search</span>
-              </button>
-            </div>
+              <div className={`relative w-full transition-all duration-200 ${searchFocused ? 'max-w-[640px] lg:max-w-[760px]' : ''}`}>
+                <span className="absolute left-4 top-1/2 -translate-y-1/2 material-symbols-outlined text-gray-400 text-[20px] pointer-events-none transition-colors duration-150">
+                  search
+                </span>
+                <div className="w-full h-11 rounded-full border-2 border-gray-200 bg-white pl-11 pr-14 text-sm text-gray-400 flex items-center text-left transition-all duration-200 group-hover:border-gray-300 group-hover:bg-gray-50 cursor-text">
+                  Search products, brands & categories...
+                </div>
+                <div className="absolute right-1.5 top-1/2 -translate-y-1/2 w-8 h-8 flex items-center justify-center rounded-full bg-primary text-white group-hover:bg-primary-dark transition-all duration-150">
+                  <span className="material-symbols-outlined text-[17px]">search</span>
+                </div>
+              </div>
+            </button>
           </div>
 
           {/* Actions */}
           <div className="flex items-center justify-end gap-1 lg:gap-1.5 shrink-0">
             {/* Mobile search */}
             <button
-              onClick={() => setMobileSearchOpen(v => !v)}
+              onClick={() => setIsSearchOpen(true)}
               className="md:hidden flex items-center justify-center w-11 h-11 rounded-xl text-gray-600 hover:bg-gray-100 transition-colors duration-150"
               aria-label="Search"
             >
@@ -197,27 +193,6 @@ export function Header() {
         </div>
       </div>
 
-      {/* ── Mobile search expand ── */}
-      {mobileSearchOpen && (
-        <div className="md:hidden border-t border-gray-100 bg-white px-3 py-2.5">
-          <div className="relative">
-            <span className="absolute left-4 top-1/2 -translate-y-1/2 material-symbols-outlined text-primary text-[20px] pointer-events-none">
-              search
-            </span>
-            <input
-              autoFocus
-              className="w-full h-11 rounded-full border-2 border-primary/30 bg-white pl-11 pr-14 text-sm outline-none transition-all duration-200 focus:border-primary focus:ring-4 focus:ring-primary/8"
-              placeholder="Search products..."
-              type="text"
-              aria-label="Search"
-            />
-            <button className="absolute right-1.5 top-1/2 -translate-y-1/2 w-8 h-8 flex items-center justify-center rounded-full bg-primary text-white">
-              <span className="material-symbols-outlined text-[17px]">search</span>
-            </button>
-          </div>
-        </div>
-      )}
-
       {/* ── Category nav ── */}
       <div className="hidden md:block border-t border-gray-100/80 bg-white">
         <div className="app-container">
@@ -249,6 +224,7 @@ export function Header() {
       </div>
 
       <MobileSidebar open={sidebarOpen} onClose={() => setSidebarOpen(false)} />
+      <SearchOverlay />
     </header>
   );
 }

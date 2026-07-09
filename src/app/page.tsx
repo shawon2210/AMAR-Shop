@@ -5,6 +5,8 @@ import { TopBrands } from '@/components/commerce/top-brands';
 import { SellerCta } from '@/components/commerce/seller-cta';
 import { LocalBanners } from '@/components/commerce/local-banners';
 import { ProductGrid } from '@/components/commerce/product-grid';
+import { TrustBadges } from '@/components/commerce/trust-badges';
+import { RecentlyViewed } from '@/components/commerce/recently-viewed';
 import { getProducts } from '@/services/products';
 import { products } from '@/lib/data/products';
 
@@ -15,13 +17,36 @@ export default async function HomePage() {
 
   return (
     <div className="flex flex-col gap-4 md:gap-5 lg:gap-6 pb-8">
+      {/* Hero */}
       <HeroSection />
+
+      {/* Trust Badges - Above the fold */}
+      <div className="app-container">
+        <TrustBadges variant="inline" />
+      </div>
+
+      {/* Flash Sale */}
       <FlashSaleSection />
+
+      {/* Categories */}
       <CategoryGrid />
+
+      {/* Trending Now */}
       <ProductGrid products={productsData.slice(0, 7)} title="Trending Now" columns={7} />
+
+      {/* Local Banners */}
       <LocalBanners />
+
+      {/* Recently Viewed */}
+      <RecentlyViewed />
+
+      {/* Top Brands */}
       <TopBrands />
+
+      {/* Seller CTA */}
       <SellerCta />
+
+      {/* Just For You */}
       <ProductGrid products={productsData} title="Just For You" columns={7} />
     </div>
   );

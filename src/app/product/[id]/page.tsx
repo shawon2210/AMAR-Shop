@@ -8,13 +8,14 @@ import { PriceDisplay, DiscountBadge } from '@/components/ui/price-display';
 import { Badge } from '@/components/ui/badge';
 import { CountdownTimer } from '@/components/ui/countdown-timer';
 import { ProductGrid } from '@/components/commerce/product-grid';
+import { ProductGallery } from '@/components/commerce/product-gallery';
 import { useCartStore } from '@/stores/cart-store';
 import { useUIStore } from '@/stores/ui-store';
+import { useRecentlyViewedStore } from '@/stores/recently-viewed-store';
 
 export default function ProductDetailPage() {
   const params = useParams();
   const router = useRouter();
-  const [selectedImage, setSelectedImage] = useState(0);
   const [quantity, setQuantity] = useState(1);
   const { data: product, isLoading } = useGetProductById(params.id as string);
   const { data: allProducts = [] } = useGetProducts(0, 8);
@@ -23,6 +24,12 @@ export default function ProductDetailPage() {
     : [];
   const addItem = useCartStore(s => s.addItem);
   const addToast = useUIStore(s => s.addToast);
+  const addToRecentlyViewed = useRecentlyViewedStore(s => s.addItem);
+
+  // Track recently viewed
+  if (product) {
+    addToRecentlyViewed(product);
+  }
 
   if (isLoading) {
     return (
@@ -75,40 +82,20 @@ export default function ProductDetailPage() {
       </nav>
 
       {/* Product Gallery + Info */}
-      <div className="grid grid-cols-1 md:grid-cols-12 gap-4 md:gap-lg">
+      <div className="grid grid-cols-1 md:grid-cols-12 gap-4 md:gap-6">
         {/* Gallery */}
-        <section className="md:col-span-5 space-y-md">
-          <div className="overflow-hidden rounded-xl bg-white aspect-square flex items-center justify-center relative cursor-zoom-in border border-outline-variant">
-            <img
-              className="w-full h-full object-cover hover:scale-150 transition-transform duration-300"
-              src={product.images[selectedImage]}
-              alt={product.name}
-            />
-            {product.isFlashSale && discount > 0 && (
-              <div className="absolute top-sm right-sm bg-primary text-white text-[10px] px-sm py-0.5 font-bold rounded">
-                FLASH SALE
-              </div>
-            )}
-          </div>
-
-          <div className="flex gap-2 overflow-x-auto hide-scrollbar pb-1">
-            {product.images.map((img, idx) => (
-              <button
-                key={idx}
-                onClick={() => setSelectedImage(idx)}
-                className={`w-16 h-16 md:w-20 md:h-20 flex-shrink-0 rounded-lg overflow-hidden border-2 transition-colors ${
-                  idx === selectedImage ? 'border-primary' : 'border-outline-variant'
-                }`}
-              >
-                <img className="w-full h-full object-cover" src={img} alt={`${product.name} ${idx + 1}`} />
-              </button>
-            ))}
-          </div>
+        <section className="md:col-span-5">
+          <ProductGallery
+            images={product.images}
+            productName={product.name}
+            isFlashSale={product.isFlashSale}
+            discount={discount}
+          />
         </section>
 
         {/* Product Info */}
         <section className="md:col-span-7 space-y-md">
-          <div className="bg-surface-container-lowest p-4 rounded-xl space-y-3">
+          <div className="bg-white p-4 md:p-5 rounded-xl space-y-4 border border-gray-100">
             <div className="flex items-center gap-1.5 flex-wrap">
               {product.isMall && <Badge variant="primary">Mall</Badge>}
               {product.isNew && <Badge variant="tertiary">New</Badge>}
@@ -116,11 +103,11 @@ export default function ProductDetailPage() {
               {discount > 0 && <DiscountBadge discount={discount} />}
             </div>
 
-            <h1 className="text-xl font-bold leading-tight text-on-surface">
+            <h1 className="text-xl md:text-2xl font-bold leading-tight text-gray-900">
               {product.name}
             </h1>
 
-            <p className="font-body-sm text-body-sm text-on-surface-variant">
+            <p className="text-sm text-gray-500">
               {product.description}
             </p>
 
@@ -167,9 +154,9 @@ export default function ProductDetailPage() {
 
             {/* Seller */}
             {product.seller && (
-              <div className="flex items-center gap-2 text-sm text-secondary border-t border-outline-variant pt-3">
+              <div className="flex items-center gap-2 text-sm text-gray-500 border-t border-gray-100 pt-3">
                 <span className="material-symbols-outlined text-base">store</span>
-                <span>Sold by: <strong className="text-on-surface">{product.seller.name}</strong></span>
+                <span>Sold by: <strong className="text-gray-900">{product.seller.name}</strong></span>
                 {product.seller.isOfficial && (
                   <Badge variant="primary" size="sm">Official Store</Badge>
                 )}
@@ -178,13 +165,13 @@ export default function ProductDetailPage() {
 
             {/* Specs */}
             {product.specifications && Object.keys(product.specifications).length > 0 && (
-              <div className="border-t border-outline-variant pt-3">
-                <h4 className="font-title-sm text-title-sm mb-2">Specifications</h4>
+              <div className="border-t border-gray-100 pt-3">
+                <h4 className="font-semibold text-sm text-gray-700 mb-2">Specifications</h4>
                 <div className="grid grid-cols-2 gap-1.5">
                   {Object.entries(product.specifications).map(([key, val]) => (
                     <div key={key} className="flex gap-1 text-sm">
-                      <span className="text-secondary min-w-[80px]">{key}:</span>
-                      <span className="text-on-surface font-medium">{val}</span>
+                      <span className="text-gray-500 min-w-[80px]">{key}:</span>
+                      <span className="text-gray-900 font-medium">{val}</span>
                     </div>
                   ))}
                 </div>
@@ -192,10 +179,10 @@ export default function ProductDetailPage() {
             )}
 
             {/* Quantity + Actions */}
-            <div className="border-t border-outline-variant pt-3 space-y-3">
+            <div className="border-t border-gray-100 pt-3 space-y-3">
               <div className="flex items-center gap-3">
                 <span className="font-semibold">Quantity:</span>
-                <div className="flex items-center border border-outline rounded-lg overflow-hidden">
+                <div className="flex items-center border border-gray-200 rounded-lg overflow-hidden">
                   <button
                     onClick={() => setQuantity(Math.max(1, quantity - 1))}
                     className="px-3 py-1.5 hover:bg-surface-container-high transition-colors"

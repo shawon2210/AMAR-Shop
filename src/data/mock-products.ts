@@ -21,7 +21,6 @@ export const MOCK_PRODUCTS: Product[] = [
     inStock: true,
     stockCount: 25,
     isNew: true,
-    isFeatured: true,
     freeShipping: true,
     soldPercent: 85,
     seller: {

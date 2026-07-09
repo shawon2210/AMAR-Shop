@@ -2,9 +2,10 @@
 
 import Link from 'next/link';
 import { useState, memo, useCallback } from 'react';
-import { Product } from '@/types';
+import type { Product } from '@/types';
 import { useCartStore } from '@/stores/cart-store';
 import { useUIStore } from '@/stores/ui-store';
+import { brandLogoMap } from '@/components/commerce/brand-logos';
 
 interface ProductCardProps {
   product: Product;
@@ -135,11 +136,29 @@ export const ProductCard = memo(function ProductCard({ product }: ProductCardPro
 
       {/* Content */}
       <div className="flex flex-col flex-1 p-3 md:p-3.5">
-        {product.brand && (
-          <p className="text-[10px] font-bold text-gray-400 uppercase tracking-widest truncate leading-none mb-1.5">
-            {product.brand}
-          </p>
-        )}
+        {product.brand && (() => {
+          const BrandLogo = brandLogoMap[product.brand];
+          return (
+            <div className="flex items-center gap-1 mb-1.5">
+              {BrandLogo ? (
+                <BrandLogo className="w-[52px] h-[11px] text-gray-400" />
+              ) : (
+                <p className="text-[10px] font-bold text-gray-400 uppercase tracking-widest truncate leading-none">
+                  {product.brand}
+                </p>
+              )}
+              {BrandLogo && (
+                <span className="inline-flex items-center gap-[2px] h-[14px] px-1 rounded-[2px] bg-primary/10 text-primary text-[7px] font-bold tracking-wider leading-none">
+                  <svg viewBox="0 0 16 16" fill="currentColor" className="w-[8px] h-[8px]">
+                    <path d="M8 1L9.5 4.5L13 6L9.5 7.5L8 11L6.5 7.5L3 6L6.5 4.5L8 1Z" />
+                    <path d="M8 11L9.5 14L13 12.5L9.5 13L8 16L6.5 13L3 12.5L6.5 14L8 11Z" />
+                  </svg>
+                  Official Store
+                </span>
+              )}
+            </div>
+          );
+        })()}
 
         <h3 className="text-[13px] font-medium text-gray-800 line-clamp-2 leading-snug flex-1" style={{ minHeight: '2.6em' }}>
           {product.name}
