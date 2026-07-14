@@ -16,7 +16,7 @@ export function Footer() {
       </div>
 
       {/* Tablet: brand left + 2-col links right, side by side */}
-      <div className="hidden md:grid lg:hidden grid-cols-[200px_1fr] gap-8">
+      <div className="hidden md:grid lg:hidden grid-cols-[auto_1fr] gap-8">
         <FooterBrand />
         <div className="grid grid-cols-2 gap-6">
           <FooterLinks />

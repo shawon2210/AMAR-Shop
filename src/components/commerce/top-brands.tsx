@@ -10,7 +10,7 @@ const BrandCard = memo(function BrandCard({ brand }: { brand: BrandInfo }) {
   return (
     <Link
       href={`/brand/${brand.slug}`}
-      className="group flex flex-col items-center gap-2.5 p-3.5 rounded-xl border border-gray-100 hover:border-gray-200 hover:shadow-[0_8px_30px_-4px_rgba(0,0,0,0.12)] hover:-translate-y-1 transition-all duration-180 bg-white"
+      className="group flex flex-col items-center gap-2.5 p-3.5 rounded-xl border border-gray-100 hover:border-gray-200 hover:shadow-[0_8px_30px_-4px_rgba(0,0,0,0.12)] hover:-translate-y-1 transition-all duration-[180ms] bg-white"
     >
       <div className={`w-14 h-14 rounded-2xl ${brand.bg} ring-4 ${brand.ring} flex items-center justify-center transition-all duration-180 group-hover:scale-105 group-hover:shadow-lg`}>
         <div className="flex items-center justify-center w-7 h-7">
@@ -90,7 +90,7 @@ function BrandCarousel() {
         <Link
           key={`${b.slug}-${i}`}
           href={`/brand/${b.slug}`}
-          className="group flex flex-col items-center gap-2 p-3 rounded-xl border border-gray-100 min-w-[80px] max-w-[80px] hover:border-gray-200 transition-all duration-180 bg-white hover:shadow-[0_4px_16px_-4px_rgba(0,0,0,0.1)] hover:-translate-y-0.5 shrink-0"
+          className="group flex flex-col items-center gap-2 p-3 rounded-xl border border-gray-100 min-w-[80px] max-w-[80px] hover:border-gray-200 transition-all duration-[180ms] bg-white hover:shadow-[0_4px_16px_-4px_rgba(0,0,0,0.1)] hover:-translate-y-0.5 shrink-0"
         >
           <div className={`w-12 h-12 rounded-xl ${b.bg} flex items-center justify-center transition-transform duration-180 group-hover:scale-105`}>
             <div className="flex items-center justify-center w-6 h-6">

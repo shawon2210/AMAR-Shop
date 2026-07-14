@@ -851,10 +851,14 @@ export class BiService {
   }
 
   async getRfmSegments() {
-    return this.prismaService.rfmSegment.findMany({ orderBy: { avgLtv: 'desc' } });
+    return this.prismaService.rfmSegment.findMany({
+      orderBy: { avgLtv: 'desc' },
+    });
   }
 
   async getCohortData() {
-    return this.prismaService.cohortAnalysis.findMany({ orderBy: { cohort: 'asc' } });
+    return this.prismaService.cohortAnalysis.findMany({
+      orderBy: { cohort: 'asc' },
+    });
   }
 }

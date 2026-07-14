@@ -6,10 +6,14 @@ import {
   ForbiddenException,
 } from '@nestjs/common';
 import { PrismaService } from '../../common/prisma.service';
+import { CouponService } from '../coupons/coupon.service';
 
 @Injectable()
 export class OrdersService {
-  constructor(private prismaService: PrismaService) {}
+  constructor(
+    private prismaService: PrismaService,
+    private couponService: CouponService,
+  ) {}
 
   private generateOrderNumber(): string {
     const date = new Date();
@@ -20,17 +24,17 @@ export class OrdersService {
     return `AMR-${y}${m}${d}-${uid}`;
   }
 
+  private readonly FREE_SHIPPING_THRESHOLD = 2000;
+  private readonly SHIPPING_COST = 60;
+
   async create(
     userId: string,
     data: {
       addressId: string;
       paymentMethod: string;
       note?: string;
-      items: { productId: string; quantity: number; price: number }[];
-      subtotal: number;
-      shipping: number;
-      discount: number;
-      total: number;
+      items: { productId: string; quantity: number }[];
+      couponCode?: string;
     },
   ) {
     if (!data.items || data.items.length === 0) {
@@ -48,9 +52,24 @@ export class OrdersService {
     const productIds = data.items.map((i) => i.productId);
     const products = await this.prismaService.product.findMany({
       where: { id: { in: productIds } },
-      select: { id: true, price: true, stockCount: true, inStock: true },
+      select: {
+        id: true,
+        price: true,
+        stockCount: true,
+        inStock: true,
+        storeId: true,
+      },
     });
     const productMap = new Map(products.map((p) => [p.id, p]));
+
+    // Validate stock and calculate totals
+    let subtotal = 0;
+    const orderItems: {
+      productId: string;
+      quantity: number;
+      price: number;
+      storeId: string;
+    }[] = [];
 
     for (const item of data.items) {
       const product = productMap.get(item.productId);
@@ -62,44 +81,96 @@ export class OrdersService {
           `Product ${item.productId} is out of stock or has insufficient stock`,
         );
       }
+
+      const itemTotal = product.price * item.quantity;
+      subtotal += itemTotal;
+      orderItems.push({
+        productId: item.productId,
+        quantity: item.quantity,
+        price: product.price,
+        storeId: product.storeId,
+      });
     }
 
-    const order = await this.prismaService.order.create({
-      data: {
-        orderNumber: this.generateOrderNumber(),
+    const shipping =
+      subtotal >= this.FREE_SHIPPING_THRESHOLD ? 0 : this.SHIPPING_COST;
+
+    let discount = 0;
+    let coupon: any = null;
+
+    if (data.couponCode) {
+      const validation = await this.couponService.validateCoupon(
+        data.couponCode,
         userId,
-        addressId: data.addressId,
-        paymentMethod: data.paymentMethod as any,
-        subtotal: data.subtotal,
-        shipping: data.shipping,
-        discount: data.discount,
-        total: data.total,
-        note: data.note,
-        status: 'PENDING',
-        items: {
-          create: data.items.map((item) => ({
-            productId: item.productId,
-            quantity: item.quantity,
-            price: item.price,
-          })),
-        },
-      },
-      include: {
-        items: {
-          include: {
-            product: { select: { id: true, name: true, images: true } },
+        subtotal,
+      );
+      discount = validation.discount;
+      coupon = validation.coupon;
+    }
+
+    const total = subtotal + shipping - discount;
+
+    // Use transaction for atomic order creation and stock reservation
+    const order = await this.prismaService.$transaction(async (tx) => {
+      // Create order with calculated totals
+      const order = await tx.order.create({
+        data: {
+          orderNumber: this.generateOrderNumber(),
+          userId,
+          addressId: data.addressId,
+          paymentMethod: data.paymentMethod as any,
+          subtotal,
+          shipping,
+          discount,
+          total,
+          note: data.note,
+          status: 'PENDING',
+          items: {
+            create: orderItems.map((item) => ({
+              productId: item.productId,
+              quantity: item.quantity,
+              price: item.price,
+            })),
           },
         },
-        address: true,
-      },
+        include: {
+          items: {
+            include: {
+              product: { select: { id: true, name: true, images: true } },
+            },
+          },
+          address: true,
+        },
+      });
+
+      // Reserve stock (decrement stockCount)
+      for (const item of data.items) {
+        await tx.product.update({
+          where: { id: item.productId },
+          data: { stockCount: { decrement: item.quantity } },
+        });
+      }
+
+      // Clear cart items
+      await tx.cartItem.deleteMany({
+        where: {
+          userId,
+          productId: { in: productIds },
+        },
+      });
+
+      return order;
     });
 
-    await this.prismaService.cartItem.deleteMany({
-      where: {
+    // Apply coupon usage tracking if coupon was used
+    if (coupon) {
+      await this.couponService.applyCoupon(
+        coupon.id,
         userId,
-        productId: { in: productIds },
-      },
-    });
+        order.id,
+        discount,
+      );
+    }
 
     return order;
   }

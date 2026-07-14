@@ -60,7 +60,9 @@ export class AdminDashboardService {
       const date = new Date(now.getTime() - i * 24 * 60 * 60 * 1000);
       const dateStr = date.toISOString().split('T')[0];
       const dayRevenue = revenueData
-        .filter((r) => r.paidAt && r.paidAt.toISOString().split('T')[0] === dateStr)
+        .filter(
+          (r) => r.paidAt && r.paidAt.toISOString().split('T')[0] === dateStr,
+        )
         .reduce((sum, r) => sum + r.total, 0);
       revenueChart.push({ date: dateStr, revenue: dayRevenue });
     }
@@ -115,14 +117,18 @@ export class AdminDashboardService {
       const date = new Date(now.getTime() - i * 24 * 60 * 60 * 1000);
       const dateStr = date.toISOString().split('T')[0];
       const dayRevenue = revenueData
-        .filter((r) => r.paidAt && r.paidAt.toISOString().split('T')[0] === dateStr)
+        .filter(
+          (r) => r.paidAt && r.paidAt.toISOString().split('T')[0] === dateStr,
+        )
         .reduce((sum, r) => sum + r.total, 0);
       revenueChart.push({ date: dateStr, revenue: dayRevenue });
     }
 
     const topCategoriesWithNames = await Promise.all(
       topCategories.map(async (c) => {
-        const cat = await this.prisma.category.findUnique({ where: { id: c.categoryId } });
+        const cat = await this.prisma.category.findUnique({
+          where: { id: c.categoryId },
+        });
         return {
           categoryId: c.categoryId,
           categoryName: cat?.name || 'Unknown',
@@ -153,7 +159,13 @@ export class AdminDashboardService {
       const totalSales = orders.reduce((sum, o) => sum + o.total, 0);
       const totalOrders = orders.length;
       const avgOrderValue = totalOrders > 0 ? totalSales / totalOrders : 0;
-      return { totalSales, totalOrders, avgOrderValue, orders, period: { from, to } };
+      return {
+        totalSales,
+        totalOrders,
+        avgOrderValue,
+        orders,
+        period: { from, to },
+      };
     }
 
     if (type === 'sellers') {
@@ -161,9 +173,21 @@ export class AdminDashboardService {
         where: { isSeller: true, createdAt: { gte: from, lte: to } },
         include: {
           store: {
-            select: { id: true, name: true, followerCount: true, rating: true, _count: { select: { products: true } } },
+            select: {
+              id: true,
+              name: true,
+              followerCount: true,
+              rating: true,
+              _count: { select: { products: true } },
+            },
           },
-          sellerProfile: { select: { totalOrders: true, totalRevenue: true, performanceScore: true } },
+          sellerProfile: {
+            select: {
+              totalOrders: true,
+              totalRevenue: true,
+              performanceScore: true,
+            },
+          },
         },
       });
       return { totalSellers: sellers.length, sellers, period: { from, to } };
@@ -183,7 +207,9 @@ export class AdminDashboardService {
       return { totalProducts, totalSold, products, period: { from, to } };
     }
 
-    throw new BadRequestException('Invalid report type. Use: sales, sellers, products');
+    throw new BadRequestException(
+      'Invalid report type. Use: sales, sellers, products',
+    );
   }
 
   async updateSettings(commissionRate?: number) {

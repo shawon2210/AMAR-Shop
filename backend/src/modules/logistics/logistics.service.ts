@@ -13,8 +13,12 @@ export class LogisticsService {
     if (!order) throw new NotFoundException('Order not found');
 
     const courier = courierId
-      ? await this.prismaService.courier.findUnique({ where: { id: courierId } })
-      : await this.prismaService.courier.findFirst({ where: { isActive: true } });
+      ? await this.prismaService.courier.findUnique({
+          where: { id: courierId },
+        })
+      : await this.prismaService.courier.findFirst({
+          where: { isActive: true },
+        });
 
     if (!courier) throw new NotFoundException('No active courier found');
 

@@ -138,7 +138,7 @@ export default function CartPage() {
             <div className="flex items-center gap-2 text-sm text-gray-600 mb-2">
               <Truck className="w-4 h-4 text-primary" />
               <span>
-              You're <strong className="text-primary">৳{shipping.remaining.toLocaleString('en-BD')}</strong> away from free delivery!
+                You&apos;re <strong className="text-primary">৳{shipping.remaining.toLocaleString('en-BD')}</strong> away from free delivery!
               </span>
             </div>
             <div className="w-full h-2 bg-gray-100 rounded-full overflow-hidden">
@@ -151,7 +151,7 @@ export default function CartPage() {
         ) : (
           <div className="flex items-center gap-2 text-sm text-emerald-600 font-medium">
             <Gift className="w-4 h-4" />
-            <span>You've earned free delivery! 🎉</span>
+            <span>You&apos;ve earned free delivery! 🎉</span>
           </div>
         )}
       </motion.div>

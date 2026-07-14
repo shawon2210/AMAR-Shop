@@ -1,5 +1,7 @@
 import { Module } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
+import { ThrottlerModule, ThrottlerGuard } from '@nestjs/throttler';
+import { APP_GUARD } from '@nestjs/core';
 import { ProductsModule } from './modules/products/products.module';
 import { CategoriesModule } from './modules/categories/categories.module';
 import { AuthModule } from './modules/auth/auth.module';
@@ -36,6 +38,12 @@ import { PrismaService } from './common/prisma.service';
 @Module({
   imports: [
     ConfigModule.forRoot({ isGlobal: true }),
+    ThrottlerModule.forRoot([
+      {
+        ttl: 60000,
+        limit: 100,
+      },
+    ]),
     ProductsModule,
     CategoriesModule,
     AuthModule,
@@ -63,6 +71,14 @@ import { PrismaService } from './common/prisma.service';
     AddressesModule,
   ],
   controllers: [AppController, HealthController],
-  providers: [AppService, PrismaService, DependencyChecker],
+  providers: [
+    AppService,
+    PrismaService,
+    DependencyChecker,
+    {
+      provide: APP_GUARD,
+      useClass: ThrottlerGuard,
+    },
+  ],
 })
 export class AppModule {}

@@ -19,15 +19,10 @@ export default function CheckoutPage() {
   const token = useAuthStore(s => s.accessToken);
   const hydrated = useAuthStore(s => !!s.accessToken);
   const items = allItems.filter(item => item.selected);
-  const subtotal = items.reduce((sum, item) => sum + item.product.price * item.quantity, 0);
 
   const [selectedAddressId, setSelectedAddressId] = useState('');
   const [selectedPayment, setSelectedPayment] = useState('cod');
   const [isProcessing, setIsProcessing] = useState(false);
-
-  const shipping = subtotal >= 2000 ? 0 : 60;
-  const discount = 0;
-  const total = subtotal + shipping - discount;
 
   const handlePlaceOrder = async () => {
     if (!hydrated) return;
@@ -47,19 +42,14 @@ export default function CheckoutPage() {
     setIsProcessing(true);
 
     try {
-      const order = await api.post<any>('/orders', {
+      const order = await api.post<{ id: string }>('/orders', {
         addressId: selectedAddressId,
         paymentMethod: selectedPayment.toUpperCase(),
         note: undefined,
         items: items.map(item => ({
           productId: item.product.id,
           quantity: item.quantity,
-          price: item.product.price,
         })),
-        subtotal,
-        shipping,
-        discount,
-        total,
       });
 
       clearCart();
@@ -72,9 +62,9 @@ export default function CheckoutPage() {
         id: orderId,
         items: items.map(item => ({ ...item, product: { ...item.product } })),
         status: 'pending',
-        total,
-        subtotal,
-        shipping,
+        total: items.reduce((sum, item) => sum + item.product.price * item.quantity, 0),
+        subtotal: items.reduce((sum, item) => sum + item.product.price * item.quantity, 0),
+        shipping: items.reduce((sum, item) => sum + item.product.price * item.quantity, 0) >= 2000 ? 0 : 60,
         discount: 0,
         paymentMethod: selectedPayment,
         addressId: selectedAddressId,
@@ -110,9 +100,6 @@ export default function CheckoutPage() {
           <div className="sticky top-24 space-y-4">
             <OrderSummary
               items={items}
-              subtotal={subtotal}
-              shipping={shipping}
-              total={total}
               isProcessing={isProcessing}
               onPlaceOrder={handlePlaceOrder}
             />

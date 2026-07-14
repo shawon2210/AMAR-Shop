@@ -16,14 +16,26 @@ export class PaymentsController {
 
   @UseGuards(AuthGuard('jwt'))
   @Post('bkash/initiate')
-  initiateBkash(@Body() body: { orderId: string; amount: number }) {
-    return this.paymentsService.initiateBkashPayment(body.orderId, body.amount);
+  initiateBkash(
+    @Body() body: { orderId: string; amount: number; customer: any },
+  ) {
+    return this.paymentsService.initiateBkashPayment(
+      body.orderId,
+      body.amount,
+      body.customer,
+    );
   }
 
   @UseGuards(AuthGuard('jwt'))
   @Post('nagad/initiate')
-  initiateNagad(@Body() body: { orderId: string; amount: number }) {
-    return this.paymentsService.initiateNagadPayment(body.orderId, body.amount);
+  initiateNagad(
+    @Body() body: { orderId: string; amount: number; customer: any },
+  ) {
+    return this.paymentsService.initiateNagadPayment(
+      body.orderId,
+      body.amount,
+      body.customer,
+    );
   }
 
   @UseGuards(AuthGuard('jwt'))

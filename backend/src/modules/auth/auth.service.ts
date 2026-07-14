@@ -3,6 +3,7 @@ import {
   Inject,
   ConflictException,
   UnauthorizedException,
+  BadRequestException,
 } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import * as bcrypt from 'bcrypt';
@@ -247,5 +248,185 @@ export class AuthService {
       refreshToken,
       expiresAt: expiresAt.toISOString(),
     };
+  }
+
+  async forgotPassword(phone: string) {
+    const user = await this.prismaService.user.findUnique({
+      where: { phone },
+    });
+
+    if (!user) {
+      return {
+        message: 'If the phone number exists, a reset link has been sent',
+      };
+    }
+
+    const resetToken = uuidv4();
+    const expiresAt = new Date(Date.now() + 60 * 60 * 1000);
+
+    await this.prismaService.passwordResetToken.create({
+      data: {
+        token: resetToken,
+        userId: user.id,
+        expiresAt,
+      },
+    });
+
+    this.sendPasswordResetSMS(user.phone, resetToken);
+
+    return {
+      message: 'If the phone number exists, a reset link has been sent',
+    };
+  }
+
+  async resetPassword(token: string, newPassword: string) {
+    const resetRecord = await this.prismaService.passwordResetToken.findUnique({
+      where: { token },
+    });
+
+    if (!resetRecord || resetRecord.expiresAt < new Date()) {
+      throw new BadRequestException('Invalid or expired reset token');
+    }
+
+    if (resetRecord.used) {
+      throw new BadRequestException('Reset token already used');
+    }
+
+    const hashedPassword = await bcrypt.hash(newPassword, 12);
+
+    await this.prismaService.$transaction([
+      this.prismaService.user.update({
+        where: { id: resetRecord.userId },
+        data: { password: hashedPassword },
+      }),
+      this.prismaService.passwordResetToken.update({
+        where: { id: resetRecord.id },
+        data: { used: true, usedAt: new Date() },
+      }),
+      this.prismaService.refreshToken.updateMany({
+        where: { userId: resetRecord.userId, revokedAt: null },
+        data: { revokedAt: new Date() },
+      }),
+    ]);
+
+    return { message: 'Password reset successfully' };
+  }
+
+  async verifyEmail(token: string) {
+    const emailVerification =
+      await this.prismaService.emailVerificationToken.findUnique({
+        where: { token },
+      });
+
+    if (!emailVerification || emailVerification.expiresAt < new Date()) {
+      throw new BadRequestException('Invalid or expired verification token');
+    }
+
+    if (emailVerification.verified) {
+      throw new BadRequestException('Email already verified');
+    }
+
+    await this.prismaService.$transaction([
+      this.prismaService.user.update({
+        where: { id: emailVerification.userId },
+        data: { isVerified: true, emailVerifiedAt: new Date() },
+      }),
+      this.prismaService.emailVerificationToken.update({
+        where: { id: emailVerification.id },
+        data: { verified: true, verifiedAt: new Date() },
+      }),
+    ]);
+
+    return { message: 'Email verified successfully' };
+  }
+
+  async verifyPhone(token: string) {
+    const phoneVerification =
+      await this.prismaService.phoneVerificationToken.findUnique({
+        where: { token },
+      });
+
+    if (!phoneVerification || phoneVerification.expiresAt < new Date()) {
+      throw new BadRequestException('Invalid or expired verification token');
+    }
+
+    if (phoneVerification.verified) {
+      throw new BadRequestException('Phone already verified');
+    }
+
+    await this.prismaService.$transaction([
+      this.prismaService.user.update({
+        where: { id: phoneVerification.userId },
+        data: { isVerified: true, phoneVerifiedAt: new Date() },
+      }),
+      this.prismaService.phoneVerificationToken.update({
+        where: { id: phoneVerification.id },
+        data: { verified: true, verifiedAt: new Date() },
+      }),
+    ]);
+
+    return { message: 'Phone verified successfully' };
+  }
+
+  async resendEmailVerification(userId: string) {
+    const user = await this.prismaService.user.findUnique({
+      where: { id: userId },
+    });
+
+    if (!user || !user.email) {
+      throw new BadRequestException('User not found or no email');
+    }
+
+    if (user.isVerified) {
+      return { message: 'Email already verified' };
+    }
+
+    const token = uuidv4();
+    const expiresAt = new Date(Date.now() + 24 * 60 * 60 * 1000);
+
+    await this.prismaService.emailVerificationToken.create({
+      data: { token, userId, expiresAt },
+    });
+
+    this.sendVerificationEmail(user.email, token);
+
+    return { message: 'Verification email sent' };
+  }
+
+  async resendPhoneVerification(userId: string) {
+    const user = await this.prismaService.user.findUnique({
+      where: { id: userId },
+    });
+
+    if (!user || !user.phone) {
+      throw new BadRequestException('User not found or no phone');
+    }
+
+    if (user.isVerified) {
+      return { message: 'Phone already verified' };
+    }
+
+    const token = uuidv4();
+    const expiresAt = new Date(Date.now() + 60 * 60 * 1000);
+
+    await this.prismaService.phoneVerificationToken.create({
+      data: { token, userId, expiresAt },
+    });
+
+    await this.sendVerificationSMS(user.phone, token);
+
+    return { message: 'Verification SMS sent' };
+  }
+
+  private sendPasswordResetSMS(phone: string, token: string) {
+    console.log(`SMS to ${phone}: Reset token: ${token}`);
+  }
+
+  private sendVerificationEmail(email: string, token: string) {
+    console.log(`Email to ${email}: Verification token: ${token}`);
+  }
+
+  private sendVerificationSMS(phone: string, token: string) {
+    console.log(`SMS to ${phone}: Verification token: ${token}`);
   }
 }

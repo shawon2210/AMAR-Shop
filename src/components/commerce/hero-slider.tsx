@@ -114,7 +114,7 @@ export function HeroSlider() {
           {/* Content */}
           <div
             className={
-              "absolute inset-0 flex flex-col justify-end pb-7 pl-6 pr-6 sm:pb-9 sm:pl-10 md:pb-11 md:pl-12 lg:pb-14 lg:pl-14 transition-all duration-600 " +
+              "absolute inset-0 flex flex-col justify-end pb-7 pl-6 pr-6 sm:pb-9 sm:pl-10 md:pb-11 md:pl-12 lg:pb-14 lg:pl-14 transition-all duration-[600ms] " +
               (i === current ? "opacity-100 translate-y-0" : "opacity-0 translate-y-4")
             }
           >

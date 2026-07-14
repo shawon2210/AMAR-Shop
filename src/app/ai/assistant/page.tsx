@@ -61,7 +61,7 @@ export default function AIAssistantPage() {
         .slice(-10)
         .map(m => ({ role: m.role, content: m.content }));
 
-      const res = await fetch('/api/ai/chat', {
+      const res = await fetch('/api/v1/ai/chat', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ message: content, history }),

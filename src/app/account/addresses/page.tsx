@@ -40,16 +40,28 @@ export default function AddressesPage() {
   }
 
   useEffect(() => {
-    if (!token) { setLoading(false); return; }
-    api.get<Address[]>('/addresses')
-      .then(setAddresses)
-      .catch(() => {
+    let mounted = true;
+
+    const fetchAddresses = async () => {
+      if (!token) {
+        setLoading(false);
+        return;
+      }
+      try {
+        const data = await api.get<Address[]>('/addresses');
+        if (mounted) setAddresses(data);
+      } catch {
+        if (!mounted) return;
         const local = loadLocalAddresses();
         if (local.length > 0) { setAddresses(local); }
-        setLoading(false);
-      })
-      .finally(() => setLoading(false));
-  }, [token, addToast]);
+      } finally {
+        if (mounted) setLoading(false);
+      }
+    };
+
+    fetchAddresses();
+    return () => { mounted = false; };
+  }, [token]);
 
   const handleSave = async () => {
     if (!form.fullName || !form.phone || !form.street || !form.area) {

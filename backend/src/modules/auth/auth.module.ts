@@ -1,5 +1,5 @@
 import { Module } from '@nestjs/common';
-import { ConfigModule, ConfigService } from '@nestjs/config';
+import { ConfigService } from '@nestjs/config';
 import { JwtModule, JwtService } from '@nestjs/jwt';
 import { PassportModule } from '@nestjs/passport';
 import { AuthController } from './auth.controller';
@@ -12,7 +12,7 @@ const refreshJwtProvider = {
   inject: [ConfigService],
   useFactory: (config: ConfigService) =>
     new JwtService({
-      secret: config.get<string>('JWT_REFRESH_SECRET') || 'amarshop-refresh-secret-2026',
+      secret: config.get<string>('JWT_REFRESH_SECRET'),
       signOptions: { expiresIn: '7d' },
     }),
 };
@@ -23,7 +23,7 @@ const refreshJwtProvider = {
     JwtModule.registerAsync({
       inject: [ConfigService],
       useFactory: (config: ConfigService) => ({
-        secret: config.get<string>('JWT_SECRET') || 'amarshop-jwt-secret-2026',
+        secret: config.get<string>('JWT_SECRET'),
         signOptions: { expiresIn: '15m' },
       }),
     }),

@@ -86,7 +86,7 @@ export function MobileSidebar({ open, onClose }: { open: boolean; onClose: () =>
           >
             {/* Header with logo + close */}
             <div className="flex items-center justify-between px-5 h-16 md:h-18 border-b border-gray-100">
-              <img src="/images/amarshop-logo.png" alt="AmarShop" className="w-27.5 h-auto" />
+              <img src="/images/amarshop-logo.png" alt="AmarShop" className="w-[110px] h-auto" />
               <button
                 onClick={onClose}
                 className="flex items-center justify-center w-9 h-9 rounded-lg text-gray-500 hover:bg-gray-100 transition-colors"

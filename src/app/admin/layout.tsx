@@ -475,19 +475,17 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
   const user = useAuthStore((s) => s.user);
   const hydrated = useAuthHydrated();
   const [sidebarOpen, setSidebarOpen] = useState(false);
-  const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
+  const [sidebarCollapsed, setSidebarCollapsed] = useState(() => {
+    if (typeof window === 'undefined') return false;
+    const saved = localStorage.getItem('amarshop-admin-sidebar');
+    if (saved !== null) return saved === 'true';
+    return window.innerWidth >= 768 && window.innerWidth < 1024;
+  });
   const [searchOpen, setSearchOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
-  const [isDesktop, setIsDesktop] = useState(true);
+  const [isDesktop, setIsDesktop] = useState(() => typeof window !== 'undefined' && window.innerWidth >= 1024);
 
   useEffect(() => {
-    setIsDesktop(window.innerWidth >= 1024);
-    const saved = localStorage.getItem('amarshop-admin-sidebar');
-    if (saved !== null) {
-      setSidebarCollapsed(saved === 'true');
-    } else if (window.innerWidth >= 768 && window.innerWidth < 1024) {
-      setSidebarCollapsed(true);
-    }
     const handleResize = () => {
       setIsDesktop(window.innerWidth >= 1024);
     };

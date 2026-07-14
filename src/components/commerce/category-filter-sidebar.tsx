@@ -35,7 +35,9 @@ export function CategoryFilterSidebar() {
   const [selectedSort, setSelectedSort] = useState('popular');
   const [mounted, setMounted] = useState(false);
 
-  useEffect(() => { setMounted(true); }, []);
+  useEffect(() => {
+    setMounted(true);
+  }, []);
 
   // Lock body scroll when drawer is open
   useEffect(() => {
@@ -46,6 +48,9 @@ export function CategoryFilterSidebar() {
     }
     return () => { document.body.style.overflow = ''; };
   }, [mobileOpen]);
+
+  // Don't render filter content until mounted (SSR safety)
+  if (!mounted) return null;
 
   const filterContent = (
     <div className="space-y-8">

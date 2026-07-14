@@ -19,7 +19,7 @@ export default function AIDescriptionGeneratorPage() {
     setDescription('');
 
     try {
-      const res = await fetch('/api/ai/describe-product', {
+      const res = await fetch('/api/v1/ai/describe-product', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({

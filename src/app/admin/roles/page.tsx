@@ -56,7 +56,7 @@ export default function RolesPage() {
           <li>• <strong>SELLER</strong> — Access to own store, products, and orders</li>
           <li>• <strong>CUSTOMER</strong> — Standard customer account access</li>
           <li>• Role-based access is enforced server-side via the <code>@Roles()</code> decorator</li>
-          <li>• To change a user's role, go to <a href="/admin/users" className="text-primary hover:underline">Users</a> and edit their profile</li>
+          <li>• To change a user&apos;s role, go to <a href="/admin/users" className="text-primary hover:underline">Users</a> and edit their profile</li>
         </ul>
       </div>
     </div>

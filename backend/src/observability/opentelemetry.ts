@@ -7,20 +7,33 @@ import { resourceFromAttributes } from '@opentelemetry/resources';
 import { SemanticResourceAttributes } from '@opentelemetry/semantic-conventions';
 
 export function setupObservability() {
+  const endpoint =
+    process.env.OTEL_EXPORTER_OTLP_ENDPOINT ||
+    process.env.OTEL_EXPORTER_OTLP_TRACES_ENDPOINT ||
+    'http://localhost:4318/v1/traces';
+
+  const traceExporter = new OTLPTraceExporter({ url: endpoint });
+
+  const metricReader = new PeriodicExportingMetricReader({
+    exporter: new OTLPMetricExporter({
+      url:
+        process.env.OTEL_EXPORTER_OTLP_METRICS_ENDPOINT ||
+        process.env.OTEL_EXPORTER_OTLP_ENDPOINT ||
+        'http://localhost:4318/v1/metrics',
+    }),
+    exportIntervalMillis: 60000,
+  });
+
   const sdk = new NodeSDK({
     resource: resourceFromAttributes({
       [SemanticResourceAttributes.SERVICE_NAME]: 'amarshop-api',
       [SemanticResourceAttributes.SERVICE_VERSION]: '1.0.0',
     }),
-    traceExporter: new OTLPTraceExporter({
-      url: process.env.OTEL_EXPORTER_OTLP_ENDPOINT,
-    }),
-    metricReader: new PeriodicExportingMetricReader({
-      exporter: new OTLPMetricExporter(),
-      exportIntervalMillis: 60000,
-    }),
+    traceExporter,
+    metricReader,
     instrumentations: [getNodeAutoInstrumentations()],
   });
+
   sdk.start();
   return sdk;
 }

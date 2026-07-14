@@ -1,13 +1,22 @@
 import {
-  Controller, Get, Post, Put, Param, Query, Body, UseGuards,
+  Controller,
+  Get,
+  Post,
+  Put,
+  Param,
+  Query,
+  Body,
+  UseGuards,
 } from '@nestjs/common';
 import { AuthGuard } from '@nestjs/passport';
 import { RolesGuard } from '../../../common/guards/roles.guard';
 import { Roles } from '../../../common/decorators/roles.decorator';
 import { AdminFinanceService } from '../services/finance.service';
 import {
-  GenerateSettlementDto, ProcessSettlementDto,
-  CreateInvoiceDto, UpdateInvoiceDto,
+  GenerateSettlementDto,
+  ProcessSettlementDto,
+  CreateInvoiceDto,
+  UpdateInvoiceDto,
   UpdateAffiliateDto,
 } from '../dto';
 
@@ -41,7 +50,10 @@ export class AdminFinanceController {
   }
 
   @Put('finance/settlements/:id')
-  async processSettlement(@Param('id') id: string, @Body() dto: ProcessSettlementDto) {
+  async processSettlement(
+    @Param('id') id: string,
+    @Body() dto: ProcessSettlementDto,
+  ) {
     return this.financeService.processSettlement(id, dto.status);
   }
 
@@ -115,7 +127,10 @@ export class AdminFinanceController {
   }
 
   @Put('affiliates/:id')
-  async updateAdminAffiliate(@Param('id') id: string, @Body() dto: UpdateAffiliateDto) {
+  async updateAdminAffiliate(
+    @Param('id') id: string,
+    @Body() dto: UpdateAffiliateDto,
+  ) {
     return this.financeService.updateAdminAffiliate(id, dto.status);
   }
 }

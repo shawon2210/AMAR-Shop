@@ -4,19 +4,17 @@ import type { CartItem } from '@/types';
 
 export function OrderSummary({
   items,
-  subtotal,
-  shipping,
-  total,
   isProcessing,
   onPlaceOrder,
 }: {
   items: CartItem[];
-  subtotal: number;
-  shipping: number;
-  total: number;
   isProcessing: boolean;
   onPlaceOrder: () => void;
 }) {
+  const subtotal = items.reduce((sum, item) => sum + item.product.price * item.quantity, 0);
+  const shipping = subtotal >= 2000 ? 0 : 60;
+  const total = subtotal + shipping;
+
   return (
     <section className="bg-white dark:bg-slate-950 rounded-2xl border border-slate-100 dark:border-slate-800 p-6 shadow-sm">
       <h2 className="font-semibold text-lg text-slate-900 dark:text-white mb-4">Order Summary</h2>

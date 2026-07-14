@@ -13,9 +13,12 @@ import {
   HttpStatus,
 } from '@nestjs/common';
 import { AuthGuard } from '@nestjs/passport';
+import { RolesGuard } from '../../common/guards/roles.guard';
+import { Roles } from '../../common/decorators/roles.decorator';
 import { SellerService } from './seller.service';
 
-@UseGuards(AuthGuard('jwt'))
+@UseGuards(AuthGuard('jwt'), RolesGuard)
+@Roles('SELLER', 'ADMIN', 'SUPER_ADMIN')
 @Controller('seller')
 export class SellerController {
   constructor(private readonly sellerService: SellerService) {}

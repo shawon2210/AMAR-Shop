@@ -1,5 +1,14 @@
 import {
-  Controller, Get, Post, Put, Delete, Param, Query, Body, Request, UseGuards,
+  Controller,
+  Get,
+  Post,
+  Put,
+  Delete,
+  Param,
+  Query,
+  Body,
+  Request,
+  UseGuards,
 } from '@nestjs/common';
 import { AuthGuard } from '@nestjs/passport';
 import { RolesGuard } from '../../../common/guards/roles.guard';
@@ -23,7 +32,8 @@ export class AdminSupportController {
     return this.supportService.getSupportTickets({
       page: page ? parseInt(page) : 1,
       limit: limit ? parseInt(limit) : 20,
-      status, priority,
+      status,
+      priority,
     });
   }
 
@@ -42,7 +52,10 @@ export class AdminSupportController {
   }
 
   @Put('support-tickets/:id')
-  async updateSupportTicket(@Param('id') id: string, @Body() dto: UpdateTicketDto) {
+  async updateSupportTicket(
+    @Param('id') id: string,
+    @Body() dto: UpdateTicketDto,
+  ) {
     return this.supportService.updateSupportTicket(id, dto);
   }
 

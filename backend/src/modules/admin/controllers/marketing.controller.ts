@@ -1,16 +1,30 @@
 import {
-  Controller, Get, Post, Put, Delete, Param, Query, Body, UseGuards,
+  Controller,
+  Get,
+  Post,
+  Put,
+  Delete,
+  Param,
+  Query,
+  Body,
+  UseGuards,
 } from '@nestjs/common';
 import { AuthGuard } from '@nestjs/passport';
 import { RolesGuard } from '../../../common/guards/roles.guard';
 import { Roles } from '../../../common/decorators/roles.decorator';
 import { AdminMarketingService } from '../services/marketing.service';
 import {
-  CreateFlashSaleDto, UpdateFlashSaleDto, AddCampaignProductDto,
-  CreateBannerDto, UpdateBannerDto,
-  CreateCouponDto, UpdateCouponDto,
-  CreateCmsPageDto, UpdateCmsPageDto,
-  CreateAnnouncementDto, UpdateAnnouncementDto,
+  CreateFlashSaleDto,
+  UpdateFlashSaleDto,
+  AddCampaignProductDto,
+  CreateBannerDto,
+  UpdateBannerDto,
+  CreateCouponDto,
+  UpdateCouponDto,
+  CreateCmsPageDto,
+  UpdateCmsPageDto,
+  CreateAnnouncementDto,
+  UpdateAnnouncementDto,
 } from '../dto';
 
 @UseGuards(AuthGuard('jwt'), RolesGuard)
@@ -30,7 +44,10 @@ export class AdminMarketingController {
   }
 
   @Put('flash-sales/:id')
-  async updateFlashSale(@Param('id') id: string, @Body() dto: UpdateFlashSaleDto) {
+  async updateFlashSale(
+    @Param('id') id: string,
+    @Body() dto: UpdateFlashSaleDto,
+  ) {
     return this.marketingService.updateFlashSale(id, dto);
   }
 
@@ -40,7 +57,10 @@ export class AdminMarketingController {
   }
 
   @Post('flash-sales/:id/products')
-  async addCampaignProduct(@Param('id') id: string, @Body() dto: AddCampaignProductDto) {
+  async addCampaignProduct(
+    @Param('id') id: string,
+    @Body() dto: AddCampaignProductDto,
+  ) {
     return this.marketingService.addCampaignProduct(id, dto);
   }
 
@@ -123,7 +143,10 @@ export class AdminMarketingController {
   }
 
   @Put('cms/announcements/:id')
-  async updateAnnouncement(@Param('id') id: string, @Body() dto: UpdateAnnouncementDto) {
+  async updateAnnouncement(
+    @Param('id') id: string,
+    @Body() dto: UpdateAnnouncementDto,
+  ) {
     return this.marketingService.updateAnnouncement(id, dto);
   }
 

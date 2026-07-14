@@ -29,6 +29,7 @@ export function AuthGuard({ children, requiredRole, fallback }: AuthGuardProps) 
     }
   }, [hydrated, isAuthenticated, router, pathname]);
 
+  // Early return for SSR/hydration
   if (!mounted || !hydrated) {
     return fallback || (
       <div className="flex flex-col items-center justify-center min-h-[60dvh] px-4">

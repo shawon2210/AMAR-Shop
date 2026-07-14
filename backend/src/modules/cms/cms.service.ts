@@ -64,7 +64,10 @@ export class CmsService {
     if (data.metaDesc !== undefined) updateData.metaDesc = data.metaDesc;
     if (data.isActive !== undefined) updateData.isActive = data.isActive;
 
-    return this.prismaService.cMSPage.update({ where: { id }, data: updateData });
+    return this.prismaService.cMSPage.update({
+      where: { id },
+      data: updateData,
+    });
   }
 
   async getBanners(position?: string) {

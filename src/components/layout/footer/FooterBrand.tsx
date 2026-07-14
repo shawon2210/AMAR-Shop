@@ -3,16 +3,16 @@ import { SocialLinks } from './SocialLinks';
 
 export function FooterBrand() {
   return (
-    <div className="text-center lg:text-left">
+    <div className="text-center md:text-left">
       <Link href="/" className="inline-flex items-center mb-4">
         <img
           src="/images/amarshop-logo.png"
           alt="AmarShop"
-          className="w-[170px] h-auto object-contain mx-auto lg:mx-0"
+          className="w-[170px] h-auto object-contain mx-auto md:mx-0"
         />
       </Link>
 
-      <p className="text-[15px] leading-7 text-gray-500 max-w-[240px] mx-auto lg:mx-0 line-clamp-3">
+      <p className="text-[15px] leading-7 text-gray-500 max-w-[240px] mx-auto md:mx-0 line-clamp-3">
         Bangladesh&apos;s premium online marketplace. Shop millions of products from trusted sellers with fast delivery and the best deals.
       </p>
 

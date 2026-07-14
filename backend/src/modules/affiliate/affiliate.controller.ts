@@ -15,7 +15,7 @@ import type { Response } from 'express';
 import { AffiliateService } from './affiliate.service';
 import { PrismaService } from '../../common/prisma.service';
 
-@Controller()
+@Controller('affiliate')
 export class AffiliateController {
   constructor(
     private readonly affiliateService: AffiliateService,
@@ -23,7 +23,7 @@ export class AffiliateController {
   ) {}
 
   @UseGuards(AuthGuard('jwt'))
-  @Post('api/affiliate/register')
+  @Post('register')
   async register(
     @Request() req: any,
     @Body()
@@ -33,14 +33,14 @@ export class AffiliateController {
   }
 
   @UseGuards(AuthGuard('jwt'))
-  @Get('api/affiliate/dashboard')
+  @Get('dashboard')
   async getDashboard(@Request() req: any) {
     const profile = await this.getAffiliateProfile(req.user.id);
     return this.affiliateService.getAffiliateDashboard(profile.id);
   }
 
   @UseGuards(AuthGuard('jwt'))
-  @Post('api/affiliate/tracking-links')
+  @Post('tracking-links')
   async createTrackingLink(
     @Request() req: any,
     @Body() body: { productId: string; campaign?: string },
@@ -54,7 +54,7 @@ export class AffiliateController {
   }
 
   @UseGuards(AuthGuard('jwt'))
-  @Get('api/affiliate/analytics')
+  @Get('analytics')
   async getAnalytics(
     @Request() req: any,
     @Query('start') start: string,
@@ -68,20 +68,20 @@ export class AffiliateController {
   }
 
   @UseGuards(AuthGuard('jwt'))
-  @Get('api/affiliate/payouts')
+  @Get('payouts')
   async getPayouts(@Request() req: any) {
     const profile = await this.getAffiliateProfile(req.user.id);
     return this.affiliateService.getAffiliatePayouts(profile.id);
   }
 
   @UseGuards(AuthGuard('jwt'))
-  @Post('api/affiliate/payouts/request')
+  @Post('payouts/request')
   async requestPayout(@Request() req: any, @Body() body: { amount: number }) {
     const profile = await this.getAffiliateProfile(req.user.id);
     return this.affiliateService.requestPayout(profile.id, body.amount);
   }
 
-  @Get('api/affiliate/top')
+  @Get('top')
   async getTopAffiliates(
     @Query('start') start: string,
     @Query('end') end: string,
@@ -90,7 +90,7 @@ export class AffiliateController {
   }
 
   @UseGuards(AuthGuard('jwt'))
-  @Get('api/affiliate/products')
+  @Get('products')
   async getProducts(@Request() req: any) {
     const profile = await this.getAffiliateProfile(req.user.id);
     return this.affiliateService.getAvailableProducts(profile.id);
