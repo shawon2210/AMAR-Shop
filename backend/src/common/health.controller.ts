@@ -8,9 +8,9 @@ export class DependencyChecker {
   async checkDatabase() {
     try {
       await this.prismaService.$queryRaw`SELECT 1`;
-      return { status: 'up', latency: 0 };
-    } catch (error: any) {
-      return { status: 'down', error: error.message };
+      return { status: 'up', latency: 0 } as const;
+    } catch {
+      return { status: 'down' } as const;
     }
   }
 
@@ -21,11 +21,11 @@ export class DependencyChecker {
         globalThis.__redis_client__?.ping
       ) {
         await globalThis.__redis_client__.ping();
-        return { status: 'up', latency: 0 };
+        return { status: 'up', latency: 0 } as const;
       }
-      return { status: 'not_configured' };
-    } catch (error: any) {
-      return { status: 'down', error: error.message };
+      return { status: 'not_configured' } as const;
+    } catch {
+      return { status: 'down' } as const;
     }
   }
 }

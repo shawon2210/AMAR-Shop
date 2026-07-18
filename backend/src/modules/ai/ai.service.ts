@@ -122,9 +122,27 @@ export class AIService {
     }
   }
 
+  private stripPII(obj: Record<string, unknown>): Record<string, unknown> {
+    const sensitiveFields = ['email', 'phone', 'password', 'ssn', 'nid', 'creditCard', 'bankAccount', 'taxId', 'ip'];
+    const result: Record<string, unknown> = {};
+    for (const [key, val] of Object.entries(obj)) {
+      if (sensitiveFields.some((f) => key.toLowerCase().includes(f.toLowerCase()))) {
+        result[key] = '[REDACTED]';
+      } else if (val && typeof val === 'object' && !Array.isArray(val)) {
+        result[key] = this.stripPII(val as Record<string, unknown>);
+      } else if (Array.isArray(val)) {
+        result[key] = val.map((v) => (typeof v === 'object' && v ? this.stripPII(v as Record<string, unknown>) : v));
+      } else {
+        result[key] = val;
+      }
+    }
+    return result;
+  }
+
   async detectFraud(order: any): Promise<FraudDetectionResult> {
     try {
       if (this.openai) {
+        const safeOrder = this.stripPII(order);
         const response = await this.openai.chat.completions.create({
           model: this.config.model!,
           messages: [
@@ -133,7 +151,7 @@ export class AIService {
               content:
                 'Analyze this order for fraud indicators. Return JSON with score (0-1), risk level, factors, and recommended action.',
             },
-            { role: 'user', content: JSON.stringify(order) },
+            { role: 'user', content: JSON.stringify(safeOrder) },
           ],
           response_format: { type: 'json_object' },
         });
@@ -157,6 +175,7 @@ export class AIService {
   async segmentUser(user: any): Promise<UserSegment> {
     try {
       if (this.openai) {
+        const safeUser = this.stripPII(user);
         const response = await this.openai.chat.completions.create({
           model: this.config.model!,
           messages: [
@@ -165,7 +184,7 @@ export class AIService {
               content:
                 'Segment this ecommerce user. Return JSON with segment name, confidence, characteristics, and recommended actions.',
             },
-            { role: 'user', content: JSON.stringify(user) },
+            { role: 'user', content: JSON.stringify(safeUser) },
           ],
           response_format: { type: 'json_object' },
         });

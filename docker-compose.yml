@@ -7,7 +7,7 @@ services:
       - "5433:5432"
     environment:
       POSTGRES_USER: postgres
-      POSTGRES_PASSWORD: shawon12
+      POSTGRES_PASSWORD: ${DB_PASSWORD:-postgres}
       POSTGRES_DB: amarshop
     volumes:
       - pgdata:/var/lib/postgresql/data
@@ -38,8 +38,8 @@ services:
     ports:
       - "4000:4000"
     environment:
-      DATABASE_URL: postgresql://postgres:shawon12@postgres:5432/amarshop?schema=public
-      JWT_SECRET: amarshop-jwt-secret-2026-prod
+      DATABASE_URL: postgresql://postgres:${DB_PASSWORD:-postgres}@postgres:5432/amarshop?schema=public
+      JWT_SECRET: ${JWT_SECRET}
       PORT: 4000
       NODE_ENV: production
       REDIS_HOST: redis

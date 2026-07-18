@@ -538,11 +538,11 @@ export class ComplianceService {
 
   encryptPII(data: string): { encrypted: string; algorithm: string } {
     const algorithm = 'aes-256-gcm';
-    const key = crypto.scryptSync(
-      process.env.ENCRYPTION_KEY || 'amarshop-encryption-key-2026',
-      'salt',
-      32,
-    );
+    const encryptionKey = process.env.ENCRYPTION_KEY;
+    if (!encryptionKey) {
+      throw new Error('ENCRYPTION_KEY environment variable is required');
+    }
+    const key = crypto.scryptSync(encryptionKey, 'salt', 32);
     const iv = crypto.randomBytes(16);
     const cipher = crypto.createCipheriv(algorithm, key, iv);
     let encrypted = cipher.update(data, 'utf8', 'hex');

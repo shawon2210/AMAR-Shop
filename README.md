@@ -631,6 +631,19 @@ SENTRY_DSN, OTEL_EXPORTER_OTLP_ENDPOINT
 
 ---
 
+## ⚠️ Security: Secret Rotation Required
+
+If you cloned or forked this repository, **any secrets that were previously hardcoded still exist in git history**, even if they've been moved to environment variables in the latest commit.
+
+**Immediately rotate the following if you've used this codebase:**
+- Database password (`shawon12` was previously hardcoded)
+- JWT signing secrets (`amarshop-jwt-secret-2026-prod` and `amarshop-refresh-secret-2026-prod` were previously hardcoded)
+- Encryption key (`amarshop-encryption-key-2026` was previously the fallback)
+
+To purge secrets from git history, use [BFG Repo-Cleaner](https://rtyley.github.io/bfg-repo-cleaner/) or `git filter-branch`.
+
+---
+
 ## 📄 License
 
 **MIT** — See [LICENSE](./LICENSE) for details.

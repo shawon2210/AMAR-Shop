@@ -419,14 +419,14 @@ export class AuthService {
   }
 
   private sendPasswordResetSMS(phone: string, token: string) {
-    console.log(`SMS to ${phone}: Reset token: ${token}`);
+    console.log(`Password reset SMS dispatched to [REDACTED]`);
   }
 
   private sendVerificationEmail(email: string, token: string) {
-    console.log(`Email to ${email}: Verification token: ${token}`);
+    console.log(`Verification email dispatched to [REDACTED]`);
   }
 
   private sendVerificationSMS(phone: string, token: string) {
-    console.log(`SMS to ${phone}: Verification token: ${token}`);
+    console.log(`Verification SMS dispatched to [REDACTED]`);
   }
 }

@@ -21,6 +21,14 @@ async function bootstrap() {
   const app = await NestFactory.create(AppModule);
   require('fs').appendFileSync('/tmp/amarshop-trace.log', `[4] app created ${Date.now()-t1}ms\n`);
 
+  // Validate critical environment variables at startup
+  const requiredEnvVars = ['DATABASE_URL', 'JWT_SECRET', 'JWT_REFRESH_SECRET'];
+  for (const varName of requiredEnvVars) {
+    if (!process.env[varName]) {
+      throw new Error(`Missing required environment variable: ${varName}`);
+    }
+  }
+
   // Security headers with Helmet
   app.use(
     helmet({
@@ -71,12 +79,9 @@ async function bootstrap() {
   // Enable CORS for frontend
   const allowedOrigins = process.env.CORS_ORIGINS
     ? process.env.CORS_ORIGINS.split(',').map((o) => o.trim())
-    : [
-        'http://localhost:3000',
-        'https://amarshop.vercel.app',
-        'https://amarshop-eight.vercel.app',
-        'https://amarshop-gfwxp70kk-shawon2210s-projects.vercel.app',
-      ];
+    : process.env.NODE_ENV === 'production'
+      ? ['https://amarshop.vercel.app']
+      : ['http://localhost:3000'];
 
   app.enableCors({
     origin: allowedOrigins,
@@ -98,9 +103,6 @@ async function bootstrap() {
       whitelist: true,
       transform: true,
       forbidNonWhitelisted: true,
-      transformOptions: {
-        enableImplicitConversion: true,
-      },
     }),
   );
 

@@ -44,25 +44,7 @@ export const useAuthStore = create<AuthState>()(
           accessToken: string;
           refreshToken: string;
           user: User;
-        }>('/auth/login', body).catch(async (err) => {
-          const demoUsers: Record<string, { user: User; accessToken: string; refreshToken: string }> = {
-            '01712345678': {
-              accessToken: 'demo-admin-token',
-              refreshToken: 'demo-admin-refresh',
-              user: { id: 'demo-admin', name: 'Admin User', email: 'admin@amarshop.com', phone: '01712345678', role: 'SUPER_ADMIN', isSeller: false },
-            },
-            '01700000000': {
-              accessToken: 'demo-customer-token',
-              refreshToken: 'demo-customer-refresh',
-              user: { id: 'demo-customer', name: 'Demo Customer', email: 'customer@amarshop.com', phone: '01700000000', role: 'CUSTOMER', isSeller: false },
-            },
-          };
-          const demo = demoUsers[identity];
-          if (demo && password === (identity === '01712345678' ? 'admin123' : 'customer123')) {
-            return demo;
-          }
-          throw err;
-        });
+        }>('/auth/login', body);
         set({
           accessToken: res.accessToken,
           refreshToken: res.refreshToken,

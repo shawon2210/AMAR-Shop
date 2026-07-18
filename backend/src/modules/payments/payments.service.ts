@@ -107,7 +107,7 @@ export class PaymentsService {
         orderId,
         amount,
         provider: 'BKASH',
-        customer: customer.phone,
+        customer: '[REDACTED]',
       });
 
       return {
@@ -198,7 +198,7 @@ export class PaymentsService {
         orderId,
         amount,
         provider: 'NAGAD',
-        customer: customer.phone,
+        customer: '[REDACTED]',
       });
 
       return {
@@ -312,7 +312,7 @@ export class PaymentsService {
         orderId,
         amount,
         provider: 'SSLCOMMERZ',
-        customer: customer.phone,
+        customer: '[REDACTED]',
       });
 
       return {
@@ -486,7 +486,7 @@ export class PaymentsService {
       this.logPaymentEvent('COD_ORDER_PROCESSED', {
         orderId,
         amount: order.total,
-        customer: order.user?.phone || '',
+        customer: '[REDACTED]',
       });
 
       return { message: 'COD order confirmed', orderId, order: updatedOrder };

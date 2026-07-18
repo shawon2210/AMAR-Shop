@@ -17,12 +17,14 @@ export function captureError(
     if (context?.user) {
       scope.setUser({
         id: context.user.id,
-        email: context.user.email,
-        username: context.user.phone,
       });
     }
-    if (context?.request) {
-      scope.setExtra('request', context.request);
+    if (context?.request && context?.request?.headers) {
+      const safeHeaders = { ...context.request.headers };
+      delete safeHeaders['authorization'];
+      delete safeHeaders['cookie'];
+      delete safeHeaders['x-api-key'];
+      scope.setExtra('request', { ...context.request, headers: safeHeaders });
     }
     if (context?.environment) {
       scope.setTag('environment', context.environment);
@@ -52,8 +54,6 @@ export function captureMessage(message: string, context?: ErrorContext) {
     if (context?.user) {
       scope.setUser({
         id: context.user.id,
-        email: context.user.email,
-        username: context.user.phone,
       });
     }
     if (context?.tags) {
@@ -75,7 +75,7 @@ export function setUserContext(user: {
   email?: string;
   phone?: string;
 }) {
-  Sentry.setUser({ id: user.id, email: user.email, username: user.phone });
+  Sentry.setUser({ id: user.id });
 }
 
 export function clearUserContext() {
