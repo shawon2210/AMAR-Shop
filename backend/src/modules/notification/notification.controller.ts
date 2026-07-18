@@ -30,8 +30,8 @@ export class NotificationController {
   }
 
   @Put(':id/read')
-  async markAsRead(@Param('id') id: string) {
-    return this.notificationService.markAsRead(id);
+  async markAsRead(@Param('id') id: string, @Request() req: any) {
+    return this.notificationService.markAsRead(id, req.user.id);
   }
 
   @Put('read-all')

@@ -37,25 +37,27 @@ export class DeveloperController {
 
   @UseGuards(AuthGuard('jwt'))
   @Delete('api-keys/:id')
-  async revokeApiKey(@Param('id') id: string) {
-    return this.developerService.revokeApiKey(id);
+  async revokeApiKey(@Param('id') id: string, @Request() req: any) {
+    return this.developerService.revokeApiKey(id, req.user.id);
   }
 
   @UseGuards(AuthGuard('jwt'))
   @Get('api-keys/:id/usage')
   async getUsage(
     @Param('id') id: string,
+    @Request() req: any,
     @Query('start') start?: string,
     @Query('end') end?: string,
   ) {
     const dateRange =
       start && end ? { start: new Date(start), end: new Date(end) } : undefined;
-    return this.developerService.getUsageStats(id, dateRange);
+    return this.developerService.getUsageStats(id, req.user.id, dateRange);
   }
 
   @UseGuards(AuthGuard('jwt'))
   @Post('webhooks')
   async registerWebhook(
+    @Request() req: any,
     @Body()
     body: {
       storeId: string;
@@ -69,24 +71,25 @@ export class DeveloperController {
       body.event,
       body.url,
       body.secret,
+      req.user.id,
     );
   }
 
   @UseGuards(AuthGuard('jwt'))
   @Get('webhooks')
-  async getWebhooks(@Query('storeId') storeId: string) {
-    return this.developerService.getWebhooks(storeId);
+  async getWebhooks(@Request() req: any, @Query('storeId') storeId: string) {
+    return this.developerService.getWebhooks(storeId, req.user.id);
   }
 
   @UseGuards(AuthGuard('jwt'))
   @Delete('webhooks/:id')
-  async deleteWebhook(@Param('id') id: string) {
-    return this.developerService.deleteWebhook(id);
+  async deleteWebhook(@Param('id') id: string, @Request() req: any) {
+    return this.developerService.deleteWebhook(id, req.user.id);
   }
 
   @UseGuards(AuthGuard('jwt'))
   @Get('webhooks/:id/logs')
-  async getWebhookLogs(@Param('id') id: string) {
-    return this.developerService.getWebhookLogs(id);
+  async getWebhookLogs(@Param('id') id: string, @Request() req: any) {
+    return this.developerService.getWebhookLogs(id, req.user.id);
   }
 }

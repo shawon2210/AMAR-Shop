@@ -80,9 +80,10 @@ export class DeveloperService {
     };
   }
 
-  async revokeApiKey(keyId: string) {
+  async revokeApiKey(keyId: string, userId: string) {
     const key = await this.prisma.apiKey.findUnique({ where: { id: keyId } });
     if (!key) throw new NotFoundException('API key not found');
+    if (key.userId !== userId) throw new UnauthorizedException('API key does not belong to this user');
 
     await this.prisma.apiKey.update({
       where: { id: keyId },
@@ -108,7 +109,11 @@ export class DeveloperService {
     });
   }
 
-  async getUsageStats(keyId: string, dateRange?: { start: Date; end: Date }) {
+  async getUsageStats(keyId: string, userId: string, dateRange?: { start: Date; end: Date }) {
+    const key = await this.prisma.apiKey.findUnique({ where: { id: keyId }, select: { userId: true } });
+    if (!key) throw new NotFoundException('API key not found');
+    if (key.userId !== userId) throw new UnauthorizedException('API key does not belong to this user');
+
     const where: any = { apiKeyId: keyId };
     if (dateRange) {
       where.createdAt = { gte: dateRange.start, lte: dateRange.end };
@@ -139,7 +144,11 @@ export class DeveloperService {
     });
   }
 
-  async getWebhooks(storeId: string) {
+  async getWebhooks(storeId: string, userId: string) {
+    const store = await this.prisma.store.findUnique({ where: { id: storeId }, select: { userId: true } });
+    if (!store) throw new NotFoundException('Store not found');
+    if (store.userId !== userId) throw new UnauthorizedException('Store does not belong to this user');
+
     return this.prisma.webhook.findMany({
       where: { storeId },
       include: { _count: { select: { logs: true } } },
@@ -151,13 +160,24 @@ export class DeveloperService {
     event: string,
     url: string,
     secret: string,
+    userId: string,
   ) {
+    const store = await this.prisma.store.findUnique({ where: { id: storeId }, select: { userId: true } });
+    if (!store) throw new NotFoundException('Store not found');
+    if (store.userId !== userId) throw new UnauthorizedException('Store does not belong to this user');
+
     return this.prisma.webhook.create({
       data: { storeId, event, url, secret },
     });
   }
 
-  async deleteWebhook(webhookId: string) {
+  async deleteWebhook(webhookId: string, userId: string) {
+    const webhook = await this.prisma.webhook.findUnique({ where: { id: webhookId } });
+    if (!webhook) throw new NotFoundException('Webhook not found');
+
+    const store = await this.prisma.store.findUnique({ where: { id: webhook.storeId }, select: { userId: true } });
+    if (!store || store.userId !== userId) throw new UnauthorizedException('Webhook does not belong to this user');
+
     await this.prisma.webhook.delete({ where: { id: webhookId } });
     return { message: 'Webhook deleted' };
   }
@@ -207,7 +227,13 @@ export class DeveloperService {
     return { delivered: webhooks.length, results };
   }
 
-  async getWebhookLogs(webhookId: string) {
+  async getWebhookLogs(webhookId: string, userId: string) {
+    const webhook = await this.prisma.webhook.findUnique({ where: { id: webhookId } });
+    if (!webhook) throw new NotFoundException('Webhook not found');
+
+    const store = await this.prisma.store.findUnique({ where: { id: webhook.storeId }, select: { userId: true } });
+    if (!store || store.userId !== userId) throw new UnauthorizedException('Webhook does not belong to this user');
+
     return this.prisma.webhookLog.findMany({
       where: { webhookId },
       orderBy: { createdAt: 'desc' },

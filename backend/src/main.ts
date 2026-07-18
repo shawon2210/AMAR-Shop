@@ -109,9 +109,14 @@ async function bootstrap() {
   // Global interceptors
   app.useGlobalInterceptors(new TracingInterceptor(), new MetricsInterceptor());
 
-  // Metrics endpoint for Prometheus
+  // Metrics endpoint for Prometheus — protected in production
   const httpAdapter = app.getHttpAdapter();
-  httpAdapter.get('/metrics', async (req, res) => {
+  httpAdapter.get('/metrics', async (req: any, res: any) => {
+    if (process.env.NODE_ENV === 'production' && req.headers['x-monitoring-key'] !== process.env.MONITORING_KEY) {
+      res.statusCode = 403;
+      res.end('Forbidden');
+      return;
+    }
     res.set('Content-Type', register.contentType);
     res.end(await register.metrics());
   });

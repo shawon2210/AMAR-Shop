@@ -17,50 +17,61 @@ export class PaymentsController {
   @UseGuards(AuthGuard('jwt'))
   @Post('bkash/initiate')
   initiateBkash(
+    @Request() req: any,
     @Body() body: { orderId: string; amount: number; customer: any },
   ) {
     return this.paymentsService.initiateBkashPayment(
       body.orderId,
       body.amount,
       body.customer,
+      req.user.id,
     );
   }
 
   @UseGuards(AuthGuard('jwt'))
   @Post('nagad/initiate')
   initiateNagad(
+    @Request() req: any,
     @Body() body: { orderId: string; amount: number; customer: any },
   ) {
     return this.paymentsService.initiateNagadPayment(
       body.orderId,
       body.amount,
       body.customer,
+      req.user.id,
     );
   }
 
   @UseGuards(AuthGuard('jwt'))
   @Post('sslcommerz/initiate')
   initiateSSLCommerz(
+    @Request() req: any,
     @Body() body: { orderId: string; amount: number; customer: any },
   ) {
     return this.paymentsService.initiateSSLCommerzPayment(
       body.orderId,
       body.amount,
       body.customer,
+      req.user.id,
     );
   }
 
   @UseGuards(AuthGuard('jwt'))
   @Post('cod')
-  async processCod(@Body() body: { orderId: string }) {
-    return this.paymentsService.processCodOrder(body.orderId);
+  async processCod(
+    @Request() req: any,
+    @Body() body: { orderId: string },
+  ) {
+    return this.paymentsService.processCodOrder(body.orderId, req.user.id);
   }
 
+  @UseGuards(AuthGuard('jwt'))
   @Get('verify/:provider/:transactionId')
-  verifyPayment(
+  async verifyPayment(
+    @Request() req: any,
     @Param('provider') provider: string,
     @Param('transactionId') transactionId: string,
   ) {
-    return this.paymentsService.verifyPayment(provider, transactionId);
+    return this.paymentsService.verifyPayment(provider, transactionId, req.user.id);
   }
 }
