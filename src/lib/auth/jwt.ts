@@ -1,4 +1,7 @@
-const JWT_SECRET = process.env.JWT_SECRET || 'your-secret-key-change-in-production';
+const JWT_SECRET = process.env.JWT_SECRET;
+if (!JWT_SECRET) {
+  throw new Error('JWT_SECRET environment variable is required');
+}
 
 const encoder = new TextEncoder();
 const decoder = new TextDecoder();
@@ -13,7 +16,7 @@ function base64urlDecode(str: string): string {
 }
 
 async function importKey(): Promise<CryptoKey> {
-  const keyData = encoder.encode('your-secret-key-change-in-production');
+  const keyData = encoder.encode(JWT_SECRET);
   return crypto.subtle.importKey(
     'raw',
     keyData,

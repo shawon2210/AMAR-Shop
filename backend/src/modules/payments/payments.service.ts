@@ -93,10 +93,9 @@ export class PaymentsService {
           customerName: customer.name,
           customerPhone: customer.phone,
           callbackUrl,
+          // Only store non-sensitive reference data — never store credentials or auth tokens
           metadata: {
             reference: bkashReference,
-            token,
-            createPaymentData,
           },
           createdAt: new Date(),
           expiresAt: new Date(Date.now() + 30 * 60 * 1000),
@@ -298,10 +297,10 @@ export class PaymentsService {
           customerName: customer.name,
           customerPhone: customer.phone,
           ipnUrl: ipnUrl || 'http://localhost:3000/api/payments/ipn',
+          // Only store non-sensitive reference — never store store_pass/auth credentials
           metadata: {
             val_id,
             gatewayPageURL,
-            initData,
           },
           createdAt: new Date(),
           expiresAt: new Date(Date.now() + 60 * 60 * 1000),
@@ -399,12 +398,27 @@ export class PaymentsService {
         status,
       });
 
+      // Never return full payment object — it may contain sensitive metadata
+      const safePayment = payment
+        ? {
+            id: payment.id,
+            provider: payment.provider,
+            method: payment.method,
+            orderId: payment.orderId,
+            amount: payment.amount,
+            netAmount: payment.netAmount,
+            status: payment.status,
+            verifiedAt: payment.verifiedAt,
+            createdAt: payment.createdAt,
+          }
+        : null;
+
       return {
         verified,
         transactionId,
         provider,
         status,
-        payment,
+        payment: safePayment,
         message: verified
           ? 'Payment verification successful'
           : 'Payment verification failed',
@@ -606,7 +620,15 @@ export class PaymentsService {
       status: payment.status,
       createdAt: payment.createdAt,
       orderId: payment.orderId,
-      metadata: payment.metadata,
+      // Only expose safe metadata — strip any credentials/tokens that may exist in old records
+      metadata: payment.metadata
+        ? {
+            ...(payment.metadata as Record<string, unknown>),
+            token: undefined,
+            initData: undefined,
+            createPaymentData: undefined,
+          }
+        : null,
     }));
   }
 }

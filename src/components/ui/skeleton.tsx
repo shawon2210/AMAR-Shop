@@ -51,7 +51,7 @@ export function ProductCardSkeleton() {
 // Hero Section Skeleton
 export function HeroSkeleton() {
   return (
-    <div className="relative overflow-hidden rounded-2xl w-full h-[280px] md:h-[380px] lg:h-[460px] bg-gray-100">
+    <div className="relative overflow-hidden rounded-2xl w-full h-70 md:h-380px lg:h-460px bg-gray-100">
       <Skeleton className="w-full h-full" />
       <div className="absolute bottom-0 left-0 right-0 p-8 space-y-3">
         <Skeleton className="h-6 w-48 rounded-full" />

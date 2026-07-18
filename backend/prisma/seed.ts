@@ -2,7 +2,14 @@ import { PrismaClient } from '@prisma/client';
 import { PrismaPg } from '@prisma/adapter-pg';
 import { Pool } from 'pg';
 
-const pool = new Pool({ user: 'postgres', password: 'shawon12', host: 'localhost', port: 5433, database: 'amarshop' });
+const pool = new Pool({
+  user: process.env.DB_USER || 'postgres',
+  // No fallback password — must be set via DB_PASSWORD env var
+  password: process.env.DB_PASSWORD,
+  host: process.env.DB_HOST || 'localhost',
+  port: parseInt(process.env.DB_PORT || '5433', 10),
+  database: process.env.DB_NAME || 'amarshop',
+});
 const adapter = new PrismaPg(pool);
 const prisma = new PrismaClient({ adapter });
 

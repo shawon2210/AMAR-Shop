@@ -407,16 +407,25 @@ npm install
 
 ### 2. Environment Variables
 
-```bash
-# Backend (.env)
-DATABASE_URL="postgresql://amarshop:secret@localhost:5433/amarshop"
-REDIS_URL="redis://localhost:6379"
-JWT_ACCESS_SECRET="your-access-secret"
-JWT_REFRESH_SECRET="your-refresh-secret"
+Copy the template file to `.env` in both the root and `backend/` directories:
 
-# Frontend (.env.local)
-NEXT_PUBLIC_API_URL="http://localhost:4000/api/v1"
+```bash
+# Root (frontend)
+cp .env.example .env
+
+# Backend
+cp .env.example backend/.env
 ```
+
+Then edit each `.env` with your real values. See `.env.example` for all available variables.
+
+Key variables to configure:
+| Variable | Default | Description |
+|----------|---------|-------------|
+| `DATABASE_URL` | `postgresql://postgres:...` | PostgreSQL connection string |
+| `JWT_SECRET` | (required) | JWT signing secret — generate a strong random value |
+| `JWT_REFRESH_SECRET` | (required) | JWT refresh secret — different from JWT_SECRET |
+| `NEXT_PUBLIC_API_URL` | `http://localhost:3001/api/v1` | Backend API base URL (client‑safe) |
 
 ### 3. Start Infrastructure
 
@@ -558,6 +567,22 @@ All API routes are prefixed with `/api/v1`.
 - **Audit logging** — Interceptor logs admin mutations
 - **API key scoping** — Developer module supports scoped API keys
 - **HTTPS** — Enforced in production via Nginx reverse proxy
+
+### ⚠️ Secrets in Git History
+
+**WARNING:** If you previously cloned or forked this repository before the secret-safety pass (July 2026), the following secrets may exist in your local git history and must be rotated immediately:
+
+| Secret | Previous Value | Files Affected |
+|--------|---------------|----------------|
+| Database password | `shawon12` | `backend/prisma/seed.ts`, `backend/prisma/seed-products.ts`, `backend/prisma/demo-seed.ts`, `backend/prisma.config.ts`, `backend/test/global-setup.ts`, `backend/src/common/prisma.service.ts` |
+| JWT fallback secret | `your-secret-key-change-in-production` | `src/lib/auth/jwt.ts` |
+
+**Action required:**
+1. **Rotate these secrets in production** — the old values are compromised
+2. **Run `git filter-branch` or BFG Repo-Cleaner** to purge them from your git history if this is a public repository
+3. **Any forks or clones** should be re-cloned from the cleaned repository
+
+See [.env.example](./.env.example) for all required environment variables.
 
 ---
 

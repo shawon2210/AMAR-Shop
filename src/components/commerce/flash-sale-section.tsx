@@ -33,7 +33,7 @@ function useCountdown(target: string) {
 function TimeUnit({ value, label }: { value: string; label: string }) {
   return (
     <div className="flex flex-col items-center">
-      <div className="bg-black/30 backdrop-blur-sm rounded-lg px-2.5 py-1.5 min-w-[36px] text-center">
+      <div className="bg-black/30 backdrop-blur-sm rounded-lg px-2.5 py-1.5 min-w-36px text-center">
         <span className="text-white font-bold text-base tabular-nums leading-none">{value}</span>
       </div>
       <span className="text-white/50 text-[9px] mt-0.5 leading-none uppercase tracking-wide">{label}</span>
@@ -113,7 +113,7 @@ const FlashCard = memo(function FlashCard({ product }: { product: Product }) {
             </div>
             <div className="h-1.5 bg-gray-100 rounded-full overflow-hidden">
               <div
-                className={`h-full bg-gradient-to-r ${progressColor} rounded-full transition-all duration-500`}
+                className={`h-full bg-linear-to-br ${progressColor} rounded-full transition-all duration-500`}
                 style={{ width: `${sold}%` }}
               />
             </div>
@@ -149,7 +149,7 @@ export function FlashSaleSection() {
   return (
     <section>
       <div className="app-container">
-        <div className="relative overflow-hidden rounded-2xl bg-gradient-to-br from-red-600 via-red-500 to-rose-600 p-4 md:p-5 shadow-lg">
+        <div className="relative overflow-hidden rounded-2xl bg-linear-to-br from-red-600 via-red-500 to-rose-600 p-4 md:p-5 shadow-lg">
           {/* Decorative elements */}
           <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top_right,rgba(255,255,255,0.15),transparent_55%)]" />
           <div className="absolute -bottom-12 -left-12 w-48 h-48 rounded-full bg-white/5 blur-3xl" />

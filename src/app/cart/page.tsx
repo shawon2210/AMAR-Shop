@@ -90,7 +90,7 @@ export default function CartPage() {
             <div className="space-y-2">
               {removedItems.slice(0, 3).map(r => (
                 <div key={r.item.id} className="flex items-center gap-3 bg-white p-3 rounded-lg border border-gray-100">
-                  <div className="w-10 h-10 rounded-md bg-gray-100 overflow-hidden flex-shrink-0">
+                    <div className="w-10 h-10 rounded-md bg-gray-100 overflow-hidden shrink-0">
                     <img src={r.item.product.images[0]} alt="" className="w-full h-full object-cover" />
                   </div>
                   <div className="flex-1 min-w-0">
@@ -143,7 +143,7 @@ export default function CartPage() {
             </div>
             <div className="w-full h-2 bg-gray-100 rounded-full overflow-hidden">
               <div
-                className="h-full bg-gradient-to-r from-primary to-primary-light rounded-full transition-all duration-500"
+                className="h-full bg-linear-to-r from-primary to-primary-light rounded-full transition-all duration-500"
                 style={{ width: `${shipping.percent}%` }}
               />
             </div>

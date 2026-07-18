@@ -39,5 +39,5 @@ export const realtimeConfig: RealtimeConfig = {
     maxConnections: 1000,
     maxEventsPerMinute: 120,
   },
-  jwtSecret: process.env.JWT_SECRET || 'amarshop-jwt-secret-2026',
+  jwtSecret: process.env.JWT_SECRET || (() => { throw new Error('JWT_SECRET environment variable is required for realtime config'); })(),
 };

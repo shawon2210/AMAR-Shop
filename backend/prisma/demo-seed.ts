@@ -5,7 +5,14 @@ import { faker } from '@faker-js/faker';
 
 const CHUNK = { categories: 50, brands: 100, products: 500, users: 1000, reviews: 5000, orders: 5000, shipments: 5000 };
 
-const pool = new Pool({ user: 'postgres', password: 'shawon12', host: 'localhost', port: 5433, database: 'amarshop' });
+const pool = new Pool({
+  user: process.env.DB_USER || 'postgres',
+  // No fallback password — must be set via DB_PASSWORD env var
+  password: process.env.DB_PASSWORD,
+  host: process.env.DB_HOST || 'localhost',
+  port: parseInt(process.env.DB_PORT || '5433', 10),
+  database: process.env.DB_NAME || 'amarshop',
+});
 const prisma = new PrismaClient({ adapter: new PrismaPg(pool) });
 
 async function reset() {

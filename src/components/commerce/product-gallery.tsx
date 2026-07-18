@@ -107,7 +107,7 @@ export function ProductGallery({ images, productName, isFlashSale, discount }: P
           {/* Skeleton loader */}
           {!loadedImages.has(selectedIndex) && !hasError && (
             <div className="absolute inset-0 bg-gray-100 animate-pulse">
-              <div className="w-full h-full bg-gradient-to-r from-gray-100 via-gray-200 to-gray-100 animate-shimmer" />
+              <div className="w-full h-full bg-linear-to-r from-gray-100 via-gray-200 to-gray-100 animate-shimmer" />
             </div>
           )}
 
