@@ -62,6 +62,17 @@ export function ProductGallery({ images, productName, isFlashSale, discount }: P
     return () => document.removeEventListener('keydown', onKey);
   }, [isFullscreen, handlePrev, handleNext]);
 
+  // Scroll lock + focus save/restore
+  useEffect(() => {
+    if (!isFullscreen) return;
+    const prev = document.activeElement as HTMLElement | null;
+    document.body.style.overflow = 'hidden';
+    return () => {
+      document.body.style.overflow = '';
+      prev?.focus();
+    };
+  }, [isFullscreen]);
+
   // Touch/swipe gestures
   const handleTouchStart = (e: React.TouchEvent) => {
     touchStartX.current = e.touches[0].clientX;
@@ -214,6 +225,9 @@ export function ProductGallery({ images, productName, isFlashSale, discount }: P
             exit={{ opacity: 0 }}
             className="fixed inset-0 z-[70] bg-black/95 flex items-center justify-center"
             onClick={() => setIsFullscreen(false)}
+            role="dialog"
+            aria-modal="true"
+            aria-label={`${productName} image gallery`}
           >
             <button
               onClick={() => setIsFullscreen(false)}

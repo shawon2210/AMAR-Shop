@@ -37,7 +37,7 @@ export default function NewProduct() {
   };
 
   return (
-    <div className="space-y-6 max-w-4xl">
+    <div className="space-y-6 app-container">
       <div className="flex items-center justify-between">
         <h1 className="text-xl font-bold text-on-surface">Add New Product</h1>
         <div className="flex items-center gap-2">

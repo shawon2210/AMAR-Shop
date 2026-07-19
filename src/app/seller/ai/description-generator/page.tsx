@@ -45,7 +45,7 @@ export default function AIDescriptionGeneratorPage() {
   };
 
   return (
-    <div className="max-w-4xl mx-auto">
+    <div className="app-container">
       <div className="flex items-center gap-3 mb-6">
         <div className="w-10 h-10 rounded-lg bg-primary/10 flex items-center justify-center">
           <span className="material-symbols-outlined text-primary">auto_awesome</span>

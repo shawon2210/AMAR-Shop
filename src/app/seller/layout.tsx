@@ -71,7 +71,7 @@ export default function SellerLayout({ children }: { children: React.ReactNode }
         </nav>
 
         <div className="p-4 border-t border-white/[0.04]">
-          <button onClick={() => setSidebarCollapsed(!sidebarCollapsed)} className="w-full flex items-center justify-center p-2 text-white/40 hover:text-white">
+          <button onClick={() => setSidebarCollapsed(!sidebarCollapsed)} className="w-full flex items-center justify-center p-2 text-white/40 hover:text-white" aria-label={sidebarCollapsed ? 'Expand sidebar' : 'Collapse sidebar'}>
             <span className="material-symbols-outlined">{sidebarCollapsed ? 'chevron_right' : 'chevron_left'}</span>
           </button>
         </div>
@@ -86,13 +86,14 @@ export default function SellerLayout({ children }: { children: React.ReactNode }
               <button
                 className="lg:hidden p-2 -ml-2 rounded-lg hover:bg-slate-100"
                 onClick={() => setSidebarOpen(true)}
+                aria-label="Open sidebar"
               >
                 <span className="material-symbols-outlined">menu</span>
               </button>
             </div>
 
             <div className="flex items-center gap-3">
-              <button className="relative p-2 rounded-full hover:bg-slate-100">
+              <button className="relative p-2 rounded-full hover:bg-slate-100" aria-label="Notifications">
                 <span className="material-symbols-outlined text-slate-600">notifications</span>
               </button>
 

@@ -137,6 +137,7 @@ function LoginForm() {
                   onClick={() => setShowPassword(!showPassword)}
                   className="px-3 text-secondary flex items-center justify-center"
                   tabIndex={-1}
+                  aria-label={showPassword ? 'Hide password' : 'Show password'}
                 >
                   <span className="material-symbols-outlined text-base sm:text-lg">
                     {showPassword ? 'visibility_off' : 'visibility'}

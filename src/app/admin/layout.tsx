@@ -446,6 +446,8 @@ function SearchOverlay({
   onClose: () => void;
 }) {
   const router = useRouter();
+  const prevFocusRef = useRef<HTMLElement | null>(null);
+  const inputRef = useRef<HTMLInputElement>(null);
 
   const results = useMemo(() => {
     if (!query.trim()) return [];
@@ -461,6 +463,16 @@ function SearchOverlay({
     return () => window.removeEventListener('keydown', handleKey);
   }, [onClose]);
 
+  useEffect(() => {
+    prevFocusRef.current = document.activeElement as HTMLElement;
+    document.body.style.overflow = 'hidden';
+    setTimeout(() => inputRef.current?.focus(), 50);
+    return () => {
+      document.body.style.overflow = '';
+      prevFocusRef.current?.focus();
+    };
+  }, []);
+
   return (
     <div className="fixed inset-0 z-50 bg-black/40 backdrop-blur-sm" onClick={onClose} role="dialog" aria-modal="true" aria-label="Search">
       <div
@@ -470,6 +482,7 @@ function SearchOverlay({
         <div className="flex items-center gap-3 p-4 border-b border-[#eee]">
           <span className="material-symbols-outlined text-[#888] text-[20px]">search</span>
           <input
+            ref={inputRef}
             type="text"
             value={query}
             onChange={(e) => setQuery(e.target.value)}

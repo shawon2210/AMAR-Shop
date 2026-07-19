@@ -33,7 +33,7 @@ export default function SellerSettings() {
   ];
 
   return (
-    <div className="space-y-6 max-w-4xl">
+    <div className="space-y-6 app-container">
       <h1 className="text-xl font-bold text-on-surface">Settings</h1>
 
       {/* Tabs */}

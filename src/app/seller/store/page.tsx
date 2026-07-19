@@ -8,7 +8,7 @@ export default function SellerStore() {
   const [storeDesc, setStoreDesc] = useState('Premium electronics and lifestyle products in Bangladesh. Authentic products with the best prices and fast delivery across the country.');
 
   return (
-    <div className="space-y-6 max-w-4xl">
+    <div className="space-y-6 app-container">
       <h1 className="text-xl font-bold text-on-surface">Store Settings</h1>
 
       {/* Store Preview Card */}

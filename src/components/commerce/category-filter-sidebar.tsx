@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import Link from 'next/link';
 import { useParams } from 'next/navigation';
 import { motion, AnimatePresence } from 'framer-motion';
@@ -34,17 +34,20 @@ export function CategoryFilterSidebar() {
   const [mobileOpen, setMobileOpen] = useState(false);
   const [selectedSort, setSelectedSort] = useState('popular');
   const [mounted, setMounted] = useState(false);
+  const prevFocusRef = useRef<HTMLElement | null>(null);
 
   useEffect(() => {
     setMounted(true);
   }, []);
 
-  // Lock body scroll when drawer is open
+  // Lock body scroll + focus save/restore when drawer is open
   useEffect(() => {
     if (mobileOpen) {
+      prevFocusRef.current = document.activeElement as HTMLElement;
       document.body.style.overflow = 'hidden';
     } else {
       document.body.style.overflow = '';
+      prevFocusRef.current?.focus();
     }
     return () => { document.body.style.overflow = ''; };
   }, [mobileOpen]);
@@ -141,6 +144,9 @@ export function CategoryFilterSidebar() {
                 exit={{ x: '-100%' }}
                 transition={{ type: 'spring', stiffness: 300, damping: 30 }}
                 className="fixed left-0 top-0 h-full w-[280px] max-w-[80vw] bg-white z-[210] shadow-2xl"
+                role="dialog"
+                aria-modal="true"
+                aria-label="Filters"
               >
                 <div className="flex items-center justify-between px-5 h-16 border-b border-gray-200">
                   <div className="flex items-center gap-2 text-sm font-semibold text-gray-900">
