@@ -79,33 +79,33 @@ export default function OrdersPage() {
         <>
           {/* Desktop Table */}
           <div className="hidden sm:block bg-white rounded-xl border border-[#eee] overflow-x-auto">
-            <table className="w-full text-sm">
+            <table className="w-full text-xs sm:text-sm">
               <thead>
                 <tr className="text-left text-[#888] text-xs uppercase tracking-wider bg-[#fafafa] border-b border-[#eee]">
-                  <th className="p-3">Order ID</th>
-                  <th className="p-3">Customer</th>
-                  <th className="p-3">Amount</th>
-                  <th className="p-3">Items</th>
-                  <th className="p-3">Status</th>
-                  <th className="p-3">Date</th>
-                  <th className="p-3">Actions</th>
+                  <th className="p-3 whitespace-nowrap">Order ID</th>
+                  <th className="p-3 whitespace-nowrap">Customer</th>
+                  <th className="p-3 whitespace-nowrap">Amount</th>
+                  <th className="p-3 whitespace-nowrap hidden lg:table-cell">Items</th>
+                  <th className="p-3 whitespace-nowrap">Status</th>
+                  <th className="p-3 whitespace-nowrap hidden lg:table-cell">Date</th>
+                  <th className="p-3 whitespace-nowrap">Actions</th>
                 </tr>
               </thead>
               <tbody>
                 {data.orders.map((o: AdminOrder) => (
                   <tr key={o.id} className="border-b border-[#f5f5f5] hover:bg-[#fafafa]">
-                    <td className="p-3 font-medium text-[#333]">#{o.orderNumber || o.id.slice(-6)}</td>
-                    <td className="p-3 text-[#555]">{o.user?.name || 'N/A'}</td>
-                    <td className="p-3 font-medium">{formatBDT(o.total)}</td>
-                    <td className="p-3 text-[#666]">{o.items?.length || 0}</td>
-                    <td className="p-3">
+                    <td className="p-3 font-medium text-[#333] whitespace-nowrap">#{o.orderNumber || o.id.slice(-6)}</td>
+                    <td className="p-3 text-[#555] whitespace-nowrap">{o.user?.name || 'N/A'}</td>
+                    <td className="p-3 font-medium whitespace-nowrap">{formatBDT(o.total)}</td>
+                    <td className="p-3 text-[#666] whitespace-nowrap hidden lg:table-cell">{o.items?.length || 0}</td>
+                    <td className="p-3 whitespace-nowrap">
                       <span className={`text-[11px] font-semibold px-2 py-0.5 rounded-full ${ORDER_STATUS_COLORS[o.status] || 'bg-gray-100 text-gray-700'}`}>
                         {o.status}
                       </span>
                     </td>
-                    <td className="p-3 text-[#888]">{formatDate(o.createdAt)}</td>
-                    <td className="p-3">
-                      <button onClick={() => setDetailOrder(o)} className="p-1.5 rounded-lg hover:bg-[#f5f5f5]" title="View Details">
+                    <td className="p-3 text-[#888] whitespace-nowrap hidden lg:table-cell">{formatDate(o.createdAt)}</td>
+                    <td className="p-3 whitespace-nowrap">
+                      <button onClick={() => setDetailOrder(o)} className="p-1.5 rounded-lg hover:bg-[#f5f5f5]" aria-label="View order details">
                         <span className="material-symbols-outlined text-[18px] text-[#666]">visibility</span>
                       </button>
                     </td>
@@ -169,7 +169,7 @@ export default function OrdersPage() {
           <div className="bg-white rounded-xl w-full max-w-2xl max-h-[90vh] overflow-y-auto">
             <div className="p-6 border-b border-[#eee] flex items-center justify-between">
               <h3 className="text-lg font-semibold">Order #{detailOrder.orderNumber || detailOrder.id.slice(-6)}</h3>
-              <button onClick={() => setDetailOrder(null)}>
+              <button onClick={() => setDetailOrder(null)} aria-label="Close order details">
                 <span className="material-symbols-outlined text-[#888]">close</span>
               </button>
             </div>

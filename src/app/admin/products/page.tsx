@@ -96,56 +96,56 @@ export default function ProductsPage() {
         <>
           {/* Desktop Table */}
           <div className="hidden sm:block bg-white rounded-xl border border-[#eee] overflow-x-auto">
-            <table className="w-full text-sm">
+            <table className="w-full text-xs sm:text-sm">
               <thead>
                 <tr className="text-left text-[#888] text-xs uppercase tracking-wider bg-[#fafafa] border-b border-[#eee]">
-                  <th className="p-3">Product</th>
-                  <th className="p-3">Store</th>
-                  <th className="p-3">Category</th>
-                  <th className="p-3">Price</th>
-                  <th className="p-3">Stock</th>
-                  <th className="p-3">Status</th>
-                  <th className="p-3">Actions</th>
+                  <th className="p-2 sm:p-3 whitespace-nowrap">Product</th>
+                  <th className="p-2 sm:p-3 whitespace-nowrap">Store</th>
+                  <th className="p-2 sm:p-3 whitespace-nowrap hidden lg:table-cell">Category</th>
+                  <th className="p-2 sm:p-3 whitespace-nowrap">Price</th>
+                  <th className="p-2 sm:p-3 whitespace-nowrap">Stock</th>
+                  <th className="p-2 sm:p-3 whitespace-nowrap">Status</th>
+                  <th className="p-2 sm:p-3 whitespace-nowrap">Actions</th>
                 </tr>
               </thead>
               <tbody>
                 {data.products.map((p) => (
                   <tr key={p.id} className="border-b border-[#f5f5f5] hover:bg-[#fafafa]">
-                    <td className="p-3">
-                      <div className="flex items-center gap-3">
-                        <div className="w-10 h-10 rounded-lg bg-[#f0f0f0] flex items-center justify-center overflow-hidden">
+                    <td className="p-2 sm:p-3">
+                      <div className="flex items-center gap-2 sm:gap-3">
+                        <div className="w-8 h-8 sm:w-10 sm:h-10 rounded-lg bg-[#f0f0f0] flex items-center justify-center overflow-hidden shrink-0">
                           {p.images?.[0] ? (
                             <img src={p.images[0]} alt="" className="w-full h-full object-cover" />
                           ) : (
-                            <span className="material-symbols-outlined text-[#888] text-[20px]">inventory_2</span>
+                            <span className="material-symbols-outlined text-[#888] text-[16px] sm:text-[20px]">inventory_2</span>
                           )}
                         </div>
-                        <span className="font-medium text-[#333] max-w-[200px] truncate">{p.name}</span>
+                        <span className="font-medium text-[#333] max-w-[140px] sm:max-w-[200px] truncate">{p.name}</span>
                       </div>
                     </td>
-                    <td className="p-3 text-[#555]">{p.store?.name || 'N/A'}</td>
-                    <td className="p-3 text-[#666]">{p.category?.name || 'N/A'}</td>
-                    <td className="p-3 font-medium">{formatBDT(p.price)}</td>
-                    <td className="p-3">
+                    <td className="p-2 sm:p-3 text-[#555] whitespace-nowrap">{p.store?.name || 'N/A'}</td>
+                    <td className="p-2 sm:p-3 text-[#666] whitespace-nowrap hidden lg:table-cell">{p.category?.name || 'N/A'}</td>
+                    <td className="p-2 sm:p-3 font-medium whitespace-nowrap">{formatBDT(p.price)}</td>
+                    <td className="p-2 sm:p-3 whitespace-nowrap">
                       <span className={p.stockCount === 0 ? 'text-red-500 font-medium' : 'text-[#666]'}>
                         {p.stockCount === 0 ? 'Out of Stock' : p.stockCount}
                       </span>
                     </td>
-                    <td className="p-3">
+                    <td className="p-2 sm:p-3 whitespace-nowrap">
                       <span className={`text-[11px] font-semibold px-2 py-0.5 rounded-full ${statusStyles[p.status] || 'bg-gray-100 text-gray-700'}`}>
                         {p.status}
                       </span>
                     </td>
-                    <td className="p-3">
+                    <td className="p-2 sm:p-3 whitespace-nowrap">
                       <div className="flex items-center gap-1">
                         {p.status === 'pending' && (
                           <>
-                            <button onClick={() => handleApprove(p.id)} className="text-[11px] bg-green-500 text-white px-2 py-1 rounded-md hover:bg-green-600">Approve</button>
-                            <button onClick={() => handleReject(p.id)} className="text-[11px] bg-red-500 text-white px-2 py-1 rounded-md hover:bg-red-600">Reject</button>
+                            <button onClick={() => handleApprove(p.id)} className="text-[10px] sm:text-[11px] bg-green-500 text-white px-1.5 sm:px-2 py-1 rounded-md hover:bg-green-600 font-medium">Approve</button>
+                            <button onClick={() => handleReject(p.id)} className="text-[10px] sm:text-[11px] bg-red-500 text-white px-1.5 sm:px-2 py-1 rounded-md hover:bg-red-600 font-medium">Reject</button>
                           </>
                         )}
-                        <button className="p-1.5 rounded-lg hover:bg-[#f5f5f5]" title="Edit">
-                          <span className="material-symbols-outlined text-[18px] text-[#666]">edit</span>
+                        <button className="p-1 sm:p-1.5 rounded-lg hover:bg-[#f5f5f5]" title="Edit">
+                          <span className="material-symbols-outlined text-[16px] sm:text-[18px] text-[#666]">edit</span>
                         </button>
                       </div>
                     </td>

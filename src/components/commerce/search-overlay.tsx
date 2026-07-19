@@ -33,6 +33,7 @@ export function SearchOverlay() {
   const inputRef = useRef<HTMLInputElement>(null);
   const overlayRef = useRef<HTMLDivElement>(null);
   const debounceRef = useRef<ReturnType<typeof setTimeout>>(undefined);
+  const prevFocusRef = useRef<HTMLElement | null>(null);
   const [filteredProducts, setFilteredProducts] = useState<typeof products>([]);
   const [filteredCategories, setFilteredCategories] = useState<string[]>([]);
   const [filteredBrands, setFilteredBrands] = useState<string[]>([]);
@@ -91,10 +92,13 @@ export function SearchOverlay() {
     return () => { if (debounceRef.current) clearTimeout(debounceRef.current); };
   }, [query, performSearch]);
 
-  // Focus input when opened
+  // Focus input when opened, restore focus on close
   useEffect(() => {
     if (isOpen) {
+      prevFocusRef.current = document.activeElement as HTMLElement;
       setTimeout(() => inputRef.current?.focus(), 50);
+    } else {
+      prevFocusRef.current?.focus();
     }
   }, [isOpen]);
 
@@ -200,7 +204,7 @@ export function SearchOverlay() {
   const showResults = query.trim().length > 0;
 
   return (
-    <div className="fixed inset-0 z-[60] bg-black/40 backdrop-blur-sm">
+    <div className="fixed inset-0 z-[60] bg-black/40 backdrop-blur-sm" role="dialog" aria-modal="true" aria-label="Search products">
       <div
         ref={overlayRef}
         className="absolute top-0 left-0 right-0 bg-white shadow-2xl border-b border-gray-200"
@@ -372,7 +376,7 @@ export function SearchOverlay() {
                             }`}
                           >
                             <div className="w-8 h-8 rounded-md bg-gray-100 overflow-hidden flex-shrink-0">
-                              <img src={prod.images[0]} alt="" className="w-full h-full object-cover" />
+                              <img src={prod.images[0]} alt={prod.name} className="w-full h-full object-cover" />
                             </div>
                             <div className="flex-1 text-left min-w-0">
                               <p className="truncate">{highlightMatch(prod.name, query)}</p>

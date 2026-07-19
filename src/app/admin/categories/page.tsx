@@ -241,47 +241,49 @@ export default function CategoriesPage() {
               )}
             </div>
           ) : (
-            <table className="w-full text-sm">
-              <thead>
-                <tr className="text-left text-[#888] text-xs uppercase tracking-wider bg-[#fafafa] border-b border-[#eee]">
-                  <th className="p-3">Name</th>
-                  <th className="p-3">Bengali</th>
-                  <th className="p-3">Slug</th>
-                  <th className="p-3">Icon</th>
-                  <th className="p-3">Parent</th>
-                  <th className="p-3">Products</th>
-                  <th className="p-3">Actions</th>
-                </tr>
-              </thead>
-              <tbody>
-                {allCats.map((c: AdminCategory) => (
-                  <tr key={c.id} className="border-b border-[#f5f5f5] hover:bg-[#fafafa]">
-                    <td className="p-3 font-medium text-[#333]">{c.name}</td>
-                    <td className="p-3 text-[#666]">{c.bnName || '—'}</td>
-                    <td className="p-3 text-[#888] font-mono text-xs">{c.slug}</td>
-                    <td className="p-3">
-                      <span className="material-symbols-outlined text-[18px] text-[#888]">{c.icon || 'category'}</span>
-                    </td>
-                    <td className="p-3 text-[#666]">{c.parent?.name || '—'}</td>
-                    <td className="p-3 text-[#666]">{(c._count?.products || 0).toLocaleString()}</td>
-                    <td className="p-3">
-                      <div className="flex gap-1">
-                        <button onClick={() => {
-                          setEditId(c.id);
-                          setForm({ name: c.name, bnName: c.bnName || '', slug: c.slug, icon: c.icon || '', parentId: c.parentId || '' });
-                          setFormMode('edit');
-                        }} className="p-1.5 rounded-lg hover:bg-[#f5f5f5]">
-                          <span className="material-symbols-outlined text-[18px] text-[#666]">edit</span>
-                        </button>
-                        <button onClick={() => handleDelete(c.id)} className="p-1.5 rounded-lg hover:bg-[#f5f5f5]">
-                          <span className="material-symbols-outlined text-[18px] text-[#666]">delete</span>
-                        </button>
-                      </div>
-                    </td>
+            <div className="overflow-x-auto">
+              <table className="w-full text-xs sm:text-sm">
+                <thead>
+                  <tr className="text-left text-[#888] text-xs uppercase tracking-wider bg-[#fafafa] border-b border-[#eee]">
+                    <th className="p-3 whitespace-nowrap">Name</th>
+                    <th className="p-3 whitespace-nowrap hidden lg:table-cell">Bengali</th>
+                    <th className="p-3 whitespace-nowrap">Slug</th>
+                    <th className="p-3 whitespace-nowrap hidden lg:table-cell">Icon</th>
+                    <th className="p-3 whitespace-nowrap hidden lg:table-cell">Parent</th>
+                    <th className="p-3 whitespace-nowrap">Products</th>
+                    <th className="p-3 whitespace-nowrap">Actions</th>
                   </tr>
-                ))}
-              </tbody>
-            </table>
+                </thead>
+                <tbody>
+                  {allCats.map((c: AdminCategory) => (
+                    <tr key={c.id} className="border-b border-[#f5f5f5] hover:bg-[#fafafa]">
+                      <td className="p-3 font-medium text-[#333] whitespace-nowrap">{c.name}</td>
+                      <td className="p-3 text-[#666] whitespace-nowrap hidden lg:table-cell">{c.bnName || '—'}</td>
+                      <td className="p-3 text-[#888] font-mono text-xs whitespace-nowrap">{c.slug}</td>
+                      <td className="p-3 whitespace-nowrap hidden lg:table-cell">
+                        <span className="material-symbols-outlined text-[18px] text-[#888]">{c.icon || 'category'}</span>
+                      </td>
+                      <td className="p-3 text-[#666] whitespace-nowrap hidden lg:table-cell">{c.parent?.name || '—'}</td>
+                      <td className="p-3 text-[#666] whitespace-nowrap">{(c._count?.products || 0).toLocaleString()}</td>
+                      <td className="p-3 whitespace-nowrap">
+                        <div className="flex gap-1">
+                          <button onClick={() => {
+                            setEditId(c.id);
+                            setForm({ name: c.name, bnName: c.bnName || '', slug: c.slug, icon: c.icon || '', parentId: c.parentId || '' });
+                            setFormMode('edit');
+                          }} className="p-1.5 rounded-lg hover:bg-[#f5f5f5]" aria-label="Edit category">
+                            <span className="material-symbols-outlined text-[18px] text-[#666]">edit</span>
+                          </button>
+                          <button onClick={() => handleDelete(c.id)} className="p-1.5 rounded-lg hover:bg-[#f5f5f5]" aria-label="Delete category">
+                            <span className="material-symbols-outlined text-[18px] text-[#666]">delete</span>
+                          </button>
+                        </div>
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
           )}
         </div>
       )}

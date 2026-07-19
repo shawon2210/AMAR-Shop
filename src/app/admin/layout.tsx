@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useMemo, useEffect, useCallback } from 'react';
+import { useState, useMemo, useEffect, useCallback, useRef } from 'react';
 import Link from 'next/link';
 import { usePathname, useRouter } from 'next/navigation';
 import { useAuthStore, useAuthHydrated } from '@/stores/auth-store';
@@ -200,6 +200,41 @@ function Sidebar({
     return init;
   });
   const user = useAuthStore((s) => s.user);
+  const closeButtonRef = useRef<HTMLButtonElement>(null);
+  const sidebarRef = useRef<HTMLElement>(null);
+
+  useEffect(() => {
+    if (open && !isDesktop) {
+      closeButtonRef.current?.focus();
+    }
+  }, [open, isDesktop]);
+
+  // Esc close + focus trap for mobile sidebar
+  useEffect(() => {
+    if (!open) return;
+    const handleKey = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') {
+        onClose();
+        return;
+      }
+      if (e.key !== 'Tab' || !sidebarRef.current || isDesktop) return;
+      const focusable = sidebarRef.current.querySelectorAll<HTMLElement>(
+        'a[href], button:not([disabled]), textarea, input, select, [tabindex]:not([tabindex="-1"])'
+      );
+      if (focusable.length === 0) return;
+      const first = focusable[0];
+      const last = focusable[focusable.length - 1];
+      if (e.shiftKey && document.activeElement === first) {
+        e.preventDefault();
+        last.focus();
+      } else if (!e.shiftKey && document.activeElement === last) {
+        e.preventDefault();
+        first.focus();
+      }
+    };
+    document.addEventListener('keydown', handleKey);
+    return () => document.removeEventListener('keydown', handleKey);
+  }, [open, isDesktop, onClose]);
 
   const toggleSection = useCallback((title: string) => {
     setExpandedSections((prev) => ({ ...prev, [title]: !prev[title] }));
@@ -229,8 +264,10 @@ function Sidebar({
         </div>
         {!isDesktop && (
           <button
+            ref={closeButtonRef}
             onClick={onClose}
             className="p-2 rounded-lg hover:bg-white/10 text-white/50"
+            aria-label="Close sidebar menu"
           >
             <span className="material-symbols-outlined text-[20px]">close</span>
           </button>
@@ -241,6 +278,7 @@ function Sidebar({
         <button
           onClick={onToggleCollapse}
           className="absolute -right-3 top-[26px] z-10 w-6 h-6 rounded-full bg-[#1e293b] border border-white/[0.06] flex items-center justify-center text-white/40 hover:text-white hover:border-white/[0.12] transition-all shadow-lg"
+          aria-label={collapsed ? 'Expand sidebar' : 'Collapse sidebar'}
         >
           <span className="material-symbols-outlined text-[14px] transition-transform duration-300">
             {collapsed ? 'chevron_right' : 'chevron_left'}
@@ -349,7 +387,7 @@ function Sidebar({
                   window.location.href = '/admin/login';
                 }}
                 className="p-2.5 rounded-lg hover:bg-white/8 text-white/25 hover:text-red-400 transition-colors"
-                title="Logout"
+                aria-label="Logout"
               >
                 <span className="material-symbols-outlined text-[16px]">logout</span>
               </button>
@@ -370,6 +408,10 @@ function Sidebar({
           />
         )}
         <aside
+          ref={sidebarRef}
+          role="dialog"
+          aria-modal="true"
+          aria-label="Admin navigation sidebar"
           className={`fixed top-0 left-0 bottom-0 z-50 w-[280px] max-w-[85vw] bg-gradient-to-b from-[#0f172a] to-[#0b1220] text-white flex flex-col shadow-2xl shadow-black/30 transition-transform duration-300 ease-out ${
             open ? 'translate-x-0' : '-translate-x-full'
           }`}
@@ -420,9 +462,9 @@ function SearchOverlay({
   }, [onClose]);
 
   return (
-    <div className="fixed inset-0 z-50 bg-black/40 backdrop-blur-sm" onClick={onClose}>
+    <div className="fixed inset-0 z-50 bg-black/40 backdrop-blur-sm" onClick={onClose} role="dialog" aria-modal="true" aria-label="Search">
       <div
-        className="absolute top-[72px] left-1/2 -translate-x-1/2 w-full max-w-lg bg-white rounded-xl shadow-2xl border border-[#eee] overflow-hidden"
+        className="absolute top-0 sm:top-[72px] left-0 right-0 sm:left-1/2 sm:-translate-x-1/2 sm:w-full sm:max-w-lg bg-white sm:rounded-xl shadow-2xl sm:border sm:border-[#eee] overflow-hidden min-h-[200px] sm:min-h-0"
         onClick={(e) => e.stopPropagation()}
       >
         <div className="flex items-center gap-3 p-4 border-b border-[#eee]">
@@ -484,6 +526,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
   const [searchOpen, setSearchOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
   const [isDesktop, setIsDesktop] = useState(() => typeof window !== 'undefined' && window.innerWidth >= 1024);
+  const hamburgerRef = useRef<HTMLButtonElement>(null);
 
   useEffect(() => {
     const handleResize = () => {
@@ -512,6 +555,13 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
       router.replace('/');
     }
   }, [hydrated, token, user, pathname, router]);
+
+  // Focus hamburger when sidebar closes on mobile
+  useEffect(() => {
+    if (!sidebarOpen) {
+      hamburgerRef.current?.focus();
+    }
+  }, [sidebarOpen]);
 
   useEffect(() => {
     const handleKey = (e: KeyboardEvent) => {
@@ -572,8 +622,10 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
       <div className="flex flex-col min-w-0 overflow-hidden">
         <header className="sticky top-0 z-30 h-[72px] bg-white/80 backdrop-blur-md border-b border-slate-200 flex items-center px-4 lg:px-6 gap-3">
           <button
+            ref={hamburgerRef}
             className="lg:hidden p-2.5 -ml-2 rounded-lg hover:bg-[#f5f5f5] transition-colors"
             onClick={() => setSidebarOpen(true)}
+            aria-label="Open sidebar menu"
           >
             <span className="material-symbols-outlined text-[#555]">menu</span>
           </button>
@@ -599,6 +651,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
             <button
               onClick={() => setSearchOpen(true)}
               className="flex items-center gap-2 bg-[#f5f5f5] hover:bg-[#f0f0f0] rounded-lg px-2.5 py-2 transition-colors md:w-[240px]"
+              aria-label="Open search"
             >
               <span className="material-symbols-outlined text-[#888] text-[18px]">search</span>
               <span className="hidden md:inline text-xs text-[#aaa] flex-1 text-left">Search...</span>
@@ -610,6 +663,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
             <Link
               href="/admin/notifications"
               className="relative p-2 rounded-full hover:bg-[#f5f5f5] transition-colors shrink-0"
+              aria-label="Notifications"
             >
               <span className="material-symbols-outlined text-[#555] text-[20px]">notifications</span>
               <span className="absolute top-1 right-1 w-4 h-4 bg-red-500 text-white text-[9px] font-bold rounded-full flex items-center justify-center shadow-sm">
@@ -637,7 +691,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
                   router.push('/admin/login');
                 }}
                 className="ml-1 p-1.5 rounded-lg hover:bg-red-50 text-[#888] hover:text-red-500 transition-colors shrink-0"
-                title="Logout"
+                aria-label="Logout"
               >
                 <span className="material-symbols-outlined text-[18px]">logout</span>
               </button>

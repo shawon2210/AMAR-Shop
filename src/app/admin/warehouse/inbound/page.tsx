@@ -58,32 +58,32 @@ export default function InboundPage() {
         </div>
       )}
 
-      <div className="bg-surface rounded-xl border border-outline-variant overflow-hidden">
-        <table className="w-full text-body-sm">
+      <div className="bg-surface rounded-xl border border-outline-variant overflow-x-auto">
+        <table className="w-full text-xs sm:text-sm">
           <thead>
-            <tr className="border-b border-outline-variant bg-surface-container-low">
-              <th className="text-left py-3 px-4 text-on-surface-variant font-medium">Order #</th>
-              <th className="text-left py-3 px-4 text-on-surface-variant font-medium">Supplier</th>
-              <th className="text-left py-3 px-4 text-on-surface-variant font-medium">Items</th>
-              <th className="text-left py-3 px-4 text-on-surface-variant font-medium">Status</th>
-              <th className="text-left py-3 px-4 text-on-surface-variant font-medium">Received</th>
-              <th className="text-left py-3 px-4 text-on-surface-variant font-medium">Action</th>
-            </tr>
+              <tr className="border-b border-outline-variant bg-surface-container-low">
+                <th className="text-left py-3 px-4 text-on-surface-variant font-medium whitespace-nowrap">Order #</th>
+                <th className="text-left py-3 px-4 text-on-surface-variant font-medium whitespace-nowrap">Supplier</th>
+                <th className="text-left py-3 px-4 text-on-surface-variant font-medium whitespace-nowrap">Items</th>
+                <th className="text-left py-3 px-4 text-on-surface-variant font-medium whitespace-nowrap">Status</th>
+                <th className="text-left py-3 px-4 text-on-surface-variant font-medium whitespace-nowrap hidden lg:table-cell">Received</th>
+                <th className="text-left py-3 px-4 text-on-surface-variant font-medium whitespace-nowrap">Action</th>
+              </tr>
           </thead>
           <tbody>
             {orders.map((o, i) => (
               <tr key={i} className="border-b border-outline-variant/50 hover:bg-surface-container-low">
-                <td className="py-3 px-4 text-on-surface font-medium">{o.id}</td>
-                <td className="py-3 px-4 text-on-surface-variant">{o.supplier}</td>
-                <td className="py-3 px-4 text-on-surface">{o.items}</td>
-                <td className="py-3 px-4">
+                <td className="py-3 px-4 text-on-surface font-medium whitespace-nowrap">{o.id}</td>
+                <td className="py-3 px-4 text-on-surface-variant whitespace-nowrap">{o.supplier}</td>
+                <td className="py-3 px-4 text-on-surface whitespace-nowrap">{o.items}</td>
+                <td className="py-3 px-4 whitespace-nowrap">
                   <span className={`inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-label-bold ${o.status === 'COMPLETED' ? 'bg-green-100 text-green-700' : o.status === 'RECEIVING' ? 'bg-amber-100 text-amber-700' : 'bg-surface-container-highest text-on-surface-variant'}`}>
                     <span className={`w-1.5 h-1.5 rounded-full ${o.status === 'COMPLETED' ? 'bg-green-500' : o.status === 'RECEIVING' ? 'bg-amber-500' : 'bg-gray-400'}`} />
                     {o.status}
                   </span>
                 </td>
-                <td className="py-3 px-4 text-on-surface-variant">{o.received}</td>
-                <td className="py-3 px-4">
+                <td className="py-3 px-4 text-on-surface-variant whitespace-nowrap hidden lg:table-cell">{o.received}</td>
+                <td className="py-3 px-4 whitespace-nowrap">
                   <button className="text-primary text-body-sm font-medium hover:underline">
                     {o.status === 'PENDING' ? 'Receive' : 'View'}
                   </button>

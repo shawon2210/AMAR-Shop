@@ -185,14 +185,16 @@ export default function ProductDetailPage() {
                 <div className="flex items-center border border-gray-200 rounded-lg overflow-hidden">
                   <button
                     onClick={() => setQuantity(Math.max(1, quantity - 1))}
-                    className="px-3 py-1.5 hover:bg-surface-container-high transition-colors"
+                    className="px-3 py-1.5 hover:bg-gray-100 transition-colors"
+                    aria-label="Decrease quantity"
                   >
                     <span className="material-symbols-outlined text-base">remove</span>
                   </button>
                   <span className="px-4 font-semibold border-x border-outline">{quantity}</span>
                   <button
                     onClick={() => setQuantity(Math.min(product.stockCount, quantity + 1))}
-                    className="px-3 py-1.5 hover:bg-surface-container-high transition-colors"
+                    className="px-3 py-1.5 hover:bg-gray-100 transition-colors"
+                    aria-label="Increase quantity"
                   >
                     <span className="material-symbols-outlined text-base">add</span>
                   </button>

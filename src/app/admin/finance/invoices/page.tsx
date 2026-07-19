@@ -49,17 +49,17 @@ export default function InvoicesPage() {
 
       {error && <AdminError message={error} onRetry={refetch} />}
 
-      <div className="bg-white rounded-xl border border-[#eee] overflow-hidden">
-        <table className="w-full text-sm">
+      <div className="bg-white rounded-xl border border-[#eee] overflow-x-auto">
+        <table className="w-full text-xs sm:text-sm">
           <thead>
             <tr className="border-b border-[#eee] bg-[#fafafa]">
-              <th className="text-left py-3 px-4 text-[#888] font-medium">Invoice #</th>
-              <th className="text-left py-3 px-4 text-[#888] font-medium">Order</th>
-              <th className="text-left py-3 px-4 text-[#888] font-medium">Seller</th>
-              <th className="text-right py-3 px-4 text-[#888] font-medium">Amount</th>
-              <th className="text-left py-3 px-4 text-[#888] font-medium">Status</th>
-              <th className="text-left py-3 px-4 text-[#888] font-medium">Date</th>
-              <th className="text-left py-3 px-4 text-[#888] font-medium">Action</th>
+              <th className="text-left py-3 px-4 text-[#888] font-medium whitespace-nowrap">Invoice #</th>
+              <th className="text-left py-3 px-4 text-[#888] font-medium whitespace-nowrap">Order</th>
+              <th className="text-left py-3 px-4 text-[#888] font-medium whitespace-nowrap hidden lg:table-cell">Seller</th>
+              <th className="text-right py-3 px-4 text-[#888] font-medium whitespace-nowrap">Amount</th>
+              <th className="text-left py-3 px-4 text-[#888] font-medium whitespace-nowrap">Status</th>
+              <th className="text-left py-3 px-4 text-[#888] font-medium whitespace-nowrap hidden lg:table-cell">Date</th>
+              <th className="text-left py-3 px-4 text-[#888] font-medium whitespace-nowrap">Action</th>
             </tr>
           </thead>
           <tbody>
@@ -70,17 +70,17 @@ export default function InvoicesPage() {
             ) : (
               data.invoices.map((inv) => (
                 <tr key={inv.id} className="border-b border-[#eee]/50 hover:bg-[#fafafa]">
-                  <td className="py-3 px-4 font-medium text-[#333]">{inv.invoiceNumber}</td>
-                  <td className="py-3 px-4 text-[#666]">#{inv.order?.orderNumber || inv.orderId.slice(-6)}</td>
-                  <td className="py-3 px-4 text-[#555]">{inv.seller?.name || 'N/A'}</td>
-                  <td className="py-3 px-4 text-right font-semibold">{formatBDT(inv.total)}</td>
-                  <td className="py-3 px-4">
+                  <td className="py-3 px-4 font-medium text-[#333] whitespace-nowrap">{inv.invoiceNumber}</td>
+                  <td className="py-3 px-4 text-[#666] whitespace-nowrap">#{inv.order?.orderNumber || inv.orderId.slice(-6)}</td>
+                  <td className="py-3 px-4 text-[#555] whitespace-nowrap hidden lg:table-cell">{inv.seller?.name || 'N/A'}</td>
+                  <td className="py-3 px-4 text-right font-semibold whitespace-nowrap">{formatBDT(inv.total)}</td>
+                  <td className="py-3 px-4 whitespace-nowrap">
                     <span className={`text-[11px] font-semibold px-2 py-0.5 rounded-full ${statusStyles[inv.status] || 'bg-gray-100 text-gray-700'}`}>
                       {inv.status}
                     </span>
                   </td>
-                  <td className="py-3 px-4 text-[#888]">{formatDate(inv.createdAt)}</td>
-                  <td className="py-3 px-4">
+                  <td className="py-3 px-4 text-[#888] whitespace-nowrap hidden lg:table-cell">{formatDate(inv.createdAt)}</td>
+                  <td className="py-3 px-4 whitespace-nowrap">
                     <div className="flex gap-1">
                       {inv.status === 'DRAFT' && (
                         <button onClick={() => handleStatusChange(inv.id, 'SENT')} className="text-xs bg-blue-500 text-white px-2 py-1 rounded-md hover:bg-blue-600">Send</button>

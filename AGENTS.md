@@ -49,4 +49,26 @@ footer.tsx (parent — trusts + newsletter + container)
 
 - Uses inline SVGs for social icons (lucide-react v1.23 lacks brand icons)
 - All motion animations use `framer-motion` with `fadeUp` / `staggerContainer` / `cardItem` variants from `@/lib/motion-variants`
+
+---
+
+## Session 2026-07-19 — Layout standardization & responsive refinement
+
+### What was done
+
+- **globals.css** — `app-container` → `max-width: 1440px` (was 1600), removed 1720/1920 overrides. Added `.admin-container` class.
+- **Cart page** — Desktop grid layout (`lg:grid-cols-[minmax(0,2fr)_minmax(0,1fr)]`) with sticky order summary sidebar. Fixed bottom bar now hides on `lg:`.
+- **Admin sidebar** — Esc key closes sidebar on mobile. Focus trap uses combined keydown handler (Tab trap + Esc). Hamburger button ref stored in layout for focus return on close.
+- **Admin search overlay** — Added `prevFocusRef` to restore focus when search closes.
+- **Admin products table** — Responsive text (`text-xs sm:text-sm`), reduced padding on small screens, Category column hidden on `<lg:` viewport, tighter action buttons.
+- **Search overlay (global)** — Added `prevFocusRef` to save/restore `document.activeElement` when opening/closing the overlay.
+
+### Patterns established
+
+- Desktop form factor uses `.app-container` (max 1440px) or `.admin-container` for page-level centering
+- Tablet/mobile uses same containers with tighter `clamp()` padding
+- Admin tables: `overflow-x-auto` on wrapper, `whitespace-nowrap` on cells, critical columns hidden at breakpoints
+- Mobile drawers: focus trap (Tab cycle + Esc close), hamburger focus restoration on close
+- Search overlays: `prevFocusRef` pattern for focus return
+- Fixed bottom bars hide at `lg:` breakpoint when desktop sidebar takes over
 <!-- END:session-summary -->

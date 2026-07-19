@@ -188,31 +188,31 @@ export default function SupportPage() {
           ) : (
             <>
               {/* Desktop Table */}
-              <div className="hidden sm:block bg-white rounded-xl border border-[#eee] overflow-hidden">
-                <table className="w-full text-sm">
+              <div className="hidden sm:block bg-white rounded-xl border border-[#eee] overflow-x-auto">
+                <table className="w-full text-xs sm:text-sm">
                   <thead>
                     <tr className="text-left text-[#888] text-xs uppercase tracking-wider bg-[#fafafa] border-b border-[#eee]">
-                      <th className="p-3">ID</th>
-                      <th className="p-3">User</th>
-                      <th className="p-3">Subject</th>
-                      <th className="p-3">Category</th>
-                      <th className="p-3">Priority</th>
-                      <th className="p-3">Status</th>
-                      <th className="p-3">Date</th>
-                      <th className="p-3">Actions</th>
+                      <th className="p-3 whitespace-nowrap">ID</th>
+                      <th className="p-3 whitespace-nowrap">User</th>
+                      <th className="p-3 whitespace-nowrap">Subject</th>
+                      <th className="p-3 whitespace-nowrap hidden lg:table-cell">Category</th>
+                      <th className="p-3 whitespace-nowrap">Priority</th>
+                      <th className="p-3 whitespace-nowrap">Status</th>
+                      <th className="p-3 whitespace-nowrap hidden lg:table-cell">Date</th>
+                      <th className="p-3 whitespace-nowrap">Actions</th>
                     </tr>
                   </thead>
                   <tbody>
                     {listData.tickets.map((t) => (
                       <tr key={t.id} className="border-b border-[#f5f5f5] hover:bg-[#fafafa] cursor-pointer" onClick={() => setSelectedId(t.id)}>
-                        <td className="p-3 font-mono text-xs font-medium text-[#333]">{t.id.slice(-8)}</td>
-                        <td className="p-3 text-[#555]">{t.user?.name || 'Unknown'}</td>
-                        <td className="p-3 text-[#444] max-w-[200px] truncate">{t.subject}</td>
-                        <td className="p-3 text-[#666]">{t.category || '—'}</td>
-                        <td className="p-3"><span className={`text-[11px] font-semibold px-2 py-0.5 rounded-full ${priorityStyles[t.priority] || 'bg-gray-100 text-gray-700'}`}>{t.priority}</span></td>
-                        <td className="p-3"><span className={`text-[11px] font-semibold px-2 py-0.5 rounded-full ${statusStyles[t.status] || 'bg-gray-100 text-gray-700'}`}>{t.status === 'IN_PROGRESS' ? 'In Progress' : t.status.charAt(0) + t.status.slice(1).toLowerCase()}</span></td>
-                        <td className="p-3 text-[#888] text-xs">{formatDate(t.createdAt)}</td>
-                        <td className="p-3"><span className="material-symbols-outlined text-[18px] text-[#666] cursor-pointer">visibility</span></td>
+                        <td className="p-3 font-mono text-xs font-medium text-[#333] whitespace-nowrap">{t.id.slice(-8)}</td>
+                        <td className="p-3 text-[#555] whitespace-nowrap">{t.user?.name || 'Unknown'}</td>
+                        <td className="p-3 text-[#444] max-w-[200px] truncate whitespace-nowrap">{t.subject}</td>
+                        <td className="p-3 text-[#666] whitespace-nowrap hidden lg:table-cell">{t.category || '—'}</td>
+                        <td className="p-3 whitespace-nowrap"><span className={`text-[11px] font-semibold px-2 py-0.5 rounded-full ${priorityStyles[t.priority] || 'bg-gray-100 text-gray-700'}`}>{t.priority}</span></td>
+                        <td className="p-3 whitespace-nowrap"><span className={`text-[11px] font-semibold px-2 py-0.5 rounded-full ${statusStyles[t.status] || 'bg-gray-100 text-gray-700'}`}>{t.status === 'IN_PROGRESS' ? 'In Progress' : t.status.charAt(0) + t.status.slice(1).toLowerCase()}</span></td>
+                        <td className="p-3 text-[#888] text-xs whitespace-nowrap hidden lg:table-cell">{formatDate(t.createdAt)}</td>
+                        <td className="p-3 whitespace-nowrap"><span className="material-symbols-outlined text-[18px] text-[#666] cursor-pointer">visibility</span></td>
                       </tr>
                     ))}
                   </tbody>

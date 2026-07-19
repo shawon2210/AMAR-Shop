@@ -22,6 +22,10 @@ function LoginForm() {
 
   useEffect(() => {
     if (!isAuthenticated) return;
+    if (redirectTo !== '/') {
+      router.push(redirectTo);
+      return;
+    }
     const state = useAuthStore.getState();
     if (state.user?.role === 'ADMIN' || state.user?.role === 'SUPER_ADMIN') {
       router.push('/admin');
@@ -30,7 +34,7 @@ function LoginForm() {
     } else {
       router.push('/account');
     }
-  }, [isAuthenticated, router]);
+  }, [isAuthenticated, router, redirectTo]);
 
   const isEmail = identity.includes('@');
   const identityError =

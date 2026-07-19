@@ -56,31 +56,31 @@ export default function SettlementsPage() {
       ) : (
         <>
           {/* Desktop Table */}
-          <div className="hidden sm:block bg-white rounded-xl border border-[#eee] overflow-hidden">
-            <table className="w-full text-sm">
+          <div className="hidden sm:block bg-white rounded-xl border border-[#eee] overflow-x-auto">
+            <table className="w-full text-xs sm:text-sm">
               <thead>
                 <tr className="border-b border-[#eee] bg-[#fafafa]">
-                  <th className="text-left py-3 px-4 text-[#888] font-medium">Settlement #</th>
-                  <th className="text-left py-3 px-4 text-[#888] font-medium">Seller</th>
-                  <th className="text-left py-3 px-4 text-[#888] font-medium">Period</th>
-                  <th className="text-right py-3 px-4 text-[#888] font-medium">Gross</th>
-                  <th className="text-right py-3 px-4 text-[#888] font-medium">Commission</th>
-                  <th className="text-right py-3 px-4 text-[#888] font-medium">Net</th>
-                  <th className="text-left py-3 px-4 text-[#888] font-medium">Status</th>
-                  <th className="text-left py-3 px-4 text-[#888] font-medium">Action</th>
+                  <th className="text-left py-3 px-4 text-[#888] font-medium whitespace-nowrap">Settlement #</th>
+                  <th className="text-left py-3 px-4 text-[#888] font-medium whitespace-nowrap">Seller</th>
+                  <th className="text-left py-3 px-4 text-[#888] font-medium whitespace-nowrap hidden lg:table-cell">Period</th>
+                  <th className="text-right py-3 px-4 text-[#888] font-medium whitespace-nowrap">Gross</th>
+                  <th className="text-right py-3 px-4 text-[#888] font-medium whitespace-nowrap">Commission</th>
+                  <th className="text-right py-3 px-4 text-[#888] font-medium whitespace-nowrap">Net</th>
+                  <th className="text-left py-3 px-4 text-[#888] font-medium whitespace-nowrap">Status</th>
+                  <th className="text-left py-3 px-4 text-[#888] font-medium whitespace-nowrap">Action</th>
                 </tr>
               </thead>
               <tbody>
                 {data.settlements.map((s) => (
                   <tr key={s.id} className="border-b border-[#eee]/50 hover:bg-[#fafafa]">
-                    <td className="py-3 px-4 font-medium text-[#333]">{s.settlementNumber}</td>
-                    <td className="py-3 px-4 text-[#555]">{s.seller?.name || 'N/A'}</td>
-                    <td className="py-3 px-4 text-[#666]">{formatDate(s.periodStart)} - {formatDate(s.periodEnd)}</td>
-                    <td className="py-3 px-4 text-right">{formatBDT(s.grossAmount)}</td>
-                    <td className="py-3 px-4 text-right text-red-500">-{formatBDT(s.commission)}</td>
-                    <td className="py-3 px-4 text-right font-semibold">{formatBDT(s.netAmount)}</td>
-                    <td className="py-3 px-4"><span className={`text-[11px] font-semibold px-2 py-0.5 rounded-full ${statusStyles[s.status] || 'bg-gray-100 text-gray-700'}`}>{s.status}</span></td>
-                    <td className="py-3 px-4">
+                    <td className="py-3 px-4 font-medium text-[#333] whitespace-nowrap">{s.settlementNumber}</td>
+                    <td className="py-3 px-4 text-[#555] whitespace-nowrap">{s.seller?.name || 'N/A'}</td>
+                    <td className="py-3 px-4 text-[#666] whitespace-nowrap hidden lg:table-cell">{formatDate(s.periodStart)} - {formatDate(s.periodEnd)}</td>
+                    <td className="py-3 px-4 text-right whitespace-nowrap">{formatBDT(s.grossAmount)}</td>
+                    <td className="py-3 px-4 text-right text-red-500 whitespace-nowrap">-{formatBDT(s.commission)}</td>
+                    <td className="py-3 px-4 text-right font-semibold whitespace-nowrap">{formatBDT(s.netAmount)}</td>
+                    <td className="py-3 px-4 whitespace-nowrap"><span className={`text-[11px] font-semibold px-2 py-0.5 rounded-full ${statusStyles[s.status] || 'bg-gray-100 text-gray-700'}`}>{s.status}</span></td>
+                    <td className="py-3 px-4 whitespace-nowrap">
                       {s.status === 'PENDING' && <button onClick={() => handleProcess(s.id, 'PROCESSING')} className="text-xs bg-blue-500 text-white px-2 py-1 rounded-md hover:bg-blue-600">Process</button>}
                       {s.status === 'PROCESSING' && <button onClick={() => handleProcess(s.id, 'COMPLETED')} className="text-xs bg-green-500 text-white px-2 py-1 rounded-md hover:bg-green-600">Complete</button>}
                       {(s.status === 'COMPLETED' || s.status === 'FAILED') && <span className="text-xs text-[#888]">Done</span>}

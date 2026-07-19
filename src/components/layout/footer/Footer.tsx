@@ -9,24 +9,15 @@ import { DeliveryPartners } from './DeliveryPartners';
 export function Footer() {
   return (
     <>
-      {/* Desktop: 5-column grid — brand takes 1.4fr, 4 link cols take 1fr each */}
-      <div className="hidden lg:grid grid-cols-[1.4fr_repeat(4,1fr)] gap-x-8">
+      {/* Brand + Links — single mobile-first grid */}
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-[1.4fr_repeat(4,1fr)] gap-8">
         <FooterBrand />
-        <FooterLinks />
-      </div>
-
-      {/* Tablet: brand left + 2-col links right, side by side */}
-      <div className="hidden md:grid lg:hidden grid-cols-[auto_1fr] gap-8">
-        <FooterBrand />
-        <div className="grid grid-cols-2 gap-6">
+        <div className="hidden md:grid grid-cols-2 lg:grid-cols-4 gap-6">
           <FooterLinks />
         </div>
-      </div>
-
-      {/* Mobile: brand + accordion */}
-      <div className="md:hidden space-y-4">
-        <FooterBrand />
-        <AccordionFooter />
+        <div className="md:hidden col-span-full">
+          <AccordionFooter />
+        </div>
       </div>
 
       {/* Strip: Download App | Accepted Payments | Delivery Partners */}

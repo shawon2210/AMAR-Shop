@@ -73,17 +73,17 @@ export default function SellerOrders() {
       {/* Orders table */}
       <div className="bg-white rounded-xl border border-surface-container-high shadow-sm overflow-hidden">
         <div className="overflow-x-auto">
-          <table className="w-full text-sm">
+          <table className="w-full text-xs sm:text-sm">
             <thead>
               <tr className="text-left text-on-surface-variant text-xs border-b border-surface-container-high bg-surface-container-low">
-                <th className="p-3 font-medium">Order ID</th>
-                <th className="p-3 font-medium">Customer</th>
-                <th className="p-3 font-medium">Product</th>
-                <th className="p-3 font-medium">Qty</th>
-                <th className="p-3 font-medium">Total</th>
-                <th className="p-3 font-medium">Status</th>
-                <th className="p-3 font-medium">Date</th>
-                <th className="p-3 font-medium">Actions</th>
+                <th className="p-3 font-medium whitespace-nowrap">Order ID</th>
+                <th className="p-3 font-medium whitespace-nowrap">Customer</th>
+                <th className="p-3 font-medium whitespace-nowrap hidden lg:table-cell">Product</th>
+                <th className="p-3 font-medium whitespace-nowrap">Qty</th>
+                <th className="p-3 font-medium whitespace-nowrap">Total</th>
+                <th className="p-3 font-medium whitespace-nowrap">Status</th>
+                <th className="p-3 font-medium whitespace-nowrap hidden lg:table-cell">Date</th>
+                <th className="p-3 font-medium whitespace-nowrap">Actions</th>
               </tr>
             </thead>
             <tbody>
@@ -94,18 +94,18 @@ export default function SellerOrders() {
                     className="border-b border-surface-container-high hover:bg-surface-container-low cursor-pointer transition-colors"
                     onClick={() => toggleRow(order.id)}
                   >
-                    <td className="p-3 font-medium text-primary">{order.id}</td>
-                    <td className="p-3 text-on-surface">{order.customer}</td>
-                    <td className="p-3 text-on-surface">{order.product}</td>
-                    <td className="p-3 text-on-surface">{order.qty}</td>
-                    <td className="p-3 font-medium text-on-surface">{order.total}</td>
-                    <td className="p-3">
+                    <td className="p-3 font-medium text-primary whitespace-nowrap">{order.id}</td>
+                    <td className="p-3 text-on-surface whitespace-nowrap">{order.customer}</td>
+                    <td className="p-3 text-on-surface whitespace-nowrap hidden lg:table-cell">{order.product}</td>
+                    <td className="p-3 text-on-surface whitespace-nowrap">{order.qty}</td>
+                    <td className="p-3 font-medium text-on-surface whitespace-nowrap">{order.total}</td>
+                    <td className="p-3 whitespace-nowrap">
                       <span className={`text-[11px] font-semibold px-2 py-0.5 rounded-full ${statusStyles[order.status]}`}>
                         {order.status}
                       </span>
                     </td>
-                    <td className="p-3 text-on-surface-variant">{order.date}</td>
-                    <td className="p-3">
+                    <td className="p-3 text-on-surface-variant whitespace-nowrap hidden lg:table-cell">{order.date}</td>
+                    <td className="p-3 whitespace-nowrap">
                       <div className="flex items-center gap-1" onClick={(e) => e.stopPropagation()}>
                         {order.status === 'Processing' && (
                           <button className="text-xs px-2 py-1 rounded bg-primary text-on-primary font-medium hover:bg-primary-container transition-colors">
@@ -117,7 +117,7 @@ export default function SellerOrders() {
                             Mark Delivered
                           </button>
                         )}
-                        <button className="p-1.5 rounded-lg hover:bg-surface-container-high text-on-surface-variant transition-colors">
+                        <button className="p-1.5 rounded-lg hover:bg-surface-container-high text-on-surface-variant transition-colors" aria-label="More options">
                           <span className="material-symbols-outlined text-lg">more_vert</span>
                         </button>
                       </div>

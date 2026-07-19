@@ -110,27 +110,27 @@ export default function SellerCampaigns() {
       {/* Past Campaigns */}
       <section>
         <h2 className="text-sm font-semibold text-on-surface mb-3">Past Campaigns</h2>
-        <div className="bg-white rounded-xl border border-surface-container-high shadow-sm overflow-hidden">
-          <table className="w-full text-sm">
+        <div className="bg-white rounded-xl border border-surface-container-high shadow-sm overflow-x-auto">
+          <table className="w-full text-xs sm:text-sm">
             <thead>
               <tr className="text-left text-on-surface-variant text-xs border-b border-surface-container-high bg-surface-container-low">
-                <th className="p-3 font-medium">Campaign</th>
-                <th className="p-3 font-medium">Type</th>
-                <th className="p-3 font-medium">Dates</th>
-                <th className="p-3 font-medium">Enrolled</th>
-                <th className="p-3 font-medium">Revenue</th>
-                <th className="p-3 font-medium">Status</th>
+                <th className="p-3 font-medium whitespace-nowrap">Campaign</th>
+                <th className="p-3 font-medium whitespace-nowrap hidden lg:table-cell">Type</th>
+                <th className="p-3 font-medium whitespace-nowrap">Dates</th>
+                <th className="p-3 font-medium whitespace-nowrap">Enrolled</th>
+                <th className="p-3 font-medium whitespace-nowrap">Revenue</th>
+                <th className="p-3 font-medium whitespace-nowrap">Status</th>
               </tr>
             </thead>
             <tbody>
               {pastCampaigns.map((c) => (
                 <tr key={c.id} className="border-b border-surface-container-high last:border-b-0 hover:bg-surface-container-low">
-                  <td className="p-3 font-medium text-on-surface">{c.title}</td>
-                  <td className="p-3 text-on-surface-variant">{c.type}</td>
-                  <td className="p-3 text-on-surface-variant">{c.dates}</td>
-                  <td className="p-3 text-on-surface">{c.enrolled}</td>
-                  <td className="p-3 font-medium text-on-surface">{c.revenue}</td>
-                  <td className="p-3">
+                  <td className="p-3 font-medium text-on-surface whitespace-nowrap">{c.title}</td>
+                  <td className="p-3 text-on-surface-variant whitespace-nowrap hidden lg:table-cell">{c.type}</td>
+                  <td className="p-3 text-on-surface-variant whitespace-nowrap">{c.dates}</td>
+                  <td className="p-3 text-on-surface whitespace-nowrap">{c.enrolled}</td>
+                  <td className="p-3 font-medium text-on-surface whitespace-nowrap">{c.revenue}</td>
+                  <td className="p-3 whitespace-nowrap">
                     <span className="text-[11px] font-semibold px-2 py-0.5 rounded-full bg-gray-100 text-gray-600">Ended</span>
                   </td>
                 </tr>

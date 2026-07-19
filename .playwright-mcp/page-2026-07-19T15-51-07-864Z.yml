@@ -1,0 +1,508 @@
+- generic [active] [ref=f3e1]:
+  - generic [ref=f3e2]:
+    - banner [ref=f3e3]:
+      - generic [ref=f3e5]:
+        - generic [ref=f3e6]:
+          - button "Open menu" [ref=f3e7]:
+            - generic [ref=f3e8]: menu
+          - link [ref=f3e9] [cursor=pointer]:
+            - /url: /
+            - img "AmarShop" [ref=f3e10]
+        - button "search Search products, brands & categories... search" [ref=f3e12]:
+          - generic [ref=f3e13]:
+            - generic: search
+            - generic [ref=f3e14]: Search products, brands & categories...
+            - generic [ref=f3e15]: search
+        - generic [ref=f3e17]:
+          - link "Notifications" [ref=f3e18] [cursor=pointer]:
+            - /url: /notifications
+            - generic [ref=f3e19]: notifications
+          - link "Wishlist" [ref=f3e21] [cursor=pointer]:
+            - /url: /account
+            - generic [ref=f3e22]: favorite_border
+          - link "Shopping cart" [ref=f3e23] [cursor=pointer]:
+            - /url: /cart
+            - generic [ref=f3e24]: shopping_cart
+          - link "Sign In" [ref=f3e25] [cursor=pointer]:
+            - /url: /auth/login
+      - navigation "Category navigation" [ref=f3e28]:
+        - link "Fashion" [ref=f3e29] [cursor=pointer]:
+          - /url: /category/fashion
+        - link "Electronics" [ref=f3e30] [cursor=pointer]:
+          - /url: /category/electronics
+        - link "Beauty" [ref=f3e31] [cursor=pointer]:
+          - /url: /category/beauty
+        - link "Groceries" [ref=f3e32] [cursor=pointer]:
+          - /url: /category/groceries
+        - link "Home & Living" [ref=f3e33] [cursor=pointer]:
+          - /url: /category/home
+        - link "Sports" [ref=f3e34] [cursor=pointer]:
+          - /url: /category/sports
+        - link "🔥 Flash Sale" [ref=f3e35] [cursor=pointer]:
+          - /url: /flash-sale
+    - main [ref=f3e36]:
+      - generic [ref=f3e38]:
+        - generic [ref=f3e39]:
+          - generic [ref=f3e40]: bolt
+          - generic [ref=f3e41]:
+            - heading "FLASH SALE" [level=2] [ref=f3e42]
+            - paragraph [ref=f3e43]: Deals end in
+        - generic [ref=f3e44]:
+          - generic [ref=f3e45]:
+            - generic [ref=f3e46]: "00"
+            - text: Hours
+          - generic [ref=f3e47]: ":"
+          - generic [ref=f3e48]:
+            - generic [ref=f3e49]: "00"
+            - text: Mins
+          - generic [ref=f3e50]: ":"
+          - generic [ref=f3e51]:
+            - generic [ref=f3e52]: "00"
+            - text: Secs
+      - navigation [ref=f3e53]:
+        - generic [ref=f3e54]:
+          - button "Happening Now Active Deals" [ref=f3e55]:
+            - text: Happening Now
+            - generic [ref=f3e56]: Active Deals
+          - button "Coming Soon Starts 12:00 PM" [ref=f3e57]:
+            - text: Coming Soon
+            - generic [ref=f3e58]: Starts 12:00 PM
+      - generic [ref=f3e60]:
+        - button "All Products" [ref=f3e61]
+        - button "Electronics" [ref=f3e62]
+        - button "Fashion" [ref=f3e63]
+        - button "Home Decor" [ref=f3e64]
+        - button "Health & Beauty" [ref=f3e65]
+        - button "Kitchen" [ref=f3e66]
+        - button "Sports" [ref=f3e67]
+      - main [ref=f3e68]:
+        - generic [ref=f3e69]:
+          - link "Premium Smartphone 5G - Midnight Black -19% MALL Add to wishlist shopping_bag Add to Cart Official Store Premium Smartphone 5G - Midnight Black star star star star star (124) ৳14,999 ৳18,500 Save ৳3,501" [ref=f3e70] [cursor=pointer]:
+            - /url: /product/prod-1
+            - generic [ref=f3e71]:
+              - img "Premium Smartphone 5G - Midnight Black" [ref=f3e72]
+              - generic [ref=f3e73]:
+                - generic [ref=f3e74]: "-19%"
+                - generic [ref=f3e75]: MALL
+              - button "Add to wishlist" [ref=f3e76]:
+                - generic [ref=f3e77]: favorite
+              - button "shopping_bag Add to Cart" [ref=f3e79]:
+                - generic [ref=f3e80]: shopping_bag
+                - text: Add to Cart
+            - generic [ref=f3e81]:
+              - generic [ref=f3e82]: Official Store
+              - heading "Premium Smartphone 5G - Midnight Black" [level=3] [ref=f3e89]
+              - generic [ref=f3e90]:
+                - generic [ref=f3e91]:
+                  - generic [ref=f3e92]: star
+                  - generic [ref=f3e93]: star
+                  - generic [ref=f3e94]: star
+                  - generic [ref=f3e95]: star
+                  - generic [ref=f3e96]: star
+                - generic [ref=f3e97]: (124)
+              - generic [ref=f3e98]:
+                - generic [ref=f3e99]:
+                  - generic [ref=f3e100]: ৳14,999
+                  - generic [ref=f3e101]: ৳18,500
+                - paragraph [ref=f3e102]: Save ৳3,501
+          - link "TWS Noise Cancelling Earbuds Gen 2 -40% Add to wishlist shopping_bag Add to Cart Official Store TWS Noise Cancelling Earbuds Gen 2 star star star star star (89) ৳1,250 ৳2,100 Save ৳850" [ref=f3e103] [cursor=pointer]:
+            - /url: /product/prod-2
+            - generic [ref=f3e104]:
+              - img "TWS Noise Cancelling Earbuds Gen 2" [ref=f3e105]
+              - generic [ref=f3e106]: "-40%"
+              - button "Add to wishlist" [ref=f3e108]:
+                - generic [ref=f3e109]: favorite
+              - button "shopping_bag Add to Cart" [ref=f3e111]:
+                - generic [ref=f3e112]: shopping_bag
+                - text: Add to Cart
+            - generic [ref=f3e113]:
+              - generic [ref=f3e114]: Official Store
+              - heading "TWS Noise Cancelling Earbuds Gen 2" [level=3] [ref=f3e121]
+              - generic [ref=f3e122]:
+                - generic [ref=f3e123]:
+                  - generic [ref=f3e124]: star
+                  - generic [ref=f3e125]: star
+                  - generic [ref=f3e126]: star
+                  - generic [ref=f3e127]: star
+                  - generic [ref=f3e128]: star
+                - generic [ref=f3e129]: (89)
+              - generic [ref=f3e130]:
+                - generic [ref=f3e131]:
+                  - generic [ref=f3e132]: ৳1,250
+                  - generic [ref=f3e133]: ৳2,100
+                - paragraph [ref=f3e134]: Save ৳850
+          - link "Analogue Leather Watch - Men's Classic -40% Add to wishlist shopping_bag Add to Cart Official Store Analogue Leather Watch - Men's Classic star star star star star (256) ৳899 ৳1,500 Save ৳601" [ref=f3e135] [cursor=pointer]:
+            - /url: /product/prod-3
+            - generic [ref=f3e136]:
+              - img "Analogue Leather Watch - Men's Classic" [ref=f3e137]
+              - generic [ref=f3e138]: "-40%"
+              - button "Add to wishlist" [ref=f3e140]:
+                - generic [ref=f3e141]: favorite
+              - button "shopping_bag Add to Cart" [ref=f3e143]:
+                - generic [ref=f3e144]: shopping_bag
+                - text: Add to Cart
+            - generic [ref=f3e145]:
+              - generic [ref=f3e146]: Official Store
+              - heading "Analogue Leather Watch - Men's Classic" [level=3] [ref=f3e168]
+              - generic [ref=f3e169]:
+                - generic [ref=f3e170]:
+                  - generic [ref=f3e171]: star
+                  - generic [ref=f3e172]: star
+                  - generic [ref=f3e173]: star
+                  - generic [ref=f3e174]: star
+                  - generic [ref=f3e175]: star
+                - generic [ref=f3e176]: (256)
+              - generic [ref=f3e177]:
+                - generic [ref=f3e178]:
+                  - generic [ref=f3e179]: ৳899
+                  - generic [ref=f3e180]: ৳1,500
+                - paragraph [ref=f3e181]: Save ৳601
+          - link "Smart Power Blender - 1200W Professional -38% Add to wishlist shopping_bag Add to Cart Official Store Smart Power Blender - 1200W Professional star star star star star (67) ৳4,200 ৳6,800 Save ৳2,600" [ref=f3e182] [cursor=pointer]:
+            - /url: /product/prod-4
+            - generic [ref=f3e183]:
+              - img "Smart Power Blender - 1200W Professional" [ref=f3e184]
+              - generic [ref=f3e185]: "-38%"
+              - button "Add to wishlist" [ref=f3e187]:
+                - generic [ref=f3e188]: favorite
+              - button "shopping_bag Add to Cart" [ref=f3e190]:
+                - generic [ref=f3e191]: shopping_bag
+                - text: Add to Cart
+            - generic [ref=f3e192]:
+              - generic [ref=f3e193]: Official Store
+              - heading "Smart Power Blender - 1200W Professional" [level=3] [ref=f3e200]
+              - generic [ref=f3e201]:
+                - generic [ref=f3e202]:
+                  - generic [ref=f3e203]: star
+                  - generic [ref=f3e204]: star
+                  - generic [ref=f3e205]: star
+                  - generic [ref=f3e206]: star
+                  - generic [ref=f3e207]: star
+                - generic [ref=f3e208]: (67)
+              - generic [ref=f3e209]:
+                - generic [ref=f3e210]:
+                  - generic [ref=f3e211]: ৳4,200
+                  - generic [ref=f3e212]: ৳6,800
+                - paragraph [ref=f3e213]: Save ৳2,600
+          - link "Organic Vitamin C Face Serum & Moisturizer Kit Add to wishlist shopping_bag Add to Cart GlowNatural Organic Vitamin C Face Serum & Moisturizer Kit star star star star star (256) ৳950" [ref=f3e214] [cursor=pointer]:
+            - /url: /product/prod-7
+            - generic [ref=f3e215]:
+              - img "Organic Vitamin C Face Serum & Moisturizer Kit" [ref=f3e216]
+              - button "Add to wishlist" [ref=f3e217]:
+                - generic [ref=f3e218]: favorite
+              - button "shopping_bag Add to Cart" [ref=f3e220]:
+                - generic [ref=f3e221]: shopping_bag
+                - text: Add to Cart
+            - generic [ref=f3e222]:
+              - paragraph [ref=f3e224]: GlowNatural
+              - heading "Organic Vitamin C Face Serum & Moisturizer Kit" [level=3] [ref=f3e225]
+              - generic [ref=f3e226]:
+                - generic [ref=f3e227]:
+                  - generic [ref=f3e228]: star
+                  - generic [ref=f3e229]: star
+                  - generic [ref=f3e230]: star
+                  - generic [ref=f3e231]: star
+                  - generic [ref=f3e232]: star
+                - generic [ref=f3e233]: (256)
+              - generic [ref=f3e234]: ৳950
+          - link "Premium Wireless Noise Cancelling Headphones v2 -45% MALL Add to wishlist shopping_bag Add to Cart Official Store Premium Wireless Noise Cancelling Headphones v2 star star star star star (312) ৳8,900 ৳16,200 Save ৳7,300" [ref=f3e237] [cursor=pointer]:
+            - /url: /product/prod-11
+            - generic [ref=f3e238]:
+              - img "Premium Wireless Noise Cancelling Headphones v2" [ref=f3e239]
+              - generic [ref=f3e240]:
+                - generic [ref=f3e241]: "-45%"
+                - generic [ref=f3e242]: MALL
+              - button "Add to wishlist" [ref=f3e243]:
+                - generic [ref=f3e244]: favorite
+              - button "shopping_bag Add to Cart" [ref=f3e246]:
+                - generic [ref=f3e247]: shopping_bag
+                - text: Add to Cart
+            - generic [ref=f3e248]:
+              - generic [ref=f3e249]: Official Store
+              - heading "Premium Wireless Noise Cancelling Headphones v2" [level=3] [ref=f3e256]
+              - generic [ref=f3e257]:
+                - generic [ref=f3e258]:
+                  - generic [ref=f3e259]: star
+                  - generic [ref=f3e260]: star
+                  - generic [ref=f3e261]: star
+                  - generic [ref=f3e262]: star
+                  - generic [ref=f3e263]: star
+                - generic [ref=f3e264]: (312)
+              - generic [ref=f3e265]:
+                - generic [ref=f3e266]:
+                  - generic [ref=f3e267]: ৳8,900
+                  - generic [ref=f3e268]: ৳16,200
+                - paragraph [ref=f3e269]: Save ৳7,300
+          - link "Ultra-Mix Pro Smart Kitchen Blender -30% Add to wishlist shopping_bag Add to Cart KitchenElite Ultra-Mix Pro Smart Kitchen Blender star star star star star (78) ৳4,550 ৳6,500 Save ৳1,950" [ref=f3e270] [cursor=pointer]:
+            - /url: /product/prod-12
+            - generic [ref=f3e271]:
+              - img "Ultra-Mix Pro Smart Kitchen Blender" [ref=f3e272]
+              - generic [ref=f3e273]: "-30%"
+              - button "Add to wishlist" [ref=f3e275]:
+                - generic [ref=f3e276]: favorite
+              - button "shopping_bag Add to Cart" [ref=f3e278]:
+                - generic [ref=f3e279]: shopping_bag
+                - text: Add to Cart
+            - generic [ref=f3e280]:
+              - paragraph [ref=f3e282]: KitchenElite
+              - heading "Ultra-Mix Pro Smart Kitchen Blender" [level=3] [ref=f3e283]
+              - generic [ref=f3e284]:
+                - generic [ref=f3e285]:
+                  - generic [ref=f3e286]: star
+                  - generic [ref=f3e287]: star
+                  - generic [ref=f3e288]: star
+                  - generic [ref=f3e289]: star
+                  - generic [ref=f3e290]: star
+                - generic [ref=f3e291]: (78)
+              - generic [ref=f3e292]:
+                - generic [ref=f3e293]:
+                  - generic [ref=f3e294]: ৳4,550
+                  - generic [ref=f3e295]: ৳6,500
+                - paragraph [ref=f3e296]: Save ৳1,950
+          - link "Titanium Series Chronograph Watch Add to wishlist shopping_bag Add to Cart LuxTime Titanium Series Chronograph Watch star star star star star (89) ৳12,000" [ref=f3e297] [cursor=pointer]:
+            - /url: /product/prod-13
+            - generic [ref=f3e298]:
+              - img "Titanium Series Chronograph Watch" [ref=f3e299]
+              - button "Add to wishlist" [ref=f3e300]:
+                - generic [ref=f3e301]: favorite
+              - button "shopping_bag Add to Cart" [ref=f3e303]:
+                - generic [ref=f3e304]: shopping_bag
+                - text: Add to Cart
+            - generic [ref=f3e305]:
+              - paragraph [ref=f3e307]: LuxTime
+              - heading "Titanium Series Chronograph Watch" [level=3] [ref=f3e308]
+              - generic [ref=f3e309]:
+                - generic [ref=f3e310]:
+                  - generic [ref=f3e311]: star
+                  - generic [ref=f3e312]: star
+                  - generic [ref=f3e313]: star
+                  - generic [ref=f3e314]: star
+                  - generic [ref=f3e315]: star
+                - generic [ref=f3e316]: (89)
+              - generic [ref=f3e317]: ৳12,000
+          - link "Elite Performance Running Shoes -62% Add to wishlist shopping_bag Add to Cart SpeedX Elite Performance Running Shoes star star star star star (540) ৳3,200 ৳8,500 Save ৳5,300" [ref=f3e320] [cursor=pointer]:
+            - /url: /product/prod-14
+            - generic [ref=f3e321]:
+              - img "Elite Performance Running Shoes" [ref=f3e322]
+              - generic [ref=f3e323]: "-62%"
+              - button "Add to wishlist" [ref=f3e325]:
+                - generic [ref=f3e326]: favorite
+              - button "shopping_bag Add to Cart" [ref=f3e328]:
+                - generic [ref=f3e329]: shopping_bag
+                - text: Add to Cart
+            - generic [ref=f3e330]:
+              - paragraph [ref=f3e332]: SpeedX
+              - heading "Elite Performance Running Shoes" [level=3] [ref=f3e333]
+              - generic [ref=f3e334]:
+                - generic [ref=f3e335]:
+                  - generic [ref=f3e336]: star
+                  - generic [ref=f3e337]: star
+                  - generic [ref=f3e338]: star
+                  - generic [ref=f3e339]: star
+                  - generic [ref=f3e340]: star
+                - generic [ref=f3e341]: (540)
+              - generic [ref=f3e342]:
+                - generic [ref=f3e343]:
+                  - generic [ref=f3e344]: ৳3,200
+                  - generic [ref=f3e345]: ৳8,500
+                - paragraph [ref=f3e346]: Save ৳5,300
+          - link "ZenMist Smart Ultrasonic Diffuser -50% Add to wishlist shopping_bag Add to Cart ZenMist ZenMist Smart Ultrasonic Diffuser star star star star star (34) ৳2,400 ৳4,800 Save ৳2,400" [ref=f3e347] [cursor=pointer]:
+            - /url: /product/prod-15
+            - generic [ref=f3e348]:
+              - img "ZenMist Smart Ultrasonic Diffuser" [ref=f3e349]
+              - generic [ref=f3e350]: "-50%"
+              - button "Add to wishlist" [ref=f3e352]:
+                - generic [ref=f3e353]: favorite
+              - button "shopping_bag Add to Cart" [ref=f3e355]:
+                - generic [ref=f3e356]: shopping_bag
+                - text: Add to Cart
+            - generic [ref=f3e357]:
+              - paragraph [ref=f3e359]: ZenMist
+              - heading "ZenMist Smart Ultrasonic Diffuser" [level=3] [ref=f3e360]
+              - generic [ref=f3e361]:
+                - generic [ref=f3e362]:
+                  - generic [ref=f3e363]: star
+                  - generic [ref=f3e364]: star
+                  - generic [ref=f3e365]: star
+                  - generic [ref=f3e366]: star
+                  - generic [ref=f3e367]: star
+                - generic [ref=f3e368]: (34)
+              - generic [ref=f3e369]:
+                - generic [ref=f3e370]:
+                  - generic [ref=f3e371]: ৳2,400
+                  - generic [ref=f3e372]: ৳4,800
+                - paragraph [ref=f3e373]: Save ৳2,400
+    - contentinfo [ref=f3e374]:
+      - generic [ref=f3e380]:
+        - generic [ref=f3e386]:
+          - heading "Stay in the Loop" [level=3] [ref=f3e387]
+          - paragraph [ref=f3e388]: Exclusive deals, launches & offers — straight to your inbox.
+        - generic [ref=f3e389]:
+          - textbox "Your email address" [ref=f3e394]
+          - button "Subscribe" [ref=f3e395]
+      - generic [ref=f3e398]:
+        - generic [ref=f3e399]:
+          - generic [ref=f3e400]:
+            - link [ref=f3e401] [cursor=pointer]:
+              - /url: /
+              - img "AmarShop" [ref=f3e402]
+            - paragraph [ref=f3e403]: Bangladesh's premium online marketplace. Shop millions of products from trusted sellers with fast delivery and the best deals.
+            - generic [ref=f3e404]:
+              - heading "Follow Us" [level=4] [ref=f3e405]
+              - generic [ref=f3e406]:
+                - link "Facebook" [ref=f3e407] [cursor=pointer]:
+                  - /url: "#"
+                - link "Instagram" [ref=f3e410] [cursor=pointer]:
+                  - /url: "#"
+                - link "X (Twitter)" [ref=f3e413] [cursor=pointer]:
+                  - /url: "#"
+                - link "YouTube" [ref=f3e416] [cursor=pointer]:
+                  - /url: "#"
+                - link "LinkedIn" [ref=f3e419] [cursor=pointer]:
+                  - /url: https://www.linkedin.com/in/md-shawon-molla-2a3877293/
+                - link "GitHub" [ref=f3e422] [cursor=pointer]:
+                  - /url: https://github.com/shawon2210
+          - generic [ref=f3e425]:
+            - generic [ref=f3e426]:
+              - heading "Customer Service" [level=3] [ref=f3e427]
+              - list [ref=f3e428]:
+                - listitem [ref=f3e429]:
+                  - link "Help Center" [ref=f3e430] [cursor=pointer]:
+                    - /url: /help
+                - listitem [ref=f3e431]:
+                  - link "Returns & Refunds" [ref=f3e432] [cursor=pointer]:
+                    - /url: /help/returns
+                - listitem [ref=f3e433]:
+                  - link "Shipping Info" [ref=f3e434] [cursor=pointer]:
+                    - /url: /help/shipping
+                - listitem [ref=f3e435]:
+                  - link "Order Tracking" [ref=f3e436] [cursor=pointer]:
+                    - /url: /orders
+                - listitem [ref=f3e437]:
+                  - link "Payment Methods" [ref=f3e438] [cursor=pointer]:
+                    - /url: /help/payment
+                - listitem [ref=f3e439]:
+                  - link "Contact Us" [ref=f3e440] [cursor=pointer]:
+                    - /url: /contact
+            - generic [ref=f3e441]:
+              - heading "Shop Categories" [level=3] [ref=f3e442]
+              - list [ref=f3e443]:
+                - listitem [ref=f3e444]:
+                  - link "Electronics" [ref=f3e445] [cursor=pointer]:
+                    - /url: /category/electronics
+                - listitem [ref=f3e446]:
+                  - link "Fashion" [ref=f3e447] [cursor=pointer]:
+                    - /url: /category/fashion
+                - listitem [ref=f3e448]:
+                  - link "Beauty" [ref=f3e449] [cursor=pointer]:
+                    - /url: /category/beauty
+                - listitem [ref=f3e450]:
+                  - link "Groceries" [ref=f3e451] [cursor=pointer]:
+                    - /url: /category/groceries
+                - listitem [ref=f3e452]:
+                  - link "Home & Living" [ref=f3e453] [cursor=pointer]:
+                    - /url: /category/home
+                - listitem [ref=f3e454]:
+                  - link "Sports" [ref=f3e455] [cursor=pointer]:
+                    - /url: /category/sports
+            - generic [ref=f3e456]:
+              - heading "Seller Center" [level=3] [ref=f3e457]
+              - list [ref=f3e458]:
+                - listitem [ref=f3e459]:
+                  - link "Become a Seller" [ref=f3e460] [cursor=pointer]:
+                    - /url: /seller/dashboard
+                - listitem [ref=f3e461]:
+                  - link "Seller Dashboard" [ref=f3e462] [cursor=pointer]:
+                    - /url: /seller/dashboard
+                - listitem [ref=f3e463]:
+                  - link "Seller Analytics" [ref=f3e464] [cursor=pointer]:
+                    - /url: /seller/analytics
+                - listitem [ref=f3e465]:
+                  - link "Seller Finance" [ref=f3e466] [cursor=pointer]:
+                    - /url: /seller/finance
+                - listitem [ref=f3e467]:
+                  - link "Seller Policy" [ref=f3e468] [cursor=pointer]:
+                    - /url: /seller/policy
+                - listitem [ref=f3e469]:
+                  - link "Seller Support" [ref=f3e470] [cursor=pointer]:
+                    - /url: /support/chat
+            - generic [ref=f3e471]:
+              - heading "Company" [level=3] [ref=f3e472]
+              - list [ref=f3e473]:
+                - listitem [ref=f3e474]:
+                  - link "About Us" [ref=f3e475] [cursor=pointer]:
+                    - /url: /about
+                - listitem [ref=f3e476]:
+                  - link "Careers" [ref=f3e477] [cursor=pointer]:
+                    - /url: /careers
+                - listitem [ref=f3e478]:
+                  - link "Press & Media" [ref=f3e479] [cursor=pointer]:
+                    - /url: /press
+                - listitem [ref=f3e480]:
+                  - link "Blog" [ref=f3e481] [cursor=pointer]:
+                    - /url: /blog
+                - listitem [ref=f3e482]:
+                  - link "Terms of Service" [ref=f3e483] [cursor=pointer]:
+                    - /url: /terms
+                - listitem [ref=f3e484]:
+                  - link "Privacy Policy" [ref=f3e485] [cursor=pointer]:
+                    - /url: /privacy
+        - generic [ref=f3e487]:
+          - generic [ref=f3e488]:
+            - heading "Download App" [level=4] [ref=f3e489]
+            - generic [ref=f3e491]:
+              - link [ref=f3e492] [cursor=pointer]:
+                - /url: "#"
+                - generic [ref=f3e496]:
+                  - paragraph [ref=f3e497]: Download on
+                  - paragraph [ref=f3e498]: Google Play
+              - link [ref=f3e499] [cursor=pointer]:
+                - /url: "#"
+                - generic [ref=f3e503]:
+                  - paragraph [ref=f3e504]: Download on
+                  - paragraph [ref=f3e505]: App Store
+          - generic [ref=f3e506]:
+            - heading "Accepted Payments" [level=4] [ref=f3e507]
+            - generic [ref=f3e509]:
+              - generic "bKash" [ref=f3e510]:
+                - img [ref=f3e511]:
+                  - generic [ref=f3e513]: bKash
+              - generic "Nagad" [ref=f3e514]:
+                - img [ref=f3e515]:
+                  - generic [ref=f3e517]: Nagad
+              - generic "Rocket" [ref=f3e518]:
+                - img [ref=f3e519]:
+                  - generic [ref=f3e521]: Rocket
+              - generic "Visa" [ref=f3e522]:
+                - img [ref=f3e523]:
+                  - generic [ref=f3e525]: VISA
+              - generic "Mastercard" [ref=f3e526]
+              - generic "American Express" [ref=f3e531]:
+                - img [ref=f3e532]:
+                  - generic [ref=f3e534]: AMEX
+              - generic "PayPal" [ref=f3e535]:
+                - img [ref=f3e536]:
+                  - generic [ref=f3e538]: PayPal
+              - generic "COD" [ref=f3e539]:
+                - img [ref=f3e540]:
+                  - generic [ref=f3e542]: COD
+          - generic [ref=f3e544]:
+            - heading "Delivery Partners" [level=4] [ref=f3e545]
+            - generic [ref=f3e546]:
+              - generic [ref=f3e547]: Pathao
+              - generic [ref=f3e548]: RedX
+              - generic [ref=f3e549]: Steadfast
+              - generic [ref=f3e550]: Sundarban
+              - generic [ref=f3e551]: Paperfly
+        - generic [ref=f3e553]:
+          - generic [ref=f3e554]: 100% Secure Payment
+          - paragraph [ref=f3e558]: © 2026 AmarShop. All rights reserved.
+          - generic [ref=f3e559]:
+            - link "Privacy" [ref=f3e560] [cursor=pointer]:
+              - /url: /privacy
+            - link "Terms" [ref=f3e561] [cursor=pointer]:
+              - /url: /terms
+            - link "Support" [ref=f3e562] [cursor=pointer]:
+              - /url: /support/chat
+            - link "Track Order" [ref=f3e563] [cursor=pointer]:
+              - /url: /orders
+  - button "Open Next.js Dev Tools" [ref=f3e569] [cursor=pointer]

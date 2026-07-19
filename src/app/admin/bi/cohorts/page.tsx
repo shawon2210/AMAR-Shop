@@ -46,26 +46,26 @@ export default function CohortsPage() {
       ) : (
         <>
           {/* Desktop Table */}
-          <div className="hidden sm:block bg-white rounded-xl border border-[#eee] overflow-hidden">
-            <table className="w-full text-sm">
+          <div className="hidden sm:block bg-white rounded-xl border border-[#eee] overflow-x-auto">
+            <table className="w-full text-xs sm:text-sm">
               <thead>
                 <tr className="bg-[#fafafa] border-b border-[#eee]">
-                  <th className="text-left py-3 px-4 text-[#888] font-medium">Cohort</th>
-                  <th className="text-center py-3 px-4 text-[#888] font-medium">Users</th>
+                  <th className="text-left py-3 px-4 text-[#888] font-medium whitespace-nowrap">Cohort</th>
+                  <th className="text-center py-3 px-4 text-[#888] font-medium whitespace-nowrap">Users</th>
                   {cols.map((_, i) => (
-                    <th key={i} className="text-center py-3 px-4 text-[#888] font-medium">Period {i}</th>
+                    <th key={i} className="text-center py-3 px-4 text-[#888] font-medium whitespace-nowrap">Period {i}</th>
                   ))}
                 </tr>
               </thead>
               <tbody>
                 {cohorts.map((c, i) => (
                   <tr key={i} className="border-b border-[#f5f5f5] hover:bg-[#fafafa]">
-                    <td className="py-3 px-4 font-medium text-[#333]">{c.cohort}</td>
-                    <td className="py-3 px-4 text-center text-[#555]">{c.base}</td>
+                    <td className="py-3 px-4 font-medium text-[#333] whitespace-nowrap">{c.cohort}</td>
+                    <td className="py-3 px-4 text-center text-[#555] whitespace-nowrap">{c.base}</td>
                     {cols.map((col, j) => {
                       const pct = getCohortValue(c, col);
                       return (
-                        <td key={j} className="py-3 px-4 text-center">
+                        <td key={j} className="py-3 px-4 text-center whitespace-nowrap">
                           <span className={`px-2 py-1 rounded text-xs font-semibold ${
                             pct >= 40 ? 'bg-green-100 text-green-700' : pct >= 30 ? 'bg-amber-100 text-amber-700' : 'bg-gray-100 text-gray-700'
                           }`}>

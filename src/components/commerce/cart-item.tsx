@@ -53,6 +53,7 @@ export function CartItemCard({ item }: CartItemCardProps) {
               transition={fastTransition}
               onClick={() => updateQuantity(item.id, item.quantity - 1)}
               className="px-2 py-1 hover:bg-gray-100 transition-colors"
+              aria-label="Decrease quantity"
             >
               <span className="material-symbols-outlined text-base">remove</span>
             </motion.button>
@@ -62,6 +63,7 @@ export function CartItemCard({ item }: CartItemCardProps) {
               transition={fastTransition}
               onClick={() => updateQuantity(item.id, item.quantity + 1)}
               className="px-2 py-1 hover:bg-gray-100 transition-colors"
+              aria-label="Increase quantity"
             >
               <span className="material-symbols-outlined text-base">add</span>
             </motion.button>
