@@ -10,7 +10,6 @@ function LoginForm() {
   const searchParams = useSearchParams();
   const redirectTo = searchParams.get('redirect') || '/';
   const login = useAuthStore(s => s.login);
-  const demoLogin = useAuthStore(s => s.demoLogin);
   const logout = useAuthStore(s => s.logout);
   const isAuthenticated = useAuthStore(s => s.isAuthenticated);
   const user = useAuthStore(s => s.user);
@@ -32,6 +31,21 @@ function LoginForm() {
       ? 'Password must be at least 6 characters'
       : '';
 
+  function getDashboardRoute(): string {
+    const s = useAuthStore.getState();
+    if (s.user?.role === 'ADMIN' || s.user?.role === 'SUPER_ADMIN') return '/admin/dashboard';
+    if (s.user?.isSeller || s.user?.role === 'SELLER') return '/seller/dashboard';
+    return '/account';
+  }
+
+  function redirectAfterLogin() {
+    if (redirectTo !== '/') {
+      router.push(redirectTo);
+    } else {
+      router.push(getDashboardRoute());
+    }
+  }
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setError('');
@@ -39,18 +53,7 @@ function LoginForm() {
     setLoading(true);
     try {
       await login(identity, password);
-      if (redirectTo !== '/') {
-        router.push(redirectTo);
-      } else {
-        const state = useAuthStore.getState();
-        if (state.user?.role === 'ADMIN' || state.user?.role === 'SUPER_ADMIN') {
-          router.push('/admin/dashboard');
-        } else if (state.user?.isSeller || state.user?.role === 'SELLER') {
-          router.push('/seller/dashboard');
-        } else {
-          router.push('/account');
-        }
-      }
+      redirectAfterLogin();
     } catch (err: unknown) {
       const message = err instanceof Error ? err.message : 'Invalid credentials. Please try again.';
       setError(message);
@@ -69,7 +72,7 @@ function LoginForm() {
             </p>
             <div className="flex justify-center gap-3 mt-2">
               <button
-                onClick={() => router.push(redirectTo)}
+                onClick={() => router.push(getDashboardRoute())}
                 className="text-xs text-primary underline hover:no-underline"
               >
                 Go to dashboard
@@ -210,7 +213,19 @@ function LoginForm() {
           <div className="mt-4 grid grid-cols-3 gap-2">
             <button
               type="button"
-              onClick={() => demoLogin({ id: 'demo-admin', name: 'Admin User', email: 'admin@amarshop.com', phone: '01712345678', role: 'SUPER_ADMIN', isSeller: false })}
+              onClick={async () => {
+                setLoading(true);
+                setError('');
+                try {
+                  await login('01712345678', 'password123');
+                  redirectAfterLogin();
+                } catch (err: unknown) {
+                  const message = err instanceof Error ? err.message : 'Demo login failed';
+                  setError(message);
+                } finally {
+                  setLoading(false);
+                }
+              }}
               className="flex flex-col items-center gap-1 py-2.5 sm:py-3 px-1 border border-outline rounded-lg hover:bg-surface-container active:scale-[0.97] transition-all text-[10px] sm:text-xs leading-tight"
             >
               <span className="material-symbols-outlined text-xl sm:text-2xl text-primary">admin_panel_settings</span>
@@ -218,7 +233,19 @@ function LoginForm() {
             </button>
             <button
               type="button"
-              onClick={() => demoLogin({ id: 'demo-seller', name: 'ShopZone BD', email: 'seller@amarshop.com', phone: '01798765432', role: 'SELLER', isSeller: true })}
+              onClick={async () => {
+                setLoading(true);
+                setError('');
+                try {
+                  await login('01798765432', 'password123');
+                  redirectAfterLogin();
+                } catch (err: unknown) {
+                  const message = err instanceof Error ? err.message : 'Demo login failed';
+                  setError(message);
+                } finally {
+                  setLoading(false);
+                }
+              }}
               className="flex flex-col items-center gap-1 py-2.5 sm:py-3 px-1 border border-outline rounded-lg hover:bg-surface-container active:scale-[0.97] transition-all text-[10px] sm:text-xs leading-tight"
             >
               <span className="material-symbols-outlined text-xl sm:text-2xl text-tertiary">storefront</span>
@@ -226,7 +253,19 @@ function LoginForm() {
             </button>
             <button
               type="button"
-              onClick={() => demoLogin({ id: 'demo-customer', name: 'Demo Customer', email: 'customer@amarshop.com', phone: '01700000000', role: 'CUSTOMER', isSeller: false })}
+              onClick={async () => {
+                setLoading(true);
+                setError('');
+                try {
+                  await login('01700000000', 'password123');
+                  redirectAfterLogin();
+                } catch (err: unknown) {
+                  const message = err instanceof Error ? err.message : 'Demo login failed';
+                  setError(message);
+                } finally {
+                  setLoading(false);
+                }
+              }}
               className="flex flex-col items-center gap-1 py-2.5 sm:py-3 px-1 border border-outline rounded-lg hover:bg-surface-container active:scale-[0.97] transition-all text-[10px] sm:text-xs leading-tight"
             >
               <span className="material-symbols-outlined text-xl sm:text-2xl text-green-600">person</span>

@@ -28,6 +28,7 @@ async function attemptRefresh(): Promise<boolean> {
         user: data.user,
       };
       localStorage.setItem('amarshop-auth', JSON.stringify(current));
+      document.cookie = `accessToken=${data.accessToken}; path=/; max-age=604800; SameSite=Strict`;
       window.dispatchEvent(new CustomEvent('amarshop-auth-refreshed', { detail: data }));
       return true;
     } catch {
@@ -77,6 +78,7 @@ export async function request<T>(
   if (!res.ok) {
     if (res.status === 401 && typeof window !== 'undefined') {
       localStorage.removeItem('amarshop-auth');
+      document.cookie = 'accessToken=; path=/; max-age=0; SameSite=Strict';
       window.dispatchEvent(new CustomEvent('amarshop-auth-logout'));
       const currentPath = window.location.pathname + window.location.search;
       if (!path.startsWith('/auth/')) {

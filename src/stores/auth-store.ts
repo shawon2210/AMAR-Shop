@@ -27,6 +27,17 @@ interface AuthState {
 
 type AuthPersist = Pick<AuthState, 'accessToken' | 'refreshToken' | 'user'>;
 
+function setAuthCookie(token: string) {
+  if (typeof document === 'undefined') return;
+  // Max-age 7 days, path / so middleware can see it on all routes
+  document.cookie = `accessToken=${token}; path=/; max-age=604800; SameSite=Strict`;
+}
+
+function clearAuthCookie() {
+  if (typeof document === 'undefined') return;
+  document.cookie = 'accessToken=; path=/; max-age=0; SameSite=Strict';
+}
+
 export const useAuthStore = create<AuthState>()(
   persist(
     (set, get) => ({
@@ -51,6 +62,7 @@ export const useAuthStore = create<AuthState>()(
           user: res.user,
           isAuthenticated: true,
         });
+        setAuthCookie(res.accessToken);
       },
 
       demoLogin: (user) => {
@@ -60,6 +72,7 @@ export const useAuthStore = create<AuthState>()(
           user,
           isAuthenticated: true,
         });
+        setAuthCookie('demo-token-' + user.id);
       },
 
       loginWithPhone: async (phone, password) => {
@@ -74,6 +87,7 @@ export const useAuthStore = create<AuthState>()(
           user: res.user,
           isAuthenticated: true,
         });
+        setAuthCookie(res.accessToken);
       },
 
       register: async (data) => {
@@ -88,6 +102,7 @@ export const useAuthStore = create<AuthState>()(
           user: res.user,
           isAuthenticated: true,
         });
+        setAuthCookie(res.accessToken);
       },
 
       logout: () => {
@@ -98,6 +113,7 @@ export const useAuthStore = create<AuthState>()(
           user: null,
           isAuthenticated: false,
         });
+        clearAuthCookie();
         if (token) {
           request('/auth/logout', {
             method: 'POST',
@@ -142,9 +158,23 @@ export const useAuthStore = create<AuthState>()(
 export function useAuthHydrated(): boolean {
   const [hydrated, setHydrated] = useState(false);
   useEffect(() => {
-    if (useAuthStore.persist?.hasHydrated()) setHydrated(true);
-    const unsub = useAuthStore.persist?.onFinishHydration(() => setHydrated(true));
+    if (useAuthStore.persist?.hasHydrated()) {
+      setHydrated(true);
+      syncCookieFromStore();
+    }
+    const unsub = useAuthStore.persist?.onFinishHydration(() => {
+      setHydrated(true);
+      syncCookieFromStore();
+    });
     return unsub;
   }, []);
   return hydrated;
+}
+
+function syncCookieFromStore() {
+  if (typeof document === 'undefined') return;
+  const state = useAuthStore.getState();
+  if (state.accessToken) {
+    document.cookie = `accessToken=${state.accessToken}; path=/; max-age=604800; SameSite=Strict`;
+  }
 }
