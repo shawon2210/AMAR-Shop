@@ -14,6 +14,7 @@ enum UserRole {
   ADMIN
   LOGISTICS
   MODERATOR
+  SUPER_ADMIN
 }
 
 enum OrderStatus {

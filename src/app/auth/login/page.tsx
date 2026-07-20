@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect, Suspense } from 'react';
+import { useState, Suspense } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import Link from 'next/link';
 import { useAuthStore } from '@/stores/auth-store';
@@ -11,7 +11,9 @@ function LoginForm() {
   const redirectTo = searchParams.get('redirect') || '/';
   const login = useAuthStore(s => s.login);
   const demoLogin = useAuthStore(s => s.demoLogin);
+  const logout = useAuthStore(s => s.logout);
   const isAuthenticated = useAuthStore(s => s.isAuthenticated);
+  const user = useAuthStore(s => s.user);
 
   const [identity, setIdentity] = useState('');
   const [password, setPassword] = useState('');
@@ -19,22 +21,6 @@ function LoginForm() {
   const [rememberMe, setRememberMe] = useState(false);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
-
-  useEffect(() => {
-    if (!isAuthenticated) return;
-    if (redirectTo !== '/') {
-      router.push(redirectTo);
-      return;
-    }
-    const state = useAuthStore.getState();
-    if (state.user?.role === 'ADMIN' || state.user?.role === 'SUPER_ADMIN') {
-      router.push('/admin');
-    } else if (state.user?.isSeller || state.user?.role === 'SELLER') {
-      router.push('/seller/dashboard');
-    } else {
-      router.push('/account');
-    }
-  }, [isAuthenticated, router, redirectTo]);
 
   const isEmail = identity.includes('@');
   const identityError =
@@ -58,7 +44,7 @@ function LoginForm() {
       } else {
         const state = useAuthStore.getState();
         if (state.user?.role === 'ADMIN' || state.user?.role === 'SUPER_ADMIN') {
-          router.push('/admin');
+          router.push('/admin/dashboard');
         } else if (state.user?.isSeller || state.user?.role === 'SELLER') {
           router.push('/seller/dashboard');
         } else {
@@ -73,13 +59,30 @@ function LoginForm() {
     }
   };
 
-  if (typeof window !== 'undefined' && isAuthenticated) {
-    return null;
-  }
-
   return (
     <div className="flex flex-col items-center justify-center min-h-[80dvh] px-3 sm:px-4 py-6 sm:py-8">
       <div className="w-full max-w-[440px] bg-surface-container-lowest rounded-xl shadow-sm">
+        {isAuthenticated && user && (
+          <div className="p-4 sm:p-5 bg-primary-container rounded-t-xl border-b border-outline-variant">
+            <p className="text-xs sm:text-sm text-primary font-medium text-center">
+              Signed in as <span className="font-bold">{user.name}</span>
+            </p>
+            <div className="flex justify-center gap-3 mt-2">
+              <button
+                onClick={() => router.push(redirectTo)}
+                className="text-xs text-primary underline hover:no-underline"
+              >
+                Go to dashboard
+              </button>
+              <button
+                onClick={() => { logout(); setIdentity(''); setPassword(''); }}
+                className="text-xs text-error underline hover:no-underline"
+              >
+                Sign out &amp; use different account
+              </button>
+            </div>
+          </div>
+        )}
         <div className="p-5 sm:p-6 md:p-8">
           <div className="text-center mb-5 sm:mb-6">
             <h1 className="text-xl sm:text-2xl md:text-[28px] font-bold text-primary mb-1 leading-tight text-balance">

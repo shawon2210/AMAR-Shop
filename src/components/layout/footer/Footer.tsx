@@ -12,7 +12,7 @@ export function Footer() {
       {/* Brand + Links — single mobile-first grid */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-[1.4fr_repeat(4,1fr)] gap-8">
         <FooterBrand />
-        <div className="hidden md:grid grid-cols-2 lg:grid-cols-4 gap-6">
+        <div className="hidden md:grid grid-cols-2 lg:grid-cols-4 gap-6 lg:col-span-4">
           <FooterLinks />
         </div>
         <div className="md:hidden col-span-full">

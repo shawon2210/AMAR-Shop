@@ -3,11 +3,11 @@ import type { NextRequest } from 'next/server';
 import { verifyToken } from './lib/auth/jwt';
 
 const protectedRoutes = {
-  '/account': ['CUSTOMER', 'SELLER', 'ADMIN'],
+  '/account': ['CUSTOMER', 'SELLER', 'ADMIN', 'SUPER_ADMIN'],
   '/checkout': ['CUSTOMER'],
   '/cart': ['CUSTOMER', 'SELLER'],
-  '/seller': ['SELLER', 'ADMIN'],
-  '/admin': ['ADMIN'],
+  '/seller': ['SELLER', 'ADMIN', 'SUPER_ADMIN'],
+  '/admin': ['ADMIN', 'SUPER_ADMIN'],
 };
 
 const authRoutes = ['/auth/login', '/auth/register'];
@@ -71,6 +71,7 @@ export async function middleware(request: NextRequest) {
 function getRoleHome(role: string): string {
   switch (role) {
     case 'ADMIN':
+    case 'SUPER_ADMIN':
       return '/admin/dashboard';
     case 'SELLER':
       return '/seller/dashboard';

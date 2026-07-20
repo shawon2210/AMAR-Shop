@@ -39,13 +39,5 @@ export const realtimeConfig: RealtimeConfig = {
     maxConnections: 1000,
     maxEventsPerMinute: 120,
   },
-  get jwtSecret(): string {
-    const secret = process.env.JWT_SECRET;
-    if (!secret) {
-      throw new Error(
-        'JWT_SECRET environment variable is required for realtime config',
-      );
-    }
-    return secret;
-  },
+  jwtSecret: process.env.JWT_SECRET || '',
 };
