@@ -49,17 +49,8 @@ async function fetchMonitoring(): Promise<MonitoringData> {
     return await api.get<MonitoringData>('/admin/monitoring');
   } catch {
     return {
-      metrics: { uptime: '14d 6h 32m', responseTime: '245ms', memory: 62, memoryUsed: '6.2 GB / 10 GB', cpu: 38, disk: 47, diskUsed: '235 GB / 500 GB' },
-      services: [
-        { name: 'Web Server', status: 'up', responseTime: '120ms', lastChecked: '2026-07-22T14:00:00Z' },
-        { name: 'Database', status: 'up', responseTime: '45ms', lastChecked: '2026-07-22T14:00:00Z' },
-        { name: 'Redis Cache', status: 'up', responseTime: '2ms', lastChecked: '2026-07-22T14:00:00Z' },
-        { name: 'Queue Worker', status: 'up', responseTime: '—', lastChecked: '2026-07-22T14:00:00Z' },
-        { name: 'Storage (S3)', status: 'up', responseTime: '180ms', lastChecked: '2026-07-22T14:00:00Z' },
-        { name: 'Email Service', status: 'down', responseTime: '—', lastChecked: '2026-07-22T13:55:00Z' },
-        { name: 'Search Engine', status: 'up', responseTime: '90ms', lastChecked: '2026-07-22T14:00:00Z' },
-        { name: 'Payment Gateway', status: 'up', responseTime: '310ms', lastChecked: '2026-07-22T14:00:00Z' },
-      ],
+      metrics: { uptime: '', responseTime: '', memory: 0, memoryUsed: '', cpu: 0, disk: 0, diskUsed: '' },
+      services: [],
     };
   }
 }

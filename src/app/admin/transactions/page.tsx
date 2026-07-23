@@ -26,16 +26,7 @@ async function fetchTransactions(search?: string, status?: string, from?: string
     const qs = params.toString();
     return await api.get<Transaction[]>(`/admin/transactions${qs ? `?${qs}` : ''}`);
   } catch {
-    return [
-      { id: '1', txnId: 'TXN-001', orderNo: 'ORD-1024', customer: 'Rahim Mia', amount: 5400, method: 'bkash', status: 'PAID', date: '2026-07-23' },
-      { id: '2', txnId: 'TXN-002', orderNo: 'ORD-1025', customer: 'Karim Hasan', amount: 12800, method: 'nagad', status: 'PAID', date: '2026-07-23' },
-      { id: '3', txnId: 'TXN-003', orderNo: 'ORD-1026', customer: 'Fatima Begum', amount: 3200, method: 'cod', status: 'UNPAID', date: '2026-07-22' },
-      { id: '4', txnId: 'TXN-004', orderNo: 'ORD-1027', customer: 'Jahid Khan', amount: 25600, method: 'sslcommerz', status: 'PAID', date: '2026-07-22' },
-      { id: '5', txnId: 'TXN-005', orderNo: 'ORD-1028', customer: 'Nasrin Akter', amount: 1800, method: 'bkash', status: 'REFUNDED', date: '2026-07-21' },
-      { id: '6', txnId: 'TXN-006', orderNo: 'ORD-1029', customer: 'Shohag Ali', amount: 9200, method: 'nagad', status: 'PAID', date: '2026-07-21' },
-      { id: '7', txnId: 'TXN-007', orderNo: 'ORD-1030', customer: 'Moin Uddin', amount: 7500, method: 'cod', status: 'PAID', date: '2026-07-20' },
-      { id: '8', txnId: 'TXN-008', orderNo: 'ORD-1031', customer: 'Jannatul Ferdous', amount: 45000, method: 'sslcommerz', status: 'UNPAID', date: '2026-07-20' },
-    ];
+    return [];
   }
 }
 

@@ -1,27 +1,51 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
+import { AdminLoading, AdminError, AdminEmpty } from '@/components/ui/admin-states';
+import { api } from '@/services/api';
+
+interface InventoryItem {
+  inventoryId: string;
+  productId: string;
+  productName: string;
+  quantity: number;
+}
 
 interface BinItem {
   binId: string;
   code: string;
   zone: string;
-  items: { inventoryId: string; productId: string; productName: string; quantity: number }[];
+  items: InventoryItem[];
 }
 
 export default function InventoryPage() {
   const [selectedZone, setSelectedZone] = useState('A');
-
-  const mockBins: BinItem[] = [
-    { binId: 'b1', code: 'A-01-01-01', zone: 'A', items: [{ inventoryId: 'i1', productId: 'p1', productName: 'Samsung Galaxy S25', quantity: 24 }] },
-    { binId: 'b2', code: 'A-01-01-02', zone: 'A', items: [{ inventoryId: 'i2', productId: 'p2', productName: 'iPhone 16 Pro', quantity: 15 }] },
-    { binId: 'b3', code: 'B-01-01-01', zone: 'B', items: [{ inventoryId: 'i3', productId: 'p3', productName: 'Sony WH-1000XM6', quantity: 8 }] },
-    { binId: 'b4', code: 'B-01-01-02', zone: 'B', items: [{ inventoryId: 'i4', productId: 'p4', productName: 'MacBook Air M4', quantity: 5 }] },
-    { binId: 'b5', code: 'C-01-01-01', zone: 'C', items: [{ inventoryId: 'i5', productId: 'p5', productName: 'AirPods Pro 3', quantity: 42 }] },
-  ];
+  const [bins, setBins] = useState<BinItem[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
 
   const zones = ['A', 'B', 'C', 'D'];
-  const filtered = selectedZone ? mockBins.filter(b => b.zone === selectedZone) : mockBins;
+
+  const load = async () => {
+    setLoading(true);
+    setError(null);
+    try {
+      setBins(await api.get<BinItem[]>('/admin/warehouse/inventory'));
+    } catch (err) {
+      setError(err instanceof Error ? err.message : 'Failed to load inventory');
+      setBins([]);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  useEffect(() => { load(); }, []);
+
+  const filtered = selectedZone ? bins.filter(b => b.zone === selectedZone) : bins;
+
+  if (loading) return <AdminLoading message="Loading inventory..." />;
+  if (error) return <AdminError message={error} onRetry={load} />;
+  if (!bins.length) return <AdminEmpty message="No inventory bins found" icon="shelves" />;
 
   return (
     <div className="space-y-6">

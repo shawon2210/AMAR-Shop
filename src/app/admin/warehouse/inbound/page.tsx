@@ -1,15 +1,40 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
+import { AdminLoading, AdminError, AdminEmpty } from '@/components/ui/admin-states';
+import { api } from '@/services/api';
+
+interface InboundOrder {
+  id: string;
+  supplier: string;
+  status: string;
+  items: number;
+  received: string;
+}
 
 export default function InboundPage() {
   const [showForm, setShowForm] = useState(false);
+  const [orders, setOrders] = useState<InboundOrder[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
 
-  const orders = [
-    { id: 'IN-000001', supplier: 'Samsung Bangladesh', status: 'COMPLETED', items: 3, received: '2026-06-28' },
-    { id: 'IN-000002', supplier: 'Apple Distributor', status: 'RECEIVING', items: 5, received: '2026-06-29' },
-    { id: 'IN-000003', supplier: 'Sony Electronics', status: 'PENDING', items: 2, received: '-' },
-  ];
+  const load = async () => {
+    setLoading(true);
+    setError(null);
+    try {
+      setOrders(await api.get<InboundOrder[]>('/admin/warehouse/inbound'));
+    } catch (err) {
+      setError(err instanceof Error ? err.message : 'Failed to load inbound orders');
+      setOrders([]);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  useEffect(() => { load(); }, []);
+
+  if (loading) return <AdminLoading message="Loading inbound orders..." />;
+  if (error) return <AdminError message={error} onRetry={load} />;
 
   return (
     <div className="space-y-6">
@@ -58,41 +83,45 @@ export default function InboundPage() {
         </div>
       )}
 
-      <div className="bg-surface rounded-xl border border-outline-variant overflow-x-auto">
-        <table className="w-full text-xs sm:text-sm">
-          <thead>
-              <tr className="border-b border-outline-variant bg-surface-container-low">
-                <th className="text-left py-3 px-4 text-on-surface-variant font-medium whitespace-nowrap">Order #</th>
-                <th className="text-left py-3 px-4 text-on-surface-variant font-medium whitespace-nowrap">Supplier</th>
-                <th className="text-left py-3 px-4 text-on-surface-variant font-medium whitespace-nowrap">Items</th>
-                <th className="text-left py-3 px-4 text-on-surface-variant font-medium whitespace-nowrap">Status</th>
-                <th className="text-left py-3 px-4 text-on-surface-variant font-medium whitespace-nowrap hidden lg:table-cell">Received</th>
-                <th className="text-left py-3 px-4 text-on-surface-variant font-medium whitespace-nowrap">Action</th>
-              </tr>
-          </thead>
-          <tbody>
-            {orders.map((o, i) => (
-              <tr key={i} className="border-b border-outline-variant/50 hover:bg-surface-container-low">
-                <td className="py-3 px-4 text-on-surface font-medium whitespace-nowrap">{o.id}</td>
-                <td className="py-3 px-4 text-on-surface-variant whitespace-nowrap">{o.supplier}</td>
-                <td className="py-3 px-4 text-on-surface whitespace-nowrap">{o.items}</td>
-                <td className="py-3 px-4 whitespace-nowrap">
-                  <span className={`inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-label-bold ${o.status === 'COMPLETED' ? 'bg-green-100 text-green-700' : o.status === 'RECEIVING' ? 'bg-amber-100 text-amber-700' : 'bg-surface-container-highest text-on-surface-variant'}`}>
-                    <span className={`w-1.5 h-1.5 rounded-full ${o.status === 'COMPLETED' ? 'bg-green-500' : o.status === 'RECEIVING' ? 'bg-amber-500' : 'bg-gray-400'}`} />
-                    {o.status}
-                  </span>
-                </td>
-                <td className="py-3 px-4 text-on-surface-variant whitespace-nowrap hidden lg:table-cell">{o.received}</td>
-                <td className="py-3 px-4 whitespace-nowrap">
-                  <button className="text-primary text-body-sm font-medium hover:underline">
-                    {o.status === 'PENDING' ? 'Receive' : 'View'}
-                  </button>
-                </td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
-      </div>
+      {!orders.length ? (
+        <AdminEmpty message="No inbound orders found" icon="move_to_inbox" />
+      ) : (
+        <div className="bg-surface rounded-xl border border-outline-variant overflow-x-auto">
+          <table className="w-full text-xs sm:text-sm">
+            <thead>
+                <tr className="border-b border-outline-variant bg-surface-container-low">
+                  <th className="text-left py-3 px-4 text-on-surface-variant font-medium whitespace-nowrap">Order #</th>
+                  <th className="text-left py-3 px-4 text-on-surface-variant font-medium whitespace-nowrap">Supplier</th>
+                  <th className="text-left py-3 px-4 text-on-surface-variant font-medium whitespace-nowrap">Items</th>
+                  <th className="text-left py-3 px-4 text-on-surface-variant font-medium whitespace-nowrap">Status</th>
+                  <th className="text-left py-3 px-4 text-on-surface-variant font-medium whitespace-nowrap hidden lg:table-cell">Received</th>
+                  <th className="text-left py-3 px-4 text-on-surface-variant font-medium whitespace-nowrap">Action</th>
+                </tr>
+            </thead>
+            <tbody>
+              {orders.map((o, i) => (
+                <tr key={i} className="border-b border-outline-variant/50 hover:bg-surface-container-low">
+                  <td className="py-3 px-4 text-on-surface font-medium whitespace-nowrap">{o.id}</td>
+                  <td className="py-3 px-4 text-on-surface-variant whitespace-nowrap">{o.supplier}</td>
+                  <td className="py-3 px-4 text-on-surface whitespace-nowrap">{o.items}</td>
+                  <td className="py-3 px-4 whitespace-nowrap">
+                    <span className={`inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-label-bold ${o.status === 'COMPLETED' ? 'bg-green-100 text-green-700' : o.status === 'RECEIVING' ? 'bg-amber-100 text-amber-700' : 'bg-surface-container-highest text-on-surface-variant'}`}>
+                      <span className={`w-1.5 h-1.5 rounded-full ${o.status === 'COMPLETED' ? 'bg-green-500' : o.status === 'RECEIVING' ? 'bg-amber-500' : 'bg-gray-400'}`} />
+                      {o.status}
+                    </span>
+                  </td>
+                  <td className="py-3 px-4 text-on-surface-variant whitespace-nowrap hidden lg:table-cell">{o.received}</td>
+                  <td className="py-3 px-4 whitespace-nowrap">
+                    <button className="text-primary text-body-sm font-medium hover:underline">
+                      {o.status === 'PENDING' ? 'Receive' : 'View'}
+                    </button>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+      )}
     </div>
   );
 }

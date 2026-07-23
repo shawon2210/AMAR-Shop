@@ -16,15 +16,7 @@ const defaultForm = { name: '', subject: '', content: '', scheduleDate: '' };
 
 async function fetchEmailCampaigns(): Promise<EmailCampaign[]> {
   try { return await api.get<EmailCampaign[]>('/admin/email-campaigns'); }
-  catch {
-    return [
-      { id: '1', name: 'Welcome Series', subject: 'Welcome to Amarshop!', recipients: 5200, sent: 5200, opened: 2800, clicked: 950, status: 'completed', createdAt: '2026-07-01' },
-      { id: '2', name: 'Flash Sale Alert', subject: '24hr Flash Sale - Up to 70% Off!', recipients: 15000, sent: 15000, opened: 6200, clicked: 2100, status: 'completed', createdAt: '2026-07-15' },
-      { id: '3', name: 'Abandoned Cart', subject: 'Your cart is waiting!', recipients: 3400, sent: 3400, opened: 1400, clicked: 380, status: 'active', createdAt: '2026-07-18' },
-      { id: '4', name: 'New Collection', subject: 'Check out our new arrivals', recipients: 12000, sent: 0, opened: 0, clicked: 0, status: 'draft', createdAt: '2026-07-22' },
-      { id: '5', name: 'Weekend Offer', subject: 'Weekend Special Deals', recipients: 8000, sent: 8000, opened: 3100, clicked: 1100, status: 'completed', createdAt: '2026-07-10' },
-    ];
-  }
+  catch { return []; }
 }
 
 export default function EmailCampaignsPage() {

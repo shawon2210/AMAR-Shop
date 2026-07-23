@@ -1,11 +1,41 @@
 'use client';
 
+import { useState, useEffect } from 'react';
+import { AdminLoading, AdminError, AdminEmpty } from '@/components/ui/admin-states';
+import { api } from '@/services/api';
+
+interface Pickup {
+  id: string;
+  courier: string;
+  items: number;
+  status: string;
+  date: string;
+  slot: string;
+}
+
 export default function PickupPage() {
-  const pickups = [
-    { id: 'SHP-001', courier: 'RedX', items: 3, status: 'SCHEDULED', date: '2026-07-01', slot: '10:00 - 14:00' },
-    { id: 'SHP-002', courier: 'Steadfast', items: 1, status: 'PENDING', date: '-', slot: '-' },
-    { id: 'SHP-003', courier: 'eCourier', items: 5, status: 'SCHEDULED', date: '2026-06-30', slot: '14:00 - 18:00' },
-  ];
+  const [pickups, setPickups] = useState<Pickup[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+
+  const load = async () => {
+    setLoading(true);
+    setError(null);
+    try {
+      setPickups(await api.get<Pickup[]>('/admin/fulfillment/pickup'));
+    } catch (err) {
+      setError(err instanceof Error ? err.message : 'Failed to load pickups');
+      setPickups([]);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  useEffect(() => { load(); }, []);
+
+  if (loading) return <AdminLoading message="Loading pickup schedules..." />;
+  if (error) return <AdminError message={error} onRetry={load} />;
+  if (!pickups.length) return <AdminEmpty message="No pickup schedules found" icon="calendar_today" />;
 
   return (
     <div className="space-y-6">

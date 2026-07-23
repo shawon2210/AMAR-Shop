@@ -24,17 +24,7 @@ async function fetchAccounting(from?: string, to?: string): Promise<AccountingDa
     const qs = params.toString();
     return await api.get<AccountingData>(`/admin/accounting${qs ? `?${qs}` : ''}`);
   } catch {
-    const entries: AccountingEntry[] = [
-      { id: '1', date: '2026-07-23', description: 'Product Sales', type: 'credit', amount: 245000, category: 'Sales', status: 'completed' },
-      { id: '2', date: '2026-07-22', description: 'Commission Deduction', type: 'debit', amount: 12250, category: 'Commission', status: 'completed' },
-      { id: '3', date: '2026-07-22', description: 'Shipping Revenue', type: 'credit', amount: 18500, category: 'Shipping', status: 'completed' },
-      { id: '4', date: '2026-07-21', description: 'Payment Gateway Fee', type: 'debit', amount: 4900, category: 'Fees', status: 'completed' },
-      { id: '5', date: '2026-07-21', description: 'Seller Payout', type: 'debit', amount: 180000, category: 'Payout', status: 'pending' },
-      { id: '6', date: '2026-07-20', description: 'Advertisement Income', type: 'credit', amount: 35000, category: 'Ads', status: 'completed' },
-      { id: '7', date: '2026-07-20', description: 'Refund Processing', type: 'debit', amount: 8900, category: 'Refund', status: 'completed' },
-      { id: '8', date: '2026-07-19', description: 'Subscription Fees', type: 'credit', amount: 15000, category: 'Subscriptions', status: 'completed' },
-    ];
-    return { revenue: 313500, expenses: 211050, net: 102450, pending: 180000, entries };
+    return { revenue: 0, expenses: 0, net: 0, pending: 0, entries: [] };
   }
 }
 

@@ -1,12 +1,44 @@
 'use client';
 
+import { useState, useEffect } from 'react';
+import { AdminLoading, AdminError, AdminEmpty } from '@/components/ui/admin-states';
+import { api } from '@/services/api';
+
+interface Courier {
+  name: string;
+  slug: string;
+  shipments: number;
+  delivered: number;
+  failed: number;
+  returned: number;
+  onTime: number;
+  codCollected: number;
+  codRemitted: number;
+}
+
 export default function CourierPage() {
-  const couriers = [
-    { name: 'RedX', slug: 'redx', shipments: 234, delivered: 220, failed: 5, returned: 9, onTime: 91, codCollected: 456000, codRemitted: 442320 },
-    { name: 'Steadfast', slug: 'steadfast', shipments: 189, delivered: 175, failed: 8, returned: 6, onTime: 88, codCollected: 321000, codRemitted: 311370 },
-    { name: 'eCourier', slug: 'ecourier', shipments: 156, delivered: 148, failed: 3, returned: 5, onTime: 95, codCollected: 289000, codRemitted: 283220 },
-    { name: 'Pathao', slug: 'pathao', shipments: 98, delivered: 90, failed: 4, returned: 4, onTime: 85, codCollected: 167000, codRemitted: 160320 },
-  ];
+  const [couriers, setCouriers] = useState<Courier[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+
+  const load = async () => {
+    setLoading(true);
+    setError(null);
+    try {
+      setCouriers(await api.get<Courier[]>('/admin/fulfillment/courier'));
+    } catch (err) {
+      setError(err instanceof Error ? err.message : 'Failed to load courier data');
+      setCouriers([]);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  useEffect(() => { load(); }, []);
+
+  if (loading) return <AdminLoading message="Loading couriers..." />;
+  if (error) return <AdminError message={error} onRetry={load} />;
+  if (!couriers.length) return <AdminEmpty message="No courier data found" icon="local_shipping" />;
 
   return (
     <div className="space-y-6">

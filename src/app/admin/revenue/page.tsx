@@ -26,14 +26,7 @@ interface RevenueData {
 async function fetchRevenue(): Promise<RevenueData> {
   try {
     return await api.get<RevenueData>('/admin/revenue');
-  } catch {
-    const d = new Date();
-    const chart: RevenueEntry[] = Array.from({ length: 30 }, (_, i) => {
-      const date = new Date(d); date.setDate(date.getDate() - (29 - i));
-      return { date: date.toISOString().slice(0, 10), revenue: Math.floor(Math.random() * 50000) + 10000, orders: Math.floor(Math.random() * 80) + 10 };
-    });
-    return { totalRevenue: 12450000, thisMonth: 1850000, today: 72000, avgOrder: 1560, chart };
-  }
+  } catch { return { totalRevenue: 0, thisMonth: 0, today: 0, avgOrder: 0, chart: [] }; }
 }
 
 export default function RevenuePage() {

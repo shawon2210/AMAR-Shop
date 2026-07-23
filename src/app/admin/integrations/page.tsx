@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { AdminLoading, AdminError } from '@/components/ui/admin-states';
+import { AdminLoading, AdminError, AdminEmpty } from '@/components/ui/admin-states';
 import { getErrorMessage } from '@/lib/error-helper';
 import { api } from '@/services/api';
 
@@ -17,14 +17,7 @@ async function fetchIntegrations(): Promise<Integration[]> {
   try {
     return await api.get<Integration[]>('/admin/integrations');
   } catch {
-    return [
-      { id: 'smtp', name: 'SMTP', description: 'Email delivery service for transactional emails', icon: 'mail', connected: true },
-      { id: 'sms', name: 'SMS Gateway', description: 'Send SMS notifications to customers', icon: 'sms', connected: false },
-      { id: 'payment', name: 'Payment Gateway', description: 'Process online payments via SSLCommerz, bKash, Nagad', icon: 'payments', connected: true },
-      { id: 'analytics', name: 'Analytics', description: 'Track site traffic and user behavior', icon: 'analytics', connected: true },
-      { id: 'social', name: 'Social Login', description: 'Allow login via Google, Facebook, Apple', icon: 'login', connected: false },
-      { id: 'cdn', name: 'CDN', description: 'Content delivery network for static assets', icon: 'cloud', connected: false },
-    ];
+    return [];
   }
 }
 
@@ -66,8 +59,8 @@ export default function IntegrationsPage() {
 
       {loading ? (
         <AdminLoading />
-      ) : !data ? (
-        <AdminLoading />
+      ) : !data || data.length === 0 ? (
+        <AdminEmpty message="No integrations found" />
       ) : (
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
           {data.map((item) => (

@@ -26,15 +26,7 @@ async function fetchJobs(): Promise<JobsResponse> {
   try {
     return await api.get<JobsResponse>('/admin/jobs');
   } catch {
-    const mock: Job[] = [
-      { id: '1', name: 'Send Daily Digest Emails', status: 'success', lastRun: '2026-07-22T06:00:00Z', nextRun: '2026-07-23T06:00:00Z', duration: '12s', description: 'Sends daily order summary emails to customers' },
-      { id: '2', name: 'Process Pending Refunds', status: 'running', lastRun: '2026-07-22T00:00:00Z', nextRun: '2026-07-23T00:00:00Z', duration: '—', description: 'Processes all pending refund requests' },
-      { id: '3', name: 'Generate Seller Settlements', status: 'failed', lastRun: '2026-07-21T23:00:00Z', nextRun: '2026-07-22T23:00:00Z', duration: '45s', description: 'Calculates and generates seller settlement reports' },
-      { id: '4', name: 'Clear Expired Flash Sales', status: 'success', lastRun: '2026-07-22T05:00:00Z', nextRun: '2026-07-23T05:00:00Z', duration: '3s', description: 'Deactivates flash sales past their end date' },
-      { id: '5', name: 'Update Product Search Index', status: 'success', lastRun: '2026-07-22T04:00:00Z', nextRun: '2026-07-23T04:00:00Z', duration: '28s', description: 'Reindexes products for search functionality' },
-      { id: '6', name: 'Cleanup Expired Cart Sessions', status: 'success', lastRun: '2026-07-22T03:00:00Z', nextRun: '2026-07-23T03:00:00Z', duration: '8s', description: 'Removes cart sessions older than 7 days' },
-    ];
-    return { data: mock, total: mock.length };
+    return { data: [], total: 0 };
   }
 }
 

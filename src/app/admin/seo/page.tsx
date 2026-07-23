@@ -26,20 +26,7 @@ interface SEOData {
 async function fetchSEOData(): Promise<SEOData> {
   try {
     return await api.get<SEOData>('/admin/seo');
-  } catch {
-    return {
-      pages: [
-        { id: '1', path: '/', metaTitle: 'Amarshop - Home', metaDesc: 'Best online shopping in Bangladesh', keywords: 'shopping, online, bangladesh', updatedAt: '2026-07-20T10:00:00Z' },
-        { id: '2', path: '/categories', metaTitle: 'Categories - Amarshop', metaDesc: 'Browse all product categories', keywords: 'categories, products', updatedAt: '2026-07-19T08:30:00Z' },
-        { id: '3', path: '/products', metaTitle: 'Products - Amarshop', metaDesc: 'Browse all products', keywords: 'products, shop, buy', updatedAt: '2026-07-18T14:00:00Z' },
-        { id: '4', path: '/about', metaTitle: 'About Us - Amarshop', metaDesc: 'Learn about Amarshop', keywords: 'about, company, team', updatedAt: '2026-07-15T09:00:00Z' },
-        { id: '5', path: '/contact', metaTitle: 'Contact - Amarshop', metaDesc: 'Get in touch with us', keywords: 'contact, support, help', updatedAt: '2026-07-10T11:00:00Z' },
-      ],
-      total: 5,
-      page: 1,
-      totalPages: 1,
-    };
-  }
+  } catch { return { pages: [], total: 0, page: 1, totalPages: 0 }; }
 }
 
 async function updateSEO(id: string, data: { metaTitle: string; metaDesc: string; keywords: string }): Promise<void> {

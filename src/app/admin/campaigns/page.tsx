@@ -19,16 +19,7 @@ const defaultForm = { name: '', type: 'DISPLAY', budget: '', startsAt: '', endsA
 
 async function fetchCampaigns(): Promise<Campaign[]> {
   try { return await api.get<Campaign[]>('/admin/campaigns'); }
-  catch {
-    return [
-      { id: '1', name: 'Eid Mega Sale', type: 'DISPLAY', budget: 50000, spend: 32500, impressions: 125000, clicks: 4800, status: 'active', startsAt: '2026-07-15', endsAt: '2026-08-15' },
-      { id: '2', name: 'New Collection Launch', type: 'SOCIAL', budget: 30000, spend: 15000, impressions: 78000, clicks: 2100, status: 'active', startsAt: '2026-07-20', endsAt: '2026-08-20' },
-      { id: '3', name: 'Flash Sale Promo', type: 'DISPLAY', budget: 20000, spend: 8500, impressions: 45000, clicks: 1200, status: 'active', startsAt: '2026-07-25', endsAt: '2026-08-05' },
-      { id: '4', name: 'Back to School', type: 'SEARCH', budget: 40000, spend: 0, impressions: 0, clicks: 0, status: 'scheduled', startsAt: '2026-08-10', endsAt: '2026-09-10' },
-      { id: '5', name: 'Summer Clearance', type: 'SOCIAL', budget: 25000, spend: 25000, impressions: 95000, clicks: 3200, status: 'ended', startsAt: '2026-06-01', endsAt: '2026-07-01' },
-      { id: '6', name: 'Ramadan Offers', type: 'DISPLAY', budget: 60000, spend: 60000, impressions: 210000, clicks: 8900, status: 'ended', startsAt: '2026-02-15', endsAt: '2026-03-15' },
-    ];
-  }
+  catch { return []; }
 }
 
 export default function CampaignsPage() {

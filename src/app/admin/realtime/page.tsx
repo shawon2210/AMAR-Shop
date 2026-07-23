@@ -1,30 +1,65 @@
 'use client';
 
 import { useState, useEffect } from 'react';
+import { AdminLoading, AdminError } from '@/components/ui/admin-states';
+import { api } from '@/services/api';
 
-function randomMetric() {
-  return {
-    activeUsers: Math.floor(Math.random() * 150) + 50,
-    ordersPerMin: Math.floor(Math.random() * 20) + 5,
-    revenueToday: Math.floor(Math.random() * 500000) + 200000,
-    systemHealth: 99.8,
-    apiLatency: Math.floor(Math.random() * 200) + 50,
-    errorRate: 0.12,
-  };
+interface Metrics {
+  activeUsers: number;
+  ordersPerMin: number;
+  revenueToday: number;
+  systemHealth: number;
+  apiLatency: number;
+  errorRate: number;
 }
 
-export default function RealtimePage() {
-  const [metrics, setMetrics] = useState(randomMetric);
+interface ActivityItem {
+  id: number;
+  user: string;
+  action: string;
+  target: string;
+  time: string;
+  amount: string;
+}
 
-  const [recentActivity, setRecentActivity] = useState([
-    { id: 1, user: 'Rahim M.', action: 'placed order', target: '#ORD-1245', time: 'Just now', amount: '৳1,250' },
-    { id: 2, user: 'Karim H.', action: 'signed up', target: '', time: '1m ago', amount: '' },
-    { id: 3, user: 'Fatima B.', action: 'added to cart', target: 'Samsung Galaxy S25', time: '2m ago', amount: '৳89,999' },
-    { id: 4, user: 'Nadia K.', action: 'completed payment', target: '#ORD-1243', time: '3m ago', amount: '৳2,450' },
-    { id: 5, user: 'Hasan A.', action: 'submitted review', target: 'iPhone 16 Pro', time: '4m ago', amount: '' },
-  ]);
+interface RealtimeData {
+  metrics: Metrics;
+  recentActivity: ActivityItem[];
+}
+
+const defaultMetrics: Metrics = {
+  activeUsers: 0,
+  ordersPerMin: 0,
+  revenueToday: 0,
+  systemHealth: 100,
+  apiLatency: 0,
+  errorRate: 0,
+};
+
+export default function RealtimePage() {
+  const [metrics, setMetrics] = useState<Metrics>(defaultMetrics);
+  const [recentActivity, setRecentActivity] = useState<ActivityItem[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+
+  const load = async () => {
+    setLoading(true);
+    setError(null);
+    try {
+      const data = await api.get<RealtimeData>('/admin/realtime');
+      setMetrics(data.metrics);
+      setRecentActivity(data.recentActivity);
+    } catch (err) {
+      setError(err instanceof Error ? err.message : 'Failed to load realtime data');
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  useEffect(() => { load(); }, []);
 
   useEffect(() => {
+    if (loading || error) return;
     const interval = setInterval(() => {
       setMetrics(prev => ({
         activeUsers: prev.activeUsers + Math.floor(Math.random() * 5) - 2,
@@ -44,7 +79,10 @@ export default function RealtimePage() {
     }, 3000);
 
     return () => clearInterval(interval);
-  }, []);
+  }, [loading, error]);
+
+  if (loading) return <AdminLoading message="Loading realtime dashboard..." />;
+  if (error) return <AdminError message={error} onRetry={load} />;
 
   return (
     <div className="space-y-6">

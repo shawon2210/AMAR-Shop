@@ -29,15 +29,7 @@ async function fetchZones(page: number, limit: number): Promise<ZoneResponse> {
   try {
     return await api.get<ZoneResponse>(`/admin/delivery-zones?page=${page}&limit=${limit}`);
   } catch {
-    const mock: DeliveryZone[] = [
-      { id: 'z1', name: 'Dhaka City', cities: ['Dhaka', 'Mirpur', 'Uttara', 'Banani', 'Gulshan'], methodsCount: 3, isActive: true, createdAt: '2024-01-01T10:00:00Z' },
-      { id: 'z2', name: 'Chittagong', cities: ['Chittagong City', 'Nasirabad', 'Agrabad'], methodsCount: 2, isActive: true, createdAt: '2024-01-02T10:00:00Z' },
-      { id: 'z3', name: 'Sylhet', cities: ['Sylhet City', 'Zindabazar', 'Shahjalal'], methodsCount: 2, isActive: true, createdAt: '2024-01-03T10:00:00Z' },
-      { id: 'z4', name: 'Rajshahi', cities: ['Rajshahi City', 'Shaheb Bazar'], methodsCount: 1, isActive: true, createdAt: '2024-01-04T10:00:00Z' },
-      { id: 'z5', name: 'Khulna', cities: ['Khulna City', 'Sonadanga'], methodsCount: 2, isActive: false, createdAt: '2024-01-05T10:00:00Z' },
-    ];
-    const start = (page - 1) * limit;
-    return { zones: mock.slice(start, start + limit), total: mock.length, page, totalPages: Math.ceil(mock.length / limit) };
+    return { zones: [], total: 0, page, totalPages: 0 };
   }
 }
 

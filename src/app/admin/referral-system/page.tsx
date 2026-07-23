@@ -16,27 +16,14 @@ interface Referrer {
   conversions: number; earned: number; status: string;
 }
 
-const defaultStats: ReferralStats = { totalReferrals: 12480, conversions: 3560, commissionPaid: 890000, activeReferrers: 2340 };
-
 async function fetchReferralStats(): Promise<ReferralStats> {
   try { return await api.get<ReferralStats>('/admin/referrals/stats'); }
-  catch { return defaultStats; }
+  catch { return { totalReferrals: 0, conversions: 0, commissionPaid: 0, activeReferrers: 0 }; }
 }
 
 async function fetchReferrers(): Promise<Referrer[]> {
   try { return await api.get<Referrer[]>('/admin/referrals'); }
-  catch {
-    return [
-      { id: '1', referrer: 'Rahim Mia', code: 'RAHIM10', clicks: 340, conversions: 28, earned: 42000, status: 'active' },
-      { id: '2', referrer: 'Sultana Akter', code: 'SULTANA', clicks: 520, conversions: 45, earned: 67500, status: 'active' },
-      { id: '3', referrer: 'Hasan Mahmud', code: 'HASAN20', clicks: 180, conversions: 12, earned: 18000, status: 'active' },
-      { id: '4', referrer: 'Nusrat Jahan', code: 'NUSRAT', clicks: 890, conversions: 72, earned: 108000, status: 'active' },
-      { id: '5', referrer: 'Kabir Hossain', code: 'KABIR50', clicks: 65, conversions: 3, earned: 4500, status: 'inactive' },
-      { id: '6', referrer: 'Taslima Begum', code: 'TASLIMA', clicks: 410, conversions: 35, earned: 52500, status: 'active' },
-      { id: '7', referrer: 'Joynal Abedin', code: 'JOYNAL', clicks: 220, conversions: 18, earned: 27000, status: 'active' },
-      { id: '8', referrer: 'Shamima Yeasmin', code: 'SHAMIMA', clicks: 1560, conversions: 98, earned: 147000, status: 'active' },
-    ];
-  }
+  catch { return []; }
 }
 
 export default function ReferralSystemPage() {

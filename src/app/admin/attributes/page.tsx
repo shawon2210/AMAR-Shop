@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { AdminLoading, AdminError, AdminEmpty } from '@/components/ui/admin-states';
 import { Pagination } from '@/components/ui/pagination';
 import { getErrorMessage } from '@/lib/error-helper';
@@ -42,15 +42,7 @@ async function fetchAttributes(page: number, limit: number): Promise<AttributeRe
   try {
     return await api.get<AttributeResponse>(`/admin/attributes?page=${page}&limit=${limit}`);
   } catch {
-    const mock: ProductAttribute[] = [
-      { id: 'a1', name: 'Size', type: 'SELECT', values: [{ id: 'v1', value: 'S' }, { id: 'v2', value: 'M' }, { id: 'v3', value: 'L' }, { id: 'v4', value: 'XL' }], sortOrder: 1, isActive: true, createdAt: '2024-01-01T10:00:00Z' },
-      { id: 'a2', name: 'Color', type: 'COLOR', values: [{ id: 'v5', value: 'Red', meta: '#FF0000' }, { id: 'v6', value: 'Blue', meta: '#0000FF' }, { id: 'v7', value: 'Green', meta: '#00FF00' }], sortOrder: 2, isActive: true, createdAt: '2024-01-02T10:00:00Z' },
-      { id: 'a3', name: 'Storage', type: 'SELECT', values: [{ id: 'v8', value: '64GB' }, { id: 'v9', value: '128GB' }, { id: 'v10', value: '256GB' }], sortOrder: 3, isActive: true, createdAt: '2024-01-03T10:00:00Z' },
-      { id: 'a4', name: 'RAM', type: 'SELECT', values: [{ id: 'v11', value: '4GB' }, { id: 'v12', value: '6GB' }, { id: 'v13', value: '8GB' }], sortOrder: 4, isActive: true, createdAt: '2024-01-04T10:00:00Z' },
-      { id: 'a5', name: 'Material', type: 'TEXT', values: [{ id: 'v14', value: 'Cotton' }, { id: 'v15', value: 'Polyester' }], sortOrder: 5, isActive: false, createdAt: '2024-01-05T10:00:00Z' },
-    ];
-    const start = (page - 1) * limit;
-    return { attributes: mock.slice(start, start + limit), total: mock.length, page, totalPages: Math.ceil(mock.length / limit) };
+    return { attributes: [], total: 0, page, totalPages: 0 };
   }
 }
 
@@ -77,7 +69,7 @@ export default function AttributesPage() {
     }
   };
 
-  useState(() => { load(page); });
+  useEffect(() => { load(page); }, [page]);
 
   const resetForm = () => { setForm(defaultForm); setEditId(null); setShowForm(false); };
 

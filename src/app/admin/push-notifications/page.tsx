@@ -16,15 +16,7 @@ const defaultForm = { title: '', message: '', target: 'ALL' };
 
 async function fetchPushNotifications(): Promise<PushNotification[]> {
   try { return await api.get<PushNotification[]>('/admin/push-notifications'); }
-  catch {
-    return [
-      { id: '1', title: 'Flash Sale Live!', message: 'Up to 70% off on thousands of items. Shop now!', target: 'ALL', sentCount: 25000, status: 'sent', createdAt: '2026-07-23' },
-      { id: '2', title: 'Order Delivered', message: 'Your order #ORD-1024 has been delivered. Rate your experience!', target: 'USERS', sentCount: 520, status: 'sent', createdAt: '2026-07-22' },
-      { id: '3', title: 'New Seller Tips', message: 'Boost your sales with our new seller tools.', target: 'SELLERS', sentCount: 1500, status: 'sent', createdAt: '2026-07-21' },
-      { id: '4', title: 'Weekend Offer', message: 'Special weekend discounts just for you!', target: 'ALL', sentCount: 0, status: 'draft', createdAt: '2026-07-20' },
-      { id: '5', title: 'Payment Received', message: 'Your withdrawal request has been processed.', target: 'SELLERS', sentCount: 340, status: 'sent', createdAt: '2026-07-19' },
-    ];
-  }
+  catch { return []; }
 }
 
 export default function PushNotificationsPage() {

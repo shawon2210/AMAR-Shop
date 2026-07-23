@@ -31,16 +31,7 @@ async function fetchCollections(page: number, limit: number): Promise<Collection
   try {
     return await api.get<CollectionResponse>(`/admin/collections?page=${page}&limit=${limit}`);
   } catch {
-    const mock: Collection[] = [
-      { id: 'c1', name: 'Summer Collection', slug: 'summer-collection', description: 'Light and breezy summer essentials', image: 'https://picsum.photos/seed/summer/400/300', productCount: 45, isActive: true, createdAt: '2024-01-01T10:00:00Z' },
-      { id: 'c2', name: 'Winter Essentials', slug: 'winter-essentials', description: 'Stay warm with our winter picks', image: 'https://picsum.photos/seed/winter/400/300', productCount: 32, isActive: true, createdAt: '2024-01-02T10:00:00Z' },
-      { id: 'c3', name: 'Eid Collection', slug: 'eid-collection', description: 'Special Eid offers', image: 'https://picsum.photos/seed/eid/400/300', productCount: 78, isActive: true, createdAt: '2024-01-03T10:00:00Z' },
-      { id: 'c4', name: 'Tech Deals', slug: 'tech-deals', description: 'Best tech gadgets at great prices', image: 'https://picsum.photos/seed/tech/400/300', productCount: 56, isActive: true, createdAt: '2024-01-04T10:00:00Z' },
-      { id: 'c5', name: 'Home Decor', slug: 'home-decor', description: 'Beautiful home decoration items', image: 'https://picsum.photos/seed/home/400/300', productCount: 23, isActive: false, createdAt: '2024-01-05T10:00:00Z' },
-      { id: 'c6', name: 'Sports Gear', slug: 'sports-gear', description: 'Everything for your active lifestyle', image: 'https://picsum.photos/seed/sports/400/300', productCount: 67, isActive: true, createdAt: '2024-01-06T10:00:00Z' },
-    ];
-    const start = (page - 1) * limit;
-    return { collections: mock.slice(start, start + limit), total: mock.length, page, totalPages: Math.ceil(mock.length / limit) };
+    return { collections: [], total: 0, page, totalPages: 0 };
   }
 }
 

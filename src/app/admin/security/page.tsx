@@ -14,27 +14,11 @@ interface SecuritySettings {
   passwordPolicy: { minLength: number; expiryDays: number; requireSpecialChar: boolean; requireNumber: boolean };
 }
 
-const mockSettings: SecuritySettings = {
-  twoFactorEnabled: false,
-  sessionTimeoutMinutes: 30,
-  ipWhitelist: [
-    { id: '1', ip: '192.168.1.100', label: 'Office', createdAt: '2026-01-15T10:00:00Z' },
-    { id: '2', ip: '103.25.47.10', label: 'VPN Gateway', createdAt: '2026-03-20T08:00:00Z' },
-  ],
-  loginAttempts: [
-    { id: '1', user: 'admin@amarshop.com', ip: '192.168.1.100', time: '2026-07-23T10:30:00Z', success: true },
-    { id: '2', user: 'unknown@test.com', ip: '45.33.22.11', time: '2026-07-23T09:15:00Z', success: false },
-    { id: '3', user: 'admin@amarshop.com', ip: '192.168.1.100', time: '2026-07-23T08:00:00Z', success: true },
-    { id: '4', user: 'hacker@malicious.com', ip: '185.220.101.1', time: '2026-07-22T23:00:00Z', success: false },
-  ],
-  passwordPolicy: { minLength: 8, expiryDays: 90, requireSpecialChar: true, requireNumber: true },
-};
-
 async function fetchSettings(): Promise<SecuritySettings> {
   try {
     return await api.get<SecuritySettings>('/admin/security');
   } catch {
-    return mockSettings;
+    return { twoFactorEnabled: false, sessionTimeoutMinutes: 30, ipWhitelist: [], loginAttempts: [], passwordPolicy: { minLength: 8, expiryDays: 90, requireSpecialChar: true, requireNumber: true } };
   }
 }
 

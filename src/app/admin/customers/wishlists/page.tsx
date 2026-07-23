@@ -33,15 +33,7 @@ async function fetchWishlists(params: { page: number; limit: number; search?: st
     if (params.search) q.set('search', params.search);
     return await api.get<WishlistResponse>(`/admin/wishlists?${q.toString()}`);
   } catch {
-    const mock: WishlistItem[] = [
-      { id: '1', customer: 'Rahim Ahmed', customerId: 'u1', product: 'Samsung Galaxy S24 Ultra', productId: 'p1', price: 145000, addedAt: '2026-07-15T10:30:00Z' },
-      { id: '2', customer: 'Fatima Begum', customerId: 'u2', product: 'Nike Air Max 270', productId: 'p2', price: 12500, addedAt: '2026-07-18T14:15:00Z' },
-      { id: '3', customer: 'Kabir Hossain', customerId: 'u3', product: 'Apple MacBook Pro M3', productId: 'p3', price: 249000, addedAt: '2026-07-19T09:00:00Z' },
-      { id: '4', customer: 'Nusrat Jahan', customerId: 'u4', product: 'Sony WH-1000XM5', productId: 'p4', price: 32000, addedAt: '2026-07-20T16:45:00Z' },
-      { id: '5', customer: 'Shakib Khan', customerId: 'u5', product: 'Dell XPS 16', productId: 'p5', price: 185000, addedAt: '2026-07-21T11:20:00Z' },
-    ];
-    const filtered = params.search ? mock.filter((w) => w.customer.toLowerCase().includes(params.search!.toLowerCase())) : mock;
-    return { data: filtered, total: filtered.length, page: 1, limit: 10, totalPages: 1 };
+    return { data: [], total: 0, page: 1, limit: 10, totalPages: 0 };
   }
 }
 

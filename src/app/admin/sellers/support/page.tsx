@@ -34,17 +34,7 @@ async function fetchTickets(params: { page: number; limit: number; status?: stri
     q.set('limit', String(params.limit));
     if (params.status) q.set('status', params.status);
     return await api.get<TicketsResponse>(`/admin/sellers/support?${q.toString()}`);
-  } catch {
-    const mock: SupportTicket[] = [
-      { id: '1', ticketNumber: 'TK-1001', seller: 'TechWorld BD', subject: 'Payment not received for July', priority: 'High', status: 'open', createdAt: '2026-07-20T10:30:00Z', message: 'I have not received my payment for July settlements.' },
-      { id: '2', ticketNumber: 'TK-1002', seller: 'Fashion Hub', subject: 'Product listing issue', priority: 'Medium', status: 'in_progress', createdAt: '2026-07-19T14:15:00Z', message: 'Unable to list new products in the electronics category.' },
-      { id: '3', ticketNumber: 'TK-1003', seller: 'Gadget Zone', subject: 'Wrong commission rate applied', priority: 'High', status: 'open', createdAt: '2026-07-21T09:00:00Z', message: 'My commission rate was changed from 5% to 8% without notice.' },
-      { id: '4', ticketNumber: 'TK-1004', seller: 'Home Decor', subject: 'Shipping label not generating', priority: 'Low', status: 'resolved', createdAt: '2026-07-18T16:45:00Z', message: 'Shipping labels for COD orders are not generating.' },
-      { id: '5', ticketNumber: 'TK-1005', seller: 'Sports Pro', subject: 'Account verification delay', priority: 'Medium', status: 'in_progress', createdAt: '2026-07-17T11:20:00Z', message: 'KYC documents submitted 2 weeks ago, still not verified.' },
-    ];
-    const filtered = params.status ? mock.filter((t) => t.status === params.status) : mock;
-    return { data: filtered, total: filtered.length, page: 1, limit: 10, totalPages: 1 };
-  }
+  } catch { return { data: [], total: 0, page: 1, limit: 10, totalPages: 0 }; }
 }
 
 const statusStyles: Record<string, string> = {

@@ -28,17 +28,7 @@ async function fetchAnalytics(params: { search?: string }): Promise<SellerAnalyt
     const q = new URLSearchParams();
     if (params.search) q.set('search', params.search);
     return await api.get<SellerAnalytics>(`/admin/sellers/analytics?${q.toString()}`);
-  } catch {
-    const mock: SellerStat[] = [
-      { id: '1', seller: 'Rahim Ahmed', store: 'TechWorld BD', products: 245, revenue: 2850000, orders: 1890, rating: 4.7 },
-      { id: '2', seller: 'Fatima Begum', store: 'Fashion Hub', products: 560, revenue: 1920000, orders: 3450, rating: 4.5 },
-      { id: '3', seller: 'Kabir Hossain', store: 'Gadget Zone', products: 180, revenue: 4100000, orders: 2200, rating: 4.8 },
-      { id: '4', seller: 'Nusrat Jahan', store: 'Home Decor', products: 320, revenue: 980000, orders: 1100, rating: 4.3 },
-      { id: '5', seller: 'Shakib Khan', store: 'Sports Pro', products: 410, revenue: 1650000, orders: 1780, rating: 4.6 },
-    ];
-    const filtered = params.search ? mock.filter((s) => s.store.toLowerCase().includes(params.search!.toLowerCase()) || s.seller.toLowerCase().includes(params.search!.toLowerCase())) : mock;
-    return { stats: { totalSellers: 1248, activeStores: 987, avgRating: 4.3, totalRevenue: 14250000 }, data: filtered, total: filtered.length };
-  }
+  } catch { return { stats: { totalSellers: 0, activeStores: 0, avgRating: 0, totalRevenue: 0 }, data: [], total: 0 }; }
 }
 
 export default function SellerAnalyticsPage() {

@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { AdminLoading, AdminError, AdminEmpty } from '@/components/ui/admin-states';
 import { Pagination } from '@/components/ui/pagination';
 import { getErrorMessage } from '@/lib/error-helper';
@@ -38,15 +38,7 @@ async function fetchShipping(page: number, limit: number): Promise<ShippingRespo
   try {
     return await api.get<ShippingResponse>(`/admin/shipping?page=${page}&limit=${limit}`);
   } catch {
-    const mock: ShippingMethod[] = [
-      { id: 's1', name: 'Standard Delivery', zone: 'Dhaka City', type: 'FLAT', rate: 60, minOrder: 0, estimatedDays: '1-3 days', isActive: true, createdAt: '2024-01-01T10:00:00Z' },
-      { id: 's2', name: 'Express Delivery', zone: 'Dhaka City', type: 'FLAT', rate: 120, minOrder: 0, estimatedDays: 'Same day', isActive: true, createdAt: '2024-01-02T10:00:00Z' },
-      { id: 's3', name: 'Free Shipping', zone: 'Nationwide', type: 'FREE', rate: 0, minOrder: 1000, estimatedDays: '5-7 days', isActive: true, createdAt: '2024-01-03T10:00:00Z' },
-      { id: 's4', name: 'Outside Dhaka', zone: 'Outside Dhaka', type: 'PER_KG', rate: 15, minOrder: 0, estimatedDays: '3-5 days', isActive: true, createdAt: '2024-01-04T10:00:00Z' },
-      { id: 's5', name: 'Cash on Delivery', zone: 'Nationwide', type: 'FLAT', rate: 40, minOrder: 0, estimatedDays: '3-7 days', isActive: false, createdAt: '2024-01-05T10:00:00Z' },
-    ];
-    const start = (page - 1) * limit;
-    return { methods: mock.slice(start, start + limit), total: mock.length, page, totalPages: Math.ceil(mock.length / limit) };
+    return { methods: [], total: 0, page, totalPages: 0 };
   }
 }
 
@@ -73,7 +65,7 @@ export default function ShippingPage() {
     }
   };
 
-  useState(() => { load(page); });
+  useEffect(() => { load(page); }, [page]);
 
   const resetForm = () => { setForm(defaultForm); setEditId(null); setShowForm(false); };
 

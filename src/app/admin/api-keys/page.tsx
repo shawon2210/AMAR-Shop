@@ -33,17 +33,7 @@ async function fetchApiKeys(): Promise<ApiKeyData> {
   try {
     return await api.get<ApiKeyData>('/admin/api-keys');
   } catch {
-    return {
-      keys: [
-        { id: '1', name: 'Production API', prefix: 'sk_live_...a1b2', createdBy: 'admin@amarshop.com', lastUsedAt: '2026-07-23T10:00:00Z', isActive: true, permissions: ['products.read', 'products.write', 'orders.read'], createdAt: '2026-01-10T08:00:00Z' },
-        { id: '2', name: 'Mobile App Key', prefix: 'sk_live_...c3d4', createdBy: 'admin@amarshop.com', lastUsedAt: '2026-07-22T15:30:00Z', isActive: true, permissions: ['products.read', 'orders.read'], createdAt: '2026-03-15T10:00:00Z' },
-        { id: '3', name: 'Staging API', prefix: 'sk_test_...e5f6', createdBy: 'dev@amarshop.com', lastUsedAt: null, isActive: false, permissions: ['products.read', 'products.write', 'orders.read', 'orders.write'], createdAt: '2026-02-20T12:00:00Z' },
-        { id: '4', name: 'Analytics Service', prefix: 'sk_live_...g7h8', createdBy: 'dev@amarshop.com', lastUsedAt: '2026-07-21T09:00:00Z', isActive: true, permissions: ['reports.read'], createdAt: '2026-04-01T14:00:00Z' },
-      ],
-      total: 4,
-      page: 1,
-      totalPages: 1,
-    };
+    return { keys: [], total: 0, page: 1, totalPages: 1 };
   }
 }
 

@@ -34,15 +34,7 @@ async function fetchWithdrawals(params: { page: number; limit: number; status?: 
     if (params.status) q.set('status', params.status);
     return await api.get<WithdrawResponse>(`/admin/sellers/withdrawals?${q.toString()}`);
   } catch {
-    const mock: WithdrawRequest[] = [
-      { id: '1', seller: 'TechWorld BD', amount: 45000, method: 'Bank Transfer', account: '****1234', status: 'pending', createdAt: '2026-07-20T10:30:00Z' },
-      { id: '2', seller: 'Fashion Hub', amount: 28000, method: 'bKash', account: '****5678', status: 'pending', createdAt: '2026-07-21T14:15:00Z' },
-      { id: '3', seller: 'Gadget Zone', amount: 125000, method: 'Bank Transfer', account: '****9012', status: 'approved', createdAt: '2026-07-19T09:00:00Z' },
-      { id: '4', seller: 'Home Decor', amount: 8500, method: 'Nagad', account: '****3456', status: 'rejected', createdAt: '2026-07-18T16:45:00Z', note: 'Insufficient balance' },
-      { id: '5', seller: 'Sports Pro', amount: 32000, method: 'Bank Transfer', account: '****7890', status: 'pending', createdAt: '2026-07-22T11:20:00Z' },
-    ];
-    const filtered = params.status ? mock.filter((w) => w.status === params.status) : mock;
-    return { data: filtered, total: filtered.length, page: 1, limit: 10, totalPages: 1 };
+    return { data: [], total: 0, page: params.page, limit: params.limit, totalPages: 1 };
   }
 }
 

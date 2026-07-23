@@ -25,14 +25,7 @@ async function fetchBackups(): Promise<BackupsResponse> {
   try {
     return await api.get<BackupsResponse>('/admin/backups');
   } catch {
-    const mock: Backup[] = [
-      { id: '1', filename: 'amarshop_full_20260722.sql.gz', size: '2.4 GB', type: 'Full', createdAt: '2026-07-22T02:00:00Z', status: 'completed' },
-      { id: '2', filename: 'amarshop_incr_20260722.sql.gz', size: '180 MB', type: 'Incremental', createdAt: '2026-07-22T06:00:00Z', status: 'completed' },
-      { id: '3', filename: 'amarshop_incr_20260721.sql.gz', size: '210 MB', type: 'Incremental', createdAt: '2026-07-21T18:00:00Z', status: 'completed' },
-      { id: '4', filename: 'amarshop_full_20260720.sql.gz', size: '2.3 GB', type: 'Full', createdAt: '2026-07-20T02:00:00Z', status: 'completed' },
-      { id: '5', filename: 'amarshop_incr_20260720.sql.gz', size: '195 MB', type: 'Incremental', createdAt: '2026-07-20T12:00:00Z', status: 'failed' },
-    ];
-    return { data: mock, total: mock.length };
+    return { data: [], total: 0 };
   }
 }
 

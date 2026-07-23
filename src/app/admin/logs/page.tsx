@@ -22,35 +22,11 @@ const levelColors: Record<string, string> = {
   ERROR: 'bg-red-100 text-red-700',
 };
 
-const mockLogs: Record<string, LogEntry[]> = {
-  Application: [
-    { id: 'a1', timestamp: '2026-07-23T10:30:00Z', level: 'INFO', source: 'api-server', message: 'Server started on port 4000' },
-    { id: 'a2', timestamp: '2026-07-23T10:29:00Z', level: 'INFO', source: 'database', message: 'Connected to MongoDB cluster' },
-    { id: 'a3', timestamp: '2026-07-23T10:28:00Z', level: 'WARN', source: 'cache', message: 'Redis connection retry #2' },
-    { id: 'a4', timestamp: '2026-07-23T10:25:00Z', level: 'INFO', source: 'cron', message: 'Daily report generated successfully' },
-    { id: 'a5', timestamp: '2026-07-23T10:20:00Z', level: 'INFO', source: 'api-server', message: 'GET /api/products - 200 - 45ms' },
-  ],
-  Error: [
-    { id: 'e1', timestamp: '2026-07-23T10:15:00Z', level: 'ERROR', source: 'payment-worker', message: 'Payment gateway timeout for order O-7891' },
-    { id: 'e2', timestamp: '2026-07-23T10:00:00Z', level: 'ERROR', source: 'api-server', message: 'Unhandled error: Cannot read properties of null' },
-    { id: 'e3', timestamp: '2026-07-23T09:45:00Z', level: 'WARN', source: 'sms-service', message: 'SMS API rate limit approaching' },
-    { id: 'e4', timestamp: '2026-07-23T09:30:00Z', level: 'ERROR', source: 'email-service', message: 'SMTP connection failed, retrying...' },
-    { id: 'e5', timestamp: '2026-07-23T09:00:00Z', level: 'ERROR', source: 'database', message: 'Query timeout: db.orders.find() took 12s' },
-  ],
-  Access: [
-    { id: 'x1', timestamp: '2026-07-23T10:30:00Z', level: 'INFO', source: 'auth', message: 'Admin login from 192.168.1.100' },
-    { id: 'x2', timestamp: '2026-07-23T10:25:00Z', level: 'WARN', source: 'auth', message: 'Failed login attempt for admin@amarshop.com from 45.33.22.11' },
-    { id: 'x3', timestamp: '2026-07-23T10:20:00Z', level: 'INFO', source: 'api-server', message: 'GET /admin/orders - admin@amarshop.com' },
-    { id: 'x4', timestamp: '2026-07-23T10:15:00Z', level: 'INFO', source: 'auth', message: 'Token refreshed for user@example.com' },
-    { id: 'x5', timestamp: '2026-07-23T10:00:00Z', level: 'WARN', source: 'auth', message: 'Suspicious activity: multiple 401 from IP 185.220.101.1' },
-  ],
-};
-
 async function fetchLogs(): Promise<Record<string, LogEntry[]>> {
   try {
     return await api.get<Record<string, LogEntry[]>>('/admin/logs');
   } catch {
-    return mockLogs;
+    return {};
   }
 }
 

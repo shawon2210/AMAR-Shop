@@ -31,16 +31,7 @@ async function fetchBrands(page: number, limit: number): Promise<BrandsResponse>
   try {
     return await api.get<BrandsResponse>(`/admin/brands?page=${page}&limit=${limit}`);
   } catch {
-    const mock: Brand[] = [
-      { id: 'b1', name: 'Apple', slug: 'apple', description: 'Premium electronics', logo: 'https://logo.clearbit.com/apple.com', productCount: 120, isActive: true, createdAt: '2024-01-01T10:00:00Z' },
-      { id: 'b2', name: 'Samsung', slug: 'samsung', description: 'Consumer electronics', logo: 'https://logo.clearbit.com/samsung.com', productCount: 340, isActive: true, createdAt: '2024-01-02T10:00:00Z' },
-      { id: 'b3', name: 'Sony', slug: 'sony', description: 'Entertainment & electronics', logo: 'https://logo.clearbit.com/sony.com', productCount: 200, isActive: true, createdAt: '2024-01-03T10:00:00Z' },
-      { id: 'b4', name: 'Nike', slug: 'nike', description: 'Sportswear & footwear', logo: 'https://logo.clearbit.com/nike.com', productCount: 450, isActive: true, createdAt: '2024-01-04T10:00:00Z' },
-      { id: 'b5', name: 'Adidas', slug: 'adidas', description: 'Sportswear brand', logo: 'https://logo.clearbit.com/adidas.com', productCount: 280, isActive: false, createdAt: '2024-01-05T10:00:00Z' },
-    ];
-    const start = (page - 1) * limit;
-    const paged = mock.slice(start, start + limit);
-    return { brands: paged, total: mock.length, page, totalPages: Math.ceil(mock.length / limit) };
+    return { brands: [], total: 0, page, totalPages: 0 };
   }
 }
 

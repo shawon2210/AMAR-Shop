@@ -38,24 +38,7 @@ async function fetchTeams(params: { page: number; limit: number }): Promise<Team
     q.set('limit', String(params.limit));
     return await api.get<TeamsResponse>(`/admin/teams?${q.toString()}`);
   } catch {
-    const mock: Team[] = [
-      { id: '1', name: 'Engineering', description: 'Platform development team', membersCount: 12, createdAt: '2026-01-15T10:00:00Z', members: [
-        { id: 'u1', name: 'Rahim Ahmed', email: 'rahim@example.com', role: 'Lead' },
-        { id: 'u2', name: 'Sadia Rahman', email: 'sadia@example.com', role: 'Developer' },
-      ]},
-      { id: '2', name: 'Customer Support', description: 'Handles customer queries and tickets', membersCount: 8, createdAt: '2026-02-01T08:00:00Z', members: [
-        { id: 'u3', name: 'Fatima Begum', email: 'fatima@example.com', role: 'Manager' },
-        { id: 'u4', name: 'Kabir Hossain', email: 'kabir@example.com', role: 'Agent' },
-      ]},
-      { id: '3', name: 'Marketing', description: 'Digital marketing and campaigns', membersCount: 6, createdAt: '2026-03-10T12:00:00Z', members: [
-        { id: 'u5', name: 'Nusrat Jahan', email: 'nusrat@example.com', role: 'Lead' },
-      ]},
-      { id: '4', name: 'Finance', description: 'Accounting and settlements', membersCount: 4, createdAt: '2026-04-05T09:30:00Z', members: [] },
-      { id: '5', name: 'Logistics', description: 'Warehouse and delivery management', membersCount: 15, createdAt: '2026-05-20T14:00:00Z', members: [
-        { id: 'u6', name: 'Shakib Khan', email: 'shakib@example.com', role: 'Manager' },
-      ]},
-    ];
-    return { data: mock, total: mock.length, page: 1, limit: 10, totalPages: 1 };
+    return { data: [], total: 0, page: params.page, limit: params.limit, totalPages: 1 };
   }
 }
 

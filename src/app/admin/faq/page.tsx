@@ -29,18 +29,7 @@ async function fetchFAQs(): Promise<FAQData> {
   try {
     return await api.get<FAQData>('/admin/faq');
   } catch {
-    return {
-      items: [
-        { id: '1', question: 'How long does shipping take?', answer: 'Standard shipping takes 3-5 business days.', category: 'Shipping', sortOrder: 1, isActive: true },
-        { id: '2', question: 'What payment methods do you accept?', answer: 'We accept bKash, Nagad, and Cash on Delivery.', category: 'Payments', sortOrder: 2, isActive: true },
-        { id: '3', question: 'Can I return a product?', answer: 'Yes, within 7 days of delivery.', category: 'Returns', sortOrder: 1, isActive: true },
-        { id: '4', question: 'How do I track my order?', answer: 'Use the tracking number sent to your email.', category: 'Orders', sortOrder: 1, isActive: false },
-        { id: '5', question: 'How to create an account?', answer: 'Click Sign Up and enter your details.', category: 'Account', sortOrder: 1, isActive: true },
-      ],
-      total: 5,
-      page: 1,
-      totalPages: 1,
-    };
+    return { items: [], total: 0, page: 1, totalPages: 0 };
   }
 }
 

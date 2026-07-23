@@ -27,19 +27,7 @@ async function fetchActivity(): Promise<ActivityData> {
   try {
     return await api.get<ActivityData>('/admin/activity');
   } catch {
-    return {
-      entries: [
-        { id: '1', timestamp: '2026-07-23T10:30:00Z', user: 'admin@amarshop.com', action: 'Updated product', resource: 'Product #P-1024', details: 'Changed price from ৳1,200 to ৳1,100' },
-        { id: '2', timestamp: '2026-07-23T09:15:00Z', user: 'moderator@amarshop.com', action: 'Approved seller', resource: 'Seller #S-89', details: 'KYC verification approved for "Fashion Hub BD"' },
-        { id: '3', timestamp: '2026-07-23T08:45:00Z', user: 'admin@amarshop.com', action: 'Created coupon', resource: 'Coupon #C-56', details: 'Created 20% off flash sale coupon' },
-        { id: '4', timestamp: '2026-07-22T18:00:00Z', user: 'system', action: 'Auto-cancelled order', resource: 'Order #O-7890', details: 'Payment not received within 24 hours' },
-        { id: '5', timestamp: '2026-07-22T15:30:00Z', user: 'seller@fashionhub.com', action: 'Added product', resource: 'Product #P-1025', details: 'Added "Summer Dress - Blue" to store' },
-        { id: '6', timestamp: '2026-07-22T14:00:00Z', user: 'admin@amarshop.com', action: 'Updated banner', resource: 'Banner #B-12', details: 'Changed banner image and link' },
-      ],
-      total: 6,
-      page: 1,
-      totalPages: 1,
-    };
+    return { entries: [], total: 0, page: 1, totalPages: 1 };
   }
 }
 

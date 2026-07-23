@@ -33,17 +33,7 @@ async function fetchBlogs(): Promise<BlogData> {
   try {
     return await api.get<BlogData>('/admin/blogs');
   } catch {
-    return {
-      posts: [
-        { id: '1', title: 'Summer Fashion Trends 2026', author: 'Rahim Khan', category: 'Fashion', status: 'Published', views: 1240, image: '', content: 'Summer fashion content...', createdAt: '2026-07-20T10:00:00Z' },
-        { id: '2', title: 'Top Gadgets of the Year', author: 'Sadia Islam', category: 'Tech', status: 'Published', views: 980, image: '', content: 'Gadget review content...', createdAt: '2026-07-18T08:30:00Z' },
-        { id: '3', title: 'Healthy Eating Tips', author: 'Farzana Ahmed', category: 'Lifestyle', status: 'Draft', views: 0, image: '', content: 'Draft content...', createdAt: '2026-07-15T14:00:00Z' },
-        { id: '4', title: 'Traditional Bangladeshi Cuisine', author: 'Shamim Hasan', category: 'Food', status: 'Published', views: 1560, image: '', content: 'Food content...', createdAt: '2026-07-12T09:00:00Z' },
-      ],
-      total: 4,
-      page: 1,
-      totalPages: 1,
-    };
+    return { posts: [], total: 0, page: 1, totalPages: 1 };
   }
 }
 

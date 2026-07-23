@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { AdminLoading, AdminError, AdminEmpty } from '@/components/ui/admin-states';
 import { Pagination } from '@/components/ui/pagination';
 import { getErrorMessage } from '@/lib/error-helper';
@@ -29,16 +29,7 @@ async function fetchTags(page: number, limit: number): Promise<TagResponse> {
   try {
     return await api.get<TagResponse>(`/admin/tags?page=${page}&limit=${limit}`);
   } catch {
-    const mock: Tag[] = [
-      { id: 'tg1', name: 'New Arrival', slug: 'new-arrival', productCount: 145, isActive: true, createdAt: '2024-01-01T10:00:00Z' },
-      { id: 'tg2', name: 'Best Seller', slug: 'best-seller', productCount: 230, isActive: true, createdAt: '2024-01-02T10:00:00Z' },
-      { id: 'tg3', name: 'Flash Sale', slug: 'flash-sale', productCount: 56, isActive: true, createdAt: '2024-01-03T10:00:00Z' },
-      { id: 'tg4', name: 'Trending', slug: 'trending', productCount: 89, isActive: true, createdAt: '2024-01-04T10:00:00Z' },
-      { id: 'tg5', name: 'Premium', slug: 'premium', productCount: 34, isActive: false, createdAt: '2024-01-05T10:00:00Z' },
-      { id: 'tg6', name: 'Limited Edition', slug: 'limited-edition', productCount: 12, isActive: true, createdAt: '2024-01-06T10:00:00Z' },
-    ];
-    const start = (page - 1) * limit;
-    return { tags: mock.slice(start, start + limit), total: mock.length, page, totalPages: Math.ceil(mock.length / limit) };
+    return { tags: [], total: 0, page, totalPages: 0 };
   }
 }
 
@@ -65,7 +56,7 @@ export default function TagsPage() {
     }
   };
 
-  useState(() => { load(page); });
+  useEffect(() => { load(page); }, [page]);
 
   const resetForm = () => { setForm(defaultForm); setEditId(null); setShowForm(false); };
 

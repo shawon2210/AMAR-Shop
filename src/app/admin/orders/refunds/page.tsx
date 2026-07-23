@@ -35,15 +35,7 @@ async function fetchRefunds(params: { page: number; limit: number; status?: stri
     if (params.status) q.set('status', params.status);
     return await api.get<RefundsResponse>(`/admin/refunds?${q.toString()}`);
   } catch {
-    const mock: Refund[] = [
-      { id: '1', refundNumber: 'RF-1001', orderNumber: 'ORD-2024-001', customer: 'Rahim Ahmed', amount: 1500, method: 'bKash', status: 'completed', createdAt: '2026-07-20T10:30:00Z', reason: 'Defective item' },
-      { id: '2', refundNumber: 'RF-1002', orderNumber: 'ORD-2024-002', customer: 'Fatima Begum', amount: 3200, method: 'Nagad', status: 'pending', createdAt: '2026-07-21T14:15:00Z', reason: 'Wrong size' },
-      { id: '3', refundNumber: 'RF-1003', orderNumber: 'ORD-2024-003', customer: 'Kabir Hossain', amount: 780, method: 'SSLCommerz', status: 'failed', createdAt: '2026-07-19T09:00:00Z', reason: 'Payment error' },
-      { id: '4', refundNumber: 'RF-1004', orderNumber: 'ORD-2024-004', customer: 'Nusrat Jahan', amount: 5400, method: 'bKash', status: 'pending', createdAt: '2026-07-21T16:45:00Z', reason: 'Product not as described' },
-      { id: '5', refundNumber: 'RF-1005', orderNumber: 'ORD-2024-005', customer: 'Shakib Khan', amount: 2100, method: 'Nagad', status: 'completed', createdAt: '2026-07-18T11:20:00Z' },
-    ];
-    const filtered = params.status ? mock.filter((r) => r.status === params.status) : mock;
-    return { data: filtered, total: filtered.length, page: 1, limit: 10, totalPages: 1 };
+    return { data: [], total: 0, page: 1, limit: 10, totalPages: 0 };
   }
 }
 

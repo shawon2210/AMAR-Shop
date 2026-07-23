@@ -71,4 +71,28 @@ footer.tsx (parent — trusts + newsletter + container)
 - Mobile drawers: focus trap (Tab cycle + Esc close), hamburger focus restoration on close
 - Search overlays: `prevFocusRef` pattern for focus return
 - Fixed bottom bars hide at `lg:` breakpoint when desktop sidebar takes over
+---
+
+## Session 2026-07-23 — Mock data eradication & placeholder replacement
+
+### What was done
+
+- **Fixed 39 mock-data admin pages** — Replaced hardcoded fallback arrays in `catch` blocks with empty data (`[]` or zeroed objects). These pages now show `AdminEmpty` when APIs are unavailable instead of silently displaying fake data.
+- **Fixed 8 placeholder admin pages** (overview, fulfillment/{courier,pickup,tracking}, realtime, warehouse/{inbound,inventory,pick-lists}) — Added full `useState`/`useEffect` API call infrastructure, proper loading/error/empty state handling, removed all hardcoded data.
+- **Fixed 5 public/seller placeholder pages** — Admin homepage (`src/app/admin/homepage/page.tsx`): full CMS section editor with drag-reorder. Contact page (`src/app/contact/page.tsx`): validated form + info sidebar. Cookie policy (`src/app/cookies/page.tsx`): 8-section server component. Seller policy (`src/app/seller/policy/page.tsx`): 11-section policy page. Seller root (`src/app/seller/page.tsx`): created with dashboard redirect.
+- **Bug fixes** — Fixed 4 pages that used `useState(fn())` instead of `useEffect` for data loading (`attributes`, `shipping`, `tags`, `vendors`, `taxes`).
+
+### Files changed
+
+| Category | Count | Files |
+|---|---|---|
+| Admin mock-data catch fix | 39 | accounting, activity, analytics, api-keys, attributes, audit-logs, backups, blogs, brands, campaigns, collections, customers/{addresses,segments,wishlists}, delivery-zones, email-campaigns, faq, integrations, jobs, logs, monitoring, orders/{refunds,returns}, payouts, promotions, push-notifications, referral-system, revenue, security, seo, sellers/{analytics,support,withdraw-requests}, shipping, tags, taxes, teams, transactions, vendors |
+| Admin placeholder → API | 8 | overview, fulfillment/{courier,pickup,tracking}, realtime, warehouse/{inbound,inventory,pick-lists} |
+| Public/seller placeholders | 5 | admin/homepage, contact, cookies, seller/policy, seller/{page.tsx new} |
+
+### Patterns established
+
+- Mock data replacement: empty-array fallback in catch + `AdminLoading`/`AdminError`/`AdminEmpty` from `@/components/ui/admin-states`
+- Data fetching pattern: `useState<T>([])` + `useState(true)` + `useState<string|null>(null)` + `useEffect` with `api.get()`, `catch(e) { setData([]) }`
+- Placeholder pages: never show "coming soon" — either implement with API or show empty state
 <!-- END:session-summary -->

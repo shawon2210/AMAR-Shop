@@ -16,15 +16,7 @@ const defaultForm = { name: '', type: 'BUYXGETY', discount: '', minPurchase: '',
 
 async function fetchPromotions(): Promise<Promotion[]> {
   try { return await api.get<Promotion[]>('/admin/promotions'); }
-  catch {
-    return [
-      { id: '1', name: 'Buy 2 Get 1 Free', type: 'BUYXGETY', discount: '2x1', minPurchase: 0, startsAt: '2026-07-01', endsAt: '2026-08-31', isActive: true },
-      { id: '2', name: 'Free Shipping Week', type: 'FREE_SHIPPING', discount: '100%', minPurchase: 500, startsAt: '2026-07-15', endsAt: '2026-07-22', isActive: true },
-      { id: '3', name: 'Summer Bundle', type: 'BUNDLE', discount: '20%', minPurchase: 2000, startsAt: '2026-07-01', endsAt: '2026-09-30', isActive: true },
-      { id: '4', name: 'Buy 3 Get 20% Off', type: 'BUYXGETY', discount: '3+20%', minPurchase: 0, startsAt: '2026-06-01', endsAt: '2026-07-15', isActive: false },
-      { id: '5', name: 'Free Shipping Nationwide', type: 'FREE_SHIPPING', discount: '100%', minPurchase: 1000, startsAt: '2026-08-01', endsAt: '2026-08-15', isActive: true },
-    ];
-  }
+  catch { return []; }
 }
 
 export default function PromotionsPage() {

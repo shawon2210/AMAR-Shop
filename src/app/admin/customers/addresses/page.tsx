@@ -34,15 +34,7 @@ async function fetchAddresses(params: { page: number; limit: number; search?: st
     if (params.search) q.set('search', params.search);
     return await api.get<AddressesResponse>(`/admin/addresses?${q.toString()}`);
   } catch {
-    const mock: AddressRecord[] = [
-      { id: '1', customer: 'Rahim Ahmed', customerId: 'u1', type: 'Home', address: '12/A, Mirpur Road', city: 'Dhaka', phone: '01711111111', isDefault: true },
-      { id: '2', customer: 'Rahim Ahmed', customerId: 'u1', type: 'Work', address: '34, Gulshan Avenue', city: 'Dhaka', phone: '01711111111', isDefault: false },
-      { id: '3', customer: 'Fatima Begum', customerId: 'u2', type: 'Home', address: '56, Shantinagar', city: 'Dhaka', phone: '01722222222', isDefault: true },
-      { id: '4', customer: 'Kabir Hossain', customerId: 'u3', type: 'Home', address: '78, Nasirabad', city: 'Chattogram', phone: '01733333333', isDefault: true },
-      { id: '5', customer: 'Nusrat Jahan', customerId: 'u4', type: 'Work', address: '90, Agrabad', city: 'Chattogram', phone: '01744444444', isDefault: true },
-    ];
-    const filtered = params.search ? mock.filter((a) => a.customer.toLowerCase().includes(params.search!.toLowerCase())) : mock;
-    return { data: filtered, total: filtered.length, page: 1, limit: 10, totalPages: 1 };
+    return { data: [], total: 0, page: 1, limit: 10, totalPages: 0 };
   }
 }
 

@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { AdminLoading, AdminError, AdminEmpty } from '@/components/ui/admin-states';
 import { Pagination } from '@/components/ui/pagination';
 import { getErrorMessage } from '@/lib/error-helper';
@@ -30,17 +30,7 @@ async function fetchVendors(page: number, limit: number, search: string): Promis
   try {
     return await api.get<VendorsResponse>(`/admin/vendors?page=${page}&limit=${limit}&search=${search}`);
   } catch {
-    const mock: Vendor[] = [
-      { id: 'v1', storeName: 'Samsung Bangladesh', owner: 'Samsung BD Ltd', phone: '01711111111', email: 'info@samsungbd.com', productsCount: 245, totalRevenue: 12500000, isActive: true, createdAt: '2024-01-15T10:00:00Z' },
-      { id: 'v2', storeName: 'Nokia Bangladesh', owner: 'HMD Global BD', phone: '01722222222', email: 'info@nokiahd.com', productsCount: 89, totalRevenue: 3200000, isActive: true, createdAt: '2024-02-20T10:00:00Z' },
-      { id: 'v3', storeName: 'Xiaomi Store BD', owner: 'Xiaomi Bangladesh', phone: '01733333333', email: 'bd@xiaomi.com', productsCount: 156, totalRevenue: 8900000, isActive: true, createdAt: '2024-03-10T10:00:00Z' },
-      { id: 'v4', storeName: 'Apple Asia', owner: 'Apple Distribution', phone: '01744444444', email: 'asia@apple.com', productsCount: 67, totalRevenue: 15200000, isActive: false, createdAt: '2024-01-05T10:00:00Z' },
-      { id: 'v5', storeName: 'Oppo BD', owner: 'Oppo Bangladesh', phone: '01755555555', email: 'bd@oppo.com', productsCount: 134, totalRevenue: 5400000, isActive: true, createdAt: '2024-04-01T10:00:00Z' },
-    ];
-    const filtered = search ? mock.filter((v) => v.storeName.toLowerCase().includes(search.toLowerCase()) || v.owner.toLowerCase().includes(search.toLowerCase())) : mock;
-    const start = (page - 1) * limit;
-    const paged = filtered.slice(start, start + limit);
-    return { vendors: paged, total: filtered.length, page, totalPages: Math.ceil(filtered.length / limit) };
+    return { vendors: [], total: 0, page, totalPages: 0 };
   }
 }
 
@@ -64,7 +54,7 @@ export default function VendorsPage() {
     }
   };
 
-  useState(() => { load(page, search); });
+  useEffect(() => { load(page, search); }, [page, search]);
 
   const handleSearch = (val: string) => {
     setSearch(val);

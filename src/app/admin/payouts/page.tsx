@@ -18,16 +18,7 @@ async function fetchPayouts(): Promise<Payout[]> {
   try {
     return await api.get<Payout[]>('/admin/payouts');
   } catch {
-    return [
-      { id: '1', seller: 'TechZone BD', amount: 45000, method: 'bkash', accountNo: '017******1234', status: 'pending', date: '2026-07-23' },
-      { id: '2', seller: 'Fashion Hub', amount: 78200, method: 'nagad', accountNo: '018******5678', status: 'completed', date: '2026-07-22' },
-      { id: '3', seller: 'Gadget World', amount: 32000, method: 'bank', accountNo: 'DBBL****1234', status: 'pending', date: '2026-07-22' },
-      { id: '4', seller: 'Home Decor Ltd', amount: 156000, method: 'bkash', accountNo: '019******9012', status: 'completed', date: '2026-07-21' },
-      { id: '5', seller: 'Book Nook', amount: 12500, method: 'nagad', accountNo: '016******3456', status: 'failed', date: '2026-07-20' },
-      { id: '6', seller: 'Sports Club', amount: 67000, method: 'bank', accountNo: 'IBBL****5678', status: 'completed', date: '2026-07-19' },
-      { id: '7', seller: 'Organic Foods', amount: 28000, method: 'bkash', accountNo: '017******7890', status: 'pending', date: '2026-07-19' },
-      { id: '8', seller: 'Kids Corner', amount: 94000, method: 'nagad', accountNo: '018******2345', status: 'completed', date: '2026-07-18' },
-    ];
+    return [];
   }
 }
 

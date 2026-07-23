@@ -17,7 +17,7 @@ async function fetchStats(): Promise<AggregatedStats> {
   try {
     return await api.get<AggregatedStats>('/admin/analytics/stats');
   } catch {
-    return { totalUsers: 45280, totalOrders: 12840, totalRevenue: 12450000, totalSellers: 1560 };
+    return { totalUsers: 0, totalOrders: 0, totalRevenue: 0, totalSellers: 0 };
   }
 }
 

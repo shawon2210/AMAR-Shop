@@ -1,12 +1,41 @@
 'use client';
 
+import { useState, useEffect } from 'react';
+import { AdminLoading, AdminError, AdminEmpty } from '@/components/ui/admin-states';
+import { api } from '@/services/api';
+
+interface PickList {
+  id: string;
+  orders: number;
+  items: number;
+  status: string;
+  priority: string;
+  warehouse: string;
+}
+
 export default function PickListsPage() {
-  const pickLists = [
-    { id: 'PK-000001', orders: 3, items: 8, status: 'OPEN', priority: 'HIGH', warehouse: 'Dhaka' },
-    { id: 'PK-000002', orders: 1, items: 2, status: 'IN_PROGRESS', priority: 'NORMAL', warehouse: 'Dhaka' },
-    { id: 'PK-000003', orders: 5, items: 12, status: 'OPEN', priority: 'URGENT', warehouse: 'Chattogram' },
-    { id: 'PK-000004', orders: 2, items: 4, status: 'COMPLETED', priority: 'LOW', warehouse: 'Dhaka' },
-  ];
+  const [pickLists, setPickLists] = useState<PickList[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+
+  const load = async () => {
+    setLoading(true);
+    setError(null);
+    try {
+      setPickLists(await api.get<PickList[]>('/admin/warehouse/pick-lists'));
+    } catch (err) {
+      setError(err instanceof Error ? err.message : 'Failed to load pick lists');
+      setPickLists([]);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  useEffect(() => { load(); }, []);
+
+  if (loading) return <AdminLoading message="Loading pick lists..." />;
+  if (error) return <AdminError message={error} onRetry={load} />;
+  if (!pickLists.length) return <AdminEmpty message="No pick lists found" icon="assignment" />;
 
   return (
     <div className="space-y-6">

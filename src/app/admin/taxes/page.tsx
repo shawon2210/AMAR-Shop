@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { AdminLoading, AdminError, AdminEmpty } from '@/components/ui/admin-states';
 import { Pagination } from '@/components/ui/pagination';
 import { getErrorMessage } from '@/lib/error-helper';
@@ -36,15 +36,7 @@ async function fetchTaxes(page: number, limit: number): Promise<TaxResponse> {
   try {
     return await api.get<TaxResponse>(`/admin/taxes?page=${page}&limit=${limit}`);
   } catch {
-    const mock: TaxRule[] = [
-      { id: 't1', name: 'Standard VAT', rate: 15, type: 'VAT', region: 'Bangladesh', isActive: true, createdAt: '2024-01-01T10:00:00Z' },
-      { id: 't2', name: 'Reduced VAT', rate: 5, type: 'VAT', region: 'Bangladesh', isActive: true, createdAt: '2024-01-02T10:00:00Z' },
-      { id: 't3', name: 'GST Standard', rate: 18, type: 'GST', region: 'India', isActive: true, createdAt: '2024-01-03T10:00:00Z' },
-      { id: 't4', name: 'GST Reduced', rate: 12, type: 'GST', region: 'India', isActive: true, createdAt: '2024-01-04T10:00:00Z' },
-      { id: 't5', name: 'Sales Tax CA', rate: 8.25, type: 'SALES_TAX', region: 'California, USA', isActive: false, createdAt: '2024-01-05T10:00:00Z' },
-    ];
-    const start = (page - 1) * limit;
-    return { rules: mock.slice(start, start + limit), total: mock.length, page, totalPages: Math.ceil(mock.length / limit) };
+    return { rules: [], total: 0, page, totalPages: 0 };
   }
 }
 
@@ -71,7 +63,7 @@ export default function TaxesPage() {
     }
   };
 
-  useState(() => { load(page); });
+  useEffect(() => { load(page); }, [page]);
 
   const resetForm = () => { setForm(defaultForm); setEditId(null); setShowForm(false); };
 

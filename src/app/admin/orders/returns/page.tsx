@@ -48,35 +48,7 @@ async function fetchReturns(params: { page: number; limit: number; status?: stri
     const response = await api.get<ReturnsResponse>(`/admin/returns?${queryParams.toString()}`);
     return response;
   } catch (error) {
-    // Mock fallback
-    const mockData: ReturnsResponse = {
-      data: [
-        {
-          id: 1,
-          orderId: 'ORD-1001',
-          customer: {
-            id: 1,
-            name: 'John Doe',
-            email: 'john@example.com',
-            image: '/placeholder.jpg'
-          },
-          product: {
-            id: 1,
-            name: 'Sample Product',
-            image: '/placeholder.jpg'
-          },
-          reason: 'Defective product',
-          status: 'pending',
-          requestedAt: new Date().toISOString(),
-          images: ['/placeholder.jpg', '/placeholder2.jpg']
-        }
-      ],
-      total: 1,
-      page: 1,
-      limit: 10,
-      totalPages: 1
-    };
-    return mockData;
+    return { data: [], total: 0, page: 1, limit: 10, totalPages: 0 };
   }
 }
 

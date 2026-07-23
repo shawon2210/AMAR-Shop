@@ -31,14 +31,7 @@ async function fetchSegments(params: { page: number; limit: number }): Promise<S
     q.set('limit', String(params.limit));
     return await api.get<SegmentsResponse>(`/admin/segments?${q.toString()}`);
   } catch {
-    const mock: Segment[] = [
-      { id: '1', name: 'VIP Customers', description: 'High-value repeat buyers', count: 342, criteria: 'Orders > 10', createdAt: '2026-01-15T10:00:00Z' },
-      { id: '2', name: 'New Users', description: 'Joined in the last 30 days', count: 1289, criteria: 'Registered < 30d', createdAt: '2026-06-01T08:00:00Z' },
-      { id: '3', name: 'Abandoned Cart', description: 'Items in cart over 24h', count: 567, criteria: 'Cart > 24h', createdAt: '2026-03-10T12:00:00Z' },
-      { id: '4', name: 'High Spenders', description: 'Spent over ৳50,000 total', count: 189, criteria: 'Total spent > 50000', createdAt: '2026-02-20T09:30:00Z' },
-      { id: '5', name: 'Inactive', description: 'No purchase in 90 days', count: 4560, criteria: 'Last order > 90d', createdAt: '2026-04-05T14:00:00Z' },
-    ];
-    return { data: mock, total: mock.length, page: 1, limit: 10, totalPages: 1 };
+    return { data: [], total: 0, page: 1, limit: 10, totalPages: 0 };
   }
 }
 

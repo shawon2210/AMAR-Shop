@@ -31,19 +31,7 @@ async function fetchAuditLogs(): Promise<AuditData> {
   try {
     return await api.get<AuditData>('/admin/audit-logs');
   } catch {
-    return {
-      entries: [
-        { id: '1', timestamp: '2026-07-23T10:30:00Z', user: 'admin@amarshop.com', action: 'UPDATE', resource: 'Product', resourceId: 'P-1024', ip: '192.168.1.100', details: 'Price updated from 1200 to 1100' },
-        { id: '2', timestamp: '2026-07-23T09:15:00Z', user: 'superadmin@amarshop.com', action: 'CREATE', resource: 'Coupon', resourceId: 'C-56', ip: '192.168.1.100', details: 'Created coupon SAVE20' },
-        { id: '3', timestamp: '2026-07-23T08:00:00Z', user: 'moderator@amarshop.com', action: 'DELETE', resource: 'Review', resourceId: 'R-890', ip: '103.25.47.10', details: 'Deleted spam review' },
-        { id: '4', timestamp: '2026-07-22T18:30:00Z', user: 'admin@amarshop.com', action: 'UPDATE', resource: 'Order', resourceId: 'O-7890', ip: '192.168.1.100', details: 'Order status changed to SHIPPED' },
-        { id: '5', timestamp: '2026-07-22T14:00:00Z', user: 'admin@amarshop.com', action: 'CREATE', resource: 'Category', resourceId: 'C-45', ip: '192.168.1.100', details: 'Created category "Electronics"' },
-        { id: '6', timestamp: '2026-07-21T11:00:00Z', user: 'superadmin@amarshop.com', action: 'DELETE', resource: 'User', resourceId: 'U-789', ip: '103.25.47.10', details: 'Deleted inactive user account' },
-      ],
-      total: 6,
-      page: 1,
-      totalPages: 1,
-    };
+    return { entries: [], total: 0, page: 1, totalPages: 1 };
   }
 }
 
