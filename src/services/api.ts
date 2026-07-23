@@ -77,7 +77,6 @@ export async function request<T>(
   if (!res.ok) {
     if (res.status === 401 && typeof window !== 'undefined') {
       localStorage.removeItem('amarshop-auth');
-      document.cookie = 'accessToken=; path=/; max-age=0; SameSite=Strict';
       window.dispatchEvent(new CustomEvent('amarshop-auth-logout'));
       const currentPath = window.location.pathname + window.location.search;
       if (!path.startsWith('/auth/')) {
