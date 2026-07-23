@@ -23,6 +23,50 @@ export interface DashboardStats {
   lowStockAlerts: number;
 }
 
+// ─── Products (Seller Admin) ──────────────────────────────────────────
+
+export interface SellerProduct {
+  id: string;
+  name: string;
+  images: string[];
+  price: number;
+  stockCount: number;
+  status: string;
+  soldCount: number;
+  sku: string;
+}
+
+export interface SellerProductsResponse {
+  products: SellerProduct[];
+  total: number;
+  totalPages: number;
+  page: number;
+  limit: number;
+}
+
+// ─── Orders (Seller Admin) ─────────────────────────────────────────
+
+export interface SellerOrder {
+  id: string;
+  customer: string;
+  product: string;
+  qty: number;
+  total: number;
+  status: string;
+  date: string;
+  items: { name: string; qty: number; price: string; image: string }[];
+  address: string;
+  timeline: string[];
+}
+
+export interface SellerOrdersResponse {
+  orders: SellerOrder[];
+  total: number;
+  totalPages: number;
+  page: number;
+  limit: number;
+}
+
 // ─── Users ──────────────────────────────────────────────
 
 export interface UserSummary {
