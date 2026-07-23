@@ -28,7 +28,6 @@ async function attemptRefresh(): Promise<boolean> {
         user: data.user,
       };
       localStorage.setItem('amarshop-auth', JSON.stringify(current));
-      document.cookie = `accessToken=${data.accessToken}; path=/; max-age=604800; SameSite=Strict`;
       window.dispatchEvent(new CustomEvent('amarshop-auth-refreshed', { detail: data }));
       return true;
     } catch {

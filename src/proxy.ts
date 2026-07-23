@@ -28,7 +28,7 @@ async function validateAuth(request: NextRequest): Promise<{ userId: string; rol
   }
 }
 
-export async function middleware(request: NextRequest) {
+export async function proxy(request: NextRequest) {
   const { pathname } = request.nextUrl;
   const auth = await validateAuth(request);
 

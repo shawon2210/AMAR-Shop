@@ -1,13 +1,14 @@
 'use client';
 
 import Link from 'next/link';
+import Image from 'next/image';
 import { useState, memo, useCallback } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import type { Product } from '@/types';
 import { useCartStore } from '@/stores/cart-store';
 import { useUIStore } from '@/stores/ui-store';
 import { brandLogoMap } from '@/components/commerce/brand-logos';
-import { Truck, ShieldCheck, Clock, Zap, BarChart3, Heart, ShoppingBag, Check } from 'lucide-react';
+import { Truck, ShieldCheck, Clock, Zap, Heart } from 'lucide-react';
 
 interface ProductCardEnhancedProps {
   product: Product;
@@ -46,7 +47,7 @@ function getDeliveryDate() {
   return `${minDate.toLocaleDateString('en-US', options)} - ${maxDate.toLocaleDateString('en-US', options)}`;
 }
 
-export const ProductCardEnhanced = memo(function ProductCardEnhanced({ product, variant = 'default', recentlyViewed }: ProductCardEnhancedProps) {
+export const ProductCardEnhanced = memo(function ProductCardEnhanced({ product, recentlyViewed }: ProductCardEnhancedProps) {
   const [imgError, setImgError] = useState(false);
   const [wishlisted, setWishlisted] = useState(false);
   const [added, setAdded] = useState(false);
@@ -72,7 +73,9 @@ export const ProductCardEnhanced = memo(function ProductCardEnhanced({ product, 
     if (isOutOfStock) return;
     addItem(product);
     setAdded(true);
+    setShowQuickAdd(true);
     addToast(product.name + ' added to cart!');
+    setTimeout(() => setShowQuickAdd(false), 800);
     setTimeout(() => setAdded(false), 1500);
   }, [addItem, addToast, product, isOutOfStock]);
 
@@ -84,15 +87,6 @@ export const ProductCardEnhanced = memo(function ProductCardEnhanced({ product, 
       return !prev;
     });
   }, [addToast]);
-
-  const handleQuickAdd = useCallback((e: React.MouseEvent) => {
-    e.preventDefault();
-    e.stopPropagation();
-    setShowQuickAdd(true);
-    addItem(product);
-    addToast(product.name + ' added to cart!');
-    setTimeout(() => setShowQuickAdd(false), 800);
-  }, [addItem, addToast, product]);
 
   return (
     <Link
@@ -110,12 +104,14 @@ export const ProductCardEnhanced = memo(function ProductCardEnhanced({ product, 
       {/* Image */}
       <div className="relative w-full aspect-square overflow-hidden bg-gray-50 shrink-0">
         {!imgError ? (
-          <img
-            className="h-full w-full object-cover object-center transition-transform duration-300 group-hover:scale-[1.06]"
+          <Image
+            className="object-cover object-center transition-transform duration-300 group-hover:scale-[1.06]"
             src={product.images[0]}
             alt={product.name}
-            loading="lazy"
+            fill
+            sizes="(max-width: 640px) 50vw, (max-width: 1024px) 33vw, 20vw"
             onError={() => setImgError(true)}
+            unoptimized={product.images[0]?.startsWith('http') && !product.images[0]?.includes('unsplash.com')}
           />
         ) : (
           <div className="w-full h-full flex items-center justify-center bg-gray-100">

@@ -22,9 +22,8 @@ function calcTime(target: string) {
 }
 
 function useCountdown(target: string) {
-  const [t, setT] = useState({ h: '00', m: '00', s: '00' });
+  const [t, setT] = useState(() => calcTime(target));
   useEffect(() => {
-    setT(calcTime(target));
     const id = setInterval(() => setT(calcTime(target)), 1000);
     return () => clearInterval(id);
   }, [target]);

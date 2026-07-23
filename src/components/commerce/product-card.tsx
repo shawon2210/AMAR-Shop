@@ -1,6 +1,7 @@
 'use client';
 
 import Link from 'next/link';
+import Image from 'next/image';
 import { useState, memo, useCallback } from 'react';
 import type { Product } from '@/types';
 import { useCartStore } from '@/stores/cart-store';
@@ -71,12 +72,14 @@ export const ProductCard = memo(function ProductCard({ product }: ProductCardPro
       {/* Image */}
       <div className="relative w-full aspect-square overflow-hidden bg-gray-50 shrink-0">
         {!imgError ? (
-          <img
-            className="h-full w-full object-cover object-center transition-transform duration-300 group-hover:scale-[1.06]"
+          <Image
+            className="object-cover object-center transition-transform duration-300 group-hover:scale-[1.06]"
             src={product.images[0]}
             alt={product.name}
-            loading="lazy"
+            fill
+            sizes="(max-width: 640px) 50vw, (max-width: 1024px) 33vw, 20vw"
             onError={() => setImgError(true)}
+            unoptimized={product.images[0]?.startsWith('http') && !product.images[0]?.includes('unsplash.com')}
           />
         ) : (
           <div className="w-full h-full flex items-center justify-center bg-gray-100">

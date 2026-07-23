@@ -279,7 +279,7 @@ export default function CartPage() {
                 See More <ArrowRight className="w-3.5 h-3.5 ml-1" />
               </button>
             </div>
-            <ProductGrid products={products.slice(0, 6)} columns={3} showLoadMore={false} />
+            <ProductGrid products={recommended.slice(0, 6)} columns={3} showLoadMore={false} />
           </motion.section>
         </div>
 
