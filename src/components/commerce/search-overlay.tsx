@@ -4,7 +4,7 @@ import { useState, useEffect, useRef, useCallback, useMemo } from 'react';
 import { useRouter } from 'next/navigation';
 import { useSearchStore } from '@/stores/search-store';
 import { products } from '@/lib/data/products';
-import { Search, X, TrendingUp, Clock, ArrowRight, Package, Store, Grid3X3 } from 'lucide-react';
+import { Search, X, TrendingUp, Clock, ArrowRight, Store, Grid3X3 } from 'lucide-react';
 
 const DEBOUNCE_MS = 200;
 
@@ -27,7 +27,7 @@ export function SearchOverlay() {
     query, setQuery, isOpen, setIsOpen,
     selectedIndex, setSelectedIndex,
     recentSearches, addRecentSearch, removeRecentSearch, clearRecentSearches,
-    suggestions, setSuggestions, trendingSearches,
+   setSuggestions, trendingSearches,
   } = useSearchStore();
 
   const inputRef = useRef<HTMLInputElement>(null);
@@ -43,7 +43,7 @@ export function SearchOverlay() {
     const cats = [...new Set(products.map(p => p.category))];
     const brds = [...new Set(products.filter(p => p.brand).map(p => p.brand!))];
     return { categories: cats, brands: brds };
-  }, [products]);
+  }, []);
 
   // Debounced search
   const performSearch = useCallback((q: string) => {
@@ -375,14 +375,14 @@ export function SearchOverlay() {
                               selectedIndex === globalIdx ? 'bg-primary/5 text-primary' : 'text-gray-700 hover:bg-gray-50'
                             }`}
                           >
-                            <div className="w-8 h-8 rounded-md bg-gray-100 overflow-hidden flex-shrink-0">
+                            <div className="w-8 h-8 rounded-md bg-gray-100 overflow-hidden shrink-0">
                               <img src={prod.images[0]} alt={prod.name} className="w-full h-full object-cover" />
                             </div>
                             <div className="flex-1 text-left min-w-0">
                               <p className="truncate">{highlightMatch(prod.name, query)}</p>
                               <p className="text-xs text-gray-400">৳{prod.price.toLocaleString('en-BD')}</p>
                             </div>
-                            <ArrowRight className="w-3.5 h-3.5 text-gray-300 flex-shrink-0" />
+                            <ArrowRight className="w-3.5 h-3.5 text-gray-300 shrink-0" />
                           </button>
                         );
                       })}

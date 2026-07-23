@@ -145,7 +145,7 @@ export const brandData: BrandInfo[] = [
 export function BrandLogoContainer({ logo: Logo, color, className = '' }: { logo: React.ComponentType<{ className?: string }>; color: string; className?: string }) {
   return (
     <div className={`flex items-center justify-center ${className}`}>
-      <div className="max-h-8 max-w-[80px] w-auto h-auto" style={{ color }}>
+      <div className="max-h-8 max-w-80px w-auto h-auto" style={{ color }}>
         <Logo className="w-full h-full" />
       </div>
     </div>

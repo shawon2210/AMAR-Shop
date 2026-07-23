@@ -170,31 +170,7 @@ function formattedPrice(amount: number): string {
 }
 
 async function fetchDashboard(): Promise<DashboardStats> {
-  const data = await api.get<Record<string, unknown>>('/seller/dashboard');
-  return {
-    totalProducts: data.totalProducts as number,
-    totalOrders: data.totalOrders as number,
-    totalRevenue: data.totalRevenue as number,
-    totalFollowers: data.totalFollowers as number,
-    avgRating: data.avgRating as number,
-    revenueChart: (data.revenueChart as { date: string; amount: number }[]) || [],
-    recentOrders: ((data.recentOrders as Array<Record<string, unknown>>) || []).map((o: Record<string, unknown>) => ({
-      id: o.id as string,
-      customer: o.customer as string,
-      product: o.product as string,
-      total: o.total as number,
-      status: o.status as string,
-      date: o.date as string,
-    })),
-    sellerProfile: {
-      level: ((data.sellerProfile as Record<string, unknown>)?.level as string) || 'Bronze',
-      performanceScore: ((data.sellerProfile as Record<string, unknown>)?.performanceScore as number) || 0,
-      responseRate: ((data.sellerProfile as Record<string, unknown>)?.responseRate as number) || 0,
-      onTimeDelivery: ((data.sellerProfile as Record<string, unknown>)?.onTimeDelivery as number) || 0,
-      cancellationRate: ((data.sellerProfile as Record<string, unknown>)?.cancellationRate as number) || 0,
-      returnsRate: ((data.sellerProfile as Record<string, unknown>)?.returnsRate as number) || 0,
-    },
-  };
+  return await api.get<DashboardStats>('/seller/dashboard');
 }
 
 async function fetchProducts(params: PaginationParams = {}): Promise<SellerProductsResponse> {

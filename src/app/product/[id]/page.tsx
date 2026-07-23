@@ -45,7 +45,7 @@ export default function ProductDetailPage() {
       <div className="flex flex-col items-center justify-center py-32 app-container">
         <span className="material-symbols-outlined text-6xl text-secondary mb-4">block</span>
         <h2 className="text-xl font-bold mb-2">Product Not Found</h2>
-        <p className="text-secondary mb-6">The product you're looking for doesn't exist or has been removed.</p>
+<p className="text-secondary mb-6">The product you&rsquo;re looking for doesn&rsquo;t exist or has been removed.</p>
         <Link
           href="/"
           className="bg-primary text-on-primary px-lg py-4 rounded-lg font-semibold hover:brightness-110 transition-all"
@@ -78,7 +78,7 @@ export default function ProductDetailPage() {
         <span className="material-symbols-outlined text-sm">chevron_right</span>
         <Link href={`/category/${product.categoryId}`} className="hover:text-primary">{product.category}</Link>
         <span className="material-symbols-outlined text-sm">chevron_right</span>
-        <span className="text-on-surface truncate max-w-[200px]">{product.name}</span>
+        <span className="text-on-surface truncate max-w-200px">{product.name}</span>
       </nav>
 
       {/* Product Gallery + Info */}
@@ -170,8 +170,8 @@ export default function ProductDetailPage() {
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-1.5">
                   {Object.entries(product.specifications).map(([key, val]) => (
                     <div key={key} className="flex gap-1 text-sm min-w-0">
-                      <span className="text-gray-500 shrink-0 min-w-[80px]">{key}:</span>
-                      <span className="text-gray-900 font-medium break-words">{String(val)}</span>
+                      <span className="text-gray-500 shrink-0 min-w-80px">{key}:</span>
+                      <span className="text-gray-900 font-medium wrap-break-word">{String(val)}</span>
                     </div>
                   ))}
                 </div>

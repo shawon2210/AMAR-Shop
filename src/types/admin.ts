@@ -26,7 +26,7 @@ export interface DashboardStats {
 // ─── Products (Seller Admin) ──────────────────────────────────────────
 
 export interface SellerProduct {
-  id: string;
+  id: number;
   name: string;
   images: string[];
   price: number;

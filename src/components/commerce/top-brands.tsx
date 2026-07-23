@@ -90,7 +90,7 @@ function BrandCarousel() {
         <Link
           key={`${b.slug}-${i}`}
           href={`/brand/${b.slug}`}
-          className="group flex flex-col items-center gap-2 p-3 rounded-xl border border-gray-100 min-w-[80px] max-w-[80px] hover:border-gray-200 transition-all duration-180ms bg-white hover:shadow-[0_4px_16px_-4px_rgba(0,0,0,0.1)] hover:-translate-y-0.5 shrink-0"
+          className="group flex flex-col items-center gap-2 p-3 rounded-xl border border-gray-100 min-w-80 min-h-80px max-w-80px hover:border-gray-200 transition-all duration-180ms bg-white hover:shadow-[0_4px_16px_-4px_rgba(0,0,0,0.1)] hover:-translate-y-0.5 shrink-0"
         >
           <div className={`w-12 h-12 rounded-xl ${b.bg} flex items-center justify-center transition-transform duration-180 group-hover:scale-105`}>
             <div className="flex items-center justify-center w-6 h-6">

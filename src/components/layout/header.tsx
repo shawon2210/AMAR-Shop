@@ -23,7 +23,6 @@ export function Header() {
   const pathname = usePathname();
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
-  const [searchFocused, setSearchFocused] = useState(false);
   const setIsSearchOpen = useSearchStore(s => s.setIsOpen);
   const hydrated = useAuthHydrated();
   const headerRef = useRef<HTMLElement>(null);
@@ -106,9 +105,9 @@ export function Header() {
           <div className="hidden md:flex justify-center">
             <button
               onClick={() => setIsSearchOpen(true)}
-              className="relative w-full max-w-[580px] lg:max-w-[700px] group"
+              className="relative w-full max-w-580px lg:max-w-700px group"
             >
-              <div className={`relative w-full transition-all duration-200 ${searchFocused ? 'max-w-[640px] lg:max-w-[760px]' : ''}`}>
+              <div className="relative w-full transition-all duration-200">
                 <span className="absolute left-4 top-1/2 -translate-y-1/2 material-symbols-outlined text-gray-400 text-[20px] pointer-events-none transition-colors duration-150">
                   search
                 </span>

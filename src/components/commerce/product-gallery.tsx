@@ -2,7 +2,7 @@
 
 import { useState, useRef, useCallback, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { X, ChevronLeft, ChevronRight, ZoomIn, ZoomOut } from 'lucide-react';
+import { X, ChevronLeft, ChevronRight, ZoomIn } from 'lucide-react';
 
 interface ProductGalleryProps {
   images: string[];
@@ -190,7 +190,7 @@ export function ProductGallery({ images, productName, isFlashSale, discount }: P
               <button
                 key={idx}
                 onClick={() => { setSelectedIndex(idx); setIsZoomed(false); }}
-                className={`relative w-16 h-16 md:w-20 md:h-20 flex-shrink-0 rounded-lg overflow-hidden border-2 transition-all duration-200 ${
+                className={`relative w-16 h-16 md:w-20 md:h-20flex-shrink-0  rounded-lg overflow-hidden border-2 transition-all duration-200 ${
                   idx === selectedIndex
                     ? 'border-primary ring-2 ring-primary/20 shadow-md'
                     : 'border-gray-200 hover:border-gray-300'
