@@ -123,15 +123,31 @@ export class AIService {
   }
 
   private stripPII(obj: Record<string, unknown>): Record<string, unknown> {
-    const sensitiveFields = ['email', 'phone', 'password', 'ssn', 'nid', 'creditCard', 'bankAccount', 'taxId', 'ip'];
+    const sensitiveFields = [
+      'email',
+      'phone',
+      'password',
+      'ssn',
+      'nid',
+      'creditCard',
+      'bankAccount',
+      'taxId',
+      'ip',
+    ];
     const result: Record<string, unknown> = {};
     for (const [key, val] of Object.entries(obj)) {
-      if (sensitiveFields.some((f) => key.toLowerCase().includes(f.toLowerCase()))) {
+      if (
+        sensitiveFields.some((f) => key.toLowerCase().includes(f.toLowerCase()))
+      ) {
         result[key] = '[REDACTED]';
       } else if (val && typeof val === 'object' && !Array.isArray(val)) {
         result[key] = this.stripPII(val as Record<string, unknown>);
       } else if (Array.isArray(val)) {
-        result[key] = val.map((v) => (typeof v === 'object' && v ? this.stripPII(v as Record<string, unknown>) : v));
+        result[key] = val.map((v) =>
+          typeof v === 'object' && v
+            ? this.stripPII(v as Record<string, unknown>)
+            : v,
+        );
       } else {
         result[key] = val;
       }

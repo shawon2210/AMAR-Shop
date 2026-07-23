@@ -1,6 +1,7 @@
 'use client';
 
 import { useState } from 'react';
+import { api } from '@/services/api';
 
 type Tone = 'professional' | 'casual' | 'luxury' | 'budget';
 
@@ -19,19 +20,16 @@ export default function AIDescriptionGeneratorPage() {
     setDescription('');
 
     try {
-      const res = await fetch('/api/v1/ai/describe-product', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
+      const data = await api.post<{ description: string }>(
+        '/api/v1/ai/describe-product',
+        {
           name: name.trim(),
           category: category.trim(),
           features: featuresText.split('\n').filter(f => f.trim()),
           tone,
           targetAudience: audience.trim() || undefined,
-        }),
-      });
-
-      const data = await res.json();
+        },
+      );
       setDescription(data.description || 'Failed to generate description.');
     } catch {
       setDescription('An error occurred while generating the description. Please try again.');

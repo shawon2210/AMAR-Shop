@@ -140,7 +140,7 @@ export default function AccountPage() {
         </Link>
       </div>
 
-      <div className="grid grid-cols-4 gap-2">
+      <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-4 gap-2">
         {[
           { icon: 'payments', label: 'To Pay', value: '0' },
           { icon: 'local_shipping', label: 'To Ship', value: '0' },

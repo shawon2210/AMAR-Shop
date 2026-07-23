@@ -13,7 +13,7 @@ export default function CategoryPage() {
   const { data: categoryProducts = [], isLoading: loading } = useGetProducts(0, 50, slug);
 
   return (
-    <div className="px-container-margin pt-md space-y-md pb-24">
+    <div className="app-container py-6 space-y-6 pb-24">
       {/* Breadcrumb */}
       <nav className="flex items-center gap-1 text-xs text-secondary">
         <Link href="/" className="hover:text-primary">Home</Link>
@@ -22,12 +22,12 @@ export default function CategoryPage() {
       </nav>
 
       <div className="flex items-center justify-between">
-        <h1 className="font-headline-md text-headline-md capitalize">{slug.replace(/-/g, ' ')}</h1>
+        <h1 className="text-responsive-subheading font-bold capitalize">{slug.replace(/-/g, ' ')}</h1>
         <span className="text-xs text-secondary">{loading ? '...' : `${categoryProducts.length} products`}</span>
       </div>
 
       {/* Filter bar — mobile */}
-      <div className="lg:hidden -mx-container-margin px-container-margin overflow-x-auto whitespace-nowrap hide-scrollbar pb-2">
+      <div className="lg:hidden -mx-[clamp(12px,2.5vw,40px)] px-[clamp(12px,2.5vw,40px)] overflow-x-auto whitespace-nowrap hide-scrollbar pb-2">
         <div className="flex items-center gap-2">
           <CategoryFilterSidebar />
         </div>

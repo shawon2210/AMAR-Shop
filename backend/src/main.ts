@@ -14,12 +14,21 @@ async function bootstrap() {
   const t0 = Date.now();
   require('fs').appendFileSync('/tmp/amarshop-trace.log', `[1] start ${t0}\n`);
   setupObservability();
-  require('fs').appendFileSync('/tmp/amarshop-trace.log', `[2] observability ready ${Date.now()-t0}ms\n`);
+  require('fs').appendFileSync(
+    '/tmp/amarshop-trace.log',
+    `[2] observability ready ${Date.now() - t0}ms\n`,
+  );
 
   const t1 = Date.now();
-  require('fs').appendFileSync('/tmp/amarshop-trace.log', `[3] creating app...\n`);
+  require('fs').appendFileSync(
+    '/tmp/amarshop-trace.log',
+    `[3] creating app...\n`,
+  );
   const app = await NestFactory.create(AppModule);
-  require('fs').appendFileSync('/tmp/amarshop-trace.log', `[4] app created ${Date.now()-t1}ms\n`);
+  require('fs').appendFileSync(
+    '/tmp/amarshop-trace.log',
+    `[4] app created ${Date.now() - t1}ms\n`,
+  );
 
   // Validate critical environment variables at startup
   const requiredEnvVars = ['DATABASE_URL', 'JWT_SECRET', 'JWT_REFRESH_SECRET'];
@@ -112,7 +121,10 @@ async function bootstrap() {
   // Metrics endpoint for Prometheus — protected in production
   const httpAdapter = app.getHttpAdapter();
   httpAdapter.get('/metrics', async (req: any, res: any) => {
-    if (process.env.NODE_ENV === 'production' && req.headers['x-monitoring-key'] !== process.env.MONITORING_KEY) {
+    if (
+      process.env.NODE_ENV === 'production' &&
+      req.headers['x-monitoring-key'] !== process.env.MONITORING_KEY
+    ) {
       res.statusCode = 403;
       res.end('Forbidden');
       return;

@@ -1,19 +1,7 @@
 'use client';
 
 import { useState } from 'react';
-
-const transactionData = [
-  { id: '1', date: '2026-06-28', description: 'bKash Deposit', amount: 5000, type: 'DEPOSIT', balance: 15000 },
-  { id: '2', date: '2026-06-27', description: 'Order #ORD-20260627-001', amount: -2499, type: 'PURCHASE', balance: 10000 },
-  { id: '3', date: '2026-06-25', description: 'Cashback - Flash Sale', amount: 150, type: 'CASHBACK', balance: 12499 },
-  { id: '4', date: '2026-06-24', description: 'Refund - Order cancelled', amount: 1299, type: 'REFUND', balance: 12349 },
-  { id: '5', date: '2026-06-22', description: 'Withdrawal to bKash', amount: -3000, type: 'WITHDRAWAL', balance: 11050 },
-  { id: '6', date: '2026-06-20', description: 'SSLCommerz Deposit', amount: 8000, type: 'DEPOSIT', balance: 14050 },
-  { id: '7', date: '2026-06-18', description: 'Order #ORD-20260618-003', amount: -1599, type: 'PURCHASE', balance: 6050 },
-  { id: '8', date: '2026-06-15', description: 'Nagad Deposit', amount: 3000, type: 'DEPOSIT', balance: 7649 },
-];
-
-const tabs = ['All', 'Deposit', 'Withdrawal', 'Purchase', 'Refund', 'Cashback'] as const;
+import { useGetWallet, useGetTransactions } from '@/services/wallet';
 
 const typeColors: Record<string, string> = {
   DEPOSIT: 'text-green-600',
@@ -31,19 +19,22 @@ const typeIcons: Record<string, string> = {
   CASHBACK: 'redeem',
 };
 
+const tabs = ['All', 'Deposit', 'Withdrawal', 'Purchase', 'Refund', 'Cashback'] as const;
+
 export default function WalletPage() {
   const [showBalance, setShowBalance] = useState(true);
   const [activeTab, setActiveTab] = useState('All');
+  const { data: wallet } = useGetWallet();
+  const { data: txnsData } = useGetTransactions(activeTab);
 
-  const balance = 12349;
-  const totalEarned = 17500;
-  const totalSpent = 5151;
-  const monthEarned = 3200;
-  const monthSpent = 4098;
+  const balance = wallet?.balance ?? 0;
+  const totalEarned = wallet?.totalEarned ?? 0;
+  const totalSpent = wallet?.totalSpent ?? 0;
+  const monthEarned = wallet?.monthEarned ?? 0;
+  const monthSpent = wallet?.monthSpent ?? 0;
+  const transactions = txnsData?.transactions ?? [];
 
-  const filteredTxns = activeTab === 'All'
-    ? transactionData
-    : transactionData.filter(t => t.type === activeTab.toUpperCase());
+  const filteredTxns = transactions;
 
   return (
     <div className="app-container py-6 space-y-6 pb-24">

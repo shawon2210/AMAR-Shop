@@ -78,7 +78,7 @@ export default function ProductDetailPage() {
         <span className="material-symbols-outlined text-sm">chevron_right</span>
         <Link href={`/category/${product.categoryId}`} className="hover:text-primary">{product.category}</Link>
         <span className="material-symbols-outlined text-sm">chevron_right</span>
-        <span className="text-on-surface truncate max-w-200px">{product.name}</span>
+        <span className="text-on-surface truncate max-w-[200px]">{product.name}</span>
       </nav>
 
       {/* Product Gallery + Info */}
@@ -167,11 +167,11 @@ export default function ProductDetailPage() {
             {product.specifications && Object.keys(product.specifications).length > 0 && (
               <div className="border-t border-gray-100 pt-3">
                 <h4 className="font-semibold text-sm text-gray-700 mb-2">Specifications</h4>
-                <div className="grid grid-cols-2 gap-1.5">
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-1.5">
                   {Object.entries(product.specifications).map(([key, val]) => (
-                    <div key={key} className="flex gap-1 text-sm">
-                      <span className="text-gray-500 min-w-80px">{key}:</span>
-                      <span className="text-gray-900 font-medium">{val}</span>
+                    <div key={key} className="flex gap-1 text-sm min-w-0">
+                      <span className="text-gray-500 shrink-0 min-w-[80px]">{key}:</span>
+                      <span className="text-gray-900 font-medium break-words">{String(val)}</span>
                     </div>
                   ))}
                 </div>

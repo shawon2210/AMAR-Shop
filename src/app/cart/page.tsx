@@ -6,9 +6,9 @@ import { useState, useEffect, useRef } from 'react';
 import { useCartStore } from '@/stores/cart-store';
 import { CartItemCard } from '@/components/commerce/cart-item';
 import { ProductGrid } from '@/components/commerce/product-grid';
-import { products } from '@/lib/data/products';
 import { fadeUp, sectionReveal } from '@/lib/motion-variants';
 import { Truck, Undo2, Gift, Percent, ShoppingBag, ArrowRight } from 'lucide-react';
+import { useGetProducts } from '@/services/products';
 
 const couponSuggestions = [
   { code: 'WELCOME10', discount: 100, label: 'New User Discount' },
@@ -37,6 +37,8 @@ export default function CartPage() {
   const selectedTotal = getSelectedTotal();
   const selectedCount = getSelectedCount();
   const shipping = getShippingProgress();
+
+  const { data: recommended = [] } = useGetProducts(0, 6);
 
   const groupedItems = items.reduce<Record<string, typeof items>>((acc, item) => {
     if (!acc[item.sellerId]) acc[item.sellerId] = [];

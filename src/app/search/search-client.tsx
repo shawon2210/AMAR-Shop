@@ -1,25 +1,17 @@
 'use client';
 
 import { useSearchParams } from 'next/navigation';
-import { useMemo } from 'react';
 import Link from 'next/link';
-import { products } from '@/lib/data/products';
+import { useSearchProducts } from '@/services/products';
+import { Star } from 'lucide-react';
 
 export default function SearchPageClient() {
   const searchParams = useSearchParams();
   const query = searchParams.get('q') || '';
 
-  const results = useMemo(() => {
-    if (!query.trim()) return [];
-    const q = query.toLowerCase();
-    return products.filter(
-      (p) =>
-        p.name.toLowerCase().includes(q) ||
-        p.brand?.toLowerCase().includes(q) ||
-        p.category.toLowerCase().includes(q) ||
-        p.description.toLowerCase().includes(q)
-    );
-  }, [query]);
+  const { data, isLoading } = useSearchProducts(query);
+  const results = data?.products || [];
+  const total = data?.total || 0;
 
   return (
     <div className="app-container pt-4 md:pt-6 pb-16 md:pb-20">
@@ -27,10 +19,22 @@ export default function SearchPageClient() {
         {query.trim() ? `Results for "${query}"` : 'Search Products'}
       </h1>
       <p className="text-sm text-gray-500 mt-1">
-        {results.length} {results.length === 1 ? 'product' : 'products'} found
+        {isLoading ? 'Searching...' : `${total} ${total === 1 ? 'product' : 'products'} found`}
       </p>
 
-      {results.length === 0 && query.trim() ? (
+      {isLoading ? (
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mt-6">
+          {Array.from({ length: 8 }).map((_, i) => (
+            <div key={i} className="space-y-3 animate-pulse">
+              <div className="aspect-square bg-gray-200 rounded-xl" />
+              <div className="h-4 bg-gray-200 rounded w-3/4" />
+              <div className="h-4 bg-gray-200 rounded w-1/2" />
+            </div>
+          ))}
+        </div>
+      ) : null}
+
+      {!isLoading && results.length === 0 && query.trim() ? (
         <div className="flex flex-col items-center justify-center py-20 text-center">
           <span className="material-symbols-outlined text-5xl text-gray-300 mb-4">search_off</span>
           <h2 className="text-lg font-semibold text-gray-700">No results found</h2>
@@ -40,7 +44,7 @@ export default function SearchPageClient() {
         </div>
       ) : null}
 
-      {!query.trim() ? (
+      {!isLoading && !query.trim() ? (
         <div className="flex flex-col items-center justify-center py-20 text-center">
           <span className="material-symbols-outlined text-5xl text-gray-300 mb-4">search</span>
           <h2 className="text-lg font-semibold text-gray-700">Search our store</h2>
@@ -89,7 +93,7 @@ export default function SearchPageClient() {
                   ) : null}
                 </div>
                 <div className="flex items-center gap-1 text-[11px] text-gray-400">
-                  <span className="material-symbols-outlined text-[14px]">star</span>
+                  <Star className="w-3 h-3 fill-yellow-400 text-yellow-400" />
                   <span>{product.rating}</span>
                   <span>({product.reviewCount})</span>
                 </div>

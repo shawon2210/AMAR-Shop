@@ -1,6 +1,7 @@
 'use client';
 
 import { useState } from 'react';
+import { api } from '@/services/api';
 
 export default function AICampaignGeneratorPage() {
   const [campaignName, setCampaignName] = useState('');
@@ -18,18 +19,15 @@ export default function AICampaignGeneratorPage() {
     setCopy('');
 
     try {
-      const res = await fetch('/api/v1/ai/describe-product', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
+      const data = await api.post<{ description: string }>(
+        '/api/v1/ai/describe-product',
+        {
           name: campaignName.trim(),
           category: category.trim() || 'General',
           features: [],
           tone: 'casual',
-        }),
-      });
-
-      const data = await res.json();
+        },
+      );
       const discountText = discount ? `Up to ${discount}% OFF! ` : '';
       const generatedCopy = `🔥 ${campaignName.toUpperCase()} IS LIVE! ${discountText}` +
         `${audience ? `Hey ${audience}, ` : ''}Don't miss our amazing deals on ${category || 'top products'}. ` +

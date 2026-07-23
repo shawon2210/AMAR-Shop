@@ -204,7 +204,7 @@ export function SearchOverlay() {
   const showResults = query.trim().length > 0;
 
   return (
-    <div className="fixed inset-0 z-[60] bg-black/40 backdrop-blur-sm" role="dialog" aria-modal="true" aria-label="Search products">
+    <div className="fixed inset-0 z-60 bg-black/40 backdrop-blur-sm" role="dialog" aria-modal="true" aria-label="Search products">
       <div
         ref={overlayRef}
         className="absolute top-0 left-0 right-0 bg-white shadow-2xl border-b border-gray-200"

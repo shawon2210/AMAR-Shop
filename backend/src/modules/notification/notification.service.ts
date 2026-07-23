@@ -1,4 +1,8 @@
-import { Injectable, NotFoundException, UnauthorizedException } from '@nestjs/common';
+import {
+  Injectable,
+  NotFoundException,
+  UnauthorizedException,
+} from '@nestjs/common';
 import { Prisma } from '@prisma/client';
 import { PrismaService } from '../../common/prisma.service';
 
@@ -57,9 +61,15 @@ export class NotificationService {
   }
 
   async markAsRead(notificationId: string, userId: string) {
-    const notification = await this.prisma.notification.findUnique({ where: { id: notificationId }, select: { userId: true } });
+    const notification = await this.prisma.notification.findUnique({
+      where: { id: notificationId },
+      select: { userId: true },
+    });
     if (!notification) throw new NotFoundException('Notification not found');
-    if (notification.userId !== userId) throw new UnauthorizedException('Notification does not belong to this user');
+    if (notification.userId !== userId)
+      throw new UnauthorizedException(
+        'Notification does not belong to this user',
+      );
 
     return this.prisma.notification.update({
       where: { id: notificationId },

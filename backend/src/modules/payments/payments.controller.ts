@@ -58,10 +58,7 @@ export class PaymentsController {
 
   @UseGuards(AuthGuard('jwt'))
   @Post('cod')
-  async processCod(
-    @Request() req: any,
-    @Body() body: { orderId: string },
-  ) {
+  async processCod(@Request() req: any, @Body() body: { orderId: string }) {
     return this.paymentsService.processCodOrder(body.orderId, req.user.id);
   }
 
@@ -72,6 +69,10 @@ export class PaymentsController {
     @Param('provider') provider: string,
     @Param('transactionId') transactionId: string,
   ) {
-    return this.paymentsService.verifyPayment(provider, transactionId, req.user.id);
+    return this.paymentsService.verifyPayment(
+      provider,
+      transactionId,
+      req.user.id,
+    );
   }
 }

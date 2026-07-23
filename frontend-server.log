@@ -1,0 +1,10 @@
+
+> amarshop@1.0.0 dev
+> next dev
+
+▲ Next.js 16.2.10 (Turbopack)
+- Local:         http://localhost:3001
+- Network:       http://192.168.31.39:3001
+- Environments: .env
+✓ Ready in 509ms
+ GET / 200 in 515ms (next.js: 176ms, application-code: 340ms)

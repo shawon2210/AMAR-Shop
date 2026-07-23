@@ -1,25 +1,34 @@
 'use client';
 
 import { useState } from 'react';
-
-const commissionHistory = [
-  { id: 'COM-001', order: 'ORD-7821', amount: '৳1,29,999', commission: '৳12,999', rate: '10%', status: 'Paid', date: '2026-06-28' },
-  { id: 'COM-002', order: 'ORD-7820', amount: '৳72,500', commission: '৳7,250', rate: '10%', status: 'Paid', date: '2026-06-27' },
-  { id: 'COM-003', order: 'ORD-7819', amount: '৳25,600', commission: '৳2,560', rate: '10%', status: 'Pending', date: '2026-06-27' },
-  { id: 'COM-004', order: 'ORD-7818', amount: '৳35,200', commission: '৳3,520', rate: '10%', status: 'Pending', date: '2026-06-26' },
-];
-
-const payoutHistory = [
-  { id: 'PO-001', amount: '৳85,000', method: 'bKash', account: '017******45', status: 'Completed', date: '2026-06-15' },
-  { id: 'PO-002', amount: '৳1,20,000', method: 'Bank Transfer', account: '****4521', status: 'Completed', date: '2026-06-01' },
-  { id: 'PO-003', amount: '৳65,000', method: 'Nagad', account: '018******78', status: 'Processing', date: '2026-05-15' },
-];
+import { useSellerFinance, formattedPrice } from '@/services/seller';
 
 export default function SellerFinance() {
   const [showBalance, setShowBalance] = useState(true);
   const [showPayoutModal, setShowPayoutModal] = useState(false);
   const [payoutAmount, setPayoutAmount] = useState('');
   const [payoutMethod, setPayoutMethod] = useState('bkash');
+
+  const { data, isLoading, error } = useSellerFinance();
+
+  if (isLoading) {
+    return (
+      <div className="flex items-center justify-center min-h-[400px]">
+        <div className="animate-pulse text-on-surface-variant">Loading finance...</div>
+      </div>
+    );
+  }
+
+  if (error || !data) {
+    return (
+      <div className="flex flex-col items-center justify-center min-h-[400px] text-center">
+        <span className="material-symbols-outlined text-4xl text-error mb-2">error</span>
+        <p className="text-on-surface-variant">Failed to load finance data</p>
+      </div>
+    );
+  }
+
+  const { wallet, pendingPayouts, pendingPayoutsCount, commissions, payoutHistory } = data;
 
   return (
     <div className="space-y-6">
@@ -34,18 +43,17 @@ export default function SellerFinance() {
               <span className="material-symbols-outlined text-lg">{showBalance ? 'visibility' : 'visibility_off'}</span>
             </button>
           </div>
-          <p className="text-2xl font-bold text-on-surface">{showBalance ? '৳2,45,800' : '••••••'}</p>
-          <p className="text-xs text-green-600 font-medium mt-1">+৳18,200 this week</p>
+          <p className="text-2xl font-bold text-on-surface">{showBalance ? formattedPrice(wallet.balance) : '••••••'}</p>
+          <p className="text-xs text-green-600 font-medium mt-1">Total earned: {formattedPrice(wallet.totalEarned)}</p>
         </div>
         <div className="bg-white rounded-xl p-5 border border-surface-container-high shadow-sm">
           <span className="text-sm text-on-surface-variant block mb-2">Pending Payout</span>
-          <p className="text-2xl font-bold text-amber-600">৳45,200</p>
-          <p className="text-xs text-on-surface-variant mt-1">3 orders pending settlement</p>
+          <p className="text-2xl font-bold text-amber-600">{formattedPrice(pendingPayouts)}</p>
+          <p className="text-xs text-on-surface-variant mt-1">{pendingPayoutsCount} orders pending settlement</p>
         </div>
         <div className="bg-white rounded-xl p-5 border border-surface-container-high shadow-sm">
-          <span className="text-sm text-on-surface-variant block mb-2">Revenue This Month</span>
-          <p className="text-2xl font-bold text-on-surface">৳3,28,500</p>
-          <p className="text-xs text-green-600 font-medium mt-1">+15% vs last month</p>
+          <span className="text-sm text-on-surface-variant block mb-2">Total Spent</span>
+          <p className="text-2xl font-bold text-on-surface">{formattedPrice(wallet.totalSpent)}</p>
         </div>
       </div>
 
@@ -64,35 +72,39 @@ export default function SellerFinance() {
         {/* Commission Table */}
         <div className="bg-white rounded-xl border border-surface-container-high shadow-sm">
           <div className="p-4 border-b border-surface-container-high">
-            <h3 className="font-semibold text-on-surface">Commission Summary</h3>
+            <h3 className="font-semibold text-on-surface">Commission History</h3>
           </div>
           <div className="overflow-x-auto">
             <table className="w-full text-sm">
               <thead>
                 <tr className="text-left text-on-surface-variant text-xs border-b border-surface-container-high bg-surface-container-low">
-                  <th className="p-3 font-medium">Order</th>
+                  <th className="p-3 font-medium">ID</th>
                   <th className="p-3 font-medium">Amount</th>
-                  <th className="p-3 font-medium">Commission</th>
-                  <th className="p-3 font-medium">Rate</th>
+                  <th className="p-3 font-medium">Type</th>
                   <th className="p-3 font-medium">Status</th>
+                  <th className="p-3 font-medium">Date</th>
                 </tr>
               </thead>
               <tbody>
-                {commissionHistory.map((c) => (
-                  <tr key={c.id} className="border-b border-surface-container-high last:border-b-0 hover:bg-surface-container-low">
-                    <td className="p-3 font-medium text-on-surface">{c.order}</td>
-                    <td className="p-3 text-on-surface">{c.amount}</td>
-                    <td className="p-3 text-on-surface font-medium">{c.commission}</td>
-                    <td className="p-3 text-on-surface-variant">{c.rate}</td>
-                    <td className="p-3">
-                      <span className={`text-[11px] font-semibold px-2 py-0.5 rounded-full ${
-                        c.status === 'Paid' ? 'bg-green-100 text-green-700' : 'bg-amber-100 text-amber-700'
-                      }`}>
-                        {c.status}
-                      </span>
-                    </td>
-                  </tr>
-                ))}
+                {commissions.length === 0 ? (
+                  <tr><td colSpan={5} className="p-6 text-center text-on-surface-variant text-sm">No commission records</td></tr>
+                ) : (
+                  commissions.slice(0, 10).map((c) => (
+                    <tr key={c.id} className="border-b border-surface-container-high last:border-b-0 hover:bg-surface-container-low">
+                      <td className="p-3 font-medium text-on-surface">#{c.id}</td>
+                      <td className="p-3 text-on-surface font-medium">{formattedPrice(c.amount)}</td>
+                      <td className="p-3 text-on-surface-variant">{c.type}</td>
+                      <td className="p-3">
+                        <span className={`text-[11px] font-semibold px-2 py-0.5 rounded-full ${
+                          c.status === 'Paid' ? 'bg-green-100 text-green-700' : 'bg-amber-100 text-amber-700'
+                        }`}>
+                          {c.status}
+                        </span>
+                      </td>
+                      <td className="p-3 text-on-surface-variant">{new Date(c.createdAt).toLocaleDateString()}</td>
+                    </tr>
+                  ))
+                )}
               </tbody>
             </table>
           </div>
@@ -108,28 +120,28 @@ export default function SellerFinance() {
               <thead>
                 <tr className="text-left text-on-surface-variant text-xs border-b border-surface-container-high bg-surface-container-low">
                   <th className="p-3 font-medium">Amount</th>
-                  <th className="p-3 font-medium">Method</th>
-                  <th className="p-3 font-medium">Account</th>
                   <th className="p-3 font-medium">Status</th>
                   <th className="p-3 font-medium">Date</th>
                 </tr>
               </thead>
               <tbody>
-                {payoutHistory.map((p) => (
-                  <tr key={p.id} className="border-b border-surface-container-high last:border-b-0 hover:bg-surface-container-low">
-                    <td className="p-3 font-medium text-on-surface">{p.amount}</td>
-                    <td className="p-3 text-on-surface">{p.method}</td>
-                    <td className="p-3 text-on-surface-variant font-mono text-xs">{p.account}</td>
-                    <td className="p-3">
-                      <span className={`text-[11px] font-semibold px-2 py-0.5 rounded-full ${
-                        p.status === 'Completed' ? 'bg-green-100 text-green-700' : 'bg-blue-100 text-blue-700'
-                      }`}>
-                        {p.status}
-                      </span>
-                    </td>
-                    <td className="p-3 text-on-surface-variant">{p.date}</td>
-                  </tr>
-                ))}
+                {payoutHistory.length === 0 ? (
+                  <tr><td colSpan={3} className="p-6 text-center text-on-surface-variant text-sm">No payout history</td></tr>
+                ) : (
+                  payoutHistory.map((p) => (
+                    <tr key={p.id} className="border-b border-surface-container-high last:border-b-0 hover:bg-surface-container-low">
+                      <td className="p-3 font-medium text-on-surface">{formattedPrice(p.amount)}</td>
+                      <td className="p-3">
+                        <span className={`text-[11px] font-semibold px-2 py-0.5 rounded-full ${
+                          p.status === 'Completed' ? 'bg-green-100 text-green-700' : 'bg-blue-100 text-blue-700'
+                        }`}>
+                          {p.status}
+                        </span>
+                      </td>
+                      <td className="p-3 text-on-surface-variant">{new Date(p.createdAt).toLocaleDateString()}</td>
+                    </tr>
+                  ))
+                )}
               </tbody>
             </table>
           </div>
@@ -146,7 +158,7 @@ export default function SellerFinance() {
                 <span className="material-symbols-outlined">close</span>
               </button>
             </div>
-            <p className="text-sm text-on-surface-variant mb-4">Available Balance: <span className="font-bold text-on-surface">৳2,45,800</span></p>
+            <p className="text-sm text-on-surface-variant mb-4">Available Balance: <span className="font-bold text-on-surface">{formattedPrice(wallet.balance)}</span></p>
             <div className="mb-4">
               <label className="text-sm font-medium text-on-surface block mb-1">Amount (৳)</label>
               <input

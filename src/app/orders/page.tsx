@@ -93,11 +93,11 @@ export default function OrdersPage() {
 
   return (
     <AuthGuard>
-    <div className="px-container-margin pt-md pb-24">
-      <h1 className="font-headline-md text-headline-md mb-md">My Orders</h1>
+    <div className="app-container py-6 pb-24">
+      <h1 className="text-responsive-subheading font-bold mb-6">My Orders</h1>
 
       {/* Tabs */}
-      <div className="flex overflow-x-auto hide-scrollbar gap-1 border-b border-outline-variant -mx-container-margin px-container-margin">
+      <div className="flex overflow-x-auto hide-scrollbar gap-1 border-b border-outline-variant -mx-[clamp(12px,2.5vw,40px)] px-[clamp(12px,2.5vw,40px)]">
         {tabs.map(tab => (
           <button
             key={tab}

@@ -80,7 +80,7 @@ export function Header() {
       </div>
 
       {/* ── Main header ── */}
-      <div className="app-container h-14 md:h-16 lg:h-[68px]">
+      <div className="app-container h-14 md:h-16 lg:h-68px">
         <div className="grid grid-cols-[auto_1fr_auto] items-center gap-2 md:gap-4 lg:gap-6 h-full">
 
           {/* Logo + mobile menu */}
@@ -160,7 +160,7 @@ export function Header() {
             >
               <span className="material-symbols-outlined text-[22px]">shopping_cart</span>
               {showAuth && itemCount > 0 && (
-                <span className="absolute -top-0.5 -right-0.5 bg-red-500 text-white text-[10px] font-bold rounded-full min-w-[17px] h-[17px] flex items-center justify-center px-1 ring-2 ring-white">
+                <span className="absolute -top-0.5 -right-0.5 bg-red-500 text-white text-[10px] font-bold rounded-full min-w-17px h-17px flex items-center justify-center px-1 ring-2 ring-white">
                   {itemCount > 99 ? '99+' : itemCount}
                 </span>
               )}

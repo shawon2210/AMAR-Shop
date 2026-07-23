@@ -1,7 +1,12 @@
 import crypto from 'node:crypto';
 import axios from 'axios';
 import type { AxiosInstance } from 'axios';
-import { Injectable, BadRequestException, UnauthorizedException, Logger } from '@nestjs/common';
+import {
+  Injectable,
+  BadRequestException,
+  UnauthorizedException,
+  Logger,
+} from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { PrismaService } from '../../common/prisma.service';
 import { PaymentStatus } from '../../common/types';
@@ -15,11 +20,20 @@ export class PaymentsService {
     private configService: ConfigService,
   ) {}
 
-  async initiateBkashPayment(orderId: string, amount: number, customer: any, userId?: string) {
+  async initiateBkashPayment(
+    orderId: string,
+    amount: number,
+    customer: any,
+    userId?: string,
+  ) {
     try {
-      const order = await this.prisma.order.findUnique({ where: { id: orderId }, select: { userId: true } });
+      const order = await this.prisma.order.findUnique({
+        where: { id: orderId },
+        select: { userId: true },
+      });
       if (!order) throw new BadRequestException('Order not found');
-      if (userId && order.userId !== userId) throw new UnauthorizedException('Order does not belong to this user');
+      if (userId && order.userId !== userId)
+        throw new UnauthorizedException('Order does not belong to this user');
 
       const callbackUrl = this.configService.get('BKASH_CALLBACK_URL');
       const username = this.configService.get('BKASH_USERNAME');
@@ -137,11 +151,20 @@ export class PaymentsService {
     }
   }
 
-  async initiateNagadPayment(orderId: string, amount: number, customer: any, userId?: string) {
+  async initiateNagadPayment(
+    orderId: string,
+    amount: number,
+    customer: any,
+    userId?: string,
+  ) {
     try {
-      const order = await this.prisma.order.findUnique({ where: { id: orderId }, select: { userId: true } });
+      const order = await this.prisma.order.findUnique({
+        where: { id: orderId },
+        select: { userId: true },
+      });
       if (!order) throw new BadRequestException('Order not found');
-      if (userId && order.userId !== userId) throw new UnauthorizedException('Order does not belong to this user');
+      if (userId && order.userId !== userId)
+        throw new UnauthorizedException('Order does not belong to this user');
 
       const callbackUrl = this.configService.get('NAGAD_CALLBACK_URL');
       const merchantId = this.configService.get('NAGAD_MERCHANT_ID');
@@ -240,9 +263,13 @@ export class PaymentsService {
     userId?: string,
   ) {
     try {
-      const order = await this.prisma.order.findUnique({ where: { id: orderId }, select: { userId: true } });
+      const order = await this.prisma.order.findUnique({
+        where: { id: orderId },
+        select: { userId: true },
+      });
       if (!order) throw new BadRequestException('Order not found');
-      if (userId && order.userId !== userId) throw new UnauthorizedException('Order does not belong to this user');
+      if (userId && order.userId !== userId)
+        throw new UnauthorizedException('Order does not belong to this user');
 
       const storeId = this.configService.get('SSLCOMMERZ_STORE_ID');
       const storePassword = this.configService.get('SSLCOMMERZ_STORE_PASSWORD');
@@ -352,7 +379,11 @@ export class PaymentsService {
     }
   }
 
-  async verifyPayment(provider: string, transactionId: string, userId?: string) {
+  async verifyPayment(
+    provider: string,
+    transactionId: string,
+    userId?: string,
+  ) {
     try {
       const payment = await this.prisma.paymentTransaction.findUnique({
         where: { id: transactionId },

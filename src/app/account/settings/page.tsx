@@ -4,6 +4,7 @@ import { useState } from 'react';
 import Link from 'next/link';
 import { useAuthStore } from '@/stores/auth-store';
 import { useUIStore } from '@/stores/ui-store';
+import { api } from '@/services/api';
 import { AuthGuard } from '@/components/auth/auth-guard';
 
 export default function SettingsPage() {
@@ -12,9 +13,22 @@ export default function SettingsPage() {
 
   const [name, setName] = useState(user?.name || '');
   const [email, setEmail] = useState(user?.email || '');
+  const [saving, setSaving] = useState(false);
 
-  const handleSave = () => {
-    addToast('Settings saved', 'success');
+  const handleSave = async () => {
+    if (!name.trim()) {
+      addToast('Name is required', 'error');
+      return;
+    }
+    setSaving(true);
+    try {
+      await api.put('/auth/profile', { name: name.trim(), email: email.trim() });
+      addToast('Settings saved', 'success');
+    } catch (err) {
+      addToast(err instanceof Error ? err.message : 'Failed to save settings', 'error');
+    } finally {
+      setSaving(false);
+    }
   };
 
   return (
@@ -54,9 +68,17 @@ export default function SettingsPage() {
           </div>
           <button
             onClick={handleSave}
-            className="w-full py-2.5 bg-primary text-on-primary font-semibold text-sm rounded-lg hover:brightness-110 transition-all"
+            disabled={saving}
+            className="w-full py-2.5 bg-primary text-on-primary font-semibold text-sm rounded-lg hover:brightness-110 transition-all disabled:opacity-70 flex items-center justify-center gap-2"
           >
-            Save Changes
+            {saving ? (
+              <>
+                <span className="material-symbols-outlined text-base animate-spin">progress_activity</span>
+                Saving...
+              </>
+            ) : (
+              'Save Changes'
+            )}
           </button>
         </div>
       </div>

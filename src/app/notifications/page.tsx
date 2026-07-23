@@ -1,22 +1,25 @@
 'use client';
 
 import Link from 'next/link';
-
-const notifications = [
-  { id: '1', icon: 'local_shipping', title: 'Order Shipped', message: 'Your order #12345 has been shipped and is on its way!', time: '2m ago', unread: true },
-  { id: '2', icon: 'sell', title: 'Flash Sale Alert', message: '50% off on Electronics starting in 2 hours. Don\'t miss out!', time: '1h ago', unread: true },
-  { id: '3', icon: 'confirmation_number', title: 'Voucher Received', message: 'You\'ve received a free shipping voucher. Use code FREESHIP.', time: '3h ago', unread: false },
-  { id: '4', icon: 'star', title: 'Review Reminder', message: 'How was your recent purchase? Share your experience!', time: '1d ago', unread: false },
-  { id: '5', icon: 'account_balance_wallet', title: 'Payment Successful', message: 'Payment of ৳1,250 for order #12340 was successful.', time: '2d ago', unread: false },
-  { id: '6', icon: 'campaign', title: 'Trending Now', message: 'Check out what\'s trending this week in Fashion.', time: '3d ago', unread: false },
-];
+import { useGetNotifications, useMarkAllRead } from '@/services/notifications';
 
 export default function NotificationsPage() {
+  const { data } = useGetNotifications();
+  const { mutate: markAllRead } = useMarkAllRead();
+  const notifications = data?.notifications ?? [];
+
   return (
-    <div className="px-container-margin pt-md space-y-md pb-24">
+    <div className="app-container py-6 space-y-6 pb-24">
       <div className="flex items-center justify-between">
-        <h1 className="font-headline-md text-headline-md">Notifications</h1>
-        <button className="text-primary font-label-bold text-label-bold">Mark All Read</button>
+        <h1 className="text-responsive-subheading font-bold">Notifications</h1>
+        {notifications.length > 0 && (
+          <button
+            onClick={() => markAllRead()}
+            className="text-primary font-label-bold text-label-bold"
+          >
+            Mark All Read
+          </button>
+        )}
       </div>
 
       <div className="space-y-xs">

@@ -2,21 +2,11 @@
 
 import { useState } from 'react';
 import Link from 'next/link';
+import { useSellerDashboard } from '@/services/seller';
 
-const stats = [
-  { label: 'Total Products', value: '156', icon: 'inventory_2', color: 'bg-primary', change: '+12 this month' },
-  { label: 'Total Orders', value: '1,284', icon: 'receipt_long', color: 'bg-tertiary', change: '+8.3% vs last month' },
-  { label: 'Total Revenue', value: '৳4,52,800', icon: 'payments', color: 'bg-green-600', change: '+15.2% vs last month' },
-  { label: 'Total Followers', value: '3,842', icon: 'favorite', color: 'bg-amber-600', change: '+124 this week' },
-];
-
-const recentOrders = [
-  { id: '#ORD-7821', customer: 'Rahim Miah', product: 'iPhone 15 Pro', total: '৳1,29,999', status: 'Delivered', date: '2026-06-28' },
-  { id: '#ORD-7820', customer: 'Fatima Begum', product: 'Samsung TV 55"', total: '৳72,500', status: 'Shipped', date: '2026-06-27' },
-  { id: '#ORD-7819', customer: 'Karim Hossain', product: 'Air Jordan Sneakers', total: '৳12,800', status: 'Processing', date: '2026-06-27' },
-  { id: '#ORD-7818', customer: 'Nasrin Akter', product: 'Wooden Dining Table', total: '৳35,200', status: 'Pending', date: '2026-06-26' },
-  { id: '#ORD-7817', customer: 'Jamil Ahmed', product: 'Wireless Earbuds', total: '৳3,999', status: 'Delivered', date: '2026-06-26' },
-];
+const weeklyRevenue = [12, 19, 15, 22, 18, 25, 20];
+const days = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
+const maxRev = Math.max(...weeklyRevenue);
 
 const statusStyles: Record<string, string> = {
   Delivered: 'bg-green-100 text-green-700',
@@ -26,19 +16,43 @@ const statusStyles: Record<string, string> = {
   Cancelled: 'bg-red-100 text-red-700',
 };
 
-const weeklyRevenue = [12, 19, 15, 22, 18, 25, 20];
-const days = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
-const maxRev = Math.max(...weeklyRevenue);
-
 export default function SellerDashboard() {
   const [showRevenue, setShowRevenue] = useState(true);
+  const { data, isLoading, error } = useSellerDashboard();
+
+  if (isLoading) {
+    return (
+      <div className="flex items-center justify-center min-h-[400px]">
+        <div className="animate-pulse text-on-surface-variant">Loading dashboard...</div>
+      </div>
+    );
+  }
+
+  if (error || !data) {
+    return (
+      <div className="flex flex-col items-center justify-center min-h-[400px] text-center">
+        <span className="material-symbols-outlined text-4xl text-error mb-2">error</span>
+        <p className="text-on-surface-variant">Failed to load dashboard data</p>
+        <button onClick={() => window.location.reload()} className="mt-3 text-sm text-primary font-medium hover:underline">Try Again</button>
+      </div>
+    );
+  }
+
+  const { totalProducts, totalOrders, totalRevenue, totalFollowers, sellerProfile, recentOrders } = data;
+
+  const stats = [
+    { label: 'Total Products', value: totalProducts.toLocaleString(), icon: 'inventory_2', color: 'bg-primary', change: `${totalProducts > 0 ? '+' : ''}${totalProducts} total` },
+    { label: 'Total Orders', value: totalOrders.toLocaleString(), icon: 'receipt_long', color: 'bg-tertiary', change: `${totalOrders} completed` },
+    { label: 'Total Revenue', value: `৳${totalRevenue.toLocaleString('en-IN')}`, icon: 'payments', color: 'bg-green-600', change: 'Lifetime earnings' },
+    { label: 'Total Followers', value: totalFollowers.toLocaleString(), icon: 'favorite', color: 'bg-amber-600', change: 'Store followers' },
+  ];
 
   return (
     <div className="space-y-6">
       <div className="flex items-center justify-between">
         <div>
           <h1 className="text-xl font-bold text-on-surface">Dashboard</h1>
-          <p className="text-sm text-on-surface-variant">Welcome back, ShopZone! Here&apos;s your overview.</p>
+          <p className="text-sm text-on-surface-variant">Welcome back! Here&apos;s your overview.</p>
         </div>
         <div className="flex gap-2">
           <button
@@ -104,13 +118,13 @@ export default function SellerDashboard() {
                 <circle cx="18" cy="18" r="15.5" fill="none" stroke="#e5e7eb" strokeWidth="3" />
                 <circle
                   cx="18" cy="18" r="15.5" fill="none" stroke="#a63600" strokeWidth="3"
-                  strokeDasharray={`${85 * 2.44} ${100 * 2.44}`}
+                  strokeDasharray={`${sellerProfile.performanceScore * 2.44} ${100 * 2.44}`}
                   strokeLinecap="round"
                 />
               </svg>
               <div className="absolute inset-0 flex items-center justify-center">
                 <div className="text-center">
-                  <p className="text-3xl font-bold text-on-surface">85</p>
+                  <p className="text-3xl font-bold text-on-surface">{sellerProfile.performanceScore}</p>
                   <p className="text-xs text-on-surface-variant">/100</p>
                 </div>
               </div>
@@ -118,19 +132,19 @@ export default function SellerDashboard() {
             <div className="mt-4 space-y-2 w-full">
               <div className="flex justify-between text-xs">
                 <span className="text-on-surface-variant">On-time Delivery</span>
-                <span className="text-green-600 font-medium">94%</span>
+                <span className="text-green-600 font-medium">{sellerProfile.onTimeDelivery}%</span>
+              </div>
+              <div className="flex justify-between text-xs">
+                <span className="text-on-surface-variant">Response Rate</span>
+                <span className="text-green-600 font-medium">{sellerProfile.responseRate}%</span>
               </div>
               <div className="flex justify-between text-xs">
                 <span className="text-on-surface-variant">Cancellation Rate</span>
-                <span className="text-amber-600 font-medium">2.1%</span>
+                <span className="text-amber-600 font-medium">{sellerProfile.cancellationRate}%</span>
               </div>
               <div className="flex justify-between text-xs">
                 <span className="text-on-surface-variant">Returns</span>
-                <span className="text-green-600 font-medium">1.3%</span>
-              </div>
-              <div className="flex justify-between text-xs">
-                <span className="text-on-surface-variant">Response Time</span>
-                <span className="text-green-600 font-medium">&lt;1 hr</span>
+                <span className="text-green-600 font-medium">{sellerProfile.returnsRate}%</span>
               </div>
             </div>
           </div>
@@ -159,20 +173,24 @@ export default function SellerDashboard() {
                 </tr>
               </thead>
               <tbody>
-                {recentOrders.map((order) => (
-                  <tr key={order.id} className="border-b border-surface-container-high last:border-b-0 hover:bg-surface-container-low">
-                    <td className="p-3 font-medium text-on-surface">{order.id}</td>
-                    <td className="p-3 text-on-surface">{order.customer}</td>
-                    <td className="p-3 text-on-surface">{order.product}</td>
-                    <td className="p-3 font-medium text-on-surface">{order.total}</td>
-                    <td className="p-3">
-                      <span className={`text-[11px] font-semibold px-2 py-0.5 rounded-full ${statusStyles[order.status]}`}>
-                        {order.status}
-                      </span>
-                    </td>
-                    <td className="p-3 text-on-surface-variant">{order.date}</td>
-                  </tr>
-                ))}
+                {recentOrders.length === 0 ? (
+                  <tr><td colSpan={6} className="p-6 text-center text-on-surface-variant text-sm">No recent orders</td></tr>
+                ) : (
+                  recentOrders.map((order) => (
+                    <tr key={order.id} className="border-b border-surface-container-high last:border-b-0 hover:bg-surface-container-low">
+                      <td className="p-3 font-medium text-on-surface">{order.id}</td>
+                      <td className="p-3 text-on-surface">{order.customer}</td>
+                      <td className="p-3 text-on-surface">{order.product}</td>
+                      <td className="p-3 font-medium text-on-surface">৳{typeof order.total === 'number' ? order.total.toLocaleString('en-IN') : order.total}</td>
+                      <td className="p-3">
+                        <span className={`text-[11px] font-semibold px-2 py-0.5 rounded-full ${statusStyles[order.status] || 'bg-gray-100 text-gray-600'}`}>
+                          {order.status}
+                        </span>
+                      </td>
+                      <td className="p-3 text-on-surface-variant">{order.date}</td>
+                    </tr>
+                  ))
+                )}
               </tbody>
             </table>
           </div>

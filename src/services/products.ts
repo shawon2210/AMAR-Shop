@@ -47,11 +47,20 @@ function toProduct(raw: Record<string, unknown>): Product {
   };
 }
 
+interface SearchResponse {
+  items: Record<string, unknown>[];
+  total: number;
+  page: number;
+  limit: number;
+  totalPages: number;
+}
+
 export const QUERY_KEYS = {
   products: 'products',
   product: 'product',
   categories: 'categories',
   flashSale: 'flashSaleProducts',
+  search: 'searchResults',
 };
 
 async function fetchProducts(skip = 0, take = 20, categorySlug?: string): Promise<Product[]> {
@@ -90,6 +99,50 @@ async function fetchFlashSaleProducts(): Promise<Product[]> {
   } catch {
     return MOCK_FLASH_SALE_PRODUCTS;
   }
+}
+
+async function fetchSearchResults(
+  query: string,
+  filters?: { category?: string; minPrice?: number; maxPrice?: number; sort?: string; page?: number; limit?: number },
+): Promise<{ products: Product[]; total: number; page: number; totalPages: number }> {
+  try {
+    const params = new URLSearchParams();
+    if (query) params.set('q', query);
+    if (filters?.category) params.set('category', filters.category);
+    if (filters?.minPrice !== undefined) params.set('minPrice', String(filters.minPrice));
+    if (filters?.maxPrice !== undefined) params.set('maxPrice', String(filters.maxPrice));
+    if (filters?.sort) params.set('sort', filters.sort);
+    if (filters?.page) params.set('page', String(filters.page));
+    if (filters?.limit) params.set('limit', String(filters.limit));
+    const data = await api.get<SearchResponse>(`/search?${params.toString()}`);
+    return {
+      products: (data.items || []).map(toProduct),
+      total: data.total,
+      page: data.page,
+      totalPages: data.totalPages,
+    };
+  } catch {
+    const q = query.toLowerCase();
+    const filtered = MOCK_PRODUCTS.filter(
+      (p) =>
+        p.name.toLowerCase().includes(q) ||
+        p.brand?.toLowerCase().includes(q) ||
+        p.category.toLowerCase().includes(q),
+    );
+    return { products: filtered, total: filtered.length, page: 1, totalPages: 1 };
+  }
+}
+
+export function useSearchProducts(
+  query: string,
+  filters?: { category?: string; minPrice?: number; maxPrice?: number; sort?: string; page?: number; limit?: number },
+) {
+  return useQuery({
+    queryKey: [QUERY_KEYS.search, { query, ...filters }],
+    queryFn: () => fetchSearchResults(query, filters),
+    enabled: query.trim().length > 0,
+    staleTime: 1000 * 60 * 2,
+  });
 }
 
 export function getProducts(skip = 0, take = 20, categorySlug?: string): Promise<Product[]> {

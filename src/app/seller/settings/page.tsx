@@ -1,6 +1,7 @@
 'use client';
 
 import { useState } from 'react';
+import { useSellerStore } from '@/services/seller';
 
 interface ToggleField {
   label: string;
@@ -18,6 +19,8 @@ export default function SellerSettings() {
     { label: 'Campaign Updates', description: 'Campaign deadlines and performance', enabled: false },
     { label: 'Payout Notifications', description: 'When payouts are processed', enabled: true },
   ]);
+
+  const { data: storeData, isLoading } = useSellerStore();
 
   const toggleNotification = (index: number) => {
     setNotifications(notifications.map((n, i) => i === index ? { ...n, enabled: !n.enabled } : n));
@@ -56,7 +59,9 @@ export default function SellerSettings() {
         <div className="bg-white rounded-xl p-5 border border-surface-container-high shadow-sm space-y-4">
           <h3 className="font-semibold text-on-surface">Profile Information</h3>
           <div className="flex items-center gap-4 mb-4">
-            <div className="w-16 h-16 rounded-full bg-primary flex items-center justify-center text-on-primary text-2xl font-bold">S</div>
+            <div className="w-16 h-16 rounded-full bg-primary flex items-center justify-center text-on-primary text-2xl font-bold">
+              {storeData?.store?.name?.charAt(0) || 'S'}
+            </div>
             <div>
               <button className="px-3 py-1.5 text-sm rounded-lg bg-primary text-on-primary font-medium hover:bg-primary-container transition-colors">Change Avatar</button>
               <p className="text-xs text-on-surface-variant mt-1">JPG, PNG, or WebP. Max 2MB.</p>
@@ -64,16 +69,16 @@ export default function SellerSettings() {
           </div>
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <div>
-              <label className="text-sm font-medium text-on-surface block mb-1">Full Name</label>
-              <input type="text" defaultValue="Shawon Rahman" className="w-full px-3 py-2 text-sm rounded-lg border border-outline bg-white text-on-surface focus:ring-2 focus:ring-primary outline-none" />
+              <label className="text-sm font-medium text-on-surface block mb-1">Business Name</label>
+              <input type="text" defaultValue={storeData?.sellerProfile?.businessName || 'Your Store'} className="w-full px-3 py-2 text-sm rounded-lg border border-outline bg-white text-on-surface focus:ring-2 focus:ring-primary outline-none" />
             </div>
             <div>
-              <label className="text-sm font-medium text-on-surface block mb-1">Email</label>
-              <input type="email" defaultValue="seller@amarshop.com" className="w-full px-3 py-2 text-sm rounded-lg border border-outline bg-white text-on-surface focus:ring-2 focus:ring-primary outline-none" />
+              <label className="text-sm font-medium text-on-surface block mb-1">Business Type</label>
+              <input type="text" defaultValue={storeData?.sellerProfile?.businessType || 'Retail'} className="w-full px-3 py-2 text-sm rounded-lg border border-outline bg-white text-on-surface focus:ring-2 focus:ring-primary outline-none" />
             </div>
-            <div>
-              <label className="text-sm font-medium text-on-surface block mb-1">Phone</label>
-              <input type="tel" defaultValue="+880 1712-345678" className="w-full px-3 py-2 text-sm rounded-lg border border-outline bg-white text-on-surface focus:ring-2 focus:ring-primary outline-none" />
+            <div className="sm:col-span-2">
+              <label className="text-sm font-medium text-on-surface block mb-1">Business Address</label>
+              <input type="text" defaultValue={storeData?.sellerProfile?.businessAddress || ''} placeholder="Enter business address" className="w-full px-3 py-2 text-sm rounded-lg border border-outline bg-white text-on-surface focus:ring-2 focus:ring-primary outline-none" />
             </div>
           </div>
           <div className="pt-2">
@@ -172,12 +177,18 @@ export default function SellerSettings() {
           <div className="bg-white rounded-xl p-5 border border-surface-container-high shadow-sm">
             <div className="flex items-center justify-between mb-4">
               <h3 className="font-semibold text-on-surface">KYC Verification Status</h3>
-              <span className="text-[11px] font-semibold px-2 py-0.5 rounded-full bg-amber-100 text-amber-700">Pending</span>
+              <span className={`text-[11px] font-semibold px-2 py-0.5 rounded-full ${
+                storeData?.sellerProfile?.isKycVerified ? 'bg-green-100 text-green-700' : 'bg-amber-100 text-amber-700'
+              }`}>
+                {storeData?.sellerProfile?.isKycVerified ? 'Verified' : 'Pending'}
+              </span>
             </div>
-            <div className="flex items-center gap-3 p-3 rounded-lg bg-amber-50 border border-amber-200 mb-4">
-              <span className="material-symbols-outlined text-amber-600">info</span>
-              <p className="text-xs text-amber-800">Your KYC is pending. Please submit the required documents to verify your identity.</p>
-            </div>
+            {!storeData?.sellerProfile?.isKycVerified && (
+              <div className="flex items-center gap-3 p-3 rounded-lg bg-amber-50 border border-amber-200 mb-4">
+                <span className="material-symbols-outlined text-amber-600">info</span>
+                <p className="text-xs text-amber-800">Your KYC is pending. Please submit the required documents to verify your identity.</p>
+              </div>
+            )}
             <div className="space-y-4">
               <div>
                 <label className="text-sm font-medium text-on-surface block mb-1">Upload NID (National ID)</label>

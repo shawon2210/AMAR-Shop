@@ -3,7 +3,8 @@
 import { useMemo, useState } from 'react';
 import { FlashSaleBanner } from '@/components/commerce/flash-sale-banner';
 import { ProductCard } from '@/components/commerce/product-card';
-import { flashSaleProducts } from '@/lib/data/products';
+import { useGetFlashSaleProducts } from '@/services/products';
+import type { Product } from '@/types';
 
 const FLASH_SALE_END = '2026-06-30T23:59:59Z';
 
@@ -72,7 +73,7 @@ const CategoryFilter = ({ categories: cats, activeCategory, onCategoryChange }: 
 );
 
 // Extracted upcoming product card component
-const UpcomingProductCard = ({ product }: { product: (typeof flashSaleProducts)[number] }) => {
+const UpcomingProductCard = ({ product }: { product: Product }) => {
   const interestText = '2.4k People Interested';
 
   return (
@@ -119,13 +120,14 @@ const UpcomingProductCard = ({ product }: { product: (typeof flashSaleProducts)[
 export default function FlashSalePage() {
   const [activeTab, setActiveTab] = useState<TabType>('active');
   const [activeCategory, setActiveCategory] = useState<string>('All Products');
+  const { data: flashSaleProducts = [] } = useGetFlashSaleProducts();
 
   // Memoized filtering to avoid recalculating on every render
   const filteredProducts = useMemo(() =>
     flashSaleProducts.filter(p =>
       activeCategory === 'All Products' || p.category === activeCategory
     ),
-    [activeCategory]
+    [flashSaleProducts, activeCategory]
   );
 
   const upcomingProducts = useMemo(

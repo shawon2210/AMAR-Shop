@@ -1,6 +1,7 @@
 'use client';
 
 import { useState, useRef, useEffect } from 'react';
+import { api } from '@/services/api';
 
 interface ChatMessage {
   id: string;
@@ -61,15 +62,10 @@ export default function AIAssistantPage() {
         .slice(-10)
         .map(m => ({ role: m.role, content: m.content }));
 
-      const res = await fetch('/api/v1/ai/chat', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ message: content, history }),
-      });
-
-      if (!res.ok) throw new Error('Failed to get response');
-
-      const data = await res.json();
+      const data = await api.post<{ message: string; suggestions: string[]; products?: Array<{ id: string; name: string; price: number }> }>(
+        '/api/v1/ai/chat',
+        { message: content, history },
+      );
 
       const assistantMessage: ChatMessage = {
         id: `assistant-${++idCounterRef.current}`,

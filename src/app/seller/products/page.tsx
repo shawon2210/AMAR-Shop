@@ -2,22 +2,16 @@
 
 import { useState } from 'react';
 import Link from 'next/link';
-
-const allProducts = [
-  { id: 1, name: 'iPhone 15 Pro Max', image: 'https://picsum.photos/seed/p1/80/80', price: '৳1,29,999', stock: 45, status: 'Active', sales: 234, sku: 'APL-IP15PM' },
-  { id: 2, name: 'Samsung Galaxy S24 Ultra', image: 'https://picsum.photos/seed/p2/80/80', price: '৳1,19,999', stock: 32, status: 'Active', sales: 189, sku: 'SAM-S24U' },
-  { id: 3, name: 'Sony WH-1000XM5 Headphones', image: 'https://picsum.photos/seed/p3/80/80', price: '৳32,999', stock: 0, status: 'Out of Stock', sales: 78, sku: 'SNY-WH1000' },
-  { id: 4, name: 'Nike Air Max 270', image: 'https://picsum.photos/seed/p4/80/80', price: '৳16,999', stock: 12, status: 'Active', sales: 156, sku: 'NKE-AM270' },
-  { id: 5, name: 'Wooden Dining Table Set', image: 'https://picsum.photos/seed/p5/80/80', price: '৳45,000', stock: 8, status: 'Inactive', sales: 23, sku: 'WDS-TBL01' },
-  { id: 6, name: 'Dyson V15 Vacuum Cleaner', image: 'https://picsum.photos/seed/p6/80/80', price: '৳55,999', stock: 3, status: 'Pending', sales: 12, sku: 'DSN-V15' },
-  { id: 7, name: 'MacBook Pro M3 Pro', image: 'https://picsum.photos/seed/p7/80/80', price: '৳2,49,999', stock: 18, status: 'Active', sales: 67, sku: 'APL-MBP-M3' },
-  { id: 8, name: 'Casio G-Shock GA-2100', image: 'https://picsum.photos/seed/p8/80/80', price: '৳8,499', stock: 55, status: 'Active', sales: 312, sku: 'CSO-GSHOCK' },
-];
+import { useSellerProducts, useDeleteProduct, formattedPrice } from '@/services/seller';
 
 const statusColors: Record<string, string> = {
+  active: 'bg-green-100 text-green-700',
   Active: 'bg-green-100 text-green-700',
+  inactive: 'bg-gray-100 text-gray-600',
   Inactive: 'bg-gray-100 text-gray-600',
+  out_of_stock: 'bg-red-100 text-red-700',
   'Out of Stock': 'bg-red-100 text-red-700',
+  pending: 'bg-amber-100 text-amber-700',
   Pending: 'bg-amber-100 text-amber-700',
 };
 
@@ -26,27 +20,29 @@ export default function SellerProducts() {
   const [viewMode, setViewMode] = useState<'table' | 'grid'>('table');
   const [search, setSearch] = useState('');
   const [selected, setSelected] = useState<number[]>([]);
-  const [currentPage, setCurrentPage] = useState(1);
-  const perPage = 6;
+  const [page, setPage] = useState(1);
 
-  const filtered = allProducts.filter((p) => {
-    if (filter !== 'All' && p.status !== filter) return false;
-    if (search && !p.name.toLowerCase().includes(search.toLowerCase())) return false;
-    return true;
+  const { data, isLoading, error } = useSellerProducts({
+    page,
+    limit: 10,
+    status: filter === 'All' ? undefined : filter,
+    search: search || undefined,
   });
 
-  const totalPages = Math.ceil(filtered.length / perPage);
-  const paginated = filtered.slice((currentPage - 1) * perPage, currentPage * perPage);
+  const deleteProduct = useDeleteProduct();
+
+  const products = data?.products || [];
+  const totalPages = data?.totalPages || 1;
 
   const toggleSelect = (id: number) => {
     setSelected((prev) => prev.includes(id) ? prev.filter((x) => x !== id) : [...prev, id]);
   };
 
   const toggleAll = () => {
-    if (selected.length === paginated.length) {
+    if (selected.length === products.length) {
       setSelected([]);
     } else {
-      setSelected(paginated.map((p) => p.id));
+      setSelected(products.map((p) => p.id));
     }
   };
 
@@ -65,12 +61,12 @@ export default function SellerProducts() {
 
       {/* Filter bar */}
       <div className="flex flex-col sm:flex-row gap-3 items-start sm:items-center justify-between">
-        <div className="flex items-center gap-1 bg-surface-container-high rounded-lg p-1">
+        <div className="flex items-center gap-1 bg-surface-container-high rounded-lg p-1 overflow-x-auto">
           {['All', 'Active', 'Inactive', 'Out of Stock', 'Pending'].map((f) => (
             <button
               key={f}
-              onClick={() => { setFilter(f); setCurrentPage(1); }}
-              className={`px-3 py-1.5 text-sm rounded-md transition-colors ${
+              onClick={() => { setFilter(f); setPage(1); }}
+              className={`whitespace-nowrap px-3 py-1.5 text-sm rounded-md transition-colors ${
                 filter === f ? 'bg-white text-on-surface shadow-sm font-medium' : 'text-on-surface-variant hover:text-on-surface'
               }`}
             >
@@ -86,7 +82,7 @@ export default function SellerProducts() {
               type="text"
               placeholder="Search products..."
               value={search}
-              onChange={(e) => { setSearch(e.target.value); setCurrentPage(1); }}
+              onChange={(e) => { setSearch(e.target.value); setPage(1); }}
               className="w-full pl-10 pr-3 py-2 text-sm rounded-lg border border-outline bg-white text-on-surface focus:ring-2 focus:ring-primary outline-none"
             />
           </div>
@@ -111,7 +107,22 @@ export default function SellerProducts() {
         </div>
       )}
 
-      {viewMode === 'table' ? (
+      {isLoading ? (
+        <div className="flex items-center justify-center py-20">
+          <div className="animate-pulse text-on-surface-variant">Loading products...</div>
+        </div>
+      ) : error ? (
+        <div className="flex flex-col items-center justify-center py-20 text-center">
+          <span className="material-symbols-outlined text-4xl text-error mb-2">error</span>
+          <p className="text-on-surface-variant">Failed to load products</p>
+        </div>
+      ) : products.length === 0 ? (
+        <div className="flex flex-col items-center justify-center py-20 text-center">
+          <span className="material-symbols-outlined text-5xl text-on-surface-variant mb-3">inventory_2</span>
+          <p className="text-on-surface-variant">No products found</p>
+          <Link href="/seller/products/new" className="mt-3 text-sm text-primary font-medium hover:underline">Add your first product</Link>
+        </div>
+      ) : viewMode === 'table' ? (
         <div className="bg-white rounded-xl border border-surface-container-high shadow-sm overflow-x-auto">
           <table className="w-full text-sm">
             <thead>
@@ -119,7 +130,7 @@ export default function SellerProducts() {
                 <th className="p-3 w-10">
                   <input
                     type="checkbox"
-                    checked={selected.length === paginated.length && paginated.length > 0}
+                    checked={selected.length === products.length && products.length > 0}
                     onChange={toggleAll}
                     className="rounded border-outline"
                   />
@@ -133,7 +144,7 @@ export default function SellerProducts() {
               </tr>
             </thead>
             <tbody>
-              {paginated.map((product) => (
+              {products.map((product) => (
                 <tr key={product.id} className="border-b border-surface-container-high last:border-b-0 hover:bg-surface-container-low">
                   <td className="p-3">
                     <input
@@ -145,31 +156,38 @@ export default function SellerProducts() {
                   </td>
                   <td className="p-3">
                     <div className="flex items-center gap-3">
-                      <img src={product.image} alt={product.name} className="w-10 h-10 rounded-lg object-cover bg-surface-container-high" />
+                      <img
+                        src={product.images?.[0] || 'https://picsum.photos/seed/default/80/80'}
+                        alt={product.name}
+                        className="w-10 h-10 rounded-lg object-cover bg-surface-container-high"
+                      />
                       <div>
                         <p className="font-medium text-on-surface">{product.name}</p>
                         <p className="text-xs text-on-surface-variant">{product.sku}</p>
                       </div>
                     </div>
                   </td>
-                  <td className="p-3 font-medium text-on-surface">{product.price}</td>
+                  <td className="p-3 font-medium text-on-surface">{formattedPrice(product.price)}</td>
                   <td className="p-3">
-                    <span className={`${product.stock === 0 ? 'text-error' : product.stock < 10 ? 'text-amber-600' : 'text-on-surface'}`}>
-                      {product.stock}
+                    <span className={`${product.stockCount === 0 ? 'text-error' : product.stockCount < 10 ? 'text-amber-600' : 'text-on-surface'}`}>
+                      {product.stockCount}
                     </span>
                   </td>
                   <td className="p-3">
-                    <span className={`text-[11px] font-semibold px-2 py-0.5 rounded-full ${statusColors[product.status]}`}>
+                    <span className={`text-[11px] font-semibold px-2 py-0.5 rounded-full ${statusColors[product.status] || 'bg-gray-100 text-gray-600'}`}>
                       {product.status}
                     </span>
                   </td>
-                  <td className="p-3 text-on-surface">{product.sales}</td>
+                  <td className="p-3 text-on-surface">{product.soldCount}</td>
                   <td className="p-3">
                     <div className="flex items-center gap-1">
                       <button className="p-1.5 rounded-lg hover:bg-surface-container-high text-on-surface-variant hover:text-primary transition-colors">
                         <span className="material-symbols-outlined text-lg">edit</span>
                       </button>
-                      <button className="p-1.5 rounded-lg hover:bg-surface-container-high text-on-surface-variant hover:text-error transition-colors">
+                      <button
+                        onClick={() => deleteProduct.mutate(product.id)}
+                        className="p-1.5 rounded-lg hover:bg-surface-container-high text-on-surface-variant hover:text-error transition-colors"
+                      >
                         <span className="material-symbols-outlined text-lg">delete</span>
                       </button>
                     </div>
@@ -181,11 +199,11 @@ export default function SellerProducts() {
         </div>
       ) : (
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-          {paginated.map((product) => (
+          {products.map((product) => (
             <div key={product.id} className="bg-white rounded-xl border border-surface-container-high shadow-sm overflow-hidden hover:shadow-md transition-shadow">
               <div className="relative">
-                <img src={product.image} alt={product.name} className="w-full h-40 object-cover bg-surface-container-high" />
-                <span className={`absolute top-2 right-2 text-[10px] font-semibold px-2 py-0.5 rounded-full ${statusColors[product.status]}`}>
+                <img src={product.images?.[0] || 'https://picsum.photos/seed/default/80/80'} alt={product.name} className="w-full h-40 object-cover bg-surface-container-high" />
+                <span className={`absolute top-2 right-2 text-[10px] font-semibold px-2 py-0.5 rounded-full ${statusColors[product.status] || 'bg-gray-100 text-gray-600'}`}>
                   {product.status}
                 </span>
               </div>
@@ -193,13 +211,13 @@ export default function SellerProducts() {
                 <p className="font-medium text-on-surface text-sm">{product.name}</p>
                 <p className="text-xs text-on-surface-variant mt-0.5">{product.sku}</p>
                 <div className="flex items-center justify-between mt-2">
-                  <span className="font-bold text-on-surface">{product.price}</span>
-                  <span className="text-xs text-on-surface-variant">{product.sales} sold</span>
+                  <span className="font-bold text-on-surface">{formattedPrice(product.price)}</span>
+                  <span className="text-xs text-on-surface-variant">{product.soldCount} sold</span>
                 </div>
                 <div className="flex items-center gap-1 mt-2">
                   <span className="text-xs text-on-surface-variant">Stock:</span>
-                  <span className={`text-xs font-medium ${product.stock === 0 ? 'text-error' : product.stock < 10 ? 'text-amber-600' : 'text-green-600'}`}>
-                    {product.stock}
+                  <span className={`text-xs font-medium ${product.stockCount === 0 ? 'text-error' : product.stockCount < 10 ? 'text-amber-600' : 'text-green-600'}`}>
+                    {product.stockCount}
                   </span>
                 </div>
               </div>
@@ -212,28 +230,28 @@ export default function SellerProducts() {
       {totalPages > 1 && (
         <div className="flex items-center justify-center gap-2">
           <button
-            onClick={() => setCurrentPage(Math.max(1, currentPage - 1))}
-            disabled={currentPage === 1}
+            onClick={() => setPage(Math.max(1, page - 1))}
+            disabled={page === 1}
             className="p-2 rounded-lg border border-outline text-on-surface disabled:opacity-40 hover:bg-surface-container-high transition-colors"
           >
             <span className="material-symbols-outlined text-lg">chevron_left</span>
           </button>
-          {Array.from({ length: totalPages }, (_, i) => i + 1).map((page) => (
+          {Array.from({ length: totalPages }, (_, i) => i + 1).map((p) => (
             <button
-              key={page}
-              onClick={() => setCurrentPage(page)}
+              key={p}
+              onClick={() => setPage(p)}
               className={`w-9 h-9 rounded-lg text-sm font-medium transition-colors ${
-                currentPage === page
+                page === p
                   ? 'bg-primary text-on-primary'
                   : 'border border-outline text-on-surface hover:bg-surface-container-high'
               }`}
             >
-              {page}
+              {p}
             </button>
           ))}
           <button
-            onClick={() => setCurrentPage(Math.min(totalPages, currentPage + 1))}
-            disabled={currentPage === totalPages}
+            onClick={() => setPage(Math.min(totalPages, page + 1))}
+            disabled={page === totalPages}
             className="p-2 rounded-lg border border-outline text-on-surface disabled:opacity-40 hover:bg-surface-container-high transition-colors"
           >
             <span className="material-symbols-outlined text-lg">chevron_right</span>

@@ -11,6 +11,7 @@ import { EmptyCart } from '@/components/checkout/empty-cart';
 import { AddressSection } from '@/components/checkout/address-section';
 import { PaymentSection } from '@/components/checkout/payment-section';
 import { OrderSummary } from '@/components/checkout/order-summary';
+
 export default function CheckoutPage() {
   const router = useRouter();
   const allItems = useCartStore(s => s.items);
@@ -23,6 +24,10 @@ export default function CheckoutPage() {
   const [selectedAddressId, setSelectedAddressId] = useState('');
   const [selectedPayment, setSelectedPayment] = useState('cod');
   const [isProcessing, setIsProcessing] = useState(false);
+
+  const subtotal = items.reduce((sum, item) => sum + item.product.price * item.quantity, 0);
+  const shipping = subtotal >= 2000 ? 0 : 60;
+  const total = subtotal + shipping;
 
   const handlePlaceOrder = async () => {
     if (!hydrated) return;
@@ -84,8 +89,8 @@ export default function CheckoutPage() {
       {items.length === 0 ? (
         <EmptyCart />
       ) : (
-    <div className="app-container pt-4 md:pt-6 space-y-4 md:space-y-6 pb-32">
-      <h1 className="font-headline-md text-headline-md text-slate-900 dark:text-white">
+    <div className="app-container pt-4 md:pt-6 space-y-4 md:space-y-6 pb-[calc(7rem+env(safe-area-inset-bottom,0px))] lg:pb-12">
+      <h1 className="text-responsive-subheading font-bold text-slate-900 dark:text-white">
         Checkout
       </h1>
 
@@ -96,7 +101,7 @@ export default function CheckoutPage() {
           <PaymentSection selected={selectedPayment} onSelect={setSelectedPayment} />
         </div>
 
-        <div className="lg:col-span-1">
+        <div className="hidden lg:block lg:col-span-1">
           <div className="sticky top-24 space-y-4">
             <OrderSummary
               items={items}
@@ -104,6 +109,40 @@ export default function CheckoutPage() {
               onPlaceOrder={handlePlaceOrder}
             />
           </div>
+        </div>
+      </div>
+
+      {/* Mobile Sticky Checkout Bar */}
+      <div className="fixed left-0 right-0 z-40 bg-white/95 backdrop-blur-md border-t border-gray-200 shadow-[0px_-4px_12px_rgba(0,0,0,0.08)] bottom-14 lg:hidden pb-[calc(0.375rem+env(safe-area-inset-bottom,0px))]">
+        <div className="flex items-center justify-between px-4 py-3">
+          <div className="text-left">
+            <div className="flex items-center gap-1.5">
+              <span className="text-xs text-gray-500">Total:</span>
+              <span className="text-primary font-bold text-lg">৳{total.toLocaleString('en-BD')}</span>
+            </div>
+            {shipping > 0 && (
+              <p className="text-[10px] text-gray-400">+৳{shipping} shipping</p>
+            )}
+            {shipping === 0 && (
+              <p className="text-[10px] text-emerald-600 font-medium">Free shipping</p>
+            )}
+            <p className="text-[10px] text-gray-500">{items.length} item(s)</p>
+          </div>
+
+          <button
+            onClick={handlePlaceOrder}
+            disabled={isProcessing}
+            className="bg-primary text-white px-6 py-3 rounded-xl font-semibold shadow-md active:scale-95 transition-transform duration-150 text-sm disabled:opacity-70 flex items-center gap-2"
+          >
+            {isProcessing ? (
+              <>
+                <span className="material-symbols-outlined text-base animate-spin">progress_activity</span>
+                Processing
+              </>
+            ) : (
+              'Place Order'
+            )}
+          </button>
         </div>
       </div>
     </div>

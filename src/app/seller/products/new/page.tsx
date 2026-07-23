@@ -1,6 +1,9 @@
 'use client';
 
 import { useState } from 'react';
+import { useRouter } from 'next/navigation';
+import { api } from '@/services/api';
+import { useUIStore } from '@/stores/ui-store';
 
 const categories = ['Electronics', 'Fashion', 'Home & Living', 'Beauty', 'Sports', 'Books', 'Automotive', 'Food'];
 
@@ -12,10 +15,42 @@ interface Variant {
   sku: string;
 }
 
+interface FormState {
+  name: string;
+  description: string;
+  price: string;
+  comparePrice: string;
+  category: string;
+  brand: string;
+  sku: string;
+  stockCount: string;
+  lowStockThreshold: string;
+  weight: string;
+  length: string;
+  width: string;
+  height: string;
+  metaTitle: string;
+  metaDescription: string;
+}
+
+const initialForm: FormState = {
+  name: '', description: '', price: '', comparePrice: '', category: '', brand: '', sku: '',
+  stockCount: '', lowStockThreshold: '', weight: '', length: '', width: '', height: '',
+  metaTitle: '', metaDescription: '',
+};
+
 export default function NewProduct() {
+  const router = useRouter();
+  const addToast = useUIStore(s => s.addToast);
+
+  const [form, setForm] = useState<FormState>(initialForm);
   const [variants, setVariants] = useState<Variant[]>([]);
   const [images, setImages] = useState<string[]>([]);
   const [dragOver, setDragOver] = useState(false);
+  const [saving, setSaving] = useState(false);
+
+  const set = (field: keyof FormState) => (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) =>
+    setForm(prev => ({ ...prev, [field]: e.target.value }));
 
   const addVariant = () => {
     setVariants([...variants, { id: Date.now(), name: '', price: '', stock: '', sku: '' }]);
@@ -36,15 +71,59 @@ export default function NewProduct() {
     }
   };
 
+  const handleSubmit = async (status: 'draft' | 'active') => {
+    if (!form.name.trim()) {
+      addToast('Product name is required', 'error');
+      return;
+    }
+    if (!form.price.trim() || isNaN(Number(form.price))) {
+      addToast('A valid price is required', 'error');
+      return;
+    }
+
+    setSaving(true);
+    try {
+      await api.post('/seller/products', {
+        ...form,
+        price: Number(form.price),
+        comparePrice: form.comparePrice ? Number(form.comparePrice) : undefined,
+        stockCount: form.stockCount ? Number(form.stockCount) : undefined,
+        lowStockThreshold: form.lowStockThreshold ? Number(form.lowStockThreshold) : undefined,
+        weight: form.weight ? Number(form.weight) : undefined,
+        length: form.length ? Number(form.length) : undefined,
+        width: form.width ? Number(form.width) : undefined,
+        height: form.height ? Number(form.height) : undefined,
+        images,
+        variants: variants.map(v => ({ ...v, price: Number(v.price) || 0, stock: Number(v.stock) || 0 })),
+        status,
+      });
+      addToast(status === 'draft' ? 'Product saved as draft' : 'Product published', 'success');
+      router.push('/seller/products');
+    } catch (err) {
+      addToast(err instanceof Error ? err.message : 'Failed to save product', 'error');
+    } finally {
+      setSaving(false);
+    }
+  };
+
   return (
-    <div className="space-y-6 app-container">
+    <div className="space-y-6">
       <div className="flex items-center justify-between">
         <h1 className="text-xl font-bold text-on-surface">Add New Product</h1>
         <div className="flex items-center gap-2">
-          <button className="px-4 py-2 text-sm rounded-lg border border-outline text-on-surface font-medium hover:bg-surface-container-high transition-colors">
-            Save as Draft
+          <button
+            onClick={() => handleSubmit('draft')}
+            disabled={saving}
+            className="px-4 py-2 text-sm rounded-lg border border-outline text-on-surface font-medium hover:bg-surface-container-high transition-colors disabled:opacity-50"
+          >
+            {saving ? 'Saving...' : 'Save as Draft'}
           </button>
-          <button className="px-4 py-2 text-sm rounded-lg bg-primary text-on-primary font-medium hover:bg-primary-container transition-colors">
+          <button
+            onClick={() => handleSubmit('active')}
+            disabled={saving}
+            className="px-4 py-2 text-sm rounded-lg bg-primary text-on-primary font-medium hover:brightness-110 transition-all disabled:opacity-50 flex items-center gap-1.5"
+          >
+            {saving && <span className="material-symbols-outlined text-base animate-spin">progress_activity</span>}
             Publish
           </button>
         </div>
@@ -57,10 +136,12 @@ export default function NewProduct() {
           <div className="bg-white rounded-xl p-5 border border-surface-container-high shadow-sm space-y-4">
             <h3 className="font-semibold text-on-surface">Basic Information</h3>
             <div>
-              <label className="text-sm font-medium text-on-surface block mb-1">Product Name</label>
+              <label className="text-sm font-medium text-on-surface block mb-1">Product Name *</label>
               <input
                 type="text"
                 placeholder="Enter product name"
+                value={form.name}
+                onChange={set('name')}
                 className="w-full px-3 py-2 text-sm rounded-lg border border-outline bg-white text-on-surface focus:ring-2 focus:ring-primary outline-none"
               />
             </div>
@@ -69,15 +150,19 @@ export default function NewProduct() {
               <textarea
                 rows={4}
                 placeholder="Enter product description"
+                value={form.description}
+                onChange={set('description')}
                 className="w-full px-3 py-2 text-sm rounded-lg border border-outline bg-white text-on-surface focus:ring-2 focus:ring-primary outline-none resize-none"
               />
             </div>
             <div className="grid grid-cols-2 gap-4">
               <div>
-                <label className="text-sm font-medium text-on-surface block mb-1">Price (৳)</label>
+                <label className="text-sm font-medium text-on-surface block mb-1">Price (৳) *</label>
                 <input
                   type="text"
                   placeholder="0.00"
+                  value={form.price}
+                  onChange={set('price')}
                   className="w-full px-3 py-2 text-sm rounded-lg border border-outline bg-white text-on-surface focus:ring-2 focus:ring-primary outline-none"
                 />
               </div>
@@ -86,6 +171,8 @@ export default function NewProduct() {
                 <input
                   type="text"
                   placeholder="0.00"
+                  value={form.comparePrice}
+                  onChange={set('comparePrice')}
                   className="w-full px-3 py-2 text-sm rounded-lg border border-outline bg-white text-on-surface focus:ring-2 focus:ring-primary outline-none"
                 />
               </div>
@@ -93,7 +180,11 @@ export default function NewProduct() {
             <div className="grid grid-cols-2 gap-4">
               <div>
                 <label className="text-sm font-medium text-on-surface block mb-1">Category</label>
-                <select className="w-full px-3 py-2 text-sm rounded-lg border border-outline bg-white text-on-surface focus:ring-2 focus:ring-primary outline-none">
+                <select
+                  value={form.category}
+                  onChange={set('category')}
+                  className="w-full px-3 py-2 text-sm rounded-lg border border-outline bg-white text-on-surface focus:ring-2 focus:ring-primary outline-none"
+                >
                   <option value="">Select category</option>
                   {categories.map((c) => (
                     <option key={c} value={c}>{c}</option>
@@ -105,6 +196,8 @@ export default function NewProduct() {
                 <input
                   type="text"
                   placeholder="Enter brand name"
+                  value={form.brand}
+                  onChange={set('brand')}
                   className="w-full px-3 py-2 text-sm rounded-lg border border-outline bg-white text-on-surface focus:ring-2 focus:ring-primary outline-none"
                 />
               </div>
@@ -114,6 +207,8 @@ export default function NewProduct() {
               <input
                 type="text"
                 placeholder="e.g. APL-IP15PM-256"
+                value={form.sku}
+                onChange={set('sku')}
                 className="w-full px-3 py-2 text-sm rounded-lg border border-outline bg-white text-on-surface focus:ring-2 focus:ring-primary outline-none"
               />
             </div>
@@ -236,6 +331,8 @@ export default function NewProduct() {
                 type="text"
                 placeholder="SEO title (60 char max)"
                 maxLength={60}
+                value={form.metaTitle}
+                onChange={set('metaTitle')}
                 className="w-full px-3 py-2 text-sm rounded-lg border border-outline bg-white text-on-surface focus:ring-2 focus:ring-primary outline-none"
               />
             </div>
@@ -245,6 +342,8 @@ export default function NewProduct() {
                 rows={3}
                 placeholder="SEO description (160 char max)"
                 maxLength={160}
+                value={form.metaDescription}
+                onChange={set('metaDescription')}
                 className="w-full px-3 py-2 text-sm rounded-lg border border-outline bg-white text-on-surface focus:ring-2 focus:ring-primary outline-none resize-none"
               />
             </div>
@@ -261,6 +360,8 @@ export default function NewProduct() {
               <input
                 type="number"
                 placeholder="0"
+                value={form.stockCount}
+                onChange={set('stockCount')}
                 className="w-full px-3 py-2 text-sm rounded-lg border border-outline bg-white text-on-surface focus:ring-2 focus:ring-primary outline-none"
               />
             </div>
@@ -269,6 +370,8 @@ export default function NewProduct() {
               <input
                 type="number"
                 placeholder="10"
+                value={form.lowStockThreshold}
+                onChange={set('lowStockThreshold')}
                 className="w-full px-3 py-2 text-sm rounded-lg border border-outline bg-white text-on-surface focus:ring-2 focus:ring-primary outline-none"
               />
             </div>
@@ -282,21 +385,23 @@ export default function NewProduct() {
               <input
                 type="text"
                 placeholder="0.5"
+                value={form.weight}
+                onChange={set('weight')}
                 className="w-full px-3 py-2 text-sm rounded-lg border border-outline bg-white text-on-surface focus:ring-2 focus:ring-primary outline-none"
               />
             </div>
             <div className="grid grid-cols-3 gap-2">
               <div>
                 <label className="text-sm font-medium text-on-surface block mb-1">Length</label>
-                <input type="text" placeholder="cm" className="w-full px-2 py-2 text-sm rounded-lg border border-outline bg-white text-on-surface focus:ring-2 focus:ring-primary outline-none" />
+                <input type="text" placeholder="cm" value={form.length} onChange={set('length')} className="w-full px-2 py-2 text-sm rounded-lg border border-outline bg-white text-on-surface focus:ring-2 focus:ring-primary outline-none" />
               </div>
               <div>
                 <label className="text-sm font-medium text-on-surface block mb-1">Width</label>
-                <input type="text" placeholder="cm" className="w-full px-2 py-2 text-sm rounded-lg border border-outline bg-white text-on-surface focus:ring-2 focus:ring-primary outline-none" />
+                <input type="text" placeholder="cm" value={form.width} onChange={set('width')} className="w-full px-2 py-2 text-sm rounded-lg border border-outline bg-white text-on-surface focus:ring-2 focus:ring-primary outline-none" />
               </div>
               <div>
                 <label className="text-sm font-medium text-on-surface block mb-1">Height</label>
-                <input type="text" placeholder="cm" className="w-full px-2 py-2 text-sm rounded-lg border border-outline bg-white text-on-surface focus:ring-2 focus:ring-primary outline-none" />
+                <input type="text" placeholder="cm" value={form.height} onChange={set('height')} className="w-full px-2 py-2 text-sm rounded-lg border border-outline bg-white text-on-surface focus:ring-2 focus:ring-primary outline-none" />
               </div>
             </div>
           </div>
