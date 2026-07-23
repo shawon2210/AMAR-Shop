@@ -1,6 +1,7 @@
 'use client';
 
 import { useState } from 'react';
+import Image from 'next/image';
 import { useSellerOrders, useUpdateOrderStatus, formattedPrice } from '@/services/seller';
 
 const statusFilter = ['All', 'Pending', 'Processing', 'Shipped', 'Delivered', 'Cancelled'];
@@ -148,7 +149,7 @@ export default function SellerOrders() {
                                   <h4 className="text-xs font-semibold text-on-surface-variant uppercase tracking-wider mb-2">Order Items</h4>
                                   {order.items.map((item, i) => (
                                     <div key={i} className="flex items-center gap-3 mb-2">
-                                      <img src={item.image || 'https://picsum.photos/seed/default/40/40'} alt={item.name} className="w-10 h-10 rounded object-cover bg-surface-container-high" />
+                                      <Image src={item.image || 'https://picsum.photos/seed/default/40/40'} alt={item.name} width={40} height={40} className="w-10 h-10 rounded object-cover bg-surface-container-high" />
                                       <div className="flex-1">
                                         <p className="text-sm text-on-surface">{item.name}</p>
                                         <p className="text-xs text-on-surface-variant">Qty: {item.qty} x {item.price}</p>

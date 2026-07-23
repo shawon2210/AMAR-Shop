@@ -1,6 +1,7 @@
 'use client';
 
 import { useState } from 'react';
+import Image from 'next/image';
 import { useAdminPage } from '@/lib/api/hooks';
 import { fetchOrders, updateOrderStatus, addOrderNote } from '@/lib/api/admin';
 import type { AdminOrder, OrderItem } from '@/types';
@@ -211,7 +212,7 @@ export default function OrdersPage() {
                       <div className="flex items-center gap-3">
                         <div className="w-10 h-10 rounded-lg bg-[#f0f0f0] flex items-center justify-center overflow-hidden">
                           {item.product?.images?.[0] ? (
-                            <img src={item.product.images[0]} alt="" className="w-full h-full object-cover" />
+                            <Image src={item.product.images[0]} alt={item.product?.name || 'Product'} width={40} height={40} className="w-full h-full object-cover" />
                           ) : (
                             <span className="material-symbols-outlined text-[#888]">inventory_2</span>
                           )}

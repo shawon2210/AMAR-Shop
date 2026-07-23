@@ -308,8 +308,7 @@ function Sidebar({
       </div>
 
       <nav
-        className="flex-1 overflow-y-auto py-3 space-y-1"
-        style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}
+        className="flex-1 overflow-y-auto py-3 space-y-1 hide-scrollbar"
       >
         {collapsed ? (
           <div className="flex flex-col items-center gap-1 px-2">
@@ -384,7 +383,7 @@ function Sidebar({
               <button
                 onClick={() => {
                   useAuthStore.getState().logout();
-                  window.location.href = '/admin/login';
+                  if (typeof window !== 'undefined') window.location.href = '/admin/login';
                 }}
                 className="p-2.5 rounded-lg hover:bg-white/8 text-white/25 hover:text-red-400 transition-colors"
                 aria-label="Logout"
@@ -424,12 +423,9 @@ function Sidebar({
 
   return (
     <aside
-      className="sticky top-0 h-screen text-white flex flex-col z-auto"
-      style={{
-        width: collapsed ? '72px' : '256px',
-        background: 'linear-gradient(180deg, #0f172a 0%, #0b1220 60%, #090d18 100%)',
-        transition: 'width 300ms ease-out',
-      }}
+      className={`sticky top-0 h-screen text-white flex flex-col z-auto transition-[width] duration-300 ease-out bg-gradient-to-b from-[#0f172a] via-[#0b1220] via-60% to-[#090d18] ${
+        collapsed ? 'w-[72px]' : 'w-[256px]'
+      }`}
     >
       {sidebarContent}
     </aside>
@@ -617,12 +613,11 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
 
   return (
     <div
-      className="min-h-screen"
-      style={{
-        display: 'grid',
-        gridTemplateColumns: isDesktop ? `${sidebarWidth} 1fr` : '1fr',
-        transition: 'grid-template-columns 300ms ease-out',
-      }}
+      className={`min-h-screen grid transition-[grid-template-columns] duration-300 ease-out ${
+        isDesktop 
+          ? sidebarCollapsed ? 'grid-cols-[72px_1fr]' : 'grid-cols-[256px_1fr]'
+          : 'grid-cols-1'
+      }`}
     >
       <Sidebar
         open={sidebarOpen}

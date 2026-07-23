@@ -1,10 +1,11 @@
 'use client';
 
 import { motion } from 'framer-motion';
+import Link from 'next/link';
 import { CartItem as CartItemType } from '@/types';
 import { PriceDisplay } from '@/components/ui/price-display';
 import { useCartStore } from '@/stores/cart-store';
-import Link from 'next/link';
+import Image from 'next/image';
 import { cardItem, fastTransition } from '@/lib/motion-variants';
 
 interface CartItemCardProps {
@@ -30,10 +31,12 @@ export function CartItemCard({ item }: CartItemCardProps) {
       </div>
 
       <Link href={'/product/' + item.product.id} className="w-20 h-20 bg-gray-100 rounded-lg overflow-hidden flex-shrink-0">
-        <img
-          className="w-full h-full object-cover hover:scale-105 transition-transform duration-300"
+        <Image
           src={item.product.images[0]}
           alt={item.product.name}
+          width={80}
+          height={80}
+          className="object-cover hover:scale-105 transition-transform duration-300"
         />
       </Link>
 

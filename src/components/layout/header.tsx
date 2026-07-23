@@ -6,8 +6,11 @@ import { useState, useEffect, useRef } from 'react';
 import { useAuthStore, useAuthHydrated } from '@/stores/auth-store';
 import { useCartStore } from '@/stores/cart-store';
 import { useSearchStore } from '@/stores/search-store';
-import { MobileSidebar } from '@/components/layout/header/mobile-sidebar';
-import { SearchOverlay } from '@/components/commerce/search-overlay';
+import dynamic from 'next/dynamic';
+import Image from 'next/image';
+
+const SearchOverlay = dynamic(() => import('@/components/commerce/search-overlay').then(m => m.SearchOverlay), { ssr: false });
+const MobileSidebar = dynamic(() => import('@/components/layout/header/mobile-sidebar').then(m => m.MobileSidebar), { ssr: false });
 
 const categoryNav = [
   { href: '/category/fashion', label: 'Fashion' },
@@ -92,11 +95,14 @@ export function Header() {
               <span className="material-symbols-outlined text-[22px]">menu</span>
             </button>
             <Link href="/" className="flex items-center shrink-0 ml-0.5 lg:ml-0">
-              <img
+              <Image
                 src="/images/amarshop-logo.png"
                 alt="AmarShop"
+                width={90}
+                height={36}
                 className="h-7 md:h-8 lg:h-9 w-auto object-contain"
                 style={{ minWidth: '90px', maxWidth: '160px' }}
+                unoptimized={false}
               />
             </Link>
           </div>

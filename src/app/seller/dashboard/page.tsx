@@ -33,7 +33,7 @@ export default function SellerDashboard() {
       <div className="flex flex-col items-center justify-center min-h-[400px] text-center">
         <span className="material-symbols-outlined text-4xl text-error mb-2">error</span>
         <p className="text-on-surface-variant">Failed to load dashboard data</p>
-        <button onClick={() => window.location.reload()} className="mt-3 text-sm text-primary font-medium hover:underline">Try Again</button>
+        <button onClick={() => typeof window !== 'undefined' && window.location.reload()} className="mt-3 text-sm text-primary font-medium hover:underline">Try Again</button>
       </div>
     );
   }

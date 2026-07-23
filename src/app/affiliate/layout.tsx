@@ -2,6 +2,7 @@
 
 import { useState } from 'react';
 import Link from 'next/link';
+import Image from 'next/image';
 import { usePathname } from 'next/navigation';
 
 const navItems = [
@@ -27,7 +28,7 @@ export default function AffiliateLayout({ children }: { children: React.ReactNod
         <div className="flex items-center gap-3 px-5 h-16 border-b border-white/10 shrink-0">
           <span className="material-symbols-outlined text-primary text-3xl">campaign</span>
           <div>
-            <img src="/images/amarshop-logo.png" alt="AmarShop" className="w-[clamp(140px,16vw,260px)] h-auto object-contain" />
+            <Image src="/images/amarshop-logo.png" alt="AmarShop" width={180} height={40} className="w-[clamp(140px,16vw,260px)] h-auto object-contain" />
             <p className="text-[10px] text-white/50">Affiliate Dashboard</p>
           </div>
         </div>

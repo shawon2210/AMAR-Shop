@@ -2,6 +2,7 @@
 
 import { motion, AnimatePresence } from 'framer-motion';
 import Link from 'next/link';
+import Image from 'next/image';
 import { useState, useEffect, useRef } from 'react';
 import { useCartStore } from '@/stores/cart-store';
 import { CartItemCard } from '@/components/commerce/cart-item';
@@ -92,8 +93,8 @@ export default function CartPage() {
             <div className="space-y-2">
               {removedItems.slice(0, 3).map(r => (
                 <div key={r.item.id} className="flex items-center gap-3 bg-white p-3 rounded-lg border border-gray-100">
-                    <div className="w-10 h-10 rounded-md bg-gray-100 overflow-hidden shrink-0">
-                    <img src={r.item.product.images[0]} alt={r.item.product.name} className="w-full h-full object-cover" />
+                  <div className="w-10 h-10 rounded-md bg-gray-100 overflow-hidden shrink-0 relative">
+                    <Image src={r.item.product.images[0]} alt={r.item.product.name} width={40} height={40} className="w-full h-full object-cover" />
                   </div>
                   <div className="flex-1 min-w-0">
                     <p className="text-sm truncate">{r.item.product.name}</p>
@@ -286,7 +287,7 @@ export default function CartPage() {
         {/* Right Column — Order Summary (Desktop only) */}
         <div className="hidden lg:block">
           <div className="sticky top-24 space-y-4">
-            <div className="bg-white rounded-xl border border-gray-100 shadow-sm p-5">
+            <div className="bg-white rounded-xl border border-gray-100 shadow-sm p-5" aria-live="polite">
               <h3 className="text-base font-bold text-gray-900 mb-4">Order Summary</h3>
               <div className="space-y-3 text-sm">
                 <div className="flex justify-between text-gray-600">
@@ -365,6 +366,7 @@ export default function CartPage() {
         initial="hidden"
         animate="visible"
         className="fixed left-0 right-0 z-40 bg-white/95 backdrop-blur-md border-t border-gray-200 shadow-[0px_-4px_12px_rgba(0,0,0,0.08)] bottom-14 lg:hidden pb-[calc(0.375rem+env(safe-area-inset-bottom,0px))]"
+        aria-live="polite"
       >
         <div className="app-container flex items-center justify-between py-3">
           <div className="flex items-center gap-3">

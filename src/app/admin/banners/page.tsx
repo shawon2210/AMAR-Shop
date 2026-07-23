@@ -1,6 +1,7 @@
 'use client';
 
 import { useState } from 'react';
+import Image from 'next/image';
 import { useAdminData } from '@/lib/api/hooks';
 import { fetchBanners, createBanner, updateBanner, deleteBanner } from '@/lib/api/admin';
 import { AdminLoading, AdminError, AdminEmpty } from '@/components/ui/admin-states';
@@ -141,7 +142,7 @@ export default function BannersPage() {
               <div className="flex flex-col sm:flex-row items-start sm:items-center gap-4">
                 <div className="w-full sm:w-48 h-24 rounded-lg bg-gradient-to-br from-[#f0f0f0] to-[#e0e0e0] flex items-center justify-center overflow-hidden">
                   {banner.image ? (
-                    <img src={banner.image} alt={banner.title} className="w-full h-full object-cover" />
+                    <Image src={banner.image} alt={banner.title} width={200} height={100} className="w-full h-full object-cover" />
                   ) : (
                     <span className="material-symbols-outlined text-[#888] text-3xl">image</span>
                   )}

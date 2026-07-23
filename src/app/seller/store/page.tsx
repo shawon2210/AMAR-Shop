@@ -1,6 +1,7 @@
 'use client';
 
 import { useState, useEffect } from 'react';
+import Image from 'next/image';
 import { useSellerStore, useUpdateSellerStore } from '@/services/seller';
 
 export default function SellerStore() {
@@ -51,7 +52,7 @@ export default function SellerStore() {
         <div className="h-28 bg-gradient-to-r from-primary/80 to-tertiary/60 relative">
           <div className="absolute -bottom-10 left-6 w-20 h-20 rounded-xl bg-white border-2 border-white shadow-md overflow-hidden">
             {store.logo ? (
-              <img src={store.logo} alt={store.name} className="w-full h-full object-cover" />
+              <Image src={store.logo} alt={store.name} width={80} height={80} className="w-full h-full object-cover" />
             ) : (
               <div className="w-full h-full bg-primary flex items-center justify-center text-white text-2xl font-bold">
                 {store.name.charAt(0)}

@@ -4,6 +4,7 @@ let isRefreshing = false;
 let refreshPromise: Promise<boolean> | null = null;
 
 async function attemptRefresh(): Promise<boolean> {
+  if (typeof window === 'undefined') return false;
   if (isRefreshing && refreshPromise) return refreshPromise;
   isRefreshing = true;
   refreshPromise = (async () => {
@@ -17,6 +18,7 @@ async function attemptRefresh(): Promise<boolean> {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ refreshToken }),
+        credentials: 'include',
       });
       if (!res.ok) return false;
       const data = await res.json();
@@ -63,14 +65,14 @@ export async function request<T>(
   };
   if (token) headers['Authorization'] = `Bearer ${token}`;
 
-  let res = await fetch(`${API_BASE}${path}`, { ...options, headers });
+  let res = await fetch(`${API_BASE}${path}`, { ...options, headers, credentials: 'include' });
 
   if (res.status === 401 && !path.startsWith('/auth/')) {
     const refreshed = await attemptRefresh();
     if (refreshed) {
       const newToken = getToken();
       if (newToken) headers['Authorization'] = `Bearer ${newToken}`;
-      res = await fetch(`${API_BASE}${path}`, { ...options, headers });
+      res = await fetch(`${API_BASE}${path}`, { ...options, headers, credentials: 'include' });
     }
   }
 
@@ -78,8 +80,8 @@ export async function request<T>(
     if (res.status === 401 && typeof window !== 'undefined') {
       localStorage.removeItem('amarshop-auth');
       window.dispatchEvent(new CustomEvent('amarshop-auth-logout'));
-      const currentPath = window.location.pathname + window.location.search;
-      if (!path.startsWith('/auth/')) {
+      const currentPath = typeof window !== 'undefined' ? window.location.pathname + window.location.search : '';
+      if (!path.startsWith('/auth/') && typeof window !== 'undefined') {
         window.location.href = `/auth/login?redirect=${encodeURIComponent(currentPath)}`;
       }
       throw new Error('Session expired. Redirecting to login...');

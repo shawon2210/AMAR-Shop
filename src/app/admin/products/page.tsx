@@ -1,6 +1,7 @@
 'use client';
 
 import { useState } from 'react';
+import Image from 'next/image';
 import { useAdminPage } from '@/lib/api/hooks';
 import { fetchProducts, approveProduct, rejectProduct } from '@/lib/api/admin';
 import { AdminLoading, AdminError, AdminEmpty } from '@/components/ui/admin-states';
@@ -115,7 +116,7 @@ export default function ProductsPage() {
                       <div className="flex items-center gap-2 sm:gap-3">
                         <div className="w-8 h-8 sm:w-10 sm:h-10 rounded-lg bg-[#f0f0f0] flex items-center justify-center overflow-hidden shrink-0">
                           {p.images?.[0] ? (
-                            <img src={p.images[0]} alt="" className="w-full h-full object-cover" />
+                            <Image src={p.images[0]} alt={p.name} width={40} height={40} className="w-full h-full object-cover" />
                           ) : (
                             <span className="material-symbols-outlined text-[#888] text-[16px] sm:text-[20px]">inventory_2</span>
                           )}
@@ -162,7 +163,7 @@ export default function ProductsPage() {
                 <div className="flex items-center gap-3">
                   <div className="w-12 h-12 rounded-lg bg-[#f0f0f0] flex items-center justify-center overflow-hidden flex-shrink-0">
                     {p.images?.[0] ? (
-                      <img src={p.images[0]} alt="" className="w-full h-full object-cover" />
+                      <Image src={p.images[0]} alt={p.name} width={48} height={48} className="w-full h-full object-cover" />
                     ) : (
                       <span className="material-symbols-outlined text-[#888] text-[20px]">inventory_2</span>
                     )}

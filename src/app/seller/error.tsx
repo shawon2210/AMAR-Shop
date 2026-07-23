@@ -27,6 +27,17 @@ export default function SellerError({
       >
         Retry
       </button>
+
+      {process.env.NODE_ENV === 'development' && (error?.stack || error?.digest) && (
+        <details className="mt-4 text-left border-t border-gray-100 dark:border-gray-800 pt-3">
+          <summary className="cursor-pointer text-xs font-medium text-gray-500 hover:text-gray-700 dark:hover:text-gray-300">
+            Debug Details {error?.digest && `(Digest: ${error.digest})`}
+          </summary>
+          <pre className="mt-2 p-3 bg-gray-100 dark:bg-gray-950 rounded-lg overflow-x-auto text-[11px] font-mono text-red-600 dark:text-red-400 max-h-48">
+            {error?.stack}
+          </pre>
+        </details>
+      )}
     </div>
   );
 }

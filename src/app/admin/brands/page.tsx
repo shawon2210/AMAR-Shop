@@ -1,6 +1,7 @@
 'use client';
 
 import { useState } from 'react';
+import Image from 'next/image';
 import { AdminLoading, AdminError, AdminEmpty } from '@/components/ui/admin-states';
 import { Pagination } from '@/components/ui/pagination';
 import { getErrorMessage } from '@/lib/error-helper';
@@ -179,7 +180,7 @@ export default function BrandsPage() {
                     </td>
                     <td className="p-3">
                       {b.logo ? (
-                        <img src={b.logo} alt={b.name} className="w-10 h-10 rounded-lg object-contain bg-[#f5f5f5]" />
+                        <Image src={b.logo} alt={b.name} width={40} height={40} className="w-10 h-10 rounded-lg object-contain bg-[#f5f5f5]" />
                       ) : (
                         <div className="w-10 h-10 rounded-lg bg-[#f0f0f0] flex items-center justify-center">
                           <span className="material-symbols-outlined text-[#888] text-[20px]">image</span>
@@ -217,7 +218,7 @@ export default function BrandsPage() {
               <div key={b.id} className="bg-white rounded-xl border border-[#eee] p-3 space-y-2">
                 <div className="flex items-center gap-3">
                   {b.logo ? (
-                    <img src={b.logo} alt={b.name} className="w-10 h-10 rounded-lg object-contain bg-[#f5f5f5]" />
+                    <Image src={b.logo} alt={b.name} width={40} height={40} className="w-10 h-10 rounded-lg object-contain bg-[#f5f5f5]" />
                   ) : (
                     <div className="w-10 h-10 rounded-lg bg-[#f0f0f0] flex items-center justify-center">
                       <span className="material-symbols-outlined text-[#888] text-[20px]">image</span>

@@ -2,6 +2,7 @@
 
 import { useEffect, useRef } from 'react';
 import Link from 'next/link';
+import Image from 'next/image';
 import { usePathname } from 'next/navigation';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useAuthStore, useAuthHydrated } from '@/stores/auth-store';
@@ -86,7 +87,14 @@ export function MobileSidebar({ open, onClose }: { open: boolean; onClose: () =>
           >
             {/* Header with logo + close */}
             <div className="flex items-center justify-between px-5 h-16 md:h-18 border-b border-gray-100">
-              <img src="/images/amarshop-logo.png" alt="AmarShop" className="w-110px h-auto" />
+              <Image
+          src="/images/amarshop-logo.png"
+          alt="AmarShop"
+          width={110}
+          height={36}
+          className="w-110px h-auto"
+          unoptimized={false}
+        />
               <button
                 onClick={onClose}
                 className="flex items-center justify-center w-9 h-9 rounded-lg text-gray-500 hover:bg-gray-100 transition-colors"

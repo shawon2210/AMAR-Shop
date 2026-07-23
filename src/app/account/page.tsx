@@ -2,6 +2,7 @@
 
 import { useEffect } from 'react';
 import Link from 'next/link';
+import Image from 'next/image';
 import { useRouter } from 'next/navigation';
 import { useAuthStore, useAuthHydrated } from '@/stores/auth-store';
 
@@ -120,7 +121,7 @@ export default function AccountPage() {
       <div className="bg-white rounded-xl p-4 flex items-center gap-4 shadow-sm border border-gray-100">
         <div className="w-16 h-16 rounded-full bg-emerald-50 flex items-center justify-center text-primary overflow-hidden shrink-0">
           {user.avatar ? (
-            <img src={user.avatar} alt="" className="w-full h-full object-cover" />
+            <Image src={user.avatar} alt={user.name || 'User avatar'} width={64} height={64} className="w-full h-full object-cover" />
           ) : (
             <span className="material-symbols-outlined text-3xl">person</span>
           )}

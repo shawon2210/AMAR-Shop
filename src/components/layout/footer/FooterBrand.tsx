@@ -1,14 +1,18 @@
 import Link from 'next/link';
 import { SocialLinks } from './SocialLinks';
+import Image from 'next/image';
 
 export function FooterBrand() {
   return (
     <div className="text-center md:text-left">
       <Link href="/" className="inline-flex items-center mb-4">
-        <img
+        <Image
           src="/images/amarshop-logo.png"
           alt="AmarShop"
+          width={170}
+          height={48}
           className="w-[170px] h-auto object-contain mx-auto md:mx-0"
+          unoptimized={false}
         />
       </Link>
 

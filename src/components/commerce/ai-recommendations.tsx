@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
+import Image from 'next/image';
 import { Product } from '@/types';
 import { PriceDisplay } from '@/components/ui/price-display';
 
@@ -101,12 +102,13 @@ export function AIRecommendations({
             href={`/product/${product.id}`}
             className="min-w-[140px] md:min-w-[180px] bg-surface border border-outline-variant rounded-lg overflow-hidden hover:shadow-md transition-shadow shrink-0"
           >
-            <div className="aspect-square bg-surface-container overflow-hidden">
-              <img
-                className="w-full h-full object-cover hover:scale-105 transition-transform duration-300"
+            <div className="relative aspect-square bg-surface-container overflow-hidden">
+              <Image
                 src={product.images?.[0] || '/placeholder.svg'}
                 alt={product.name}
-                loading="lazy"
+                fill
+                className="w-full h-full object-cover hover:scale-105 transition-transform duration-300"
+                unoptimized={false}
               />
             </div>
             <div className="p-2 space-y-1">

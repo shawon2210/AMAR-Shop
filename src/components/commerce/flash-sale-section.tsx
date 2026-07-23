@@ -2,6 +2,7 @@
 
 import { useState, useEffect, memo, useCallback } from 'react';
 import Link from 'next/link';
+import Image from 'next/image';
 import { ArrowRight } from 'lucide-react';
 import { getFlashSaleProducts } from '@/services/products';
 import { flashSaleProducts } from '@/lib/data/products';
@@ -70,11 +71,12 @@ const FlashCard = memo(function FlashCard({ product }: { product: Product }) {
     >
       <div className="relative aspect-square overflow-hidden bg-gray-50 shrink-0">
         {!imgError ? (
-          <img
+          <Image
             src={product.images[0]}
             alt={product.name}
-            loading="lazy"
-            className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105"
+            fill
+            sizes="(max-width: 768px) 50vw, 25vw"
+            className="object-cover transition-transform duration-300 group-hover:scale-105"
             onError={() => setImgError(true)}
           />
         ) : (

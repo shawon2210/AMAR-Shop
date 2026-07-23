@@ -1,6 +1,7 @@
 'use client';
 
 import { useState } from 'react';
+import Image from 'next/image';
 import { useSellerInventory } from '@/services/seller';
 
 function getStockLevel(stock: number): { color: string; label: string } {
@@ -114,7 +115,7 @@ export default function SellerInventory() {
                           <div className={`w-2 h-2 rounded-full ${item.stockCount > 20 ? 'bg-green-500' : item.stockCount >= 5 ? 'bg-amber-500' : 'bg-red-500'}`} />
                           <div className="flex items-center gap-2">
                             {item.images?.[0] && (
-                              <img src={item.images[0]} alt={item.name} className="w-8 h-8 rounded object-cover bg-surface-container-high" />
+                              <Image src={item.images[0]} alt={item.name} width={32} height={32} className="w-8 h-8 rounded object-cover bg-surface-container-high" />
                             )}
                             <span className="font-medium text-on-surface">{item.name}</span>
                           </div>

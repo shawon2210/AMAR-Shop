@@ -1,6 +1,7 @@
 'use client';
 
 import { useState } from 'react';
+import Image from 'next/image';
 import { useRouter } from 'next/navigation';
 import { api } from '@/services/api';
 import { useUIStore } from '@/stores/ui-store';
@@ -242,7 +243,7 @@ export default function NewProduct() {
               <div className="flex flex-wrap gap-3">
                 {images.map((img, i) => (
                   <div key={i} className="relative group">
-                    <img src={img} alt={`Upload ${i + 1}`} className="w-20 h-20 rounded-lg object-cover border border-surface-container-high" />
+                    <Image src={img} alt={`Upload ${i + 1}`} width={80} height={80} className="w-20 h-20 rounded-lg object-cover border border-surface-container-high" />
                     <button
                       onClick={() => setImages(images.filter((_, idx) => idx !== i))}
                       className="absolute -top-2 -right-2 w-5 h-5 bg-error text-white rounded-full flex items-center justify-center text-xs opacity-0 group-hover:opacity-100 transition-opacity"

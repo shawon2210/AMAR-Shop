@@ -3,6 +3,7 @@
 import { useCallback, useEffect, useRef, useState } from "react";
 import Link from "next/link";
 import { ChevronLeft, ChevronRight, ArrowRight } from "lucide-react";
+import Image from 'next/image';
 
 interface HeroSlide {
   image: string;
@@ -97,14 +98,16 @@ export function HeroSlider() {
           {imgErrors[i] ? (
             <div className="absolute inset-0 bg-gradient-to-br from-primary/20 to-primary-fixed" />
           ) : (
-            <img
-              src={slide.image}
-              alt=""
-              loading={i === 0 ? "eager" : "lazy"}
-              fetchPriority={i === 0 ? "high" : "auto"}
-              className="absolute inset-0 h-full w-full object-cover"
-              onError={() => setImgErrors(p => ({ ...p, [i]: true }))}
-            />
+            <Image
+                src={slide.image}
+                alt=""
+                fill
+                className="absolute inset-0 h-full w-full object-cover"
+                loading={i === 0 ? "eager" : "lazy"}
+                fetchPriority={i === 0 ? "high" : "auto"}
+                onError={() => setImgErrors(p => ({ ...p, [i]: true }))}
+                unoptimized={false}
+              />
           )}
 
           {/* Layered gradient for depth */}

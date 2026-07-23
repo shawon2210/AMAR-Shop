@@ -1,6 +1,7 @@
 'use client';
 
 import { useMemo, useState } from 'react';
+import Image from 'next/image';
 import { FlashSaleBanner } from '@/components/commerce/flash-sale-banner';
 import { ProductCard } from '@/components/commerce/product-card';
 import { useGetFlashSaleProducts } from '@/services/products';
@@ -81,7 +82,9 @@ const UpcomingProductCard = ({ product }: { product: Product }) => {
       className="bg-white border border-gray-200 rounded-xl overflow-hidden group opacity-90"
     >
       <div className="relative aspect-square overflow-hidden grayscale-[0.2]">
-        <img
+        <Image
+          fill
+          sizes="(max-width: 768px) 50vw, 25vw"
           className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
           src={product.images[0]}
           alt={product.name}

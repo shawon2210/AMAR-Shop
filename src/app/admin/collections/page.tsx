@@ -1,6 +1,7 @@
 'use client';
 
 import { useState } from 'react';
+import Image from 'next/image';
 import { AdminLoading, AdminError, AdminEmpty } from '@/components/ui/admin-states';
 import { Pagination } from '@/components/ui/pagination';
 import { getErrorMessage } from '@/lib/error-helper';
@@ -160,7 +161,7 @@ export default function CollectionsPage() {
               <div key={c.id} className="bg-white rounded-xl border border-[#eee] overflow-hidden shadow-sm hover:shadow-md transition-shadow">
                 <div className="h-40 bg-gradient-to-br from-[#f0f0f0] to-[#e0e0e0] flex items-center justify-center overflow-hidden">
                   {c.image ? (
-                    <img src={c.image} alt={c.name} className="w-full h-full object-cover" />
+                    <Image src={c.image} alt={c.name} width={400} height={200} className="w-full h-full object-cover" />
                   ) : (
                     <span className="material-symbols-outlined text-[#888] text-4xl">collections_bookmark</span>
                   )}

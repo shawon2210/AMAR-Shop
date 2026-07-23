@@ -3,6 +3,7 @@
 import { useState, useRef, useCallback, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { X, ChevronLeft, ChevronRight, ZoomIn } from 'lucide-react';
+import Image from 'next/image';
 
 interface ProductGalleryProps {
   images: string[];
@@ -26,7 +27,7 @@ export function ProductGallery({ images, productName, isFlashSale, discount }: P
   useEffect(() => {
     const preload = (idx: number) => {
       if (loadedImages.has(idx) || idx < 0 || idx >= images.length) return;
-      const img = new Image();
+      const img = new window.Image();
       img.onload = () => setLoadedImages(prev => new Set(prev).add(idx));
       img.onerror = () => setImgErrors(prev => new Set(prev).add(idx));
       img.src = images[idx];
@@ -127,17 +128,19 @@ export function ProductGallery({ images, productName, isFlashSale, discount }: P
               <span className="material-symbols-outlined text-5xl text-gray-300">image</span>
             </div>
           ) : (
-            <img
-              src={mainImage}
-              alt={`${productName} - Image ${selectedIndex + 1}`}
-              className={`w-full h-full object-cover transition-opacity duration-300 ${loadedImages.has(selectedIndex) ? 'opacity-100' : 'opacity-0'}`}
-              style={isZoomed ? {
-                transform: 'scale(2)',
-                transformOrigin: `${zoomPosition.x}% ${zoomPosition.y}%`,
-                transition: 'transform 0.1s ease-out',
-              } : undefined}
-              loading={selectedIndex === 0 ? 'eager' : 'lazy'}
-            />
+            <Image
+                src={mainImage}
+                alt={`${productName} - Image ${selectedIndex + 1}`}
+                fill
+                className={`w-full h-full object-cover transition-opacity duration-300 ${loadedImages.has(selectedIndex) ? 'opacity-100' : 'opacity-0'}`}
+                style={isZoomed ? {
+                  transform: 'scale(2)',
+                  transformOrigin: `${zoomPosition.x}% ${zoomPosition.y}%`,
+                  transition: 'transform 0.1s ease-out',
+                } : undefined}
+                loading={selectedIndex === 0 ? 'eager' : 'lazy'}
+                unoptimized={false}
+              />
           )}
 
           {/* Badges */}
@@ -203,12 +206,14 @@ export function ProductGallery({ images, productName, isFlashSale, discount }: P
                     <span className="material-symbols-outlined text-lg text-gray-300">image</span>
                   </div>
                 ) : (
-                  <img
-                    className="w-full h-full object-cover"
-                    src={img}
-                    alt={`${productName} thumbnail ${idx + 1}`}
-                    loading="lazy"
-                  />
+                  <Image
+                     src={img}
+                     alt={`${productName} thumbnail ${idx + 1}`}
+                     fill
+                     className="w-full h-full object-cover"
+                     loading="lazy"
+                     unoptimized={false}
+                   />
                 )}
               </button>
             ))}

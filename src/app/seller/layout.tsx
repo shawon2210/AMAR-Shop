@@ -26,7 +26,7 @@ export default function SellerLayout({ children }: { children: React.ReactNode }
   const pathname = usePathname();
 
   return (
-    <div className="min-h-screen grid" style={{ gridTemplateColumns: 'auto 1fr' }}>
+    <div className={`min-h-screen grid ${sidebarCollapsed ? 'grid-cols-[72px_1fr]' : 'grid-cols-[256px_1fr]'}`}>
       {/* Mobile overlay */}
       {sidebarOpen && (
         <div
@@ -39,8 +39,7 @@ export default function SellerLayout({ children }: { children: React.ReactNode }
       <aside
         className={`fixed lg:sticky top-0 left-0 z-50 h-screen bg-gradient-to-b from-[#0f172a] to-[#0b1220] text-white flex flex-col transition-all duration-300 ease-out ${
           sidebarOpen ? 'translate-x-0' : '-translate-x-full lg:translate-x-0'
-        }`}
-        style={{ width: sidebarCollapsed ? '72px' : '256px' }}
+        } ${sidebarCollapsed ? 'w-[72px]' : 'w-[256px]'}`}
       >
         <div className="flex items-center h-16 px-5 border-b border-white/[0.04]">
           <Link href="/seller/dashboard" className="flex items-center gap-3">

@@ -1,6 +1,7 @@
 'use client';
 
 import { useState, useEffect } from 'react';
+import Image from 'next/image';
 import { useAdminData } from '@/lib/api/hooks';
 import { AdminLoading, AdminError, AdminEmpty } from '@/components/ui/admin-states';
 import { Pagination } from '@/components/ui/pagination';
@@ -185,11 +186,11 @@ export default function ReturnsPage() {
                   <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">RET-{ret.id}</td>
                   <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-700">#{ret.orderId}</td>
                   <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-700 flex items-center space-x-2">
-                    <img src={ret.customer.image || '/placeholder.jpg'} alt={ret.customer.name} className="h-8 w-8 rounded-full object-cover" />
+                    <Image src={ret.customer.image || '/placeholder.jpg'} alt={ret.customer.name} width={32} height={32} className="h-8 w-8 rounded-full object-cover" />
                     <span>{ret.customer.name}</span>
                   </td>
                   <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-700 flex items-center space-x-2">
-                    <img src={ret.product.image || '/placeholder.jpg'} alt={ret.product.name} className="h-8 w-8 rounded object-cover" />
+                    <Image src={ret.product.image || '/placeholder.jpg'} alt={ret.product.name} width={32} height={32} className="h-8 w-8 rounded object-cover" />
                     <span>{ret.product.name}</span>
                   </td>
                   <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-600 line-clamp-2">{ret.reason}</td>

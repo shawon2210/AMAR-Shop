@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { useAuthStore } from '@/stores/auth-store';
 
@@ -17,8 +17,13 @@ export default function EditAccountPage() {
   const [error, setError] = useState('');
   const [success, setSuccess] = useState(false);
 
+  useEffect(() => {
+    if (!isAuthenticated || !user) {
+      router.push('/auth/login?redirect=/account/edit');
+    }
+  }, [isAuthenticated, user, router]);
+
   if (!isAuthenticated || !user) {
-    router.push('/auth/login?redirect=/account/edit');
     return null;
   }
 

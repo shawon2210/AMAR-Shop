@@ -2,6 +2,7 @@
 
 import { useState } from 'react';
 import Link from 'next/link';
+import Image from 'next/image';
 import { useSellerProducts, useDeleteProduct, formattedPrice } from '@/services/seller';
 
 const statusColors: Record<string, string> = {
@@ -156,9 +157,11 @@ export default function SellerProducts() {
                   </td>
                   <td className="p-3">
                     <div className="flex items-center gap-3">
-                      <img
+                      <Image
                         src={product.images?.[0] || 'https://picsum.photos/seed/default/80/80'}
                         alt={product.name}
+                        width={40}
+                        height={40}
                         className="w-10 h-10 rounded-lg object-cover bg-surface-container-high"
                       />
                       <div>
@@ -202,7 +205,7 @@ export default function SellerProducts() {
           {products.map((product) => (
             <div key={product.id} className="bg-white rounded-xl border border-surface-container-high shadow-sm overflow-hidden hover:shadow-md transition-shadow">
               <div className="relative">
-                <img src={product.images?.[0] || 'https://picsum.photos/seed/default/80/80'} alt={product.name} className="w-full h-40 object-cover bg-surface-container-high" />
+                <Image src={product.images?.[0] || 'https://picsum.photos/seed/default/80/80'} alt={product.name} width={400} height={160} className="w-full h-40 object-cover bg-surface-container-high" />
                 <span className={`absolute top-2 right-2 text-[10px] font-semibold px-2 py-0.5 rounded-full ${statusColors[product.status] || 'bg-gray-100 text-gray-600'}`}>
                   {product.status}
                 </span>

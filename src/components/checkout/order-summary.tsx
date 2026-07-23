@@ -1,6 +1,7 @@
 'use client';
 
 import type { CartItem } from '@/types';
+import Image from 'next/image';
 
 export function OrderSummary({
   items,
@@ -22,11 +23,14 @@ export function OrderSummary({
       <div className="space-y-3 mb-6">
         {items.map((item) => (
           <div key={item.id} className="flex items-center gap-4">
-            <img
-              className="w-16 h-16 rounded-xl object-cover bg-slate-50 dark:bg-slate-900"
-              src={item.product.images?.[0] || '/placeholder.png'}
-              alt={item.product.name}
-            />
+            <Image
+                className="w-16 h-16 rounded-xl object-cover bg-slate-50 dark:bg-slate-900"
+                src={item.product.images?.[0] || '/placeholder.png'}
+                alt={item.product.name}
+                width={64}
+                height={64}
+                unoptimized={false}
+              />
             <div className="flex-1 min-w-0">
               <p className="text-sm truncate font-medium text-slate-900 dark:text-white">{item.product.name}</p>
               <p className="text-xs text-slate-500">Qty: {item.quantity}</p>

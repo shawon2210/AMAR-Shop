@@ -5,6 +5,7 @@ import { useRouter } from 'next/navigation';
 import { useSearchStore } from '@/stores/search-store';
 import { products } from '@/lib/data/products';
 import { Search, X, TrendingUp, Clock, ArrowRight, Store, Grid3X3 } from 'lucide-react';
+import Image from 'next/image';
 
 const DEBOUNCE_MS = 200;
 
@@ -375,8 +376,8 @@ export function SearchOverlay() {
                               selectedIndex === globalIdx ? 'bg-primary/5 text-primary' : 'text-gray-700 hover:bg-gray-50'
                             }`}
                           >
-                            <div className="w-8 h-8 rounded-md bg-gray-100 overflow-hidden shrink-0">
-                              <img src={prod.images[0]} alt={prod.name} className="w-full h-full object-cover" />
+                            <div className="relative w-8 h-8 rounded-md bg-gray-100 overflow-hidden shrink-0">
+                              <Image src={prod.images[0]} alt={prod.name} className="w-full h-full object-cover" fill />
                             </div>
                             <div className="flex-1 text-left min-w-0">
                               <p className="truncate">{highlightMatch(prod.name, query)}</p>

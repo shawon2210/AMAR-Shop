@@ -1,5 +1,7 @@
 'use client';
 
+import Image from 'next/image';
+
 const paymentMethods = [
   { id: 'bkash', name: 'bKash', icon: 'https://cdn-icons-png.flaticon.com/128/196/196578.png' },
   { id: 'nagad', name: 'Nagad', icon: 'https://cdn-icons-png.flaticon.com/128/196/196578.png' },
@@ -37,7 +39,7 @@ export function PaymentSection({
               className="w-4 h-4 text-primary"
             />
             {method.icon.startsWith('http') ? (
-              <img src={method.icon} alt={method.name} className="w-8 h-8 object-contain" />
+              <Image src={method.icon} alt={method.name} width={32} height={32} className="w-8 h-8 object-contain" unoptimized={false} />
             ) : (
               <span className="material-symbols-outlined text-slate-400 text-2xl">{method.icon}</span>
             )}
