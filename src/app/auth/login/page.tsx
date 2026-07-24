@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, Suspense } from 'react';
+import { useState, useEffect, Suspense } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import Link from 'next/link';
 import { useAuthStore } from '@/stores/auth-store';
@@ -45,6 +45,12 @@ function LoginForm() {
       router.push(getDashboardRoute());
     }
   }
+
+  useEffect(() => {
+    if (isAuthenticated && user) {
+      router.push(getDashboardRoute());
+    }
+  }, [isAuthenticated, user, router]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();

@@ -39,7 +39,7 @@ export function useAdminData<T>(
         setLoading(false);
       }
     }
-  }, deps); // eslint-disable-line react-hooks/exhaustive-deps
+  }, [fetcher, deps]);
 
   useEffect(() => {
     fetch();

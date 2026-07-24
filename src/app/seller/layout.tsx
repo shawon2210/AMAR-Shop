@@ -2,7 +2,8 @@
 
 import { useState } from 'react';
 import Link from 'next/link';
-import { usePathname } from 'next/navigation';
+import { usePathname, useRouter } from 'next/navigation';
+import { useAuthStore, useAuthHydrated } from '@/stores/auth-store';
 import { ErrorBoundary } from '@/components/ui/error-boundary';
 
 const navItems = [
@@ -21,9 +22,34 @@ const navItems = [
 ];
 
 export default function SellerLayout({ children }: { children: React.ReactNode }) {
+  const router = useRouter();
+  const pathname = usePathname();
+  const hydrated = useAuthHydrated();
+  const user = useAuthStore(s => s.user);
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
-  const pathname = usePathname();
+
+  if (!hydrated) {
+    return (
+      <div className="min-h-screen flex items-center justify-center bg-slate-50">
+        <span className="material-symbols-outlined animate-spin text-primary text-3xl">progress_activity</span>
+      </div>
+    );
+  }
+
+  if (!user) {
+    if (typeof window !== 'undefined') {
+      router.replace('/auth/login?redirect=' + encodeURIComponent(pathname));
+    }
+    return null;
+  }
+
+  if (user.role !== 'SELLER' && user.role !== 'ADMIN' && user.role !== 'SUPER_ADMIN') {
+    if (typeof window !== 'undefined') {
+      router.replace('/');
+    }
+    return null;
+  }
 
   return (
     <div className={`min-h-screen grid ${sidebarCollapsed ? 'grid-cols-[72px_1fr]' : 'grid-cols-[256px_1fr]'}`}>

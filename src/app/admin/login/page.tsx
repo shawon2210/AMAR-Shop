@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, Suspense } from 'react';
-import { useRouter, useSearchParams } from 'next/navigation';
+import { useRouter, useSearchParams, redirect } from 'next/navigation';
 import { useAuthStore } from '@/stores/auth-store';
 import { getErrorMessage } from '@/lib/error-helper';
 
@@ -20,11 +20,10 @@ function AdminLoginForm() {
 
   if (user) {
     if (user.role === 'ADMIN' || user.role === 'SUPER_ADMIN') {
-      router.replace(redirectTo);
+      redirect(redirectTo);
     } else {
-      router.replace('/');
+      redirect('/');
     }
-    return null;
   }
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -33,12 +32,7 @@ function AdminLoginForm() {
     setLoading(true);
     try {
       await login(`+880${phone}`, password);
-      const stored = localStorage.getItem('amarshop-auth');
-      let role = '';
-      if (stored) {
-        const parsed = JSON.parse(stored);
-        role = parsed?.state?.user?.role || '';
-      }
+      const role = useAuthStore.getState().user?.role;
       if (role !== 'ADMIN' && role !== 'SUPER_ADMIN') {
         useAuthStore.getState().logout();
         setError('Access denied. Admin credentials required.');
@@ -54,12 +48,12 @@ function AdminLoginForm() {
   };
 
   return (
-    <div className="flex flex-col items-center justify-center min-h-[80dvh] px-3 sm:px-4 py-6 sm:py-8 bg-gradient-to-br from-[#0f172a] via-[#0b1220] to-[#090d18]">
-      <div className="w-full max-w-[440px]">
-        <div className="p-5 sm:p-6 md:p-8 bg-white/5 backdrop-blur-sm rounded-2xl border border-white/[0.06] shadow-2xl">
+    <div className="flex flex-col items-center justify-center min-h-[80dvh] px-3 sm:px-4 py-6 sm:py-8 bg-linear-to-br from-[#0f172a] via-[#0b1220] to-[#090d18]">
+      <div className="w-full max-w-440px">
+        <div className="p-5 sm:p-6 md:p-8 bg-white/5 backdrop-blur-sm rounded-2xl border border-white/0.06 shadow-2xl">
           <div className="text-center mb-6 sm:mb-8">
             <div className="flex items-center justify-center mb-4">
-              <div className="w-11 h-11 sm:w-12 sm:h-12 rounded-xl bg-gradient-to-br from-primary to-primary/60 flex items-center justify-center shadow-lg shadow-primary/25">
+              <div className="w-11 h-11 sm:w-12 sm:h-12 rounded-xl bg-linear-to-br from-primary to-primary/60 flex items-center justify-center shadow-lg shadow-primary/25">
                 <span className="material-symbols-outlined text-white text-2xl sm:text-[28px]">admin_panel_settings</span>
               </div>
             </div>
@@ -79,8 +73,8 @@ function AdminLoginForm() {
 
             <div>
               <label className="text-xs sm:text-sm font-medium block mb-1.5 text-white/70">Phone Number</label>
-              <div className="grid grid-cols-[auto_1fr] border border-white/[0.08] rounded-xl overflow-hidden focus-within:ring-2 focus-within:ring-primary bg-white/[0.04]">
-                <span className="px-3 py-2.5 sm:py-3 bg-white/[0.06] text-xs sm:text-sm font-medium border-r border-white/[0.08] text-white/50">+880</span>
+              <div className="grid grid-cols-[auto_1fr] border border-white/0.08 rounded-xl overflow-hidden focus-within:ring-2 focus-within:ring-primary bg-white/0.04">
+                <span className="px-3 py-2.5 sm:py-3 bg-white/0.06 text-xs sm:text-sm font-medium border-r border-white/0.08 text-white/50">+880</span>
                 <input
                   type="tel"
                   value={phone}
@@ -96,7 +90,7 @@ function AdminLoginForm() {
 
             <div>
               <label className="text-xs sm:text-sm font-medium block mb-1.5 text-white/70">Password</label>
-              <div className="grid grid-cols-[1fr_auto] border border-white/[0.08] rounded-xl overflow-hidden focus-within:ring-2 focus-within:ring-primary bg-white/[0.04]">
+              <div className="grid grid-cols-[1fr_auto] border border-white/0.08 rounded-xl overflow-hidden focus-within:ring-2 focus-within:ring-primary bg-white/0.04">
                 <input
                   type={showPassword ? 'text' : 'password'}
                   value={password}
@@ -136,7 +130,7 @@ function AdminLoginForm() {
             </button>
           </form>
 
-          <div className="mt-6 sm:mt-8 pt-5 sm:pt-6 border-t border-white/[0.06]">
+          <div className="mt-6 sm:mt-8 pt-5 sm:pt-6 border-t border-white/0.06">
             <p className="text-center text-[10px] sm:text-xs text-white/30">
               Protected area — admin access only
             </p>
@@ -153,8 +147,8 @@ function AdminLoginForm() {
 export default function AdminLoginPage() {
   return (
     <Suspense fallback={
-      <div className="flex flex-col items-center justify-center min-h-[80dvh] px-3 sm:px-4 py-6 sm:py-8 bg-gradient-to-br from-[#0f172a] via-[#0b1220] to-[#090d18]">
-        <div className="w-full max-w-[440px] bg-white/[0.03] backdrop-blur-sm rounded-2xl border border-white/[0.06] p-8 text-center">
+      <div className="flex flex-col items-center justify-center min-h-[80dvh] px-3 sm:px-4 py-6 sm:py-8 bg-linear-to-br from-[#0f172a] via-[#0b1220] to-[#090d18]">
+        <div className="w-full max-w-440px bg-white/0.03 backdrop-blur-sm rounded-2xl border border-white/0.06 p-8 text-center">
           <span className="material-symbols-outlined animate-spin text-primary text-2xl">progress_activity</span>
           <p className="text-sm text-white/50 mt-3">Loading...</p>
         </div>

@@ -2,9 +2,14 @@
 
 import { useParams } from 'next/navigation';
 import { useGetProducts } from '@/services/products';
+import dynamic from 'next/dynamic';
 import { ProductCard } from '@/components/commerce/product-card';
-import { CategoryFilterSidebar } from '@/components/commerce/category-filter-sidebar';
 import Link from 'next/link';
+
+const CategoryFilterSidebar = dynamic(
+  () => import('@/components/commerce/category-filter-sidebar').then((m) => m.CategoryFilterSidebar),
+  { ssr: false }
+);
 
 export default function CategoryPage() {
   const params = useParams();

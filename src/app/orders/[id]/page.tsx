@@ -3,6 +3,7 @@
 import { useState, useEffect } from 'react';
 import { useParams, useRouter } from 'next/navigation';
 import Link from 'next/link';
+import Image from 'next/image';
 import { useAuthStore, useAuthHydrated } from '@/stores/auth-store';
 import { useUIStore } from '@/stores/ui-store';
 import { api } from '@/services/api';
@@ -168,10 +169,13 @@ export default function OrderDetailPage() {
           {order.items.map(item => (
             <div key={item.id} className="flex items-center gap-3">
               <div className="w-14 h-14 bg-surface-container rounded-lg overflow-hidden flex-shrink-0">
-                <img
+                <Image
                   className="w-full h-full object-cover"
                   src={item.product.images?.[0] || '/placeholder.png'}
                   alt={item.product.name}
+                  width={56}
+                  height={56}
+                  unoptimized
                 />
               </div>
               <div className="flex-1 min-w-0">

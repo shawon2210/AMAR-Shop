@@ -3,6 +3,7 @@
 import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
+import Image from 'next/image';
 import { useAuthStore, useAuthHydrated } from '@/stores/auth-store';
 import { useUIStore } from '@/stores/ui-store';
 import { api } from '@/services/api';
@@ -156,10 +157,13 @@ export default function OrdersPage() {
                 <div className="p-md flex gap-md">
                   {firstItem && (
                     <div className="w-16 h-16 bg-surface-container rounded-lg overflow-hidden flex-shrink-0">
-                      <img
+                      <Image
                         className="w-full h-full object-cover"
                         src={firstItem.product.images?.[0] || '/placeholder.png'}
                         alt={firstItem.product.name}
+                        width={64}
+                        height={64}
+                        unoptimized
                       />
                     </div>
                   )}

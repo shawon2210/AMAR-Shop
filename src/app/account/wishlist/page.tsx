@@ -1,6 +1,7 @@
 'use client';
 
 import Link from 'next/link';
+import Image from 'next/image';
 import { AuthGuard } from '@/components/auth/auth-guard';
 import { useGetWishlist, useRemoveFromWishlist } from '@/services/account';
 import { useCartStore } from '@/stores/cart-store';
@@ -50,9 +51,12 @@ export default function WishlistPage() {
             {items.map((product) => (
               <div key={product.id} className="bg-surface-container-lowest rounded-xl overflow-hidden shadow-sm group">
                 <Link href={`/product/${product.id}`} className="block relative aspect-square overflow-hidden">
-                  <img
+                  <Image
                     src={product.images[0]}
                     alt={product.name}
+                    width={200}
+                    height={200}
+                    unoptimized
                     className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
                   />
                   <button

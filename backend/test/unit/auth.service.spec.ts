@@ -3,7 +3,13 @@ import { ConflictException, UnauthorizedException } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import * as bcrypt from 'bcrypt';
 
+jest.mock('bcrypt', () => ({
+  hash: jest.fn().mockResolvedValue('hashedpassword'),
+  compare: jest.fn().mockResolvedValue(true),
+}));
+
 import { AuthService } from '../../src/modules/auth/auth.service';
+import { PrismaService } from '../../src/common/prisma.service';
 
 describe('AuthService', () => {
   let service: AuthService;
@@ -18,6 +24,7 @@ describe('AuthService', () => {
     password: '$2b$12$hashedpassword',
     role: 'CUSTOMER',
     isSeller: false,
+    isActive: true,
     avatar: null,
     createdAt: new Date(),
     store: null,
@@ -29,6 +36,11 @@ describe('AuthService', () => {
         findUnique: jest.fn(),
         findFirst: jest.fn(),
         create: jest.fn(),
+        update: jest.fn().mockResolvedValue(mockUser),
+      },
+      refreshToken: {
+        create: jest.fn().mockResolvedValue({ id: 'ref-1', token: 'token' }),
+        deleteMany: jest.fn().mockResolvedValue({ count: 1 }),
       },
     };
 
@@ -39,8 +51,9 @@ describe('AuthService', () => {
     const module: TestingModule = await Test.createTestingModule({
       providers: [
         AuthService,
-        { provide: 'PrismaService', useValue: prisma },
+        { provide: PrismaService, useValue: prisma },
         { provide: JwtService, useValue: jwtService },
+        { provide: 'RefreshJwtService', useValue: jwtService },
       ],
     }).compile();
 
@@ -58,8 +71,8 @@ describe('AuthService', () => {
         password: 'password123',
       });
 
-      expect(result).toHaveProperty('token');
-      expect(result.token).toBe('test-jwt-token');
+      expect(result).toHaveProperty('accessToken');
+      expect(result.accessToken).toBe('test-jwt-token');
       expect(result.user).toHaveProperty('id', 'user-1');
     });
 
@@ -75,10 +88,10 @@ describe('AuthService', () => {
   describe('login', () => {
     it('should login successfully', async () => {
       prisma.user.findUnique.mockResolvedValue(mockUser);
-      jest.spyOn(bcrypt, 'compare').mockImplementation(() => Promise.resolve(true as never));
+      prisma.user.findFirst.mockResolvedValue(mockUser);
 
       const result = await service.login('01712345678', 'password123');
-      expect(result).toHaveProperty('token');
+      expect(result).toHaveProperty('accessToken');
       expect(result.user).toHaveProperty('id', 'user-1');
     });
 

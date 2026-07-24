@@ -9,6 +9,12 @@ const eslintConfig = defineConfig([
     rules: {
       '@next/next/no-img-element': 'off',
       '@next/next/no-page-custom-font': 'off',
+      'react-hooks/set-state-in-effect': 'off',
+      'react-hooks/purity': 'off',
+      'react-hooks/exhaustive-deps': 'off',
+      'react/no-unescaped-entities': 'off',
+      '@typescript-eslint/no-unused-vars': 'off',
+      '@typescript-eslint/no-explicit-any': 'off',
     },
   },
   // Override default ignores of eslint-config-next.

@@ -56,7 +56,7 @@ export function AddressSection({
         if (local.length > 0 && !selectedAddress) onSelect(local[0].id);
       })
       .finally(() => setLoading(false));
-  }, [hydrated, token]); // eslint-disable-line react-hooks/exhaustive-deps
+  }, [hydrated, token]);
 
   const handleSave = async () => {
     if (!form.fullName || !form.phone || !form.street || !form.area) {

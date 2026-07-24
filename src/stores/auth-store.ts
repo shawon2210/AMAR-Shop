@@ -13,7 +13,6 @@ interface AuthState {
   isAuthenticated: boolean;
   login: (identity: string, password: string) => Promise<void>;
   loginWithPhone: (phone: string, password: string) => Promise<void>;
-  demoLogin: (user: User) => void;
   register: (data: {
     name: string;
     email?: string;
@@ -25,7 +24,7 @@ interface AuthState {
   setUser: (user: User) => void;
 }
 
-type AuthPersist = Pick<AuthState, 'accessToken' | 'refreshToken' | 'user'>;
+type AuthPersist = Pick<AuthState, 'user'>;
 
 // Auth cookies are set exclusively by the NestJS backend via HttpOnly, Secure,
 // SameSite=Strict response headers. No client-side document.cookie writes.
@@ -53,16 +52,6 @@ export const useAuthStore = create<AuthState>()(
           accessToken: res.accessToken,
           refreshToken: res.refreshToken,
           user: res.user,
-          isAuthenticated: true,
-        });
-
-      },
-
-      demoLogin: (user) => {
-        set({
-          accessToken: 'demo-token-' + user.id,
-          refreshToken: 'demo-refresh-' + user.id,
-          user,
           isAuthenticated: true,
         });
 
@@ -129,18 +118,14 @@ export const useAuthStore = create<AuthState>()(
     {
       name: 'amarshop-auth',
       partialize: (state): AuthPersist => ({
-        accessToken: state.accessToken,
-        refreshToken: state.refreshToken,
         user: state.user,
       }),
       merge: (persisted, current) => {
         const p = persisted as AuthPersist;
         return {
           ...current,
-          accessToken: p.accessToken ?? current.accessToken,
-          refreshToken: p.refreshToken ?? current.refreshToken,
           user: p.user ?? current.user,
-          isAuthenticated: !!(p.accessToken && p.user),
+          isAuthenticated: !!p.user,
         };
       },
     },

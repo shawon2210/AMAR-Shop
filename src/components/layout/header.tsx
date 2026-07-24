@@ -69,6 +69,12 @@ export function Header() {
                 Become a Seller
               </Link>
             )}
+            {showAuth && isAuthenticated && (user?.role === 'ADMIN' || user?.role === 'SUPER_ADMIN') && (
+              <Link href="/admin" className="hover:text-primary transition-colors duration-150 flex items-center gap-1 font-semibold text-gray-700">
+                <span className="material-symbols-outlined text-[13px]">admin_panel_settings</span>
+                Admin Panel
+              </Link>
+            )}
           </div>
           <div className="flex items-center gap-5 text-xs text-gray-500">
             <span className="flex items-center gap-1 text-emerald-600 font-medium">
@@ -179,15 +185,18 @@ export function Header() {
               >
                 Sign In
               </Link>
+            ) : user?.role === 'ADMIN' || user?.role === 'SUPER_ADMIN' ? (
+              <Link
+                href="/admin"
+                className="hidden md:flex items-center h-9 px-4 text-sm font-semibold text-primary bg-primary-fixed rounded-full hover:bg-primary/10 transition-all duration-150 whitespace-nowrap gap-1.5"
+                aria-label="Admin panel"
+              >
+                <span className="material-symbols-outlined text-[18px]">admin_panel_settings</span>
+                Admin
+              </Link>
             ) : (
               <Link
-                href={
-                  user?.role === 'ADMIN' || user?.role === 'SUPER_ADMIN'
-                    ? '/admin'
-                    : user?.isSeller
-                    ? '/seller/dashboard'
-                    : '/account'
-                }
+                href={user?.isSeller ? '/seller/dashboard' : '/account'}
                 className="hidden md:flex items-center justify-center w-11 h-11 rounded-xl text-gray-600 hover:bg-gray-100 hover:text-primary transition-all duration-150"
                 aria-label="My account"
               >

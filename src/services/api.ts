@@ -1,3 +1,5 @@
+import { useAuthStore } from '@/stores/auth-store';
+
 const API_BASE = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:4000';
 
 let isRefreshing = false;
@@ -9,27 +11,18 @@ async function attemptRefresh(): Promise<boolean> {
   isRefreshing = true;
   refreshPromise = (async () => {
     try {
-      const stored = localStorage.getItem('amarshop-auth');
-      if (!stored) return false;
-      const parsed = JSON.parse(stored);
-      const refreshToken = parsed?.state?.refreshToken;
-      if (!refreshToken) return false;
       const res = await fetch(`${API_BASE}/auth/refresh`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ refreshToken }),
         credentials: 'include',
       });
       if (!res.ok) return false;
       const data = await res.json();
-      const current = JSON.parse(localStorage.getItem('amarshop-auth') || '{}');
-      current.state = {
-        ...current.state,
+      useAuthStore.getState().setUser(data.user);
+      useAuthStore.setState({
         accessToken: data.accessToken,
         refreshToken: data.refreshToken,
-        user: data.user,
-      };
-      localStorage.setItem('amarshop-auth', JSON.stringify(current));
+      });
       window.dispatchEvent(new CustomEvent('amarshop-auth-refreshed', { detail: data }));
       return true;
     } catch {
@@ -44,14 +37,7 @@ async function attemptRefresh(): Promise<boolean> {
 
 function getToken(): string | null {
   if (typeof window === 'undefined') return null;
-  try {
-    const stored = localStorage.getItem('amarshop-auth');
-    if (stored) {
-      const parsed = JSON.parse(stored);
-      return parsed?.state?.accessToken || parsed?.state?.token || null;
-    }
-  } catch {}
-  return null;
+  return useAuthStore.getState().accessToken || null;
 }
 
 export async function request<T>(
@@ -78,8 +64,7 @@ export async function request<T>(
 
   if (!res.ok) {
     if (res.status === 401 && typeof window !== 'undefined') {
-      localStorage.removeItem('amarshop-auth');
-      window.dispatchEvent(new CustomEvent('amarshop-auth-logout'));
+      useAuthStore.getState().logout();
       const currentPath = typeof window !== 'undefined' ? window.location.pathname + window.location.search : '';
       if (!path.startsWith('/auth/') && typeof window !== 'undefined') {
         window.location.href = `/auth/login?redirect=${encodeURIComponent(currentPath)}`;

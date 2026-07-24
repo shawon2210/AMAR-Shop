@@ -239,10 +239,13 @@ export default function ReturnsPage() {
                           <h3 className="font-semibold text-gray-900 mb-2">Return Images</h3>
                           <div className="flex flex-wrap gap-3">
                             {ret.images.map((img: string, index: number) => (
-                              <img
+                              <Image
                                 key={index}
                                 src={img}
                                 alt={`Return image ${index + 1}`}
+                                width={128}
+                                height={128}
+                                unoptimized
                                 className="h-32 w-32 object-cover rounded border"
                               />
                             ))}

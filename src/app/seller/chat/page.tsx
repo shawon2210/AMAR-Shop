@@ -1,6 +1,7 @@
 'use client';
 
 import { useState } from 'react';
+import Image from 'next/image';
 import { useChatMessages } from '@/services/seller';
 
 export default function SellerChat() {
@@ -49,9 +50,12 @@ export default function SellerChat() {
                   }`}
                 >
                   <div className="relative flex-shrink-0">
-                    <img
+                    <Image
                       src={conv.avatar || `https://picsum.photos/seed/u${conv.id}/40/40`}
                       alt={conv.name || 'User'}
+                      width={40}
+                      height={40}
+                      unoptimized
                       className="w-10 h-10 rounded-full object-cover"
                     />
                     {conv.online && (
@@ -83,9 +87,12 @@ export default function SellerChat() {
               {/* Chat Header */}
               <div className="flex items-center gap-3 p-3 border-b border-surface-container-high">
                 <div className="relative">
-                  <img
+                  <Image
                     src={activeConv.avatar || `https://picsum.photos/seed/u${activeConv.id}/40/40`}
                     alt={activeConv.name || 'User'}
+                    width={36}
+                    height={36}
+                    unoptimized
                     className="w-9 h-9 rounded-full object-cover"
                   />
                   {activeConv.online && (

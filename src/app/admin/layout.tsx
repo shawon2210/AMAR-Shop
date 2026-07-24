@@ -162,11 +162,11 @@ function NavItemLink({ item, onClose, collapsed }: { item: NavItem; onClose: () 
       } ${
         isActive
           ? 'bg-primary/10 text-primary'
-          : 'text-white/60 hover:bg-white/[0.06] hover:text-white/90'
+          : 'text-white/60 hover:bg-white/0.06 hover:text-white/90'
       }`}
     >
       {isActive && (
-        <span className="absolute left-0 top-2 bottom-2 w-[3px] rounded-full bg-primary" />
+        <span className="absolute left-0 top-2 bottom-2 w-3px rounded-full bg-primary" />
       )}
       <span
         className={`material-symbols-outlined size-5 transition-colors shrink-0 ${
@@ -255,11 +255,11 @@ function Sidebar({
   const sidebarContent = (
     <>
       <div
-        className={`flex items-center justify-between h-16 shrink-0 border-b border-white/[0.04] ${
+        className={`flex items-center justify-between h-16 shrink-0 border-b border-white/0.04 ${
           collapsed ? 'justify-center px-0' : 'gap-3 px-5'
         }`}
       >
-        <div className="w-9 h-9 rounded-xl bg-gradient-to-br from-primary to-primary/60 flex items-center justify-center shadow-lg shadow-primary/25 shrink-0">
+        <div className="w-9 h-9 rounded-xl bg-linear-to-br from-primary to-primary/60 flex items-center justify-center shadow-lg shadow-primary/25 shrink-0">
           <span className="material-symbols-outlined text-white text-xl">store</span>
         </div>
         {!isDesktop && (
@@ -277,7 +277,7 @@ function Sidebar({
       {isDesktop && (
         <button
           onClick={onToggleCollapse}
-          className="absolute -right-3 top-[26px] z-10 w-6 h-6 rounded-full bg-[#1e293b] border border-white/[0.06] flex items-center justify-center text-white/40 hover:text-white hover:border-white/[0.12] transition-all shadow-lg"
+          className="absolute -right-3 top-6.5 z-10 w-6 h-6 rounded-full bg-[#1e293b] border border-white/6 flex items-center justify-center text-white/40 hover:text-white hover:border-white/12 transition-all shadow-lg"
           aria-label={collapsed ? 'Expand sidebar' : 'Collapse sidebar'}
         >
           <span className="material-symbols-outlined text-[14px] transition-transform duration-300">
@@ -301,7 +301,7 @@ function Sidebar({
               value={search}
               onChange={(e) => setSearch(e.target.value)}
               placeholder="Search menu..."
-              className="w-full bg-white/[0.04] border border-white/[0.05] rounded-lg pl-8 pr-3 py-2 text-xs text-white/60 placeholder:text-white/20 outline-none focus:border-primary/30 focus:bg-white/[0.06] transition-all"
+              className="w-full bg-white/4 border border-white/5 rounded-lg pl-8 pr-3 py-2 text-xs text-white/60 placeholder:text-white/20 outline-none focus:border-primary/30 focus:bg-white/6 transition-all"
             />
           </div>
         </div>
@@ -329,7 +329,7 @@ function Sidebar({
               <div key={section.title} className="px-2">
                 <button
                   onClick={() => toggleSection(section.title)}
-                  className="flex items-center justify-between w-full min-h-[44px] px-3 text-xs uppercase tracking-wide text-white/40 hover:text-white/60 transition-colors"
+                  className="flex items-center justify-between w-full min-h-11 px-3 text-xs uppercase tracking-wide text-white/40 hover:text-white/60 transition-colors"
                 >
                   <span className="opacity-70">{section.title}</span>
                   <span
@@ -361,13 +361,13 @@ function Sidebar({
         )}
       </nav>
 
-      <div className="border-t border-white/[0.04] p-2 shrink-0">
+      <div className="border-t border-white/4 p-2 shrink-0">
         <div
           className={`flex items-center py-2 ${
             collapsed ? 'justify-center' : 'gap-3 px-2'
-          } rounded-lg hover:bg-white/[0.03] transition-colors`}
+          } rounded-lg hover:bg-white/3 transition-colors`}
         >
-          <div className="w-8 h-8 rounded-full bg-gradient-to-br from-primary to-primary/60 flex items-center justify-center text-white text-sm font-bold uppercase shadow-sm shrink-0">
+          <div className="w-8 h-8 rounded-full bg-linear-to-br from-primary to-primary/60 flex items-center justify-center text-white text-sm font-bold uppercase shadow-sm shrink-0">
             {user?.name?.charAt(0) || 'A'}
           </div>
           {!collapsed && (
@@ -411,7 +411,7 @@ function Sidebar({
           role="dialog"
           aria-modal="true"
           aria-label="Admin navigation sidebar"
-          className={`fixed top-0 left-0 bottom-0 z-50 w-[280px] max-w-[85vw] bg-gradient-to-b from-[#0f172a] to-[#0b1220] text-white flex flex-col shadow-2xl shadow-black/30 transition-transform duration-300 ease-out ${
+          className={`fixed top-0 left-0 bottom-0 z-50 w-70 max-w-[85vw] bg-linear-to-b from-[#0f172a] to-[#0b1220] text-white flex flex-col shadow-2xl shadow-black/30 transition-transform duration-300 ease-out ${
             open ? 'translate-x-0' : '-translate-x-full'
           }`}
         >
@@ -423,8 +423,8 @@ function Sidebar({
 
   return (
     <aside
-      className={`sticky top-0 h-screen text-white flex flex-col z-auto transition-[width] duration-300 ease-out bg-gradient-to-b from-[#0f172a] via-[#0b1220] via-60% to-[#090d18] ${
-        collapsed ? 'w-[72px]' : 'w-[256px]'
+      className={`sticky top-0 h-screen text-white flex flex-col z-auto transition-[width] duration-300 ease-out bg-linear-to-b from-[#0f172a] via-[#0b1220] via-60% to-[#090d18] ${
+        collapsed ? 'w-18' : 'w-64'
       }`}
     >
       {sidebarContent}
@@ -472,7 +472,7 @@ function SearchOverlay({
   return (
     <div className="fixed inset-0 z-50 bg-black/40 backdrop-blur-sm" onClick={onClose} role="dialog" aria-modal="true" aria-label="Search">
       <div
-        className="absolute top-0 sm:top-[72px] left-0 right-0 sm:left-1/2 sm:-translate-x-1/2 sm:w-full sm:max-w-lg bg-white sm:rounded-xl shadow-2xl sm:border sm:border-[#eee] overflow-hidden min-h-[200px] sm:min-h-0"
+        className="absolute top-0 sm:top-18 left-0 right-0 sm:left-1/2 sm:-translate-x-1/2 sm:w-full sm:max-w-lg bg-white sm:rounded-xl shadow-2xl sm:border sm:border-[#eee] overflow-hidden min-h-50 sm:min-h-0"
         onClick={(e) => e.stopPropagation()}
       >
         <div className="flex items-center gap-3 p-4 border-b border-[#eee]">
@@ -522,7 +522,6 @@ function SearchOverlay({
 export default function AdminLayout({ children }: { children: React.ReactNode }) {
   const router = useRouter();
   const pathname = usePathname();
-  const token = useAuthStore((s) => s.accessToken);
   const user = useAuthStore((s) => s.user);
   const hydrated = useAuthHydrated();
   const [sidebarOpen, setSidebarOpen] = useState(false);
@@ -558,12 +557,12 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
   useEffect(() => {
     if (!hydrated) return;
     if (pathname.startsWith('/admin/login')) return;
-    if (!token || !user) {
+    if (!user) {
       router.replace('/admin/login');
     } else if (user.role !== 'ADMIN' && user.role !== 'SUPER_ADMIN') {
       router.replace('/');
     }
-  }, [hydrated, token, user, pathname, router]);
+  }, [hydrated, user, pathname, router]);
 
   // Focus hamburger when sidebar closes on mobile
   useEffect(() => {
@@ -587,7 +586,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
     return <>{children}</>;
   }
 
-  if (!token || !user || (user.role !== 'ADMIN' && user.role !== 'SUPER_ADMIN')) {
+  if (!user || (user.role !== 'ADMIN' && user.role !== 'SUPER_ADMIN')) {
     return (
       <div className="min-h-screen flex items-center justify-center bg-[#f5f5f5]">
         <div className="text-center">
@@ -628,7 +627,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
       />
 
       <div className="flex flex-col min-w-0 overflow-hidden">
-        <header className="sticky top-0 z-30 h-[72px] bg-white/80 backdrop-blur-md border-b border-slate-200 flex items-center px-4 lg:px-6 gap-3">
+        <header className="sticky top-0 z-30 h-72px bg-white/80 backdrop-blur-md border-b border-slate-200 flex items-center px-4 lg:px-6 gap-3">
           <button
             ref={hamburgerRef}
             className="lg:hidden p-2.5 -ml-2 rounded-lg hover:bg-[#f5f5f5] transition-colors"
@@ -658,7 +657,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
             {/* Search Trigger (Mobile/Desktop) */}
             <button
               onClick={() => setSearchOpen(true)}
-              className="flex items-center gap-2 bg-[#f5f5f5] hover:bg-[#f0f0f0] rounded-lg px-2.5 py-2 transition-colors md:w-[240px]"
+              className="flex items-center gap-2 bg-[#f5f5f5] hover:bg-[#f0f0f0] rounded-lg px-2.5 py-2 transition-colors md:w-60"
               aria-label="Open search"
             >
               <span className="material-symbols-outlined text-[#888] text-[18px]">search</span>
@@ -682,7 +681,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
             <div className="flex items-center gap-2 pl-2 md:pl-3 border-l border-[#e5e5e5] shrink-0">
               <Link 
                 href="/admin/settings"
-                className="w-8 h-8 rounded-full bg-gradient-to-br from-primary to-primary/60 flex items-center justify-center text-white text-xs font-bold uppercase shadow-sm shrink-0"
+                className="w-8 h-8 rounded-full bg-linear-to-br from-primary to-primary/60 flex items-center justify-center text-white text-xs font-bold uppercase shadow-sm shrink-0"
               >
                 {user?.name?.charAt(0) || 'A'}
               </Link>

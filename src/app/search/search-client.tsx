@@ -2,6 +2,7 @@
 
 import { useSearchParams } from 'next/navigation';
 import Link from 'next/link';
+import Image from 'next/image';
 import { useSearchProducts } from '@/services/products';
 import { Star } from 'lucide-react';
 
@@ -63,11 +64,13 @@ export default function SearchPageClient() {
               className="group bg-white rounded-xl border border-gray-100 overflow-hidden hover:shadow-md transition-shadow"
             >
               <div className="aspect-square bg-gray-50 relative overflow-hidden">
-                <img
+                <Image
                   src={product.images[0]}
                   alt={product.name}
+                  width={200}
+                  height={200}
+                  unoptimized
                   className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
-                  loading="lazy"
                 />
                 {product.discount ? (
                   <span className="absolute top-2 left-2 bg-red-500 text-white text-[11px] font-semibold px-1.5 py-0.5 rounded">

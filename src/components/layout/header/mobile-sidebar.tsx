@@ -152,6 +152,15 @@ export function MobileSidebar({ open, onClose }: { open: boolean; onClose: () =>
 
               {/* Quick links */}
               <div className="flex flex-col gap-1">
+                {showAuth && isAuthenticated && (user?.role === 'ADMIN' || user?.role === 'SUPER_ADMIN') && (
+                  <>
+                    <Link href="/admin" onClick={onClose} className="px-3 py-2.5 text-sm font-semibold text-primary hover:bg-primary-fixed rounded-lg transition-colors flex items-center gap-2">
+                      <span className="material-symbols-outlined text-[18px]">admin_panel_settings</span>
+                      Admin Panel
+                    </Link>
+                    <hr className="my-2 border-gray-100" />
+                  </>
+                )}
                 <Link href="/help" onClick={onClose} className="px-3 py-2.5 text-sm font-medium text-gray-700 hover:bg-gray-100 rounded-lg transition-colors">
                   Help Center
                 </Link>

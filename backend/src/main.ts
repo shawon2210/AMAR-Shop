@@ -100,9 +100,12 @@ async function bootstrap() {
       'Content-Type',
       'Authorization',
       'X-Requested-With',
-      'X-CSRF-Token',
     ],
-    exposedHeaders: ['X-CSRF-Token'],
+    // CSRF is mitigated by SameSite=Strict cookies (set in auth.controller).
+    // No additional CSRF token required — the browser does not send
+    // SameSite=Strict cookies on cross-origin requests, which is the
+    // foundational CSRF defense for this API.
+    exposedHeaders: [],
     maxAge: 86400,
   });
 

@@ -1,6 +1,7 @@
 'use client';
 
 import Link from 'next/link';
+import Image from 'next/image';
 import { AuthGuard } from '@/components/auth/auth-guard';
 import { useGetReviews } from '@/services/account';
 
@@ -66,9 +67,12 @@ export default function ReviewsPage() {
               <div key={review.id} className="bg-surface-container-lowest rounded-xl p-4 shadow-sm">
                 <div className="flex gap-3">
                   <Link href={`/product/${review.productId}`} className="shrink-0">
-                    <img
+                    <Image
                       src={review.productImage}
                       alt={review.productName}
+                      width={64}
+                      height={64}
+                      unoptimized
                       className="w-16 h-16 rounded-lg object-cover"
                     />
                   </Link>

@@ -1,5 +1,6 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { ProductsService } from '../../src/modules/products/products.service';
+import { PrismaService } from '../../src/common/prisma.service';
 
 describe('ProductsService', () => {
   let service: ProductsService;
@@ -42,7 +43,7 @@ describe('ProductsService', () => {
     const module: TestingModule = await Test.createTestingModule({
       providers: [
         ProductsService,
-        { provide: 'PrismaService', useValue: prisma },
+        { provide: PrismaService, useValue: prisma },
       ],
     }).compile();
 
@@ -54,36 +55,36 @@ describe('ProductsService', () => {
       prisma.product.findMany.mockResolvedValue(mockProducts);
       prisma.product.count.mockResolvedValue(1);
 
-      const result = await service.findAll({ page: 1, limit: 20 });
-      expect(result.data).toHaveLength(1);
-      expect(result.meta.total).toBe(1);
+      const result = await service.findAll({ skip: 0, take: 20 });
+      expect(result.products).toHaveLength(1);
+      expect(result.total).toBe(1);
     });
 
     it('should filter by category', async () => {
       prisma.product.findMany.mockResolvedValue(mockProducts);
       prisma.product.count.mockResolvedValue(1);
 
-      await service.findAll({ page: 1, limit: 20, categoryId: 'cat-1' });
+      await service.findAll({ skip: 0, take: 20, category: 'electronics' });
       expect(prisma.product.findMany).toHaveBeenCalledWith(
         expect.objectContaining({
-          where: expect.objectContaining({ categoryId: 'cat-1' }),
+          where: expect.objectContaining({ category: { slug: 'electronics' } }),
         }),
       );
     });
   });
 
-  describe('findOne', () => {
+  describe('findById', () => {
     it('should return a single product', async () => {
       prisma.product.findUnique.mockResolvedValue(mockProducts[0]);
 
-      const result = await service.findOne('prod-1');
+      const result = await service.findById('prod-1');
       expect(result).toHaveProperty('id', 'prod-1');
     });
 
     it('should throw on non-existent product', async () => {
       prisma.product.findUnique.mockResolvedValue(null);
 
-      await expect(service.findOne('nonexistent')).rejects.toThrow();
+      await expect(service.findById('nonexistent')).rejects.toThrow();
     });
   });
 });

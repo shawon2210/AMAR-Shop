@@ -4,6 +4,8 @@ import { useMemo } from 'react';
 import Link from 'next/link';
 import { useAdminData } from '@/lib/api/hooks';
 import { fetchDashboard } from '@/lib/api/admin';
+import { useAuthStore } from '@/stores/auth-store';
+import type { DashboardStats } from '@/types/admin';
 import type { RecentOrder } from '@/types';
 import { PageHeader } from '@/components/ui/page-header';
 import { StatCard } from '@/components/ui/stat-card';
@@ -12,10 +14,10 @@ import { DataTable } from '@/components/ui/data-table';
 
 function formatBDT(amount: number): string {
   const num = Math.round(amount);
-  if (num >= 10000000) return `৳${(num / 10000000).toFixed(1)}Cr`;
-  if (num >= 100000) return `৳${(num / 100000).toFixed(1)}L`;
-  if (num >= 1000) return `৳${num.toLocaleString('en-IN')}`;
-  return `৳${num}`;
+  if (num >= 10000000) return '\u09F3' + (num / 10000000).toFixed(1) + 'Cr';
+  if (num >= 100000) return '\u09F3' + (num / 100000).toFixed(1) + 'L';
+  if (num >= 1000) return '\u09F3' + num.toLocaleString('en-IN');
+  return '\u09F3' + num;
 }
 
 function RevenueChart({ data }: { data: { date: string; revenue: number }[] }) {
@@ -26,12 +28,12 @@ function RevenueChart({ data }: { data: { date: string; revenue: number }[] }) {
   const w = 600;
   const h = 200;
   const points = data
-    .map((d, i) => `${(i / (data.length - 1)) * w},${h - (d.revenue / max) * h * 0.85 - 10}`)
+    .map((d, i) => (i / (data.length - 1)) * w + ',' + (h - (d.revenue / max) * h * 0.85 - 10))
     .join(' ');
-  const area = `M0,${h} ${points} ${w},${h}Z`;
+  const area = 'M0,' + h + ' ' + points + ' ' + w + ',' + h + 'Z';
 
   return (
-    <svg viewBox={`0 0 ${w} ${h}`} className="w-full h-44 sm:h-48" preserveAspectRatio="xMidYMid meet">
+    <svg viewBox={'0 0 ' + w + ' ' + h} className="w-full h-44 sm:h-48" preserveAspectRatio="xMidYMid meet">
       <defs>
         <linearGradient id="revGrad" x1="0" y1="0" x2="0" y2="1">
           <stop offset="0%" stopColor="#a63600" stopOpacity="0.2" />
@@ -55,26 +57,37 @@ function RevenueChart({ data }: { data: { date: string; revenue: number }[] }) {
           textAnchor="middle"
           className="fill-[#999] text-[10px]"
         >
-          {data[i]?.date?.slice(5) || `Day ${i + 1}`}
+          {data[i]?.date?.slice(5) || 'Day ' + (i + 1)}
         </text>
       ))}
     </svg>
   );
 }
 
-export default function AdminDashboard() {
-  const { data, loading, error } = useAdminData(fetchDashboard);
+const emptyDashboard: DashboardStats = {
+  totalRevenue: 0,
+  totalOrders: 0,
+  totalUsers: 0,
+  totalSellers: 0,
+  totalProducts: 0,
+  revenueChart: [],
+  recentOrders: [],
+  pendingSellerApprovals: 0,
+  lowStockAlerts: 0,
+};
 
-  const stats = useMemo(() => {
-    if (!data) return [];
-    return [
-      { label: 'Total Revenue', value: formatBDT(data.totalRevenue), change: 'Today', color: 'text-green-600' },
-      { label: 'Total Orders', value: data.totalOrders.toLocaleString('en-IN'), change: 'All time', color: 'text-blue-600' },
-      { label: 'Total Users', value: data.totalUsers.toLocaleString('en-IN'), change: 'Registered', color: 'text-violet-600' },
-      { label: 'Total Sellers', value: data.totalSellers.toLocaleString('en-IN'), change: 'Active sellers', color: 'text-orange-600' },
-      { label: 'Total Products', value: data.totalProducts.toLocaleString('en-IN'), change: 'Listed', color: 'text-cyan-600' },
-    ];
-  }, [data]);
+export default function AdminDashboard() {
+  const { data, loading, error, refetch } = useAdminData(fetchDashboard);
+  const user = useAuthStore(s => s.user);
+  const d = data ?? emptyDashboard;
+
+  const stats = useMemo(() => [
+    { label: 'Total Revenue', value: formatBDT(d.totalRevenue), change: 'Today', color: 'text-green-600' },
+    { label: 'Total Orders', value: d.totalOrders.toLocaleString('en-IN'), change: 'All time', color: 'text-blue-600' },
+    { label: 'Total Users', value: d.totalUsers.toLocaleString('en-IN'), change: 'Registered', color: 'text-violet-600' },
+    { label: 'Total Sellers', value: d.totalSellers.toLocaleString('en-IN'), change: 'Active sellers', color: 'text-orange-600' },
+    { label: 'Total Products', value: d.totalProducts.toLocaleString('en-IN'), change: 'Listed', color: 'text-cyan-600' },
+  ], [d]);
 
   if (loading) {
     return (
@@ -84,22 +97,26 @@ export default function AdminDashboard() {
     );
   }
 
-  if (error) {
-    return (
-      <div className="bg-red-50 text-red-600 rounded-xl p-6 border border-red-200">
-        <h2 className="font-semibold mb-1">Failed to load dashboard</h2>
-        <p className="text-sm">{error}</p>
-      </div>
-    );
-  }
-
-  if (!data) return null;
-
   return (
     <div className="space-y-5 sm:space-y-6">
+      {error && (
+        <div className="bg-amber-50 text-amber-700 rounded-xl p-4 border border-amber-200 flex items-center justify-between gap-3">
+          <div className="flex items-center gap-2 text-sm">
+            <span className="material-symbols-outlined text-lg">info</span>
+            <span>Could not load live data — showing empty dashboard. Some features may be unavailable.</span>
+          </div>
+          <button
+            onClick={refetch}
+            className="shrink-0 px-3 py-1.5 rounded-lg bg-amber-200/50 hover:bg-amber-200 text-amber-800 text-xs font-medium transition-colors"
+          >
+            Retry
+          </button>
+        </div>
+      )}
+
       <PageHeader
         title="Dashboard"
-        subtitle="Welcome back, Admin"
+        subtitle={'Welcome back, ' + (user?.name || 'Admin')}
         actions={
           <div className="flex items-center gap-2 text-xs text-[#888]">
             <span className="material-symbols-outlined text-base">calendar_today</span>
@@ -126,7 +143,7 @@ export default function AdminDashboard() {
               <option>This Quarter</option>
             </select>
           </div>
-          <RevenueChart data={data.revenueChart} />
+          <RevenueChart data={d.revenueChart} />
         </div>
 
         {/* Quick Actions */}
@@ -138,7 +155,7 @@ export default function AdminDashboard() {
               className="flex items-center justify-between p-3 rounded-lg bg-amber-50 border border-amber-200 hover:border-amber-300 hover:shadow-sm transition-all group"
             >
               <div className="flex items-start gap-3">
-                <div className="w-8 h-8 rounded-full bg-amber-200 flex items-center justify-center flex-shrink-0 mt-0.5">
+                <div className="w-8 h-8 rounded-full bg-amber-200 flex items-center justify-center shrink-0 mt-0.5">
                   <span className="material-symbols-outlined text-amber-700 text-lg">verified</span>
                 </div>
                 <div>
@@ -146,8 +163,8 @@ export default function AdminDashboard() {
                   <p className="text-xs text-amber-600 mt-0.5">sellers need KYC review</p>
                 </div>
               </div>
-              <span className="bg-amber-500 text-white text-xs font-bold min-w-[20px] h-5 px-1.5 rounded-full flex items-center justify-center">
-                {data.pendingSellerApprovals}
+              <span className="bg-amber-500 text-white text-xs font-bold min-w-20px h-5 px-1.5 rounded-full flex items-center justify-center">
+                {d.pendingSellerApprovals}
               </span>
             </Link>
 
@@ -156,7 +173,7 @@ export default function AdminDashboard() {
               className="flex items-center justify-between p-3 rounded-lg bg-blue-50 border border-blue-200 hover:border-blue-300 hover:shadow-sm transition-all group"
             >
               <div className="flex items-start gap-3">
-                <div className="w-8 h-8 rounded-full bg-blue-200 flex items-center justify-center flex-shrink-0 mt-0.5">
+                <div className="w-8 h-8 rounded-full bg-blue-200 flex items-center justify-center shrink-0 mt-0.5">
                   <span className="material-symbols-outlined text-blue-700 text-lg">inventory</span>
                 </div>
                 <div>
@@ -164,14 +181,14 @@ export default function AdminDashboard() {
                   <p className="text-xs text-blue-600 mt-0.5">products need restocking</p>
                 </div>
               </div>
-              <span className="bg-blue-500 text-white text-xs font-bold min-w-[20px] h-5 px-1.5 rounded-full flex items-center justify-center">
-                {data.lowStockAlerts}
+              <span className="bg-blue-500 text-white text-xs font-bold min-w-20px h-5 px-1.5 rounded-full flex items-center justify-center">
+                {d.lowStockAlerts}
               </span>
             </Link>
 
             <div className="flex items-center justify-between p-3 rounded-lg bg-green-50 border border-green-200 hover:border-green-300 transition-all">
               <div className="flex items-start gap-3">
-                <div className="w-8 h-8 rounded-full bg-green-200 flex items-center justify-center flex-shrink-0 mt-0.5">
+                <div className="w-8 h-8 rounded-full bg-green-200 flex items-center justify-center shrink-0 mt-0.5">
                   <span className="material-symbols-outlined text-green-700 text-lg">check_circle</span>
                 </div>
                 <div>
@@ -203,8 +220,8 @@ export default function AdminDashboard() {
                   key: 'order',
                   header: 'Order',
                   render: (o) => (
-                    <Link href={`/admin/orders/${o.id}`} className="font-medium text-[#333] hover:text-primary transition-colors">
-                      #{o.orderNumber || o.id.slice(-6)}
+                    <Link href={'/admin/orders/' + o.id} className="font-medium text-[#333] hover:text-primary transition-colors">
+                      {'#' + (o.orderNumber || o.id.slice(-6))}
                     </Link>
                   ),
                 },
@@ -228,14 +245,14 @@ export default function AdminDashboard() {
                   hideOnMobile: true,
                 },
               ]}
-              data={data.recentOrders?.slice(0, 10)}
+              data={d.recentOrders?.slice(0, 10)}
               loading={false}
               emptyMessage="No recent orders"
               mobileCard={(o) => (
                 <div className="p-3 space-y-2">
                   <div className="flex items-center justify-between">
-                    <Link href={`/admin/orders/${o.id}`} className="font-medium text-sm text-primary">
-                      #{o.orderNumber || o.id.slice(-6)}
+                    <Link href={'/admin/orders/' + o.id} className="font-medium text-sm text-primary">
+                      {'#' + (o.orderNumber || o.id.slice(-6))}
                     </Link>
                     <StatusBadge status={o.status || 'N/A'} />
                   </div>
@@ -258,10 +275,10 @@ export default function AdminDashboard() {
           <div className="bg-white rounded-xl border border-[#eee] p-4 sm:p-5">
             <h2 className="text-base sm:text-lg font-semibold text-[#222] mb-4">Top Sellers</h2>
             <div className="space-y-3">
-              {data.recentOrders?.slice(0, 5).map((o: RecentOrder, i: number) => (
+              {d.recentOrders?.slice(0, 5).map((o: RecentOrder, i: number) => (
                 <div key={o.id} className="flex items-center justify-between py-1">
                   <div className="flex items-center gap-3">
-                    <span className={`w-6 h-6 rounded-full flex items-center justify-center text-xs font-bold ${i === 0 ? 'bg-amber-100 text-amber-700' : i === 1 ? 'bg-gray-100 text-gray-600' : i === 2 ? 'bg-orange-100 text-orange-700' : 'bg-[#f5f5f5] text-[#999]'}`}>
+                    <span className={'w-6 h-6 rounded-full flex items-center justify-center text-xs font-bold ' + (i === 0 ? 'bg-amber-100 text-amber-700' : i === 1 ? 'bg-gray-100 text-gray-600' : i === 2 ? 'bg-orange-100 text-orange-700' : 'bg-[#f5f5f5] text-[#999]')}>
                       {i + 1}
                     </span>
                     <span className="text-sm text-[#444]">{o.user?.name || 'Store'}</span>
@@ -269,7 +286,7 @@ export default function AdminDashboard() {
                   <span className="text-sm font-semibold text-[#333]">{formatBDT(o.total)}</span>
                 </div>
               ))}
-              {(!data.recentOrders || data.recentOrders.length === 0) && (
+              {(!d.recentOrders || d.recentOrders.length === 0) && (
                 <p className="text-sm text-[#888] text-center py-4">No seller data</p>
               )}
             </div>
@@ -304,14 +321,14 @@ export default function AdminDashboard() {
                   <span className="material-symbols-outlined text-blue-500 text-lg">payments</span>
                   Total Revenue
                 </span>
-                <span className="font-semibold text-[#333]">{formatBDT(data.totalRevenue)}</span>
+                <span className="font-semibold text-[#333]">{formatBDT(d.totalRevenue)}</span>
               </div>
               <div className="flex items-center justify-between p-2.5 rounded-lg bg-amber-50">
                 <span className="text-[#555] flex items-center gap-2">
                   <span className="material-symbols-outlined text-amber-500 text-lg">verified</span>
                   Pending KYC
                 </span>
-                <span className="font-semibold text-amber-700">{data.pendingSellerApprovals}</span>
+                <span className="font-semibold text-amber-700">{d.pendingSellerApprovals}</span>
               </div>
             </div>
           </div>

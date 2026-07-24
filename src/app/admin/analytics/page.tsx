@@ -4,10 +4,16 @@ import { useState, useEffect } from 'react';
 import { AdminLoading, AdminError, AdminEmpty } from '@/components/ui/admin-states';
 import { Pagination } from '@/components/ui/pagination';
 import { getErrorMessage } from '@/lib/error-helper';
+import { fetchAnalytics } from '@/lib/api/admin';
 import { formatBDT, formatDate } from '@/types';
 import { api } from '@/services/api';
-import { fetchAnalytics } from '@/lib/api/admin';
+import dynamic from 'next/dynamic';
 import type { AdminAnalytics, AnalyticsTopCategory, AnalyticsTopSeller } from '@/types';
+
+const AdminAnalyticsCharts = dynamic(
+  () => import('@/components/admin/analytics-charts').then((m) => m.AdminAnalyticsCharts),
+  { ssr: false }
+);
 
 interface AggregatedStats {
   totalUsers: number; totalOrders: number; totalRevenue: number; totalSellers: number;
@@ -80,56 +86,25 @@ export default function AnalyticsPage() {
             ))}
           </div>
 
-          <div className="grid grid-cols-1 lg:grid-cols-3 gap-5">
-            <div className="lg:col-span-2 bg-white rounded-xl border border-[#eee] p-5">
-              <h2 className="text-base font-semibold text-[#222] mb-4">Revenue (30 days)</h2>
-              <div className="flex items-end gap-[3px] h-40">
-                {revChart.map((r, i) => (
-                  <div key={i} className="flex-1 flex flex-col items-center justify-end h-full">
-                    <div className="w-full bg-primary/20 hover:bg-primary/40 rounded-t transition-colors relative group" style={{ height: `${(r.revenue / maxRev) * 100}%` }}>
-                      <div className="absolute -top-8 left-1/2 -translate-x-1/2 bg-[#222] text-white text-[10px] px-2 py-1 rounded opacity-0 group-hover:opacity-100 whitespace-nowrap transition-opacity">{formatBDT(r.revenue)}</div>
-                    </div>
+          <AdminAnalyticsCharts
+            revChart={revChart}
+            maxRev={maxRev}
+            orderStats={orderStats}
+            statusColors={statusColors}
+          />
+
+          <div className="bg-white rounded-xl border border-[#eee] p-5">
+            <h2 className="text-base font-semibold text-[#222] mb-4">Top Sellers</h2>
+            <div className="space-y-3">
+              {topSellers.slice(0, 5).map((s) => (
+                <div key={s.id} className="flex items-center justify-between">
+                  <span className="text-sm text-[#333]">{s.name}</span>
+                  <div className="text-right">
+                    <p className="text-xs text-[#888]">{s._count.products} products</p>
+                    <p className="text-xs text-[#888]">{'★'.repeat(Math.round(s.rating))}</p>
                   </div>
-                ))}
-              </div>
-            </div>
-
-            <div className="space-y-5">
-              <div className="bg-white rounded-xl border border-[#eee] p-5">
-                <h2 className="text-base font-semibold text-[#222] mb-4">Order Status</h2>
-                <div className="space-y-3">
-                  {orderStats.map((o) => {
-                    const totalOrders = orderStats.reduce((s, x) => s + x._count.id, 0);
-                    const pct = totalOrders > 0 ? Math.round((o._count.id / totalOrders) * 100) : 0;
-                    return (
-                      <div key={o.status}>
-                        <div className="flex justify-between text-sm mb-1">
-                          <span className="text-[#666]">{o.status}</span>
-                          <span className="font-medium text-[#333]">{o._count.id} ({pct}%)</span>
-                        </div>
-                        <div className="h-2 bg-[#f0f0f0] rounded-full overflow-hidden">
-                          <div className={`h-full rounded-full ${(statusColors[o.status] || 'bg-gray-300').split(' ')[0]}`} style={{ width: `${pct}%` }} />
-                        </div>
-                      </div>
-                    );
-                  })}
                 </div>
-              </div>
-
-              <div className="bg-white rounded-xl border border-[#eee] p-5">
-                <h2 className="text-base font-semibold text-[#222] mb-4">Top Sellers</h2>
-                <div className="space-y-3">
-                  {topSellers.slice(0, 5).map((s) => (
-                    <div key={s.id} className="flex items-center justify-between">
-                      <span className="text-sm text-[#333]">{s.name}</span>
-                      <div className="text-right">
-                        <p className="text-xs text-[#888]">{s._count.products} products</p>
-                        <p className="text-xs text-[#888]">{'★'.repeat(Math.round(s.rating))}</p>
-                      </div>
-                    </div>
-                  ))}
-                </div>
-              </div>
+              ))}
             </div>
           </div>
 
