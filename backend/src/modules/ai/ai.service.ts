@@ -1,6 +1,7 @@
-import { Injectable, Logger } from '@nestjs/common';
+import { Injectable, Logger, NotFoundException } from '@nestjs/common';
 import OpenAI from 'openai';
 import { ConfigService } from '@nestjs/config';
+import { PrismaService } from '../../common/prisma.service';
 import {
   AIServiceConfig,
   ProductDescriptionRequest,
@@ -23,7 +24,10 @@ export class AIService {
   private readonly config: AIServiceConfig;
   private openai: OpenAI | null = null;
 
-  constructor(private configService: ConfigService) {
+  constructor(
+    private configService: ConfigService,
+    private prisma: PrismaService,
+  ) {
     this.config = {
       provider:
         (configService.get<string>(
@@ -221,7 +225,21 @@ export class AIService {
     }
   }
 
-  forecastDemand(productId: string, days: number): DemandForecast {
+  async forecastDemand(
+    userId: string,
+    userRole: string,
+    productId: string,
+    days: number,
+  ): Promise<DemandForecast> {
+    if (userRole === 'SELLER') {
+      const product = await this.prisma.product.findUnique({
+        where: { id: productId },
+        select: { store: { select: { userId: true } } },
+      });
+      if (!product || product.store.userId !== userId) {
+        throw new NotFoundException('Product not found');
+      }
+    }
     return {
       productId,
       forecast: Array.from({ length: days }, (_, i) => ({

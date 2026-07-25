@@ -102,20 +102,81 @@ async function main() {
         items: { create: { productId: (await prisma.product.findFirst({ where: { slug: 'iphone-15-pro-max' } }))!.id, quantity: 1, price: 149999 } },
       },
     });
-    // Create a real shipment for this order so tracking can be tested
-    const courier = await prisma.courier.findFirst({ where: { isActive: true } });
-    if (courier) {
+    // Seed a courier so shipment creation succeeds
+    const courier = await prisma.courier.create({
+      data: { name: 'Test Courier', slug: 'test-courier', isActive: true, baseRate: 60, perKgRate: 20 },
+    });
+    await prisma.shipment.create({
+      data: {
+        orderId: order.id, courierId: courier.id,
+        trackingId: 'AMR-TEST-TRACK-001', status: 'IN_TRANSIT',
+        weight: 0.5, shippingFee: 100,
+        deliveryAddress: '123 Test Street, Dhaka, Dhaka',
+        estimatedDays: '3',
+        timeline: { create: { status: 'IN_TRANSIT', note: 'In transit to destination' } },
+      },
+    });
+
+    // Second order + shipment for seller2 — used to test CUSTOMER cannot track another user's shipment
+    const seller2user = await prisma.user.findFirst({ where: { email: 'seller2@amarshop.com' } })!;
+    if (seller2user) {
+      const addr2 = await prisma.address.create({
+        data: { userId: seller2user.id, label: 'Office', fullName: 'Premium Seller', phone: '01722222222', street: '456 Gulshan Avenue', city: 'Dhaka', district: 'Dhaka', isDefault: true },
+      });
+      const prod = await prisma.product.findFirst({ where: { slug: 'samsung-galaxy-s24-ultra' } });
+      const order2 = await prisma.order.create({
+        data: {
+          orderNumber: 'ORD-TEST-002', userId: seller2user.id, addressId: addr2.id,
+          subtotal: 129999, shipping: 100, total: 130099, paymentMethod: 'COD',
+          status: 'PENDING',
+          items: { create: { productId: prod!.id, quantity: 1, price: 129999 } },
+        },
+      });
       await prisma.shipment.create({
         data: {
-          orderId: order.id, courierId: courier.id,
-          trackingId: 'AMR-TEST-TRACK-001', status: 'IN_TRANSIT',
-          weight: 0.5, shippingFee: 100,
-          deliveryAddress: '123 Test Street, Dhaka, Dhaka',
-          estimatedDays: '3',
-          timeline: { create: { status: 'IN_TRANSIT', note: 'In transit to destination' } },
+          orderId: order2.id, courierId: courier.id,
+          trackingId: 'AMR-TEST-TRACK-002', status: 'PICKED_UP',
+          weight: 0.6, shippingFee: 100,
+          deliveryAddress: '456 Gulshan Avenue, Dhaka, Dhaka',
+          estimatedDays: '4',
+          timeline: { create: { status: 'PICKED_UP', note: 'Shipped via courier' } },
         },
       });
     }
+  }
+
+  // Third order with multiple items — creates co-purchase data for testing frequently-bought recommendations
+  const seller1user = await prisma.user.findFirst({ where: { email: 'seller@amarshop.com' } })!;
+  if (seller1user) {
+    const addr3 = await prisma.address.create({
+      data: { userId: seller1user.id, label: 'Warehouse', fullName: 'Demo Seller', phone: '01711111111', street: '789 Motijheel', city: 'Dhaka', district: 'Dhaka', isDefault: true },
+    });
+    const iphone = await prisma.product.findFirst({ where: { slug: 'iphone-15-pro-max' } });
+    const samsung = await prisma.product.findFirst({ where: { slug: 'samsung-galaxy-s24-ultra' } });
+    // Create an accessory so multi-item order has more than 2 products
+    const accessory = await prisma.product.create({
+      data: {
+        name: 'Phone Charger 65W', slug: 'phone-charger-65w',
+        description: 'Fast USB-C charger', price: 2499,
+        storeId: store2.id, categoryId: cat.id, brandId: brand2.id,
+        images: ['https://picsum.photos/seed/c1/600/600'],
+        inStock: true, stockCount: 100,
+      },
+    });
+    const order3 = await prisma.order.create({
+      data: {
+        orderNumber: 'ORD-TEST-003', userId: seller1user.id, addressId: addr3.id,
+        subtotal: 285497, shipping: 0, total: 285497, paymentMethod: 'COD',
+        status: 'DELIVERED',
+        items: {
+          create: [
+            { productId: iphone!.id, quantity: 1, price: 149999 },
+            { productId: samsung!.id, quantity: 1, price: 129999 },
+            { productId: accessory.id, quantity: 2, price: 2499 },
+          ],
+        },
+      },
+    });
   }
 
   console.log('SEEDED. admin@amarshop.com/admin123 | seller@amarshop.com/seller123 | customer@amarshop.com/customer123 | super@amarshop.com/super123 | seller2@amarshop.com/seller2123 | moderator@amarshop.com/moderator123 | logistics@amarshop.com/logistics123');

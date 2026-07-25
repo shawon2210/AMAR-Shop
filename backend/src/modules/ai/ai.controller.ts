@@ -4,9 +4,11 @@ import {
   Post,
   Body,
   Query,
+  Param,
   Request,
   UseGuards,
 } from '@nestjs/common';
+import { Throttle } from '@nestjs/throttler';
 import { AuthGuard } from '@nestjs/passport';
 import { RolesGuard } from '../../common/guards/roles.guard';
 import { Roles } from '../../common/decorators/roles.decorator';
@@ -25,6 +27,7 @@ export class AIController {
     private readonly prisma: PrismaService,
   ) {}
 
+  @Throttle({ default: { ttl: 60000, limit: 10 } })
   @UseGuards(AuthGuard('jwt'), RolesGuard)
   @Roles('SELLER', 'ADMIN', 'SUPER_ADMIN')
   @Post('describe-product')
@@ -34,6 +37,7 @@ export class AIController {
     };
   }
 
+  @Throttle({ default: { ttl: 60000, limit: 10 } })
   @UseGuards(AuthGuard('jwt'))
   @Post('summarize-reviews')
   async summarizeReviews(
@@ -47,6 +51,7 @@ export class AIController {
     };
   }
 
+  @Throttle({ default: { ttl: 60000, limit: 20 } })
   @UseGuards(AuthGuard('jwt'))
   @Post('chat')
   async chat(
@@ -64,6 +69,7 @@ export class AIController {
     );
   }
 
+  @Throttle({ default: { ttl: 60000, limit: 20 } })
   @UseGuards(AuthGuard('jwt'), RolesGuard)
   @Roles('MODERATOR', 'ADMIN', 'SUPER_ADMIN')
   @Post('moderate')
@@ -71,13 +77,23 @@ export class AIController {
     return this.aiService.moderateContent(body.text);
   }
 
+  @Throttle({ default: { ttl: 60000, limit: 10 } })
   @UseGuards(AuthGuard('jwt'), RolesGuard)
   @Roles('SELLER', 'ADMIN', 'SUPER_ADMIN')
   @Post('forecast')
-  forecast(@Body() body: { productId: string; days?: number }) {
-    return this.aiService.forecastDemand(body.productId, body.days || 30);
+  async forecast(
+    @Request() req: any,
+    @Body() body: { productId: string; days?: number },
+  ) {
+    return this.aiService.forecastDemand(
+      req.user.id,
+      req.user.role,
+      body.productId,
+      body.days || 30,
+    );
   }
 
+  @Throttle({ default: { ttl: 60000, limit: 60 } })
   @UseGuards(AuthGuard('jwt'))
   @Get('recommendations/feed')
   async getFeed(@Request() req: any, @Query('limit') limit?: string) {
@@ -87,10 +103,11 @@ export class AIController {
     );
   }
 
+  @Throttle({ default: { ttl: 60000, limit: 60 } })
   @UseGuards(AuthGuard('jwt'))
   @Get('recommendations/frequently-bought/:productId')
   async getFrequentlyBought(
-    @Query('productId') productId: string,
+    @Param('productId') productId: string,
     @Query('limit') limit?: string,
   ) {
     return this.recommendationService.getFrequentlyBoughtTogether(
@@ -99,10 +116,11 @@ export class AIController {
     );
   }
 
+  @Throttle({ default: { ttl: 60000, limit: 60 } })
   @UseGuards(AuthGuard('jwt'))
   @Get('recommendations/cross-sell/:productId')
   async getCrossSell(
-    @Query('productId') productId: string,
+    @Param('productId') productId: string,
     @Query('limit') limit?: string,
   ) {
     return this.recommendationService.getCrossSellItems(
@@ -111,10 +129,11 @@ export class AIController {
     );
   }
 
+  @Throttle({ default: { ttl: 60000, limit: 60 } })
   @UseGuards(AuthGuard('jwt'))
   @Get('recommendations/upsell/:productId')
   async getUpsell(
-    @Query('productId') productId: string,
+    @Param('productId') productId: string,
     @Query('limit') limit?: string,
   ) {
     return this.recommendationService.getUpsellItems(
@@ -123,6 +142,7 @@ export class AIController {
     );
   }
 
+  @Throttle({ default: { ttl: 60000, limit: 120 } })
   @UseGuards(AuthGuard('jwt'))
   @Post('track-interaction')
   async trackInteraction(
@@ -141,6 +161,7 @@ export class AIController {
     return { success: true };
   }
 
+  @Throttle({ default: { ttl: 60000, limit: 20 } })
   @UseGuards(AuthGuard('jwt'))
   @Get('search/semantic')
   async semanticSearch(@Request() req: any, @Query('q') q: string) {
@@ -156,12 +177,14 @@ export class AIController {
     return this.aiService.semanticMatch(q, products);
   }
 
+  @Throttle({ default: { ttl: 60000, limit: 10 } })
   @UseGuards(AuthGuard('jwt'))
   @Post('generate-embedding')
   async generateEmbedding(@Body() body: { text: string }) {
     return this.embeddingsService.generateEmbedding(body.text);
   }
 
+  @Throttle({ default: { ttl: 60000, limit: 10 } })
   @UseGuards(AuthGuard('jwt'))
   @Post('search/vector')
   async vectorSearch(@Body() body: { text: string; limit?: number }) {

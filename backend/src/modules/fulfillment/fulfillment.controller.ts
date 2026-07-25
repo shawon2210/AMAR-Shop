@@ -9,6 +9,8 @@ import {
   UseGuards,
 } from '@nestjs/common';
 import { AuthGuard } from '@nestjs/passport';
+import { RolesGuard } from '../../common/guards/roles.guard';
+import { Roles } from '../../common/decorators/roles.decorator';
 import { FulfillmentService } from './fulfillment.service';
 
 @UseGuards(AuthGuard('jwt'))
@@ -16,11 +18,15 @@ import { FulfillmentService } from './fulfillment.service';
 export class FulfillmentController {
   constructor(private readonly fulfillment: FulfillmentService) {}
 
+  @UseGuards(RolesGuard)
+  @Roles('LOGISTICS', 'ADMIN', 'SUPER_ADMIN')
   @Post('assign')
   async assign(@Body() body: { orderId: string }) {
     return this.fulfillment.assignWarehouse(body.orderId);
   }
 
+  @UseGuards(RolesGuard)
+  @Roles('LOGISTICS', 'ADMIN', 'SUPER_ADMIN')
   @Post('shipments')
   async createShipment(@Body() body: { orderId: string }) {
     return this.fulfillment.createShipment(body.orderId);
@@ -31,6 +37,8 @@ export class FulfillmentController {
     return this.fulfillment.getDeliverySlots(pincode);
   }
 
+  @UseGuards(RolesGuard)
+  @Roles('LOGISTICS', 'ADMIN', 'SUPER_ADMIN')
   @Put('pickup')
   async schedulePickup(
     @Body()
@@ -55,6 +63,8 @@ export class FulfillmentController {
     return this.fulfillment.getFulfillmentOptions(sellerId);
   }
 
+  @UseGuards(RolesGuard)
+  @Roles('LOGISTICS', 'ADMIN', 'SUPER_ADMIN')
   @Get('courier-performance')
   async getCourierPerformance(
     @Query('start') start: string,
@@ -68,6 +78,8 @@ export class FulfillmentController {
     return this.fulfillment.trackShipment(trackingId);
   }
 
+  @UseGuards(RolesGuard)
+  @Roles('LOGISTICS', 'ADMIN', 'SUPER_ADMIN')
   @Post('cod-reconciliation')
   async codReconciliation(@Body() body: { date: string }) {
     return this.fulfillment.processCODReconciliation(body.date);

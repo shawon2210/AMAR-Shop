@@ -95,4 +95,35 @@ footer.tsx (parent — trusts + newsletter + container)
 - Mock data replacement: empty-array fallback in catch + `AdminLoading`/`AdminError`/`AdminEmpty` from `@/components/ui/admin-states`
 - Data fetching pattern: `useState<T>([])` + `useState(true)` + `useState<string|null>(null)` + `useEffect` with `api.get()`, `catch(e) { setData([]) }`
 - Placeholder pages: never show "coming soon" — either implement with API or show empty state
+
+---
+
+## Session 2026-07-26 — Forecast IDOR fix, H-1 role wiring, H-2 per-session logout, H-3 AI rate limiting
+
+### What was done
+
+- **Forecast IDOR (C-4):** Added product ownership check in `forecastDemand()` — looks up product, verifies `store.userId` matches requester. SELLER accessing another seller's product gets 404 (choice: 404 over 403 to avoid leaking product existence). ADMIN/SUPER_ADMIN bypass the check.
+- **Cross-sell/upsell 500 fix:** Root cause = `@Query('productId')` on `:productId` route param in `ai.controller.ts`. `@Query` reads query string, not route params → `findUnique(undefined)` throws. Fixed by changing to `@Param('productId')`. Same bug across all three recommendation endpoints.
+- **H-1 (LOGISTICS role wiring):** Added `@Roles('LOGISTICS','ADMIN','SUPER_ADMIN')` + RolesGuard to 5 gated fulfillment endpoints (assign, shipments, pickup, courier-performance, cod-reconciliation). 4 read-only endpoints left JWT-only.
+- **H-2 (per-session logout):** `logout()` in `auth.service.ts` now accepts optional `refreshTokenValue`, decodes its `jti` via `refreshJwtService.verify()`, and revokes only that specific token. Falls back to revoke-all if no token provided or decoding fails. `logoutAll()` unchanged.
+- **H-3 (rate limiting on AI):** Added `@Throttle()` to all 14 endpoints in `ai.controller.ts` — 10/min (heavy AI), 20/min (chat/moderate/search), 60/min (recommendation reads), 120/min (track-interaction).
+
+### Files changed
+
+| File | Change |
+|---|---|
+| `backend/src/modules/auth/auth.controller.ts` | Updated `logout()` to read refresh token from body/cookies |
+| `backend/src/modules/auth/auth.service.ts` | `logout()` now revokes single token by jti; `logoutAll()` unchanged |
+| `backend/src/modules/ai/ai.controller.ts` | Added `@Throttle()` to all 14 endpoints; fixed `@Query`→`@Param` on cross-sell/upsell |
+| `backend/src/modules/ai/ai.service.ts` | Added product ownership check in `forecastDemand()` |
+| `backend/src/modules/fulfillment/fulfillment.controller.ts` | Added `@Roles('LOGISTICS','ADMIN','SUPER_ADMIN')` to 5 gated endpoints |
+
+### Verification evidence
+
+- **H-1**: CUSTOMER=403 on all 5 gated endpoints, LOGISTICS=passes guard (verified via handler messages)
+- **H-2**: Session A logout → A's refresh=401, B's refresh=200 (still alive). logoutAll kills all sessions
+- **H-3**: AI/recommendations/feed hit limit=60 at request #61 → 429
+- **Forecast IDOR**: SELLER2→SELLER1's Samsung=404, SELLER2→own iPhone=201, ADMIN→any=201
+- **Cross-sell fix**: SELLER→/cross-sell/:productId returns 200 (was 500)
+- **Frequently-bought**: Returns real co-purchases from seeded order data
 <!-- END:session-summary -->

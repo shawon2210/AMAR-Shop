@@ -173,11 +173,29 @@ export class AuthService {
     };
   }
 
-  async logout(userId: string) {
-    await this.prismaService.refreshToken.updateMany({
-      where: { userId, revokedAt: null },
-      data: { revokedAt: new Date() },
-    });
+  async logout(userId: string, refreshTokenValue?: string) {
+    if (refreshTokenValue) {
+      try {
+        const payload = this.refreshJwtService.verify(refreshTokenValue) as {
+          sub: string;
+          jti: string;
+        };
+        await this.prismaService.refreshToken.updateMany({
+          where: { token: payload.jti, userId },
+          data: { revokedAt: new Date() },
+        });
+      } catch {
+        await this.prismaService.refreshToken.updateMany({
+          where: { userId, revokedAt: null },
+          data: { revokedAt: new Date() },
+        });
+      }
+    } else {
+      await this.prismaService.refreshToken.updateMany({
+        where: { userId, revokedAt: null },
+        data: { revokedAt: new Date() },
+      });
+    }
     return { message: 'Logged out successfully' };
   }
 

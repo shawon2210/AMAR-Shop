@@ -69,8 +69,13 @@ export class AuthController {
   @UseGuards(AuthGuard('jwt'))
   @Post('logout')
   @HttpCode(HttpStatus.OK)
-  async logout(@Request() req: any, @Res({ passthrough: true }) res: Response) {
-    await this.authService.logout(req.user.id);
+  async logout(
+    @Request() req: any,
+    @Body() body: { refreshToken?: string },
+    @Res({ passthrough: true }) res: Response,
+  ) {
+    const refreshToken = body?.refreshToken || req.cookies?.refreshToken;
+    await this.authService.logout(req.user.id, refreshToken);
     this.clearTokenCookies(res);
     return { message: 'Logged out successfully' };
   }
