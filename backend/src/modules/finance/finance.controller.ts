@@ -5,7 +5,7 @@ import { Roles } from '../../common/decorators/roles.decorator';
 import { FinanceService } from './finance.service';
 
 @UseGuards(AuthGuard('jwt'), RolesGuard)
-@Roles('ADMIN')
+@Roles('ADMIN', 'SUPER_ADMIN')
 @Controller('finance')
 export class FinanceController {
   constructor(private readonly finance: FinanceService) {}

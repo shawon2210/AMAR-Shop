@@ -21,7 +21,7 @@ import {
 } from '../dto';
 
 @UseGuards(AuthGuard('jwt'), RolesGuard)
-@Roles('ADMIN')
+@Roles('ADMIN', 'SUPER_ADMIN')
 @Controller('admin')
 export class AdminFinanceController {
   constructor(private readonly financeService: AdminFinanceService) {}

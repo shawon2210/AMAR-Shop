@@ -19,7 +19,7 @@ export class ComplianceController {
   constructor(private readonly complianceService: ComplianceService) {}
 
   @UseGuards(AuthGuard('jwt'), RolesGuard)
-  @Roles('ADMIN')
+  @Roles('ADMIN', 'SUPER_ADMIN')
   @Get('status')
   getStatus() {
     return this.complianceService.getComplianceStatus();
@@ -58,6 +58,7 @@ export class ComplianceController {
     return this.complianceService.deleteUserData(req.user.id);
   }
 
+  @UseGuards(AuthGuard('jwt'))
   @Put('cookie-consent')
   updateCookieConsent() {
     return this.complianceService.logConsent();
@@ -69,14 +70,14 @@ export class ComplianceController {
   }
 
   @UseGuards(AuthGuard('jwt'), RolesGuard)
-  @Roles('ADMIN')
+  @Roles('ADMIN', 'SUPER_ADMIN')
   @Get('logs')
   async getLogs(@Query('start') start: string, @Query('end') end: string) {
     return this.complianceService.getComplianceLogs({ start, end });
   }
 
   @UseGuards(AuthGuard('jwt'), RolesGuard)
-  @Roles('ADMIN')
+  @Roles('ADMIN', 'SUPER_ADMIN')
   @Post('aml/check')
   async checkAML(@Body() body: { userId: string }) {
     return this.complianceService.checkAML(body.userId);

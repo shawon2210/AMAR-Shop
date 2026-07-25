@@ -26,7 +26,7 @@ export class AIController {
   ) {}
 
   @UseGuards(AuthGuard('jwt'), RolesGuard)
-  @Roles('SELLER', 'ADMIN')
+  @Roles('SELLER', 'ADMIN', 'SUPER_ADMIN')
   @Post('describe-product')
   async describeProduct(@Body() body: ProductDescriptionRequest) {
     return {
@@ -34,6 +34,7 @@ export class AIController {
     };
   }
 
+  @UseGuards(AuthGuard('jwt'))
   @Post('summarize-reviews')
   async summarizeReviews(
     @Body()
@@ -63,11 +64,15 @@ export class AIController {
     );
   }
 
+  @UseGuards(AuthGuard('jwt'), RolesGuard)
+  @Roles('MODERATOR', 'ADMIN', 'SUPER_ADMIN')
   @Post('moderate')
   async moderate(@Body() body: { text: string }) {
     return this.aiService.moderateContent(body.text);
   }
 
+  @UseGuards(AuthGuard('jwt'), RolesGuard)
+  @Roles('SELLER', 'ADMIN', 'SUPER_ADMIN')
   @Post('forecast')
   forecast(@Body() body: { productId: string; days?: number }) {
     return this.aiService.forecastDemand(body.productId, body.days || 30);
@@ -82,6 +87,7 @@ export class AIController {
     );
   }
 
+  @UseGuards(AuthGuard('jwt'))
   @Get('recommendations/frequently-bought/:productId')
   async getFrequentlyBought(
     @Query('productId') productId: string,
@@ -93,6 +99,7 @@ export class AIController {
     );
   }
 
+  @UseGuards(AuthGuard('jwt'))
   @Get('recommendations/cross-sell/:productId')
   async getCrossSell(
     @Query('productId') productId: string,
@@ -104,6 +111,7 @@ export class AIController {
     );
   }
 
+  @UseGuards(AuthGuard('jwt'))
   @Get('recommendations/upsell/:productId')
   async getUpsell(
     @Query('productId') productId: string,

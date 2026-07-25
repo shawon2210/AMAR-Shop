@@ -57,7 +57,7 @@ export function AuthGuard({ children, requiredRole, fallback }: AuthGuardProps) 
   }
 
   if (requiredRole && user.role !== requiredRole && user.role !== 'SUPER_ADMIN') {
-    router.push('/403');
+    router.push('/unauthorized');
     return null;
   }
 

@@ -16,7 +16,7 @@ export const SELLER_QUERY_KEYS = {
   kyc: 'seller-kyc',
 };
 
-const API_BASE = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:4000';
+const API_BASE = '/api';
 
 export interface DashboardStats {
   totalProducts: number;

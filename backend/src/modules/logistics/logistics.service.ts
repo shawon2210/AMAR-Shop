@@ -124,18 +124,25 @@ export class LogisticsService {
     });
   }
 
-  async getShipmentStatus(trackingId: string) {
+  async getShipmentStatus(trackingId: string, userId?: string, userRole?: string) {
     const shipment = await this.prismaService.shipment.findUnique({
       where: { trackingId },
       include: {
         courier: { select: { id: true, name: true, slug: true } },
-        order: { select: { id: true, orderNumber: true } },
+        order: { select: { id: true, orderNumber: true, userId: true } },
         timeline: { orderBy: { createdAt: 'desc' } },
       },
     });
     if (!shipment) throw new NotFoundException('Shipment not found');
 
-    return shipment;
+    if (userId && userRole && !['LOGISTICS', 'ADMIN', 'SUPER_ADMIN'].includes(userRole)) {
+      if (shipment.order.userId !== userId) {
+        throw new NotFoundException('Shipment not found');
+      }
+    }
+
+    const { order: { userId: _orderUserId, ...order }, ...rest } = shipment;
+    return { ...rest, order };
   }
 
   async getDeliveryTimeline(shipmentId: string) {

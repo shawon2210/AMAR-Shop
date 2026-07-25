@@ -17,7 +17,7 @@ import { AdminSupportService } from '../services/support.service';
 import { ReplyTicketDto, UpdateTicketDto, UpdateReviewDto } from '../dto';
 
 @UseGuards(AuthGuard('jwt'), RolesGuard)
-@Roles('ADMIN')
+@Roles('ADMIN', 'SUPER_ADMIN')
 @Controller('admin')
 export class AdminSupportController {
   constructor(private readonly supportService: AdminSupportService) {}

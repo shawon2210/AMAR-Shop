@@ -46,7 +46,7 @@ export default function SellerLayout({ children }: { children: React.ReactNode }
 
   if (user.role !== 'SELLER' && user.role !== 'ADMIN' && user.role !== 'SUPER_ADMIN') {
     if (typeof window !== 'undefined') {
-      router.replace('/');
+      router.replace('/unauthorized');
     }
     return null;
   }

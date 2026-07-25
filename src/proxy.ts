@@ -13,7 +13,7 @@ const protectedRoutes = {
 // Login/register pages — authenticated users get redirected to their role home.
 // Also excluded from the protected-route check below so unauthenticated
 // users can actually reach them.
-const authRoutes = ['/auth/login', '/auth/register', '/admin/login', '/seller/login'];
+const authRoutes = ['/auth/login', '/auth/register'];
 
 // Rate limiting — per-IP sliding window for auth endpoints.
 const RATE_LIMIT_WINDOW = 60_000;

@@ -23,7 +23,7 @@ import {
 } from '../dto';
 
 @UseGuards(AuthGuard('jwt'), RolesGuard)
-@Roles('ADMIN')
+@Roles('ADMIN', 'SUPER_ADMIN')
 @Controller('admin')
 export class AdminCommerceController {
   constructor(private readonly commerceService: AdminCommerceService) {}

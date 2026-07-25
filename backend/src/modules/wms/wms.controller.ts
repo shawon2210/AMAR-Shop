@@ -9,9 +9,12 @@ import {
   UseGuards,
 } from '@nestjs/common';
 import { AuthGuard } from '@nestjs/passport';
+import { RolesGuard } from '../../common/guards/roles.guard';
+import { Roles } from '../../common/decorators/roles.decorator';
 import { WmsService } from './wms.service';
 
-@UseGuards(AuthGuard('jwt'))
+@UseGuards(AuthGuard('jwt'), RolesGuard)
+@Roles('LOGISTICS', 'ADMIN', 'SUPER_ADMIN')
 @Controller('wms')
 export class WmsController {
   constructor(private readonly wms: WmsService) {}

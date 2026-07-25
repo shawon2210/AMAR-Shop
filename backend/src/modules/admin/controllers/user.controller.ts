@@ -15,7 +15,7 @@ import { AdminUserService } from '../services/user.service';
 import { UpdateUserDto, CreateAdminUserDto } from '../dto';
 
 @UseGuards(AuthGuard('jwt'), RolesGuard)
-@Roles('ADMIN')
+@Roles('ADMIN', 'SUPER_ADMIN')
 @Controller('admin')
 export class AdminUserController {
   constructor(private readonly userService: AdminUserService) {}
@@ -35,11 +35,13 @@ export class AdminUserController {
     });
   }
 
+  @Roles('SUPER_ADMIN')
   @Put('users/:id')
   async updateUser(@Param('id') id: string, @Body() dto: UpdateUserDto) {
     return this.userService.updateUser(id, dto);
   }
 
+  @Roles('SUPER_ADMIN')
   @Post('users')
   async createAdminUser(@Body() dto: CreateAdminUserDto) {
     return this.userService.createAdminUser(dto);
@@ -56,6 +58,7 @@ export class AdminUserController {
     });
   }
 
+  @Roles('SUPER_ADMIN')
   @Put('creators/:id')
   async updateAdminCreator(
     @Param('id') id: string,

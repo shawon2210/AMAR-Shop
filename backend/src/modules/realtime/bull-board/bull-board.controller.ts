@@ -9,14 +9,14 @@ export class BullBoardController {
   constructor(private readonly bullQueueService: BullQueueService) {}
 
   @UseGuards(AuthGuard('jwt'), RolesGuard)
-  @Roles('ADMIN')
+  @Roles('ADMIN', 'SUPER_ADMIN')
   @Get()
   async getQueueMetrics() {
     return this.bullQueueService.getQueueMetrics();
   }
 
   @UseGuards(AuthGuard('jwt'), RolesGuard)
-  @Roles('ADMIN')
+  @Roles('ADMIN', 'SUPER_ADMIN')
   @Get('jobs')
   async getRecentJobs() {
     const queues = [

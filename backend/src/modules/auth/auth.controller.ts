@@ -32,8 +32,7 @@ export class AuthController {
   ) {
     const result = await this.authService.register(body);
     this.setTokenCookies(res, result.accessToken, result.refreshToken);
-    const { expiresAt, ...user } = result;
-    return { user, expiresAt };
+    return { user: result.user, accessToken: result.accessToken, refreshToken: result.refreshToken, expiresAt: result.expiresAt };
   }
 
   @Throttle({ default: { ttl: 60000, limit: 5 } })
@@ -48,24 +47,23 @@ export class AuthController {
     }
     const result = await this.authService.login(identity, body.password);
     this.setTokenCookies(res, result.accessToken, result.refreshToken);
-    const { expiresAt, ...user } = result;
-    return { user, expiresAt };
+    return { user: result.user, accessToken: result.accessToken, refreshToken: result.refreshToken, expiresAt: result.expiresAt };
   }
 
   @Throttle({ default: { ttl: 60000, limit: 10 } })
   @Post('refresh')
   async refresh(
     @Request() req: any,
+    @Body() body: { refreshToken?: string },
     @Res({ passthrough: true }) res: Response,
   ) {
-    const refreshToken = req.cookies?.refreshToken;
+    const refreshToken = body?.refreshToken || req.cookies?.refreshToken;
     if (!refreshToken) {
       return { message: 'Refresh token not found' };
     }
     const result = await this.authService.refresh(refreshToken);
     this.setTokenCookies(res, result.accessToken, result.refreshToken);
-    const { expiresAt, ...user } = result;
-    return { user, expiresAt };
+    return { user: result.user, accessToken: result.accessToken, refreshToken: result.refreshToken, expiresAt: result.expiresAt };
   }
 
   @UseGuards(AuthGuard('jwt'))

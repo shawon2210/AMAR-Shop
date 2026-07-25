@@ -1,6 +1,6 @@
 import { useAuthStore } from '@/stores/auth-store';
 
-const API_BASE = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:4000';
+const API_BASE = '/api';
 
 let isRefreshing = false;
 let refreshPromise: Promise<boolean> | null = null;
@@ -11,9 +11,11 @@ async function attemptRefresh(): Promise<boolean> {
   isRefreshing = true;
   refreshPromise = (async () => {
     try {
+      const rt = useAuthStore.getState().refreshToken;
       const res = await fetch(`${API_BASE}/auth/refresh`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
+        body: rt ? JSON.stringify({ refreshToken: rt }) : undefined,
         credentials: 'include',
       });
       if (!res.ok) return false;
@@ -74,6 +76,8 @@ export async function request<T>(
     const body = await res.json().catch(() => ({}));
     throw new Error(body.message || `Request failed: ${res.status}`);
   }
+
+  if (res.status === 204) return undefined as T;
 
   return res.json();
 }

@@ -14,7 +14,7 @@ import { AdminDashboardService } from '../services/dashboard.service';
 import { UpdateSettingsDto } from '../dto';
 
 @UseGuards(AuthGuard('jwt'), RolesGuard)
-@Roles('ADMIN')
+@Roles('ADMIN', 'SUPER_ADMIN')
 @Controller('admin')
 export class AdminDashboardController {
   constructor(private readonly dashboardService: AdminDashboardService) {}

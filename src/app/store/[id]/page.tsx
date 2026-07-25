@@ -7,7 +7,7 @@ type Props = {
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const resolvedParams = await params;
   try {
-    const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3000/api'}/stores/${resolvedParams.id}`);
+    const res = await fetch(`/api/stores/${resolvedParams.id}`);
     if (!res.ok) {
       return { title: 'Store Not Found | AmarShop' };
     }

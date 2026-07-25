@@ -15,7 +15,7 @@ import { AdminSellerService } from '../services/seller.service';
 import { UpdateSellerDto } from '../dto';
 
 @UseGuards(AuthGuard('jwt'), RolesGuard)
-@Roles('ADMIN')
+@Roles('ADMIN', 'SUPER_ADMIN')
 @Controller('admin')
 export class AdminSellerController {
   constructor(private readonly sellerService: AdminSellerService) {}
