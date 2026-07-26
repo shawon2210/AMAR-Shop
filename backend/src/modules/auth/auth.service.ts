@@ -207,6 +207,60 @@ export class AuthService {
     return { message: 'Logged out from all devices' };
   }
 
+  async getSessions(userId: string, currentToken?: string) {
+    const tokens = await this.prismaService.refreshToken.findMany({
+      where: { userId, revokedAt: null, expiresAt: { gt: new Date() } },
+      select: { id: true, token: true, createdAt: true, expiresAt: true },
+      orderBy: { createdAt: 'desc' },
+    });
+
+    let currentJti: string | null = null;
+    if (currentToken) {
+      try {
+        const payload = this.refreshJwtService.verify(currentToken) as { jti: string };
+        currentJti = payload.jti;
+      } catch {}
+    }
+
+    return tokens.map(t => ({
+      id: t.id,
+      createdAt: t.createdAt.toISOString(),
+      expiresAt: t.expiresAt.toISOString(),
+      isCurrent: t.token === currentJti,
+    }));
+  }
+
+  async revokeSession(userId: string, sessionId: string) {
+    const token = await this.prismaService.refreshToken.findUnique({
+      where: { id: sessionId },
+    });
+    if (!token || token.userId !== userId) {
+      throw new BadRequestException('Session not found');
+    }
+    if (token.revokedAt) {
+      return { message: 'Session already revoked' };
+    }
+    await this.prismaService.refreshToken.update({
+      where: { id: sessionId },
+      data: { revokedAt: new Date() },
+    });
+    return { message: 'Session revoked' };
+  }
+
+  async logoutAllExcept(userId: string, refreshTokenValue: string) {
+    let payload: { sub: string; jti: string };
+    try {
+      payload = this.refreshJwtService.verify(refreshTokenValue);
+    } catch {
+      throw new UnauthorizedException('Invalid refresh token');
+    }
+    await this.prismaService.refreshToken.updateMany({
+      where: { userId, revokedAt: null, NOT: { token: payload.jti } },
+      data: { revokedAt: new Date() },
+    });
+    return { message: 'Logged out from all other devices' };
+  }
+
   async getProfile(userId: string) {
     const user = await this.prismaService.user.findUnique({
       where: { id: userId },

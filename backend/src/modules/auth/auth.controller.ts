@@ -3,6 +3,8 @@ import {
   Post,
   Get,
   Body,
+  Param,
+  Query,
   UseGuards,
   Request,
   Res,
@@ -90,6 +92,39 @@ export class AuthController {
     await this.authService.logoutAll(req.user.id);
     this.clearTokenCookies(res);
     return { message: 'Logged out from all devices' };
+  }
+
+  @UseGuards(AuthGuard('jwt'))
+  @Get('sessions')
+  async getSessions(
+    @Request() req: any,
+    @Query('currentToken') currentToken?: string,
+  ) {
+    return this.authService.getSessions(req.user.id, currentToken);
+  }
+
+  @UseGuards(AuthGuard('jwt'))
+  @Post('logout-all-except')
+  @HttpCode(HttpStatus.OK)
+  async logoutAllExcept(
+    @Request() req: any,
+    @Body() body: { refreshToken?: string },
+  ) {
+    const refreshToken = body?.refreshToken || req.cookies?.refreshToken;
+    if (!refreshToken) {
+      return { message: 'Current session token is required' };
+    }
+    return this.authService.logoutAllExcept(req.user.id, refreshToken);
+  }
+
+  @UseGuards(AuthGuard('jwt'))
+  @Post('sessions/:id/revoke')
+  @HttpCode(HttpStatus.OK)
+  async revokeSession(
+    @Request() req: any,
+    @Param('id') sessionId: string,
+  ) {
+    return this.authService.revokeSession(req.user.id, sessionId);
   }
 
   @UseGuards(AuthGuard('jwt'))
