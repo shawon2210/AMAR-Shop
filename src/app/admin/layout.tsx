@@ -564,11 +564,11 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
     if (!hydrated) return;
     if (pathname.startsWith('/admin/login')) return;
     if (!user) {
-      router.replace('/admin/login');
+      window.location.href = '/admin/login';
     } else if (user.role !== 'ADMIN' && user.role !== 'SUPER_ADMIN' && user.role !== 'MODERATOR') {
-      router.replace('/unauthorized');
+      window.location.href = '/unauthorized';
     }
-  }, [hydrated, user, pathname, router]);
+  }, [hydrated, user, pathname]);
 
   // Focus hamburger when sidebar closes on mobile
   useEffect(() => {

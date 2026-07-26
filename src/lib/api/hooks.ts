@@ -22,13 +22,16 @@ export function useAdminData<T>(
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const fetchId = useRef(0);
+  const fetcherRef = useRef(fetcher);
+  fetcherRef.current = fetcher;
+  const [fetchToken, setFetchToken] = useState(0);
 
   const fetch = useCallback(async () => {
     const id = ++fetchId.current;
     setLoading(true);
     setError(null);
     try {
-      const result = await fetcher();
+      const result = await fetcherRef.current();
       if (id === fetchId.current) {
         setData(result);
         setLoading(false);
@@ -39,13 +42,21 @@ export function useAdminData<T>(
         setLoading(false);
       }
     }
-  }, [fetcher, deps]);
+  }, []);
 
   useEffect(() => {
     fetch();
-  }, [fetch]);
+  }, [fetchToken]);
 
-  return { data, loading, error, refetch: fetch };
+  useEffect(() => {
+    setFetchToken((t) => t + 1);
+  }, deps);
+
+  const refetch = useCallback(() => {
+    setFetchToken((t) => t + 1);
+  }, []);
+
+  return { data, loading, error, refetch };
 }
 
 /**
