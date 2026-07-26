@@ -35,6 +35,8 @@ export class LogisticsController {
     return this.logisticsService.getDeliveryZones(courierId);
   }
 
+  @Roles('LOGISTICS', 'SELLER', 'ADMIN', 'SUPER_ADMIN')
+  @UseGuards(RolesGuard)
   @Post('calculate')
   async calculateShipping(
     @Body() body: { weight: number; district: string; courierId: string },

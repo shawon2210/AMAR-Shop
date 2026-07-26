@@ -175,18 +175,18 @@ export class AuthService {
 
   async logout(userId: string, refreshTokenValue?: string) {
     if (refreshTokenValue) {
+      let payload: { sub: string; jti: string };
       try {
-        const payload = this.refreshJwtService.verify(refreshTokenValue) as {
-          sub: string;
-          jti: string;
-        };
-        await this.prismaService.refreshToken.updateMany({
-          where: { token: payload.jti, userId },
-          data: { revokedAt: new Date() },
-        });
+        payload = this.refreshJwtService.verify(refreshTokenValue);
       } catch {
-        await this.prismaService.refreshToken.updateMany({
-          where: { userId, revokedAt: null },
+        throw new UnauthorizedException('Invalid refresh token');
+      }
+      const stored = await this.prismaService.refreshToken.findUnique({
+        where: { token: payload.jti },
+      });
+      if (stored && stored.userId === userId && !stored.revokedAt) {
+        await this.prismaService.refreshToken.update({
+          where: { id: stored.id },
           data: { revokedAt: new Date() },
         });
       }
