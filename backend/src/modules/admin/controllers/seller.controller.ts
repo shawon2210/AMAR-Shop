@@ -20,6 +20,7 @@ import { UpdateSellerDto } from '../dto';
 export class AdminSellerController {
   constructor(private readonly sellerService: AdminSellerService) {}
 
+  @Roles('MODERATOR', 'ADMIN', 'SUPER_ADMIN')
   @Get('sellers')
   async getSellers(
     @Query('page') page?: string,
@@ -40,16 +41,19 @@ export class AdminSellerController {
     return this.sellerService.updateSeller(id, dto);
   }
 
+  @Roles('MODERATOR', 'ADMIN', 'SUPER_ADMIN')
   @Put('sellers/:id/store-status')
   async toggleStoreStatus(@Param('id') id: string) {
     return this.sellerService.toggleStoreStatus(id);
   }
 
+  @Roles('MODERATOR', 'ADMIN', 'SUPER_ADMIN')
   @Post('sellers/:id/approve')
   async approveSeller(@Param('id') id: string) {
     return this.sellerService.approveSeller(id);
   }
 
+  @Roles('MODERATOR', 'ADMIN', 'SUPER_ADMIN')
   @Post('sellers/:id/reject')
   async rejectSeller(@Param('id') id: string, @Body('reason') reason: string) {
     return this.sellerService.rejectSeller(id, reason);

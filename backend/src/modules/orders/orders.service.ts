@@ -99,10 +99,12 @@ export class OrdersService {
     let coupon: any = null;
 
     if (data.couponCode) {
+      const sellerId = orderItems.length > 0 ? orderItems[0].storeId : undefined;
       const validation = await this.couponService.validateCoupon(
         data.couponCode,
         userId,
         subtotal,
+        sellerId,
       );
       discount = validation.discount;
       coupon = validation.coupon;
@@ -164,11 +166,13 @@ export class OrdersService {
 
     // Apply coupon usage tracking if coupon was used
     if (coupon) {
+      const sellerId = orderItems.length > 0 ? orderItems[0].storeId : undefined;
       await this.couponService.applyCoupon(
         coupon.id,
         userId,
         order.id,
         discount,
+        sellerId,
       );
     }
 

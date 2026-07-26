@@ -28,6 +28,7 @@ import {
 export class AdminCommerceController {
   constructor(private readonly commerceService: AdminCommerceService) {}
 
+  @Roles('MODERATOR', 'ADMIN', 'SUPER_ADMIN')
   @Get('products')
   async getProducts(
     @Query('page') page?: string,
@@ -60,11 +61,13 @@ export class AdminCommerceController {
     return this.commerceService.deleteProduct(id);
   }
 
+  @Roles('MODERATOR', 'ADMIN', 'SUPER_ADMIN')
   @Post('products/:id/approve')
   async approveProduct(@Param('id') id: string) {
     return this.commerceService.approveProduct(id);
   }
 
+  @Roles('MODERATOR', 'ADMIN', 'SUPER_ADMIN')
   @Post('products/:id/reject')
   async rejectProduct(@Param('id') id: string, @Body('reason') reason: string) {
     return this.commerceService.rejectProduct(id, reason);

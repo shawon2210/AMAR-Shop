@@ -1186,18 +1186,19 @@ model Commission {
 // =================== COUPONS & PROMOTIONS ===================
 
 model Coupon {
-  id          String   @id @default(cuid())
-  code        String   @unique
-  type        String   // PERCENTAGE | FIXED | FREE_SHIPPING
-  value       Float
-  minPurchase Float    @default(0)
-  maxUses     Int?
-  usedCount   Int      @default(0)
-  maxPerUser  Int      @default(1)
-  isActive    Boolean  @default(true)
-  startsAt    DateTime?
-  expiresAt   DateTime?
-  createdAt   DateTime @default(now())
+  id                String   @id @default(cuid())
+  code              String   @unique
+  type              String   // PERCENTAGE | FIXED | FREE_SHIPPING
+  value             Float
+  minPurchase       Float    @default(0)
+  maxUses           Int?
+  usedCount         Int      @default(0)
+  maxPerUser        Int      @default(1)
+  maxUsesPerSeller  Int?
+  isActive          Boolean  @default(true)
+  startsAt          DateTime?
+  expiresAt         DateTime?
+  createdAt         DateTime @default(now())
 
   orders      Order[]
   usage       CouponUsage[]
@@ -1209,6 +1210,7 @@ model CouponUsage {
   coupon    Coupon   @relation(fields: [couponId], references: [id])
   userId    String
   user      User     @relation(fields: [userId], references: [id])
+  sellerId  String?
   orderId   String?
   discount  Float
   createdAt DateTime @default(now())

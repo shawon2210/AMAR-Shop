@@ -87,6 +87,12 @@ const navSections: NavSection[] = [
     ],
   },
   {
+    title: 'Moderation',
+    items: [
+      { label: 'Moderation Queue', icon: 'fact_check', href: '/admin/moderation' },
+    ],
+  },
+  {
     title: 'Marketing',
     items: [
       { label: 'Email Campaigns', icon: 'email', href: '/admin/email-campaigns' },
@@ -559,7 +565,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
     if (pathname.startsWith('/admin/login')) return;
     if (!user) {
       router.replace('/admin/login');
-    } else if (user.role !== 'ADMIN' && user.role !== 'SUPER_ADMIN') {
+    } else if (user.role !== 'ADMIN' && user.role !== 'SUPER_ADMIN' && user.role !== 'MODERATOR') {
       router.replace('/unauthorized');
     }
   }, [hydrated, user, pathname, router]);
@@ -586,7 +592,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
     return <>{children}</>;
   }
 
-  if (!user || (user.role !== 'ADMIN' && user.role !== 'SUPER_ADMIN')) {
+  if (!user || (user.role !== 'ADMIN' && user.role !== 'SUPER_ADMIN' && user.role !== 'MODERATOR')) {
     return (
       <div className="min-h-screen flex items-center justify-center bg-[#f5f5f5]">
         <div className="text-center">

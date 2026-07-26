@@ -126,4 +126,73 @@ footer.tsx (parent — trusts + newsletter + container)
 - **Forecast IDOR**: SELLER2→SELLER1's Samsung=404, SELLER2→own iPhone=201, ADMIN→any=201
 - **Cross-sell fix**: SELLER→/cross-sell/:productId returns 200 (was 500)
 - **Frequently-bought**: Returns real co-purchases from seeded order data
+
+---
+
+## Session 2026-07-27 — H-1 MODERATOR role gating + Moderation Queue UI
+
+### What was done
+
+- **Added `@Roles('MODERATOR', 'ADMIN', 'SUPER_ADMIN')`** to 9 admin endpoints across 3 controllers:
+  - `support.controller.ts`: GET /admin/reviews, PUT /admin/reviews/:id
+  - `seller.controller.ts`: GET /admin/sellers, PUT /admin/sellers/:id/store-status, POST approve/reject
+  - `dashboard.controller.ts`: GET /admin/compliance
+- **Updated `admin/layout.tsx`**: Added MODERATOR to both JSX guard and server check
+- **Added "Moderation" sidebar section** with link to `/admin/moderation`
+- **Created `src/app/admin/moderation/page.tsx`** — 3-tab queue UI:
+  - **Pending Products** tab — approve/reject with reason prompt, paginated table + mobile cards
+  - **Flagged Reviews** tab — approve/hide reviews with star rating, desktop table + mobile cards
+  - **Vendor Approvals** tab — approve/reject KYC + toggle store active/suspend, filter by KYC status
+
+### Files changed
+
+| File | Change |
+|---|---|
+| `backend/src/modules/admin/controllers/support.controller.ts` | Added `@Roles` to 2 review endpoints |
+| `backend/src/modules/admin/controllers/seller.controller.ts` | Added `@Roles` to 4 seller endpoints |
+| `backend/src/modules/admin/controllers/dashboard.controller.ts` | Added `@Roles` to compliance endpoint |
+| `src/app/admin/layout.tsx` | MODERATOR in JSX guard + server check + sidebar nav |
+| `src/app/admin/moderation/page.tsx` | New 3-tab moderation queue UI (products, reviews, sellers) |
+
+---
+
+## Session 2026-07-27 (continued) — M-2 Refresh token rotation reuse detection
+
+### What was done
+
+- **Fixed reuse detection** in `auth.service.ts` `refresh()` — when a **revoked** (already rotated) refresh token is replayed, all active sessions for that user are revoked (mass-revocation on theft). Previously only returned 401 silently, allowing the attacker to keep any other sessions alive.
+- **Expired-but-unrevoked tokens** continue to revoke individually (existing behavior, not theft).
+
+### Files changed
+
+| File | Change |
+|---|---|
+| `backend/src/modules/auth/auth.service.ts` | Revoke all sessions on revoked-token reuse (theft) vs single-token on expiry |
+
+---
+
+## Session 2026-07-27 (continued) — M-3 Deactivation cascade + Phase 5 Item 3 Seller-level coupon limits
+
+### M-3 — Deactivation cascade
+
+- **`AdminUserService.updateUser`** now cascades `isActive` changes to the user's `Store`. Deactivating a user sets `Store.isActive = false`; reactivating sets it back to `true`.
+- No self-serve deactivation endpoint existed — only admin path was covered.
+
+### Phase 5 Item 3 — Seller-level coupon usage limits
+
+- **Schema**: Added `maxUsesPerSeller: Int?` to `Coupon`, `sellerId: String?` to `CouponUsage`
+- **`CouponService.validateCoupon`**: accepts optional `sellerId`, checks `maxUsesPerSeller` by counting per-seller usage (only when both `maxUsesPerSeller` and `sellerId` are set)
+- **`CouponService.applyCoupon`**: accepts optional `sellerId`, stores it on `CouponUsage` for per-seller tracking
+- **`CouponService.createCoupon` / `updateCoupon`**: accept `maxUsesPerSeller` for CRUD
+- **`OrdersService.createOrder`**: passes the first order item's `storeId` as seller context to coupon validation and application
+- Multi-seller orders use the first item's store for seller-level limit checking
+
+### Files changed
+
+| File | Change |
+|---|---|
+| `backend/prisma/schema.prisma` | Added `maxUsesPerSeller` to Coupon, `sellerId` to CouponUsage |
+| `backend/src/modules/coupons/coupon.service.ts` | Seller-level validation + tracking in validateCoupon/applyCoupon/create/update |
+| `backend/src/modules/orders/orders.service.ts` | Pass sellerId from first order item to coupon methods |
+| `backend/src/modules/admin/services/user.service.ts` | Cascade `isActive` to Store when updating user |
 <!-- END:session-summary -->

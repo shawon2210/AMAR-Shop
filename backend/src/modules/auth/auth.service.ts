@@ -136,7 +136,12 @@ export class AuthService {
     });
 
     if (!stored || stored.revokedAt || stored.expiresAt < new Date()) {
-      if (stored && !stored.revokedAt) {
+      if (stored && stored.revokedAt) {
+        await this.prismaService.refreshToken.updateMany({
+          where: { userId: stored.userId, revokedAt: null },
+          data: { revokedAt: new Date() },
+        });
+      } else if (stored && !stored.revokedAt) {
         await this.prismaService.refreshToken.update({
           where: { id: stored.id },
           data: { revokedAt: new Date() },

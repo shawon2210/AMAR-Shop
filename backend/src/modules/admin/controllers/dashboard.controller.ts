@@ -43,6 +43,7 @@ export class AdminDashboardController {
     return this.dashboardService.updateSettings(dto.commissionRate);
   }
 
+  @Roles('MODERATOR', 'ADMIN', 'SUPER_ADMIN')
   @Get('compliance')
   async getComplianceDashboard() {
     return this.dashboardService.getComplianceDashboard();

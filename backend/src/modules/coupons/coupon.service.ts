@@ -9,6 +9,7 @@ export class CouponService {
     code: string,
     userId: string,
     subtotal: number,
+    sellerId?: string,
   ): Promise<{
     valid: boolean;
     message: string;
@@ -88,6 +89,20 @@ export class CouponService {
       };
     }
 
+    if (coupon.maxUsesPerSeller != null && sellerId) {
+      const sellerUsage = await this.prisma.couponUsage.count({
+        where: { couponId: coupon.id, sellerId },
+      });
+      if (sellerUsage >= coupon.maxUsesPerSeller) {
+        return {
+          valid: false,
+          message: `Coupon usage limit for this seller reached (max ${coupon.maxUsesPerSeller})`,
+          discount: 0,
+          coupon: null,
+        };
+      }
+    }
+
     let discount = 0;
     switch (coupon.type) {
       case 'PERCENTAGE':
@@ -125,6 +140,7 @@ export class CouponService {
     userId: string,
     orderId: string,
     discount: number,
+    sellerId?: string,
   ) {
     await this.prisma.$transaction(async (tx) => {
       await tx.coupon.update({
@@ -136,6 +152,7 @@ export class CouponService {
         data: {
           couponId,
           userId,
+          sellerId,
           orderId,
           discount,
         },
@@ -179,6 +196,7 @@ export class CouponService {
     minPurchase?: number;
     maxUses?: number;
     maxPerUser?: number;
+    maxUsesPerSeller?: number;
     isActive?: boolean;
     startsAt?: string;
     expiresAt?: string;
@@ -191,6 +209,7 @@ export class CouponService {
         minPurchase: data.minPurchase || 0,
         maxUses: data.maxUses,
         maxPerUser: data.maxPerUser || 1,
+        maxUsesPerSeller: data.maxUsesPerSeller,
         isActive: data.isActive !== false,
         startsAt: data.startsAt ? new Date(data.startsAt) : undefined,
         expiresAt: data.expiresAt ? new Date(data.expiresAt) : undefined,
@@ -207,6 +226,7 @@ export class CouponService {
       minPurchase?: number;
       maxUses?: number;
       maxPerUser?: number;
+      maxUsesPerSeller?: number;
       isActive?: boolean;
       startsAt?: string;
       expiresAt?: string;
@@ -235,6 +255,10 @@ export class CouponService {
         maxPerUser:
           data.maxPerUser !== undefined
             ? parseInt(String(data.maxPerUser))
+            : undefined,
+        maxUsesPerSeller:
+          data.maxUsesPerSeller !== undefined
+            ? parseInt(String(data.maxUsesPerSeller))
             : undefined,
         isActive: data.isActive,
         startsAt: data.startsAt ? new Date(data.startsAt) : undefined,

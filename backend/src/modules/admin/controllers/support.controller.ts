@@ -59,6 +59,7 @@ export class AdminSupportController {
     return this.supportService.updateSupportTicket(id, dto);
   }
 
+  @Roles('MODERATOR', 'ADMIN', 'SUPER_ADMIN')
   @Get('reviews')
   async getReviews(
     @Query('page') page?: string,
@@ -72,6 +73,7 @@ export class AdminSupportController {
     });
   }
 
+  @Roles('MODERATOR', 'ADMIN', 'SUPER_ADMIN')
   @Put('reviews/:id')
   async updateReview(@Param('id') id: string, @Body() dto: UpdateReviewDto) {
     return this.supportService.updateReview(id, dto);

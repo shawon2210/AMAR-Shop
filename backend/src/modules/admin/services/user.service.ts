@@ -62,6 +62,14 @@ export class AdminUserService {
   ) {
     const user = await this.prisma.user.findUnique({ where: { id: userId } });
     if (!user) throw new NotFoundException('User not found');
+
+    if (data.isActive !== undefined) {
+      await this.prisma.store.updateMany({
+        where: { userId },
+        data: { isActive: data.isActive },
+      });
+    }
+
     return this.prisma.user.update({
       where: { id: userId },
       data: data as any,
