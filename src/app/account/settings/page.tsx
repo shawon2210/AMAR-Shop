@@ -24,7 +24,6 @@ function formatDate(iso: string) {
 
 export default function SettingsPage() {
   const user = useAuthStore(s => s.user);
-  const refreshToken = useAuthStore(s => s.refreshToken);
   const addToast = useUIStore(s => s.addToast);
 
   const [name, setName] = useState(user?.name || '');
@@ -39,15 +38,14 @@ export default function SettingsPage() {
   const fetchSessions = useCallback(async () => {
     setSessionsLoading(true);
     try {
-      const params = refreshToken ? `?currentToken=${encodeURIComponent(refreshToken)}` : '';
-      const data = await api.get<Session[]>(`/auth/sessions${params}`);
+      const data = await api.get<Session[]>('/auth/sessions');
       setSessions(data);
     } catch {
       setSessions([]);
     } finally {
       setSessionsLoading(false);
     }
-  }, [refreshToken]);
+  }, []);
 
   useEffect(() => { fetchSessions(); }, [fetchSessions]);
 
@@ -83,7 +81,7 @@ export default function SettingsPage() {
   const handleRevokeAllExcept = async () => {
     setRevokingAll(true);
     try {
-      await api.post('/auth/logout-all-except', { refreshToken });
+      await api.post('/auth/logout-all-except');
       setSessions(prev => prev.filter(s => !s.isCurrent));
       addToast('Logged out from all other devices', 'success');
     } catch (err) {

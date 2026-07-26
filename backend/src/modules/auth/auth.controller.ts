@@ -4,7 +4,6 @@ import {
   Get,
   Body,
   Param,
-  Query,
   UseGuards,
   Request,
   Res,
@@ -96,11 +95,8 @@ export class AuthController {
 
   @UseGuards(AuthGuard('jwt'))
   @Get('sessions')
-  async getSessions(
-    @Request() req: any,
-    @Query('currentToken') currentToken?: string,
-  ) {
-    return this.authService.getSessions(req.user.id, currentToken);
+  async getSessions(@Request() req: any) {
+    return this.authService.getSessions(req.user.id, req.cookies?.refreshToken);
   }
 
   @UseGuards(AuthGuard('jwt'))
