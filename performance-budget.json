@@ -1,0 +1,71 @@
+{
+  "name": "performance-budget",
+  "performanceBudget": {
+    "mobile": {
+      "home": {
+        "lighthouse": {
+          "score": ">45",
+          "lcp": "<8s",
+          "cls": "<0.1",
+          "tbt": "<200ms",
+          "fcp": "<1.5s"
+        },
+        "bundleSize": {
+          "maxBundle": "500kb",
+          "maxCss": "50kb",
+          "maxJs": "300kb",
+          "maxImages": "200kb"
+        },
+        "thirdParty": {
+          "maxScripts": "3",
+          "maxWeight": "500kb"
+        }
+      },
+      "category": {
+        "lighthouse": {
+          "score": ">40",
+          "lcp": "<8s",
+          "cls": "<0.1"
+        }
+      },
+      "cart": {
+        "lighthouse": {
+          "score": ">70"
+        }
+      },
+      "product": {
+        "lighthouse": {
+          "score": ">50",
+          "lcp": "<3s"
+        }
+      }
+    },
+    "desktop": {
+      "home": {
+        "lighthouse": {
+          "score": ">80",
+          "lcp": "<2.5s"
+        }
+      }
+    },
+    "metrics": {
+      "loadTime": {
+        "warning": ">3s",
+        "error": ">5s"
+      },
+      "mainThreadTime": {
+        "warning": ">200ms",
+        "error": ">500ms"
+      },
+      "layoutShifts": {
+        "warning": ">0.1",
+        "error": ">0.25"
+      }
+    }
+  },
+  "gitignore": [
+    "*.report.html",
+    "*.report.json",
+    ".lighthouse-results*"
+  ]
+}
