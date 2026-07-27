@@ -17,8 +17,8 @@ export default async function HomePage() {
 
   return (
     <div className="flex flex-col gap-4 md:gap-5 lg:gap-6 pb-8">
-      {/* Hero */}
-      <HeroSection />
+      {/* Hero - priority for above-the-fold */}
+      <HeroSection priority={true} />
 
       {/* Trust Badges - Above the fold */}
       <div className="app-container">

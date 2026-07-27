@@ -61,7 +61,7 @@ const slides: HeroSlide[] = [
 
 const AUTO_PLAY_MS = 5500;
 
-export function HeroSlider() {
+export function HeroSlider({ priority = false }: { priority?: boolean }) {
   const [current, setCurrent] = useState(0);
   const [imgErrors, setImgErrors] = useState<Record<number, boolean>>({});
   const paused = useRef(false);
@@ -78,7 +78,7 @@ export function HeroSlider() {
     return () => { if (timerRef.current) clearInterval(timerRef.current); };
   }, [next]);
 
-  return (
+      return (
     <div
       className="relative overflow-hidden rounded-2xl w-full h-hero bg-gray-900 group"
       onMouseEnter={() => { paused.current = true; }}
@@ -88,6 +88,7 @@ export function HeroSlider() {
         const diff = touchStartX.current - e.changedTouches[0].clientX;
         if (Math.abs(diff) > 48) { if (diff > 0) { next(); } else { prev(); } }
       }}
+      {...(priority ? { 'data-priority': 'true' } : {})}
     >
       {slides.map((slide, i) => (
         <div

@@ -10,6 +10,12 @@ const nextConfig = {
       { protocol: 'https', hostname: 'cdn-icons-png.flaticon.com' },
     ],
   },
+  experimental: {
+    optimizeCss: true,
+  },
+  compiler: {
+    removeConsole: process.env.NODE_ENV === 'production',
+  },
   async rewrites() {
     const apiUrl = process.env.API_PROXY_URL || process.env.NEXT_PUBLIC_API_URL || 'http://localhost:4000';
     return [
@@ -20,5 +26,7 @@ const nextConfig = {
     ];
   },
 };
+
+module.exports = nextConfig;
 
 module.exports = nextConfig;

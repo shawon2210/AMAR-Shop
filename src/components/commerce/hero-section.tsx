@@ -44,7 +44,7 @@ const promoCards = [
 
 const mobilePills = ['Electronics', 'Fashion', 'Beauty', 'Groceries', 'Home', 'Sports', '🔥 Flash Sale', 'New Arrivals'];
 
-export function HeroSection() {
+export function HeroSection({ priority = false }: { priority?: boolean }) {
   return (
     <section>
       <div className="app-container pt-3 md:pt-4">
