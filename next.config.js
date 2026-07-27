@@ -12,7 +12,6 @@ const nextConfig = {
   },
   experimental: {
     optimizeCss: true,
-    optimizePackageImports: ['lodash-es', 'lodash'],
   },
   compiler: {
     removeConsole: process.env.NODE_ENV === 'production',

@@ -68,6 +68,18 @@ jobs:
       - run: npx playwright install --with-deps
       - run: npx playwright test
 
+  performance:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - run: npm ci
+      - name: Install Lighthouse CI
+        run: npm i -D @lhci/cli
+      - name: Run Lighthouse CI for performance audit
+        run: lhci autorun --config=lighthouse.config.js
+        env:
+          LHCI_GITHUB_APP_TOKEN: ${{ secrets.LHCI_GITHUB_APP_TOKEN }}
+
   chaos:
     runs-on: ubuntu-latest
     steps:
