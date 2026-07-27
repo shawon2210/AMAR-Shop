@@ -387,9 +387,9 @@ function Sidebar({
                 </p>
               </div>
               <button
-                onClick={() => {
-                  useAuthStore.getState().logout();
-                  if (typeof window !== 'undefined') window.location.href = '/admin/login';
+                onClick={async () => {
+                  await useAuthStore.getState().logout();
+                  window.location.href = '/auth/login';
                 }}
                 className="p-2.5 rounded-lg hover:bg-white/8 text-white/25 hover:text-red-400 transition-colors"
                 aria-label="Logout"
@@ -526,7 +526,6 @@ function SearchOverlay({
 }
 
 export default function AdminLayout({ children }: { children: React.ReactNode }) {
-  const router = useRouter();
   const pathname = usePathname();
   const user = useAuthStore((s) => s.user);
   const hydrated = useAuthHydrated();
@@ -699,9 +698,9 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
               </div>
 
               <button
-                onClick={() => {
-                  useAuthStore.getState().logout();
-                  router.push('/admin/login');
+                onClick={async () => {
+                  await useAuthStore.getState().logout();
+                  window.location.href = '/auth/login';
                 }}
                 className="ml-1 p-1.5 rounded-lg hover:bg-red-50 text-[#888] hover:text-red-500 transition-colors shrink-0"
                 aria-label="Logout"

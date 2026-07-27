@@ -1,0 +1,185 @@
+- generic [active] [ref=f5e1]:
+  - link "Skip to main content" [ref=f5e2] [cursor=pointer]:
+    - /url: "#main-content"
+  - generic [ref=f5e3]:
+    - banner [ref=f5e4]:
+      - generic [ref=f5e6]:
+        - generic [ref=f5e7]:
+          - button "Open menu" [ref=f5e8]:
+            - generic [ref=f5e9]: menu
+          - link [ref=f5e10] [cursor=pointer]:
+            - /url: /
+            - img "AmarShop" [ref=f5e11]
+        - generic [ref=f5e12]:
+          - button "Search" [ref=f5e13]:
+            - generic [ref=f5e14]: search
+          - link "Shopping cart" [ref=f5e15] [cursor=pointer]:
+            - /url: /cart
+            - generic [ref=f5e16]: shopping_cart
+    - main [ref=f5e17]:
+      - generic [ref=f5e20]:
+        - generic [ref=f5e21]:
+          - paragraph [ref=f5e22]: Signed in as Admin User
+          - generic [ref=f5e23]:
+            - button "Go to dashboard" [ref=f5e24]
+            - button "Sign out" [ref=f5e25]
+        - generic [ref=f5e26]:
+          - generic [ref=f5e27]:
+            - generic [ref=f5e28]: shopping_bag
+            - heading "Welcome Back" [level=1] [ref=f5e30]
+            - paragraph [ref=f5e31]: Sign in to your AmarShop account
+          - generic [ref=f5e32]:
+            - generic [ref=f5e33]:
+              - generic [ref=f5e34]: Email or Phone
+              - textbox "admin@amarshop.com or 01712345678" [ref=f5e35]: "01700000000"
+            - generic [ref=f5e36]:
+              - generic [ref=f5e37]: Password
+              - generic [ref=f5e38]:
+                - textbox "Enter your password" [ref=f5e39]: customer123
+                - button "Show password" [ref=f5e40]:
+                  - generic [ref=f5e41]: visibility
+            - generic [ref=f5e42]:
+              - generic [ref=f5e43] [cursor=pointer]:
+                - checkbox "Remember me" [ref=f5e44]
+                - text: Remember me
+              - link "Forgot password?" [ref=f5e45] [cursor=pointer]:
+                - /url: /auth/forgot-password
+            - button "Sign In" [ref=f5e46]
+          - paragraph [ref=f5e47]:
+            - text: No account?
+            - link "Register" [ref=f5e48] [cursor=pointer]:
+              - /url: /auth/register?redirect=%2Fadmin%2Fdashboard
+          - generic [ref=f5e49]: Quick demo login
+          - generic [ref=f5e54]:
+            - button "admin_panel_settings Admin 01712345678 admin123" [ref=f5e55]:
+              - generic [ref=f5e56]: admin_panel_settings
+              - generic [ref=f5e57]: Admin
+              - generic [ref=f5e58]: "01712345678"
+              - generic [ref=f5e59]: admin123
+            - button "storefront Seller 01711111111 seller123" [ref=f5e60]:
+              - generic [ref=f5e61]: storefront
+              - generic [ref=f5e62]: Seller
+              - generic [ref=f5e63]: "01711111111"
+              - generic [ref=f5e64]: seller123
+            - button "person Customer 01700000000 customer123" [ref=f5e65]:
+              - generic [ref=f5e66]: person
+              - generic [ref=f5e67]: Customer
+              - generic [ref=f5e68]: "01700000000"
+              - generic [ref=f5e69]: customer123
+    - contentinfo [ref=f5e70]:
+      - generic [ref=f5e76]:
+        - generic [ref=f5e82]:
+          - heading "Stay in the Loop" [level=3] [ref=f5e83]
+          - paragraph [ref=f5e84]: Exclusive deals, launches & offers — straight to your inbox.
+        - generic [ref=f5e85]:
+          - textbox "Your email address" [ref=f5e90]
+          - button "Subscribe" [ref=f5e91]
+      - generic [ref=f5e94]:
+        - generic [ref=f5e95]:
+          - generic [ref=f5e96]:
+            - link [ref=f5e97] [cursor=pointer]:
+              - /url: /
+              - img "AmarShop" [ref=f5e98]
+            - paragraph [ref=f5e99]: Bangladesh's premium online marketplace. Shop millions of products from trusted sellers with fast delivery and the best deals.
+            - generic [ref=f5e100]:
+              - heading "Follow Us" [level=4] [ref=f5e101]
+              - generic [ref=f5e102]:
+                - link "Facebook" [ref=f5e103] [cursor=pointer]:
+                  - /url: "#"
+                - link "Instagram" [ref=f5e106] [cursor=pointer]:
+                  - /url: "#"
+                - link "X (Twitter)" [ref=f5e109] [cursor=pointer]:
+                  - /url: "#"
+                - link "YouTube" [ref=f5e112] [cursor=pointer]:
+                  - /url: "#"
+                - link "LinkedIn" [ref=f5e115] [cursor=pointer]:
+                  - /url: https://www.linkedin.com/in/md-shawon-molla-2a3877293/
+                - link "GitHub" [ref=f5e118] [cursor=pointer]:
+                  - /url: https://github.com/shawon2210
+          - generic [ref=f5e122]:
+            - button "Customer Service" [ref=f5e124]
+            - button "Shop Categories" [ref=f5e128]
+            - button "Seller Center" [ref=f5e132]
+            - button "Company" [ref=f5e136]
+        - generic [ref=f5e140]:
+          - generic [ref=f5e141]:
+            - heading "Download App" [level=4] [ref=f5e142]
+            - generic [ref=f5e144]:
+              - link [ref=f5e145] [cursor=pointer]:
+                - /url: "#"
+                - generic [ref=f5e149]:
+                  - paragraph [ref=f5e150]: Download on
+                  - paragraph [ref=f5e151]: Google Play
+              - link [ref=f5e152] [cursor=pointer]:
+                - /url: "#"
+                - generic [ref=f5e156]:
+                  - paragraph [ref=f5e157]: Download on
+                  - paragraph [ref=f5e158]: App Store
+          - generic [ref=f5e159]:
+            - heading "Accepted Payments" [level=4] [ref=f5e160]
+            - generic [ref=f5e162]:
+              - generic "bKash" [ref=f5e163]:
+                - img [ref=f5e164]:
+                  - generic [ref=f5e166]: bKash
+              - generic "Nagad" [ref=f5e167]:
+                - img [ref=f5e168]:
+                  - generic [ref=f5e170]: Nagad
+              - generic "Rocket" [ref=f5e171]:
+                - img [ref=f5e172]:
+                  - generic [ref=f5e174]: Rocket
+              - generic "Visa" [ref=f5e175]:
+                - img [ref=f5e176]:
+                  - generic [ref=f5e178]: VISA
+              - generic "Mastercard" [ref=f5e179]
+              - generic "American Express" [ref=f5e184]:
+                - img [ref=f5e185]:
+                  - generic [ref=f5e187]: AMEX
+              - generic "PayPal" [ref=f5e188]:
+                - img [ref=f5e189]:
+                  - generic [ref=f5e191]: PayPal
+              - generic "COD" [ref=f5e192]:
+                - img [ref=f5e193]:
+                  - generic [ref=f5e195]: COD
+          - generic [ref=f5e197]:
+            - heading "Delivery Partners" [level=4] [ref=f5e198]
+            - generic [ref=f5e199]:
+              - generic [ref=f5e200]: Pathao
+              - generic [ref=f5e201]: RedX
+              - generic [ref=f5e202]: Steadfast
+              - generic [ref=f5e203]: Sundarban
+              - generic [ref=f5e204]: Paperfly
+        - generic [ref=f5e206]:
+          - generic [ref=f5e207]: 100% Secure Payment
+          - paragraph [ref=f5e211]: © 2026 AmarShop. All rights reserved.
+          - generic [ref=f5e212]:
+            - link "Privacy" [ref=f5e213] [cursor=pointer]:
+              - /url: /privacy
+            - link "Terms" [ref=f5e214] [cursor=pointer]:
+              - /url: /terms
+            - link "Support" [ref=f5e215] [cursor=pointer]:
+              - /url: /support/chat
+            - link "Track Order" [ref=f5e216] [cursor=pointer]:
+              - /url: /orders
+    - navigation "Mobile navigation" [ref=f5e217]:
+      - link "home Home" [ref=f5e218] [cursor=pointer]:
+        - /url: /
+        - generic [ref=f5e219]: home
+        - generic [ref=f5e220]: Home
+      - link "category Categories" [ref=f5e221] [cursor=pointer]:
+        - /url: /categories
+        - generic [ref=f5e222]: category
+        - generic [ref=f5e223]: Categories
+      - link "mail Messages" [ref=f5e224] [cursor=pointer]:
+        - /url: /messages
+        - generic [ref=f5e225]: mail
+        - generic [ref=f5e226]: Messages
+      - link "shopping_cart Cart" [ref=f5e227] [cursor=pointer]:
+        - /url: /cart
+        - generic [ref=f5e228]: shopping_cart
+        - generic [ref=f5e229]: Cart
+      - link "person Account" [ref=f5e230] [cursor=pointer]:
+        - /url: /account
+        - generic [ref=f5e231]: person
+        - generic [ref=f5e232]: Account
+  - button "Open Next.js Dev Tools" [ref=f5e238] [cursor=pointer]
+  - alert [ref=f5e242]

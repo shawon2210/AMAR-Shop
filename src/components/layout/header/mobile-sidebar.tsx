@@ -3,7 +3,7 @@
 import { useEffect, useRef } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
-import { usePathname } from 'next/navigation';
+import { usePathname, useRouter } from 'next/navigation';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useAuthStore, useAuthHydrated } from '@/stores/auth-store';
 
@@ -18,6 +18,7 @@ const categoryNav = [
 
 export function MobileSidebar({ open, onClose }: { open: boolean; onClose: () => void }) {
   const pathname = usePathname();
+  const router = useRouter();
   const hydrated = useAuthHydrated();
   const user = useAuthStore((s) => s.user);
   const isAuthenticated = useAuthStore((s) => s.isAuthenticated);
@@ -177,7 +178,7 @@ export function MobileSidebar({ open, onClose }: { open: boolean; onClose: () =>
                 )}
                 {showAuth && isAuthenticated && (
                   <button
-                    onClick={() => { logout(); onClose(); }}
+                    onClick={async () => { await logout(); onClose(); router.push('/'); }}
                     className="px-3 py-2.5 text-sm font-medium text-red-600 hover:bg-red-50 rounded-lg transition-colors text-left"
                   >
                     Logout

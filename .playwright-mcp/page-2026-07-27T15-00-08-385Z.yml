@@ -1,0 +1,138 @@
+- generic [active] [ref=f13e1]:
+  - link "Skip to main content" [ref=f13e2] [cursor=pointer]:
+    - /url: "#main-content"
+  - generic [ref=f13e3]:
+    - banner [ref=f13e4]:
+      - generic [ref=f13e6]:
+        - generic [ref=f13e7]:
+          - button "Open menu" [ref=f13e8]:
+            - generic [ref=f13e9]: menu
+          - link [ref=f13e10] [cursor=pointer]:
+            - /url: /
+            - img "AmarShop" [ref=f13e11]
+        - generic [ref=f13e12]:
+          - button "Search" [ref=f13e13]:
+            - generic [ref=f13e14]: search
+          - link "Shopping cart" [ref=f13e15] [cursor=pointer]:
+            - /url: /cart
+            - generic [ref=f13e16]: shopping_cart
+    - main [ref=f13e17]:
+      - generic [ref=f13e18]:
+        - generic [ref=f13e19]: progress_activity
+        - paragraph [ref=f13e20]: Loading product...
+    - contentinfo [ref=f13e21]:
+      - generic [ref=f13e27]:
+        - generic [ref=f13e33]:
+          - heading "Stay in the Loop" [level=3] [ref=f13e34]
+          - paragraph [ref=f13e35]: Exclusive deals, launches & offers — straight to your inbox.
+        - generic [ref=f13e36]:
+          - textbox "Your email address" [ref=f13e41]
+          - button "Subscribe" [ref=f13e42]
+      - generic [ref=f13e45]:
+        - generic [ref=f13e46]:
+          - generic [ref=f13e47]:
+            - link [ref=f13e48] [cursor=pointer]:
+              - /url: /
+              - img "AmarShop" [ref=f13e49]
+            - paragraph [ref=f13e50]: Bangladesh's premium online marketplace. Shop millions of products from trusted sellers with fast delivery and the best deals.
+            - generic [ref=f13e51]:
+              - heading "Follow Us" [level=4] [ref=f13e52]
+              - generic [ref=f13e53]:
+                - link "Facebook" [ref=f13e54] [cursor=pointer]:
+                  - /url: "#"
+                - link "Instagram" [ref=f13e57] [cursor=pointer]:
+                  - /url: "#"
+                - link "X (Twitter)" [ref=f13e60] [cursor=pointer]:
+                  - /url: "#"
+                - link "YouTube" [ref=f13e63] [cursor=pointer]:
+                  - /url: "#"
+                - link "LinkedIn" [ref=f13e66] [cursor=pointer]:
+                  - /url: https://www.linkedin.com/in/md-shawon-molla-2a3877293/
+                - link "GitHub" [ref=f13e69] [cursor=pointer]:
+                  - /url: https://github.com/shawon2210
+          - generic [ref=f13e73]:
+            - button "Customer Service" [ref=f13e75]
+            - button "Shop Categories" [ref=f13e79]
+            - button "Seller Center" [ref=f13e83]
+            - button "Company" [ref=f13e87]
+        - generic [ref=f13e91]:
+          - generic [ref=f13e92]:
+            - heading "Download App" [level=4] [ref=f13e93]
+            - generic [ref=f13e95]:
+              - link [ref=f13e96] [cursor=pointer]:
+                - /url: "#"
+                - generic [ref=f13e100]:
+                  - paragraph [ref=f13e101]: Download on
+                  - paragraph [ref=f13e102]: Google Play
+              - link [ref=f13e103] [cursor=pointer]:
+                - /url: "#"
+                - generic [ref=f13e107]:
+                  - paragraph [ref=f13e108]: Download on
+                  - paragraph [ref=f13e109]: App Store
+          - generic [ref=f13e110]:
+            - heading "Accepted Payments" [level=4] [ref=f13e111]
+            - generic [ref=f13e113]:
+              - generic "bKash" [ref=f13e114]:
+                - img [ref=f13e115]:
+                  - generic [ref=f13e117]: bKash
+              - generic "Nagad" [ref=f13e118]:
+                - img [ref=f13e119]:
+                  - generic [ref=f13e121]: Nagad
+              - generic "Rocket" [ref=f13e122]:
+                - img [ref=f13e123]:
+                  - generic [ref=f13e125]: Rocket
+              - generic "Visa" [ref=f13e126]:
+                - img [ref=f13e127]:
+                  - generic [ref=f13e129]: VISA
+              - generic "Mastercard" [ref=f13e130]
+              - generic "American Express" [ref=f13e135]:
+                - img [ref=f13e136]:
+                  - generic [ref=f13e138]: AMEX
+              - generic "PayPal" [ref=f13e139]:
+                - img [ref=f13e140]:
+                  - generic [ref=f13e142]: PayPal
+              - generic "COD" [ref=f13e143]:
+                - img [ref=f13e144]:
+                  - generic [ref=f13e146]: COD
+          - generic [ref=f13e148]:
+            - heading "Delivery Partners" [level=4] [ref=f13e149]
+            - generic [ref=f13e150]:
+              - generic [ref=f13e151]: Pathao
+              - generic [ref=f13e152]: RedX
+              - generic [ref=f13e153]: Steadfast
+              - generic [ref=f13e154]: Sundarban
+              - generic [ref=f13e155]: Paperfly
+        - generic [ref=f13e157]:
+          - generic [ref=f13e158]: 100% Secure Payment
+          - paragraph [ref=f13e162]: © 2026 AmarShop. All rights reserved.
+          - generic [ref=f13e163]:
+            - link "Privacy" [ref=f13e164] [cursor=pointer]:
+              - /url: /privacy
+            - link "Terms" [ref=f13e165] [cursor=pointer]:
+              - /url: /terms
+            - link "Support" [ref=f13e166] [cursor=pointer]:
+              - /url: /support/chat
+            - link "Track Order" [ref=f13e167] [cursor=pointer]:
+              - /url: /orders
+    - navigation "Mobile navigation" [ref=f13e168]:
+      - link "home Home" [ref=f13e169] [cursor=pointer]:
+        - /url: /
+        - generic [ref=f13e170]: home
+        - generic [ref=f13e171]: Home
+      - link "category Categories" [ref=f13e172] [cursor=pointer]:
+        - /url: /categories
+        - generic [ref=f13e173]: category
+        - generic [ref=f13e174]: Categories
+      - link "mail Messages" [ref=f13e175] [cursor=pointer]:
+        - /url: /messages
+        - generic [ref=f13e176]: mail
+        - generic [ref=f13e177]: Messages
+      - link "shopping_cart Cart" [ref=f13e178] [cursor=pointer]:
+        - /url: /cart
+        - generic [ref=f13e179]: shopping_cart
+        - generic [ref=f13e180]: Cart
+      - link "person Account" [ref=f13e181] [cursor=pointer]:
+        - /url: /account
+        - generic [ref=f13e182]: person
+        - generic [ref=f13e183]: Account
+  - button "Open Next.js Dev Tools" [ref=f13e189] [cursor=pointer]

@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useEffect, Suspense } from 'react';
-import { useRouter, useSearchParams } from 'next/navigation';
+import { useSearchParams } from 'next/navigation';
 import Link from 'next/link';
 import { useAuthStore } from '@/stores/auth-store';
 
@@ -12,7 +12,6 @@ const DEMO_ACCOUNTS = [
 ];
 
 function LoginForm() {
-  const router = useRouter();
   const searchParams = useSearchParams();
   const redirectTo = searchParams.get('redirect') || '/';
   const { login, logout, isAuthenticated, user } = useAuthStore();
@@ -34,7 +33,7 @@ function LoginForm() {
   }
 
   useEffect(() => {
-    if (isAuthenticated && user) router.push(dashboardRoute());
+    if (isAuthenticated && user) window.location.href = dashboardRoute();
   }, [isAuthenticated, user]);
 
   async function handleLogin(phone: string, pw: string) {
@@ -42,7 +41,7 @@ function LoginForm() {
     setError('');
     try {
       await login(phone, pw);
-      router.push(redirectTo !== '/' ? redirectTo : dashboardRoute());
+      window.location.href = redirectTo !== '/' ? redirectTo : dashboardRoute();
     } catch (err: unknown) {
       setError(err instanceof Error ? err.message : 'Login failed');
     } finally {
@@ -64,8 +63,8 @@ function LoginForm() {
             <div className="p-4 bg-orange-50 border-b border-orange-100 text-center">
               <p className="text-sm text-orange-700 font-medium">Signed in as <span className="font-bold">{user.name}</span></p>
               <div className="flex justify-center gap-4 mt-2">
-                <button onClick={() => router.push(dashboardRoute())} className="text-xs text-orange-600 underline">Go to dashboard</button>
-                <button onClick={() => { logout(); setIdentity(''); setPassword(''); }} className="text-xs text-red-600 underline">Sign out</button>
+                <button onClick={() => window.location.href = dashboardRoute()} className="text-xs text-orange-600 underline">Go to dashboard</button>
+                <button onClick={async () => { await logout(); setIdentity(''); setPassword(''); }} className="text-xs text-red-600 underline">Sign out</button>
               </div>
             </div>
           )}

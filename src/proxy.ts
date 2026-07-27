@@ -7,7 +7,7 @@ const protectedRoutes = {
   '/checkout': ['CUSTOMER'],
   '/cart': ['CUSTOMER', 'SELLER'],
   '/seller': ['SELLER', 'ADMIN', 'SUPER_ADMIN'],
-  '/admin': ['ADMIN', 'SUPER_ADMIN'],
+  '/admin': ['ADMIN', 'SUPER_ADMIN', 'MODERATOR'],
 };
 
 // Login/register pages — authenticated users get redirected to their role home.
@@ -52,6 +52,7 @@ function getRoleHome(role: string): string {
   switch (role) {
     case 'ADMIN':
     case 'SUPER_ADMIN':
+    case 'MODERATOR':
       return '/admin';
     case 'SELLER':
       return '/seller/dashboard';

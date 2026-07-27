@@ -1,0 +1,612 @@
+- generic [active] [ref=f1521e1]:
+  - link "Skip to main content" [ref=f1521e2] [cursor=pointer]:
+    - /url: "#main-content"
+  - generic [ref=f1521e3]:
+    - banner [ref=f1521e4]:
+      - generic [ref=f1521e6]:
+        - generic [ref=f1521e7]:
+          - link "help_outline Help Center" [ref=f1521e8] [cursor=pointer]:
+            - /url: /help
+            - generic [ref=f1521e9]: help_outline
+            - text: Help Center
+          - link "local_shipping Track Order" [ref=f1521e10] [cursor=pointer]:
+            - /url: /orders
+            - generic [ref=f1521e11]: local_shipping
+            - text: Track Order
+          - link "admin_panel_settings Admin Panel" [ref=f1521e12] [cursor=pointer]:
+            - /url: /admin
+            - generic [ref=f1521e13]: admin_panel_settings
+            - text: Admin Panel
+        - generic [ref=f1521e14]:
+          - generic [ref=f1521e15]:
+            - generic [ref=f1521e16]: verified
+            - text: 100% Authentic Products
+          - link "Offers & Deals" [ref=f1521e17] [cursor=pointer]:
+            - /url: /notifications
+          - link "Download App" [ref=f1521e18] [cursor=pointer]:
+            - /url: /help
+      - generic [ref=f1521e20]:
+        - link [ref=f1521e22] [cursor=pointer]:
+          - /url: /
+          - img "AmarShop" [ref=f1521e23]
+        - button "search Search products, brands & categories... search" [ref=f1521e25]:
+          - generic [ref=f1521e26]:
+            - generic: search
+            - generic [ref=f1521e27]: Search products, brands & categories...
+            - generic [ref=f1521e28]: search
+        - generic [ref=f1521e30]:
+          - link "Notifications" [ref=f1521e31] [cursor=pointer]:
+            - /url: /notifications
+            - generic [ref=f1521e32]: notifications
+          - link "Wishlist" [ref=f1521e34] [cursor=pointer]:
+            - /url: /account
+            - generic [ref=f1521e35]: favorite_border
+          - link "Shopping cart" [ref=f1521e36] [cursor=pointer]:
+            - /url: /cart
+            - generic [ref=f1521e37]: shopping_cart
+          - link "Admin panel" [ref=f1521e38] [cursor=pointer]:
+            - /url: /admin
+            - generic [ref=f1521e39]: admin_panel_settings
+            - text: Admin
+      - navigation "Category navigation" [ref=f1521e42]:
+        - link "Fashion" [ref=f1521e43] [cursor=pointer]:
+          - /url: /category/fashion
+        - link "Electronics" [ref=f1521e44] [cursor=pointer]:
+          - /url: /category/electronics
+        - link "Beauty" [ref=f1521e45] [cursor=pointer]:
+          - /url: /category/beauty
+        - link "Groceries" [ref=f1521e46] [cursor=pointer]:
+          - /url: /category/groceries
+        - link "Home & Living" [ref=f1521e47] [cursor=pointer]:
+          - /url: /category/home
+        - link "Sports" [ref=f1521e48] [cursor=pointer]:
+          - /url: /category/sports
+        - link "🔥 Flash Sale" [ref=f1521e49] [cursor=pointer]:
+          - /url: /flash-sale
+    - main [ref=f1521e50]:
+      - generic [ref=f1521e51]:
+        - complementary [ref=f1521e52]:
+          - generic [ref=f1521e53]: store
+          - button "Collapse sidebar" [ref=f1521e56]:
+            - generic [ref=f1521e57]: chevron_left
+          - generic [ref=f1521e60]:
+            - generic [ref=f1521e61]: search
+            - textbox "Search menu..." [ref=f1521e62]
+          - navigation [ref=f1521e63]:
+            - generic [ref=f1521e64]:
+              - generic [ref=f1521e65]:
+                - button "Dashboard expand_more" [ref=f1521e66]:
+                  - generic [ref=f1521e67]: Dashboard
+                  - generic [ref=f1521e68]: expand_more
+                - generic [ref=f1521e69]:
+                  - link "dashboard Overview" [ref=f1521e70] [cursor=pointer]:
+                    - /url: /admin/overview
+                    - generic [ref=f1521e71]: dashboard
+                    - generic [ref=f1521e72]: Overview
+                  - link "analytics Analytics" [ref=f1521e73] [cursor=pointer]:
+                    - /url: /admin/analytics
+                    - generic [ref=f1521e74]: analytics
+                    - generic [ref=f1521e75]: Analytics
+                  - link "description Reports" [ref=f1521e76] [cursor=pointer]:
+                    - /url: /admin/reports
+                    - generic [ref=f1521e77]: description
+                    - generic [ref=f1521e78]: Reports
+                  - link "monitoring Activity" [ref=f1521e79] [cursor=pointer]:
+                    - /url: /admin/activity
+                    - generic [ref=f1521e80]: monitoring
+                    - generic [ref=f1521e81]: Activity
+              - generic [ref=f1521e82]:
+                - button "Commerce expand_more" [ref=f1521e83]:
+                  - generic [ref=f1521e84]: Commerce
+                  - generic [ref=f1521e85]: expand_more
+                - generic [ref=f1521e86]:
+                  - link "receipt_long Orders" [ref=f1521e87] [cursor=pointer]:
+                    - /url: /admin/orders
+                    - generic [ref=f1521e88]: receipt_long
+                    - generic [ref=f1521e89]: Orders
+                  - link "assignment_return Returns" [ref=f1521e90] [cursor=pointer]:
+                    - /url: /admin/orders/returns
+                    - generic [ref=f1521e91]: assignment_return
+                    - generic [ref=f1521e92]: Returns
+                  - link "currency_ruble Refunds" [ref=f1521e93] [cursor=pointer]:
+                    - /url: /admin/orders/refunds
+                    - generic [ref=f1521e94]: currency_ruble
+                    - generic [ref=f1521e95]: Refunds
+                  - link "swap_horiz Transactions" [ref=f1521e96] [cursor=pointer]:
+                    - /url: /admin/transactions
+                    - generic [ref=f1521e97]: swap_horiz
+                    - generic [ref=f1521e98]: Transactions
+                  - link "receipt Invoices" [ref=f1521e99] [cursor=pointer]:
+                    - /url: /admin/invoices
+                    - generic [ref=f1521e100]: receipt
+                    - generic [ref=f1521e101]: Invoices
+                  - link "payments Payments" [ref=f1521e102] [cursor=pointer]:
+                    - /url: /admin/payments
+                    - generic [ref=f1521e103]: payments
+                    - generic [ref=f1521e104]: Payments
+                  - link "confirmation_number Coupons" [ref=f1521e105] [cursor=pointer]:
+                    - /url: /admin/coupons
+                    - generic [ref=f1521e106]: confirmation_number
+                    - generic [ref=f1521e107]: Coupons
+                  - link "local_fire_department Flash Sales" [ref=f1521e108] [cursor=pointer]:
+                    - /url: /admin/flash-sales
+                    - generic [ref=f1521e109]: local_fire_department
+                    - generic [ref=f1521e110]: Flash Sales
+                  - link "campaign Campaigns" [ref=f1521e111] [cursor=pointer]:
+                    - /url: /admin/campaigns
+                    - generic [ref=f1521e112]: campaign
+                    - generic [ref=f1521e113]: Campaigns
+              - generic [ref=f1521e114]:
+                - button "Products expand_more" [ref=f1521e115]:
+                  - generic [ref=f1521e116]: Products
+                  - generic [ref=f1521e117]: expand_more
+                - generic [ref=f1521e118]:
+                  - link "inventory_2 Products" [ref=f1521e119] [cursor=pointer]:
+                    - /url: /admin/products
+                    - generic [ref=f1521e120]: inventory_2
+                    - generic [ref=f1521e121]: Products
+                  - link "category Categories" [ref=f1521e122] [cursor=pointer]:
+                    - /url: /admin/categories
+                    - generic [ref=f1521e123]: category
+                    - generic [ref=f1521e124]: Categories
+                  - link "branding_watermark Brands" [ref=f1521e125] [cursor=pointer]:
+                    - /url: /admin/brands
+                    - generic [ref=f1521e126]: branding_watermark
+                    - generic [ref=f1521e127]: Brands
+                  - link "warehouse Inventory" [ref=f1521e128] [cursor=pointer]:
+                    - /url: /admin/inventory
+                    - generic [ref=f1521e129]: warehouse
+                    - generic [ref=f1521e130]: Inventory
+                  - link "list_alt Attributes" [ref=f1521e131] [cursor=pointer]:
+                    - /url: /admin/attributes
+                    - generic [ref=f1521e132]: list_alt
+                    - generic [ref=f1521e133]: Attributes
+                  - link "star Reviews" [ref=f1521e134] [cursor=pointer]:
+                    - /url: /admin/reviews
+                    - generic [ref=f1521e135]: star
+                    - generic [ref=f1521e136]: Reviews
+                  - link "sell Tags" [ref=f1521e137] [cursor=pointer]:
+                    - /url: /admin/tags
+                    - generic [ref=f1521e138]: sell
+                    - generic [ref=f1521e139]: Tags
+                  - link "collections_bookmark Collections" [ref=f1521e140] [cursor=pointer]:
+                    - /url: /admin/collections
+                    - generic [ref=f1521e141]: collections_bookmark
+                    - generic [ref=f1521e142]: Collections
+              - generic [ref=f1521e143]:
+                - button "Vendors expand_more" [ref=f1521e144]:
+                  - generic [ref=f1521e145]: Vendors
+                  - generic [ref=f1521e146]: expand_more
+                - generic [ref=f1521e147]:
+                  - link "storefront All Vendors" [ref=f1521e148] [cursor=pointer]:
+                    - /url: /admin/vendors
+                    - generic [ref=f1521e149]: storefront
+                    - generic [ref=f1521e150]: All Vendors
+                  - link "verified Approvals" [ref=f1521e151] [cursor=pointer]:
+                    - /url: /admin/sellers/approvals
+                    - generic [ref=f1521e152]: verified
+                    - generic [ref=f1521e153]: Approvals
+                  - link "percent Commissions" [ref=f1521e154] [cursor=pointer]:
+                    - /url: /admin/sellers/commissions
+                    - generic [ref=f1521e155]: percent
+                    - generic [ref=f1521e156]: Commissions
+                  - link "account_balance_wallet Withdraw Requests" [ref=f1521e157] [cursor=pointer]:
+                    - /url: /admin/sellers/withdraw-requests
+                    - generic [ref=f1521e158]: account_balance_wallet
+                    - generic [ref=f1521e159]: Withdraw Requests
+                  - link "trending_up Analytics" [ref=f1521e160] [cursor=pointer]:
+                    - /url: /admin/sellers/analytics
+                    - generic [ref=f1521e161]: trending_up
+                    - generic [ref=f1521e162]: Analytics
+                  - link "headset_mic Vendor Support" [ref=f1521e163] [cursor=pointer]:
+                    - /url: /admin/sellers/support
+                    - generic [ref=f1521e164]: headset_mic
+                    - generic [ref=f1521e165]: Vendor Support
+              - generic [ref=f1521e166]:
+                - button "Customers expand_more" [ref=f1521e167]:
+                  - generic [ref=f1521e168]: Customers
+                  - generic [ref=f1521e169]: expand_more
+                - generic [ref=f1521e170]:
+                  - link "group Customers" [ref=f1521e171] [cursor=pointer]:
+                    - /url: /admin/customers
+                    - generic [ref=f1521e172]: group
+                    - generic [ref=f1521e173]: Customers
+                  - link "layers Segments" [ref=f1521e174] [cursor=pointer]:
+                    - /url: /admin/customers/segments
+                    - generic [ref=f1521e175]: layers
+                    - generic [ref=f1521e176]: Segments
+                  - link "favorite Wishlists" [ref=f1521e177] [cursor=pointer]:
+                    - /url: /admin/customers/wishlists
+                    - generic [ref=f1521e178]: favorite
+                    - generic [ref=f1521e179]: Wishlists
+                  - link "location_on Addresses" [ref=f1521e180] [cursor=pointer]:
+                    - /url: /admin/customers/addresses
+                    - generic [ref=f1521e181]: location_on
+                    - generic [ref=f1521e182]: Addresses
+                  - link "support Support Tickets" [ref=f1521e183] [cursor=pointer]:
+                    - /url: /admin/support-tickets
+                    - generic [ref=f1521e184]: support
+                    - generic [ref=f1521e185]: Support Tickets
+              - generic [ref=f1521e186]:
+                - button "Content expand_more" [ref=f1521e187]:
+                  - generic [ref=f1521e188]: Content
+                  - generic [ref=f1521e189]: expand_more
+                - generic [ref=f1521e190]:
+                  - link "view_carousel Banners" [ref=f1521e191] [cursor=pointer]:
+                    - /url: /admin/banners
+                    - generic [ref=f1521e192]: view_carousel
+                    - generic [ref=f1521e193]: Banners
+                  - link "home Homepage" [ref=f1521e194] [cursor=pointer]:
+                    - /url: /admin/homepage
+                    - generic [ref=f1521e195]: home
+                    - generic [ref=f1521e196]: Homepage
+                  - link "article CMS Pages" [ref=f1521e197] [cursor=pointer]:
+                    - /url: /admin/cms
+                    - generic [ref=f1521e198]: article
+                    - generic [ref=f1521e199]: CMS Pages
+                  - link "campaign Announcements" [ref=f1521e200] [cursor=pointer]:
+                    - /url: /admin/announcements
+                    - generic [ref=f1521e201]: campaign
+                    - generic [ref=f1521e202]: Announcements
+                  - link "rss_feed Blogs" [ref=f1521e203] [cursor=pointer]:
+                    - /url: /admin/blogs
+                    - generic [ref=f1521e204]: rss_feed
+                    - generic [ref=f1521e205]: Blogs
+                  - link "quiz FAQ" [ref=f1521e206] [cursor=pointer]:
+                    - /url: /admin/faq
+                    - generic [ref=f1521e207]: quiz
+                    - generic [ref=f1521e208]: FAQ
+              - generic [ref=f1521e209]:
+                - button "Moderation expand_more" [ref=f1521e210]:
+                  - generic [ref=f1521e211]: Moderation
+                  - generic [ref=f1521e212]: expand_more
+                - link "fact_check Moderation Queue" [ref=f1521e214] [cursor=pointer]:
+                  - /url: /admin/moderation
+                  - generic [ref=f1521e215]: fact_check
+                  - generic [ref=f1521e216]: Moderation Queue
+              - generic [ref=f1521e217]:
+                - button "Marketing expand_more" [ref=f1521e218]:
+                  - generic [ref=f1521e219]: Marketing
+                  - generic [ref=f1521e220]: expand_more
+                - generic [ref=f1521e221]:
+                  - link "email Email Campaigns" [ref=f1521e222] [cursor=pointer]:
+                    - /url: /admin/email-campaigns
+                    - generic [ref=f1521e223]: email
+                    - generic [ref=f1521e224]: Email Campaigns
+                  - link "notifications_active Push Notifications" [ref=f1521e225] [cursor=pointer]:
+                    - /url: /admin/push-notifications
+                    - generic [ref=f1521e226]: notifications_active
+                    - generic [ref=f1521e227]: Push Notifications
+                  - link "discount Promotions" [ref=f1521e228] [cursor=pointer]:
+                    - /url: /admin/promotions
+                    - generic [ref=f1521e229]: discount
+                    - generic [ref=f1521e230]: Promotions
+                  - link "campaign Affiliate Program" [ref=f1521e231] [cursor=pointer]:
+                    - /url: /admin/affiliates
+                    - generic [ref=f1521e232]: campaign
+                    - generic [ref=f1521e233]: Affiliate Program
+                  - link "travel_explore SEO" [ref=f1521e234] [cursor=pointer]:
+                    - /url: /admin/seo
+                    - generic [ref=f1521e235]: travel_explore
+                    - generic [ref=f1521e236]: SEO
+                  - link "share Referral System" [ref=f1521e237] [cursor=pointer]:
+                    - /url: /admin/referral-system
+                    - generic [ref=f1521e238]: share
+                    - generic [ref=f1521e239]: Referral System
+              - generic [ref=f1521e240]:
+                - button "Logistics expand_more" [ref=f1521e241]:
+                  - generic [ref=f1521e242]: Logistics
+                  - generic [ref=f1521e243]: expand_more
+                - generic [ref=f1521e244]:
+                  - link "local_shipping Shipping" [ref=f1521e245] [cursor=pointer]:
+                    - /url: /admin/shipping
+                    - generic [ref=f1521e246]: local_shipping
+                    - generic [ref=f1521e247]: Shipping
+                  - link "map Delivery Zones" [ref=f1521e248] [cursor=pointer]:
+                    - /url: /admin/delivery-zones
+                    - generic [ref=f1521e249]: map
+                    - generic [ref=f1521e250]: Delivery Zones
+                  - link "speed Couriers" [ref=f1521e251] [cursor=pointer]:
+                    - /url: /admin/couriers
+                    - generic [ref=f1521e252]: speed
+                    - generic [ref=f1521e253]: Couriers
+                  - link "pin_drop Tracking" [ref=f1521e254] [cursor=pointer]:
+                    - /url: /admin/tracking
+                    - generic [ref=f1521e255]: pin_drop
+                    - generic [ref=f1521e256]: Tracking
+                  - link "warehouse Warehouses" [ref=f1521e257] [cursor=pointer]:
+                    - /url: /admin/warehouses
+                    - generic [ref=f1521e258]: warehouse
+                    - generic [ref=f1521e259]: Warehouses
+              - generic [ref=f1521e260]:
+                - button "Finance expand_more" [ref=f1521e261]:
+                  - generic [ref=f1521e262]: Finance
+                  - generic [ref=f1521e263]: expand_more
+                - generic [ref=f1521e264]:
+                  - link "trending_up Revenue" [ref=f1521e265] [cursor=pointer]:
+                    - /url: /admin/revenue
+                    - generic [ref=f1521e266]: trending_up
+                    - generic [ref=f1521e267]: Revenue
+                  - link "receipt_long Taxes" [ref=f1521e268] [cursor=pointer]:
+                    - /url: /admin/taxes
+                    - generic [ref=f1521e269]: receipt_long
+                    - generic [ref=f1521e270]: Taxes
+                  - link "account_balance Settlements" [ref=f1521e271] [cursor=pointer]:
+                    - /url: /admin/settlements
+                    - generic [ref=f1521e272]: account_balance
+                    - generic [ref=f1521e273]: Settlements
+                  - link "payments Payouts" [ref=f1521e274] [cursor=pointer]:
+                    - /url: /admin/payouts
+                    - generic [ref=f1521e275]: payments
+                    - generic [ref=f1521e276]: Payouts
+                  - link "book Accounting" [ref=f1521e277] [cursor=pointer]:
+                    - /url: /admin/accounting
+                    - generic [ref=f1521e278]: book
+                    - generic [ref=f1521e279]: Accounting
+              - generic [ref=f1521e280]:
+                - button "Administration expand_more" [ref=f1521e281]:
+                  - generic [ref=f1521e282]: Administration
+                  - generic [ref=f1521e283]: expand_more
+                - generic [ref=f1521e284]:
+                  - link "group Users" [ref=f1521e285] [cursor=pointer]:
+                    - /url: /admin/users
+                    - generic [ref=f1521e286]: group
+                    - generic [ref=f1521e287]: Users
+                  - link "admin_panel_settings Roles" [ref=f1521e288] [cursor=pointer]:
+                    - /url: /admin/roles
+                    - generic [ref=f1521e289]: admin_panel_settings
+                    - generic [ref=f1521e290]: Roles
+                  - link "people Teams" [ref=f1521e291] [cursor=pointer]:
+                    - /url: /admin/teams
+                    - generic [ref=f1521e292]: people
+                    - generic [ref=f1521e293]: Teams
+                  - link "history Audit Logs" [ref=f1521e294] [cursor=pointer]:
+                    - /url: /admin/audit-logs
+                    - generic [ref=f1521e295]: history
+                    - generic [ref=f1521e296]: Audit Logs
+              - generic [ref=f1521e297]:
+                - button "Settings expand_more" [ref=f1521e298]:
+                  - generic [ref=f1521e299]: Settings
+                  - generic [ref=f1521e300]: expand_more
+                - generic [ref=f1521e301]:
+                  - link "settings General" [ref=f1521e302] [cursor=pointer]:
+                    - /url: /admin/settings
+                    - generic [ref=f1521e303]: settings
+                    - generic [ref=f1521e304]: General
+                  - link "vpn_key API Keys" [ref=f1521e305] [cursor=pointer]:
+                    - /url: /admin/api-keys
+                    - generic [ref=f1521e306]: vpn_key
+                    - generic [ref=f1521e307]: API Keys
+                  - link "extension Integrations" [ref=f1521e308] [cursor=pointer]:
+                    - /url: /admin/integrations
+                    - generic [ref=f1521e309]: extension
+                    - generic [ref=f1521e310]: Integrations
+              - generic [ref=f1521e311]:
+                - button "System expand_more" [ref=f1521e312]:
+                  - generic [ref=f1521e313]: System
+                  - generic [ref=f1521e314]: expand_more
+                - generic [ref=f1521e315]:
+                  - link "backup Backups" [ref=f1521e316] [cursor=pointer]:
+                    - /url: /admin/backups
+                    - generic [ref=f1521e317]: backup
+                    - generic [ref=f1521e318]: Backups
+                  - link "monitoring Monitoring" [ref=f1521e319] [cursor=pointer]:
+                    - /url: /admin/monitoring
+                    - generic [ref=f1521e320]: monitoring
+                    - generic [ref=f1521e321]: Monitoring
+                  - link "hourglass_empty Jobs" [ref=f1521e322] [cursor=pointer]:
+                    - /url: /admin/jobs
+                    - generic [ref=f1521e323]: hourglass_empty
+                    - generic [ref=f1521e324]: Jobs
+                  - link "terminal Logs" [ref=f1521e325] [cursor=pointer]:
+                    - /url: /admin/logs
+                    - generic [ref=f1521e326]: terminal
+                    - generic [ref=f1521e327]: Logs
+                  - link "security Security" [ref=f1521e328] [cursor=pointer]:
+                    - /url: /admin/security
+                    - generic [ref=f1521e329]: security
+                    - generic [ref=f1521e330]: Security
+          - generic [ref=f1521e332]:
+            - generic [ref=f1521e333]: A
+            - generic [ref=f1521e334]:
+              - paragraph [ref=f1521e335]: Admin User
+              - paragraph [ref=f1521e336]: ADMIN
+            - button "Logout" [ref=f1521e337]:
+              - generic [ref=f1521e338]: logout
+        - generic [ref=f1521e339]:
+          - generic [ref=f1521e340]:
+            - navigation [ref=f1521e341]:
+              - generic [ref=f1521e342]: Admin
+            - generic [ref=f1521e344]:
+              - button "Open search" [ref=f1521e345]:
+                - generic [ref=f1521e346]: search
+                - generic [ref=f1521e347]: Search...
+                - generic [ref=f1521e348]: ⌘K
+              - link "Notifications" [ref=f1521e349] [cursor=pointer]:
+                - /url: /admin/notifications
+                - generic [ref=f1521e350]: notifications
+                - generic [ref=f1521e351]: "3"
+              - generic [ref=f1521e352]:
+                - link "A" [ref=f1521e353] [cursor=pointer]:
+                  - /url: /admin/settings
+                - paragraph [ref=f1521e355]: Admin User
+                - button "Logout" [ref=f1521e356]:
+                  - generic [ref=f1521e357]: logout
+          - main [ref=f1521e358]:
+            - generic [ref=f1521e359]: progress_activity
+    - contentinfo [ref=f1521e361]:
+      - generic [ref=f1521e367]:
+        - generic [ref=f1521e373]:
+          - heading "Stay in the Loop" [level=3] [ref=f1521e374]
+          - paragraph [ref=f1521e375]: Exclusive deals, launches & offers — straight to your inbox.
+        - generic [ref=f1521e376]:
+          - textbox "Your email address" [ref=f1521e381]
+          - button "Subscribe" [ref=f1521e382]
+      - generic [ref=f1521e385]:
+        - generic [ref=f1521e386]:
+          - generic [ref=f1521e387]:
+            - link [ref=f1521e388] [cursor=pointer]:
+              - /url: /
+              - img "AmarShop" [ref=f1521e389]
+            - paragraph [ref=f1521e390]: Bangladesh's premium online marketplace. Shop millions of products from trusted sellers with fast delivery and the best deals.
+            - generic [ref=f1521e391]:
+              - heading "Follow Us" [level=4] [ref=f1521e392]
+              - generic [ref=f1521e393]:
+                - link "Facebook" [ref=f1521e394] [cursor=pointer]:
+                  - /url: "#"
+                - link "Instagram" [ref=f1521e397] [cursor=pointer]:
+                  - /url: "#"
+                - link "X (Twitter)" [ref=f1521e400] [cursor=pointer]:
+                  - /url: "#"
+                - link "YouTube" [ref=f1521e403] [cursor=pointer]:
+                  - /url: "#"
+                - link "LinkedIn" [ref=f1521e406] [cursor=pointer]:
+                  - /url: https://www.linkedin.com/in/md-shawon-molla-2a3877293/
+                - link "GitHub" [ref=f1521e409] [cursor=pointer]:
+                  - /url: https://github.com/shawon2210
+          - generic [ref=f1521e412]:
+            - generic [ref=f1521e413]:
+              - heading "Customer Service" [level=3] [ref=f1521e414]
+              - list [ref=f1521e415]:
+                - listitem [ref=f1521e416]:
+                  - link "Help Center" [ref=f1521e417] [cursor=pointer]:
+                    - /url: /help
+                - listitem [ref=f1521e418]:
+                  - link "Returns & Refunds" [ref=f1521e419] [cursor=pointer]:
+                    - /url: /help/returns
+                - listitem [ref=f1521e420]:
+                  - link "Shipping Info" [ref=f1521e421] [cursor=pointer]:
+                    - /url: /help/shipping
+                - listitem [ref=f1521e422]:
+                  - link "Order Tracking" [ref=f1521e423] [cursor=pointer]:
+                    - /url: /orders
+                - listitem [ref=f1521e424]:
+                  - link "Payment Methods" [ref=f1521e425] [cursor=pointer]:
+                    - /url: /help/payment
+                - listitem [ref=f1521e426]:
+                  - link "Contact Us" [ref=f1521e427] [cursor=pointer]:
+                    - /url: /contact
+            - generic [ref=f1521e428]:
+              - heading "Shop Categories" [level=3] [ref=f1521e429]
+              - list [ref=f1521e430]:
+                - listitem [ref=f1521e431]:
+                  - link "Electronics" [ref=f1521e432] [cursor=pointer]:
+                    - /url: /category/electronics
+                - listitem [ref=f1521e433]:
+                  - link "Fashion" [ref=f1521e434] [cursor=pointer]:
+                    - /url: /category/fashion
+                - listitem [ref=f1521e435]:
+                  - link "Beauty" [ref=f1521e436] [cursor=pointer]:
+                    - /url: /category/beauty
+                - listitem [ref=f1521e437]:
+                  - link "Groceries" [ref=f1521e438] [cursor=pointer]:
+                    - /url: /category/groceries
+                - listitem [ref=f1521e439]:
+                  - link "Home & Living" [ref=f1521e440] [cursor=pointer]:
+                    - /url: /category/home
+                - listitem [ref=f1521e441]:
+                  - link "Sports" [ref=f1521e442] [cursor=pointer]:
+                    - /url: /category/sports
+            - generic [ref=f1521e443]:
+              - heading "Seller Center" [level=3] [ref=f1521e444]
+              - list [ref=f1521e445]:
+                - listitem [ref=f1521e446]:
+                  - link "Become a Seller" [ref=f1521e447] [cursor=pointer]:
+                    - /url: /seller/dashboard
+                - listitem [ref=f1521e448]:
+                  - link "Seller Dashboard" [ref=f1521e449] [cursor=pointer]:
+                    - /url: /seller/dashboard
+                - listitem [ref=f1521e450]:
+                  - link "Seller Analytics" [ref=f1521e451] [cursor=pointer]:
+                    - /url: /seller/analytics
+                - listitem [ref=f1521e452]:
+                  - link "Seller Finance" [ref=f1521e453] [cursor=pointer]:
+                    - /url: /seller/finance
+                - listitem [ref=f1521e454]:
+                  - link "Seller Policy" [ref=f1521e455] [cursor=pointer]:
+                    - /url: /seller/policy
+                - listitem [ref=f1521e456]:
+                  - link "Seller Support" [ref=f1521e457] [cursor=pointer]:
+                    - /url: /support/chat
+            - generic [ref=f1521e458]:
+              - heading "Company" [level=3] [ref=f1521e459]
+              - list [ref=f1521e460]:
+                - listitem [ref=f1521e461]:
+                  - link "About Us" [ref=f1521e462] [cursor=pointer]:
+                    - /url: /about
+                - listitem [ref=f1521e463]:
+                  - link "Careers" [ref=f1521e464] [cursor=pointer]:
+                    - /url: /careers
+                - listitem [ref=f1521e465]:
+                  - link "Press & Media" [ref=f1521e466] [cursor=pointer]:
+                    - /url: /press
+                - listitem [ref=f1521e467]:
+                  - link "Blog" [ref=f1521e468] [cursor=pointer]:
+                    - /url: /blog
+                - listitem [ref=f1521e469]:
+                  - link "Terms of Service" [ref=f1521e470] [cursor=pointer]:
+                    - /url: /terms
+                - listitem [ref=f1521e471]:
+                  - link "Privacy Policy" [ref=f1521e472] [cursor=pointer]:
+                    - /url: /privacy
+        - generic [ref=f1521e474]:
+          - generic [ref=f1521e475]:
+            - heading "Download App" [level=4] [ref=f1521e476]
+            - generic [ref=f1521e478]:
+              - link [ref=f1521e479] [cursor=pointer]:
+                - /url: "#"
+                - generic [ref=f1521e483]:
+                  - paragraph [ref=f1521e484]: Download on
+                  - paragraph [ref=f1521e485]: Google Play
+              - link [ref=f1521e486] [cursor=pointer]:
+                - /url: "#"
+                - generic [ref=f1521e490]:
+                  - paragraph [ref=f1521e491]: Download on
+                  - paragraph [ref=f1521e492]: App Store
+          - generic [ref=f1521e493]:
+            - heading "Accepted Payments" [level=4] [ref=f1521e494]
+            - generic [ref=f1521e496]:
+              - generic "bKash" [ref=f1521e497]:
+                - img [ref=f1521e498]:
+                  - generic [ref=f1521e500]: bKash
+              - generic "Nagad" [ref=f1521e501]:
+                - img [ref=f1521e502]:
+                  - generic [ref=f1521e504]: Nagad
+              - generic "Rocket" [ref=f1521e505]:
+                - img [ref=f1521e506]:
+                  - generic [ref=f1521e508]: Rocket
+              - generic "Visa" [ref=f1521e509]:
+                - img [ref=f1521e510]:
+                  - generic [ref=f1521e512]: VISA
+              - generic "Mastercard" [ref=f1521e513]
+              - generic "American Express" [ref=f1521e518]:
+                - img [ref=f1521e519]:
+                  - generic [ref=f1521e521]: AMEX
+              - generic "PayPal" [ref=f1521e522]:
+                - img [ref=f1521e523]:
+                  - generic [ref=f1521e525]: PayPal
+              - generic "COD" [ref=f1521e526]:
+                - img [ref=f1521e527]:
+                  - generic [ref=f1521e529]: COD
+          - generic [ref=f1521e531]:
+            - heading "Delivery Partners" [level=4] [ref=f1521e532]
+            - generic [ref=f1521e533]:
+              - generic [ref=f1521e534]: Pathao
+              - generic [ref=f1521e535]: RedX
+              - generic [ref=f1521e536]: Steadfast
+              - generic [ref=f1521e537]: Sundarban
+              - generic [ref=f1521e538]: Paperfly
+        - generic [ref=f1521e540]:
+          - generic [ref=f1521e541]: 100% Secure Payment
+          - paragraph [ref=f1521e545]: © 2026 AmarShop. All rights reserved.
+          - generic [ref=f1521e546]:
+            - link "Privacy" [ref=f1521e547] [cursor=pointer]:
+              - /url: /privacy
+            - link "Terms" [ref=f1521e548] [cursor=pointer]:
+              - /url: /terms
+            - link "Support" [ref=f1521e549] [cursor=pointer]:
+              - /url: /support/chat
+            - link "Track Order" [ref=f1521e550] [cursor=pointer]:
+              - /url: /orders
+  - button "Open Next.js Dev Tools" [ref=f1521e556] [cursor=pointer]
+  - alert [ref=f1521e560]

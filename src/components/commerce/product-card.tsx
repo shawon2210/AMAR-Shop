@@ -79,7 +79,7 @@ export const ProductCard = memo(function ProductCard({ product }: ProductCardPro
             fill
             sizes="(max-width: 640px) 50vw, (max-width: 1024px) 33vw, 20vw"
             onError={() => setImgError(true)}
-            unoptimized={product.images[0]?.startsWith('http') && !product.images[0]?.includes('unsplash.com')}
+            unoptimized={product.images[0]?.startsWith('http')}
           />
         ) : (
           <div className="w-full h-full flex items-center justify-center bg-gray-100">

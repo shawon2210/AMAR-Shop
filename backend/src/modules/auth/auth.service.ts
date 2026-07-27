@@ -141,6 +141,13 @@ export class AuthService {
           where: { userId: stored.userId, revokedAt: null },
           data: { revokedAt: new Date() },
         });
+        await this.prismaService.securityEvent.create({
+          data: {
+            userId: stored.userId,
+            eventType: 'revoked_token_reuse_detected',
+            details: { replayedTokenId: stored.id },
+          },
+        });
       } else if (stored && !stored.revokedAt) {
         await this.prismaService.refreshToken.update({
           where: { id: stored.id },

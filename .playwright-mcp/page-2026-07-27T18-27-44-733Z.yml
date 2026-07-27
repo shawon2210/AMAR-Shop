@@ -1,0 +1,246 @@
+- generic [active] [ref=f1522e1]:
+  - link "Skip to main content" [ref=f1522e2] [cursor=pointer]:
+    - /url: "#main-content"
+  - generic [ref=f1522e3]:
+    - banner [ref=f1522e4]:
+      - generic [ref=f1522e6]:
+        - generic [ref=f1522e7]:
+          - link "help_outline Help Center" [ref=f1522e8] [cursor=pointer]:
+            - /url: /help
+            - generic [ref=f1522e9]: help_outline
+            - text: Help Center
+          - link "local_shipping Track Order" [ref=f1522e10] [cursor=pointer]:
+            - /url: /orders
+            - generic [ref=f1522e11]: local_shipping
+            - text: Track Order
+          - link "storefront Become a Seller" [ref=f1522e12] [cursor=pointer]:
+            - /url: /seller/dashboard
+            - generic [ref=f1522e13]: storefront
+            - text: Become a Seller
+        - generic [ref=f1522e14]:
+          - generic [ref=f1522e15]:
+            - generic [ref=f1522e16]: verified
+            - text: 100% Authentic Products
+          - link "Offers & Deals" [ref=f1522e17] [cursor=pointer]:
+            - /url: /notifications
+          - link "Download App" [ref=f1522e18] [cursor=pointer]:
+            - /url: /help
+      - generic [ref=f1522e20]:
+        - link [ref=f1522e22] [cursor=pointer]:
+          - /url: /
+          - img "AmarShop" [ref=f1522e23]
+        - button "search Search products, brands & categories... search" [ref=f1522e25]:
+          - generic [ref=f1522e26]:
+            - generic: search
+            - generic [ref=f1522e27]: Search products, brands & categories...
+            - generic [ref=f1522e28]: search
+        - generic [ref=f1522e30]:
+          - link "Notifications" [ref=f1522e31] [cursor=pointer]:
+            - /url: /notifications
+            - generic [ref=f1522e32]: notifications
+          - link "Wishlist" [ref=f1522e34] [cursor=pointer]:
+            - /url: /account
+            - generic [ref=f1522e35]: favorite_border
+          - link "Shopping cart" [ref=f1522e36] [cursor=pointer]:
+            - /url: /cart
+            - generic [ref=f1522e37]: shopping_cart
+          - link "Sign In" [ref=f1522e38] [cursor=pointer]:
+            - /url: /auth/login
+      - navigation "Category navigation" [ref=f1522e41]:
+        - link "Fashion" [ref=f1522e42] [cursor=pointer]:
+          - /url: /category/fashion
+        - link "Electronics" [ref=f1522e43] [cursor=pointer]:
+          - /url: /category/electronics
+        - link "Beauty" [ref=f1522e44] [cursor=pointer]:
+          - /url: /category/beauty
+        - link "Groceries" [ref=f1522e45] [cursor=pointer]:
+          - /url: /category/groceries
+        - link "Home & Living" [ref=f1522e46] [cursor=pointer]:
+          - /url: /category/home
+        - link "Sports" [ref=f1522e47] [cursor=pointer]:
+          - /url: /category/sports
+        - link "🔥 Flash Sale" [ref=f1522e48] [cursor=pointer]:
+          - /url: /flash-sale
+    - main [ref=f1522e49]:
+      - generic [ref=f1522e50]:
+        - generic [ref=f1522e51]:
+          - heading "Dashboard Overview" [level=1] [ref=f1522e52]
+          - paragraph [ref=f1522e53]: Welcome back, Admin. Here is what is happening today.
+        - generic [ref=f1522e54]:
+          - generic [ref=f1522e55]: progress_activity
+          - text: Loading...
+    - contentinfo [ref=f1522e56]:
+      - generic [ref=f1522e62]:
+        - generic [ref=f1522e68]:
+          - heading "Stay in the Loop" [level=3] [ref=f1522e69]
+          - paragraph [ref=f1522e70]: Exclusive deals, launches & offers — straight to your inbox.
+        - generic [ref=f1522e71]:
+          - textbox "Your email address" [ref=f1522e76]
+          - button "Subscribe" [ref=f1522e77]
+      - generic [ref=f1522e80]:
+        - generic [ref=f1522e81]:
+          - generic [ref=f1522e82]:
+            - link [ref=f1522e83] [cursor=pointer]:
+              - /url: /
+              - img "AmarShop" [ref=f1522e84]
+            - paragraph [ref=f1522e85]: Bangladesh's premium online marketplace. Shop millions of products from trusted sellers with fast delivery and the best deals.
+            - generic [ref=f1522e86]:
+              - heading "Follow Us" [level=4] [ref=f1522e87]
+              - generic [ref=f1522e88]:
+                - link "Facebook" [ref=f1522e89] [cursor=pointer]:
+                  - /url: "#"
+                - link "Instagram" [ref=f1522e92] [cursor=pointer]:
+                  - /url: "#"
+                - link "X (Twitter)" [ref=f1522e95] [cursor=pointer]:
+                  - /url: "#"
+                - link "YouTube" [ref=f1522e98] [cursor=pointer]:
+                  - /url: "#"
+                - link "LinkedIn" [ref=f1522e101] [cursor=pointer]:
+                  - /url: https://www.linkedin.com/in/md-shawon-molla-2a3877293/
+                - link "GitHub" [ref=f1522e104] [cursor=pointer]:
+                  - /url: https://github.com/shawon2210
+          - generic [ref=f1522e107]:
+            - generic [ref=f1522e108]:
+              - heading "Customer Service" [level=3] [ref=f1522e109]
+              - list [ref=f1522e110]:
+                - listitem [ref=f1522e111]:
+                  - link "Help Center" [ref=f1522e112] [cursor=pointer]:
+                    - /url: /help
+                - listitem [ref=f1522e113]:
+                  - link "Returns & Refunds" [ref=f1522e114] [cursor=pointer]:
+                    - /url: /help/returns
+                - listitem [ref=f1522e115]:
+                  - link "Shipping Info" [ref=f1522e116] [cursor=pointer]:
+                    - /url: /help/shipping
+                - listitem [ref=f1522e117]:
+                  - link "Order Tracking" [ref=f1522e118] [cursor=pointer]:
+                    - /url: /orders
+                - listitem [ref=f1522e119]:
+                  - link "Payment Methods" [ref=f1522e120] [cursor=pointer]:
+                    - /url: /help/payment
+                - listitem [ref=f1522e121]:
+                  - link "Contact Us" [ref=f1522e122] [cursor=pointer]:
+                    - /url: /contact
+            - generic [ref=f1522e123]:
+              - heading "Shop Categories" [level=3] [ref=f1522e124]
+              - list [ref=f1522e125]:
+                - listitem [ref=f1522e126]:
+                  - link "Electronics" [ref=f1522e127] [cursor=pointer]:
+                    - /url: /category/electronics
+                - listitem [ref=f1522e128]:
+                  - link "Fashion" [ref=f1522e129] [cursor=pointer]:
+                    - /url: /category/fashion
+                - listitem [ref=f1522e130]:
+                  - link "Beauty" [ref=f1522e131] [cursor=pointer]:
+                    - /url: /category/beauty
+                - listitem [ref=f1522e132]:
+                  - link "Groceries" [ref=f1522e133] [cursor=pointer]:
+                    - /url: /category/groceries
+                - listitem [ref=f1522e134]:
+                  - link "Home & Living" [ref=f1522e135] [cursor=pointer]:
+                    - /url: /category/home
+                - listitem [ref=f1522e136]:
+                  - link "Sports" [ref=f1522e137] [cursor=pointer]:
+                    - /url: /category/sports
+            - generic [ref=f1522e138]:
+              - heading "Seller Center" [level=3] [ref=f1522e139]
+              - list [ref=f1522e140]:
+                - listitem [ref=f1522e141]:
+                  - link "Become a Seller" [ref=f1522e142] [cursor=pointer]:
+                    - /url: /seller/dashboard
+                - listitem [ref=f1522e143]:
+                  - link "Seller Dashboard" [ref=f1522e144] [cursor=pointer]:
+                    - /url: /seller/dashboard
+                - listitem [ref=f1522e145]:
+                  - link "Seller Analytics" [ref=f1522e146] [cursor=pointer]:
+                    - /url: /seller/analytics
+                - listitem [ref=f1522e147]:
+                  - link "Seller Finance" [ref=f1522e148] [cursor=pointer]:
+                    - /url: /seller/finance
+                - listitem [ref=f1522e149]:
+                  - link "Seller Policy" [ref=f1522e150] [cursor=pointer]:
+                    - /url: /seller/policy
+                - listitem [ref=f1522e151]:
+                  - link "Seller Support" [ref=f1522e152] [cursor=pointer]:
+                    - /url: /support/chat
+            - generic [ref=f1522e153]:
+              - heading "Company" [level=3] [ref=f1522e154]
+              - list [ref=f1522e155]:
+                - listitem [ref=f1522e156]:
+                  - link "About Us" [ref=f1522e157] [cursor=pointer]:
+                    - /url: /about
+                - listitem [ref=f1522e158]:
+                  - link "Careers" [ref=f1522e159] [cursor=pointer]:
+                    - /url: /careers
+                - listitem [ref=f1522e160]:
+                  - link "Press & Media" [ref=f1522e161] [cursor=pointer]:
+                    - /url: /press
+                - listitem [ref=f1522e162]:
+                  - link "Blog" [ref=f1522e163] [cursor=pointer]:
+                    - /url: /blog
+                - listitem [ref=f1522e164]:
+                  - link "Terms of Service" [ref=f1522e165] [cursor=pointer]:
+                    - /url: /terms
+                - listitem [ref=f1522e166]:
+                  - link "Privacy Policy" [ref=f1522e167] [cursor=pointer]:
+                    - /url: /privacy
+        - generic [ref=f1522e169]:
+          - generic [ref=f1522e170]:
+            - heading "Download App" [level=4] [ref=f1522e171]
+            - generic [ref=f1522e173]:
+              - link [ref=f1522e174] [cursor=pointer]:
+                - /url: "#"
+                - generic [ref=f1522e178]:
+                  - paragraph [ref=f1522e179]: Download on
+                  - paragraph [ref=f1522e180]: Google Play
+              - link [ref=f1522e181] [cursor=pointer]:
+                - /url: "#"
+                - generic [ref=f1522e185]:
+                  - paragraph [ref=f1522e186]: Download on
+                  - paragraph [ref=f1522e187]: App Store
+          - generic [ref=f1522e188]:
+            - heading "Accepted Payments" [level=4] [ref=f1522e189]
+            - generic [ref=f1522e191]:
+              - generic "bKash" [ref=f1522e192]:
+                - img [ref=f1522e193]:
+                  - generic [ref=f1522e195]: bKash
+              - generic "Nagad" [ref=f1522e196]:
+                - img [ref=f1522e197]:
+                  - generic [ref=f1522e199]: Nagad
+              - generic "Rocket" [ref=f1522e200]:
+                - img [ref=f1522e201]:
+                  - generic [ref=f1522e203]: Rocket
+              - generic "Visa" [ref=f1522e204]:
+                - img [ref=f1522e205]:
+                  - generic [ref=f1522e207]: VISA
+              - generic "Mastercard" [ref=f1522e208]
+              - generic "American Express" [ref=f1522e213]:
+                - img [ref=f1522e214]:
+                  - generic [ref=f1522e216]: AMEX
+              - generic "PayPal" [ref=f1522e217]:
+                - img [ref=f1522e218]:
+                  - generic [ref=f1522e220]: PayPal
+              - generic "COD" [ref=f1522e221]:
+                - img [ref=f1522e222]:
+                  - generic [ref=f1522e224]: COD
+          - generic [ref=f1522e226]:
+            - heading "Delivery Partners" [level=4] [ref=f1522e227]
+            - generic [ref=f1522e228]:
+              - generic [ref=f1522e229]: Pathao
+              - generic [ref=f1522e230]: RedX
+              - generic [ref=f1522e231]: Steadfast
+              - generic [ref=f1522e232]: Sundarban
+              - generic [ref=f1522e233]: Paperfly
+        - generic [ref=f1522e235]:
+          - generic [ref=f1522e236]: 100% Secure Payment
+          - paragraph [ref=f1522e240]: © 2026 AmarShop. All rights reserved.
+          - generic [ref=f1522e241]:
+            - link "Privacy" [ref=f1522e242] [cursor=pointer]:
+              - /url: /privacy
+            - link "Terms" [ref=f1522e243] [cursor=pointer]:
+              - /url: /terms
+            - link "Support" [ref=f1522e244] [cursor=pointer]:
+              - /url: /support/chat
+            - link "Track Order" [ref=f1522e245] [cursor=pointer]:
+              - /url: /orders
+  - button "Open Next.js Dev Tools" [ref=f1522e251] [cursor=pointer]

@@ -66,7 +66,7 @@ export async function request<T>(
 
   if (!res.ok) {
     if (res.status === 401 && typeof window !== 'undefined') {
-      useAuthStore.getState().logout();
+      await useAuthStore.getState().logout();
       const currentPath = typeof window !== 'undefined' ? window.location.pathname + window.location.search : '';
       if (!path.startsWith('/auth/') && typeof window !== 'undefined') {
         window.location.href = `/auth/login?redirect=${encodeURIComponent(currentPath)}`;

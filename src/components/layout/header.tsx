@@ -107,7 +107,7 @@ export function Header() {
                 width={90}
                 height={36}
                 className="h-7 md:h-8 lg:h-9 w-auto object-contain"
-                style={{ minWidth: '90px', maxWidth: '160px' }}
+                style={{ minWidth: '90px', maxWidth: '160px', width: 'auto', height: 'auto' }}
                 unoptimized={false}
               />
             </Link>

@@ -195,4 +195,31 @@ footer.tsx (parent — trusts + newsletter + container)
 | `backend/src/modules/coupons/coupon.service.ts` | Seller-level validation + tracking in validateCoupon/applyCoupon/create/update |
 | `backend/src/modules/orders/orders.service.ts` | Pass sellerId from first order item to coupon methods |
 | `backend/src/modules/admin/services/user.service.ts` | Cascade `isActive` to Store when updating user |
+
+---
+
+## Session 2026-07-27 (end) — 🔴 Logout infinite redirect loop fix
+
+### Root cause
+
+`src/stores/auth-store.ts:89` `logout()` captured `get().accessToken` → but `accessToken` is **NOT persisted** by Zustand (`partialize` only persists `user`). After any page navigation, `accessToken` rehydrates as `null` → `if (token)` guard **skipped the API call entirely** → cookies never cleared → proxy.ts middleware saw cookies → 307 redirect → infinite `/admin/login` → `/admin` → `/auth/login` → `/admin` loop.
+
+### Fix applied
+
+- **Removed** `if (token)` guard — logout API is now called unconditionally.
+- **Removed** `Authorization` header — backend JWT strategy reads token from cookie first (`jwt.strategy.ts:17`), so cookies alone suffice.
+- **Added** `isLoggingOut` re-entrancy guard — prevents infinite recursion when `request()` 401 handler calls `logout()` re-entrantly.
+
+### Verification
+
+- Backend `clearTokenCookies(res)` works correctly (verified via `Invoke-WebRequest` to `localhost:4000`)
+- **Next.js rewrite DOES forward Set-Cookie** (verified via `Invoke-WebRequest` to `localhost:3000/api/auth/logout` — cookies cleared, no redirect on subsequent `/auth/login`)
+- Previous false negatives from `fetch()` were due to **`Set-Cookie` being a forbidden response header name in the Fetch API** — `res.headers.get('Set-Cookie')` returns `null` even when present. Use `playwright.context().cookies()` or an HTTP client to verify cookie behavior.
+- PowerShell end-to-end test: login → logout (no Auth header) → 200 OK → cookies cleared → `/auth/login` stays on login page (no redirect) ✓
+
+### Files changed
+
+| File | Change |
+|---|---|
+| `src/stores/auth-store.ts` | Removed `if(token)` guard + Auth header from `logout()`; added `isLoggingOut` re-entrancy guard |
 <!-- END:session-summary -->

@@ -63,16 +63,27 @@ export class AdminUserService {
     const user = await this.prisma.user.findUnique({ where: { id: userId } });
     if (!user) throw new NotFoundException('User not found');
 
+    const updates: any = {};
     if (data.isActive !== undefined) {
+      updates.isActive = data.isActive;
       await this.prisma.store.updateMany({
         where: { userId },
         data: { isActive: data.isActive },
       });
+      if (data.isActive === false) {
+        await this.prisma.refreshToken.updateMany({
+          where: { userId, revokedAt: null },
+          data: { revokedAt: new Date() },
+        });
+      }
     }
+
+    if (data.role) updates.role = data.role;
+    if (data.isVerified !== undefined) updates.isVerified = data.isVerified;
 
     return this.prisma.user.update({
       where: { id: userId },
-      data: data as any,
+      data: updates,
       select: {
         id: true,
         name: true,

@@ -95,7 +95,18 @@ export default function SellerLayout({ children }: { children: React.ReactNode }
           })}
         </nav>
 
-        <div className="p-4 border-t border-white/[0.04]">
+        <div className="p-3 border-t border-white/[0.04] space-y-1">
+          <button
+            onClick={async () => {
+              await useAuthStore.getState().logout();
+              window.location.href = '/auth/login';
+            }}
+            className="group flex items-center gap-3 px-3 py-2.5 rounded-xl transition-all w-full text-white/60 hover:bg-red-500/10 hover:text-red-400"
+            aria-label="Logout"
+          >
+            <span className="material-symbols-outlined size-5">logout</span>
+            {!sidebarCollapsed && <span className="flex-1 text-sm text-left">Logout</span>}
+          </button>
           <button onClick={() => setSidebarCollapsed(!sidebarCollapsed)} className="w-full flex items-center justify-center p-2 text-white/40 hover:text-white" aria-label={sidebarCollapsed ? 'Expand sidebar' : 'Collapse sidebar'}>
             <span className="material-symbols-outlined">{sidebarCollapsed ? 'chevron_right' : 'chevron_left'}</span>
           </button>
@@ -126,6 +137,16 @@ export default function SellerLayout({ children }: { children: React.ReactNode }
                 <div className="w-8 h-8 rounded-full bg-primary flex items-center justify-center text-white text-sm font-bold">
                   S
                 </div>
+                <button
+                  onClick={async () => {
+                    await useAuthStore.getState().logout();
+                    window.location.href = '/auth/login';
+                  }}
+                  className="ml-1 p-1.5 rounded-lg hover:bg-red-50 text-slate-400 hover:text-red-500 transition-colors"
+                  aria-label="Logout"
+                >
+                  <span className="material-symbols-outlined text-lg">logout</span>
+                </button>
               </div>
             </div>
           </div>

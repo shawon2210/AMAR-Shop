@@ -22,8 +22,8 @@ export default function AccountPage() {
   const logout = useAuthStore(s => s.logout);
   const hydrated = useAuthHydrated();
 
-  const handleLogout = () => {
-    logout();
+  const handleLogout = async () => {
+    await logout();
     router.push('/');
   };
 

@@ -19,7 +19,7 @@ interface AuthState {
     phone: string;
     password: string;
   }) => Promise<void>;
-  logout: () => void;
+  logout: () => Promise<void>;
   fetchProfile: () => Promise<void>;
   setUser: (user: User) => void;
 }
@@ -29,6 +29,8 @@ type AuthPersist = Pick<AuthState, 'user'>;
 // Auth cookies are set exclusively by the NestJS backend via HttpOnly, Secure,
 // SameSite=Strict response headers. No client-side document.cookie writes.
 
+
+let isLoggingOut = false;
 
 export const useAuthStore = create<AuthState>()(
   persist(
@@ -86,8 +88,7 @@ export const useAuthStore = create<AuthState>()(
         });
       },
 
-      logout: () => {
-        const token = get().accessToken;
+      logout: async () => {
         set({
           accessToken: null,
           refreshToken: null,
@@ -95,12 +96,12 @@ export const useAuthStore = create<AuthState>()(
           isAuthenticated: false,
         });
 
-        if (token) {
-          request('/auth/logout', {
-            method: 'POST',
-            headers: { Authorization: `Bearer ${token}` },
-          }).catch(() => {});
-        }
+        if (isLoggingOut) return;
+        isLoggingOut = true;
+        try {
+          await request('/auth/logout', { method: 'POST' });
+        } catch {}
+        isLoggingOut = false;
         window.dispatchEvent(new CustomEvent('amarshop-auth-logout'));
       },
 

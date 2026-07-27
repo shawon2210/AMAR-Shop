@@ -98,10 +98,11 @@ export function HeroSlider() {
           {imgErrors[i] ? (
             <div className="absolute inset-0 bg-gradient-to-br from-primary/20 to-primary-fixed" />
           ) : (
-            <Image
+              <Image
                 src={slide.image}
                 alt=""
                 fill
+                sizes="(max-width: 640px) 100vw, (max-width: 1024px) 80vw, 1200px"
                 className="absolute inset-0 h-full w-full object-cover"
                 loading={i === 0 ? "eager" : "lazy"}
                 fetchPriority={i === 0 ? "high" : "auto"}

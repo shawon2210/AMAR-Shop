@@ -166,6 +166,7 @@ model User {
   loyaltyPoints   LoyaltyPoint[]
   rewardHistory   RewardHistory[]
   adminLogs       AdminLog[]
+  securityEvents  SecurityEvent[]
   userPermissions UserPermission[]
   storeFollowers  StoreFollower[]  @relation("StoreFollowerUser")
   paymentTransactions PaymentTransaction[]
@@ -1666,6 +1667,21 @@ model AdminLog {
   createdAt DateTime @default(now())
 
   @@index([adminId, createdAt])
+}
+
+// =================== SECURITY EVENTS ===================
+
+model SecurityEvent {
+  id        String   @id @default(cuid())
+  userId    String?
+  user      User?    @relation(fields: [userId], references: [id])
+  eventType String   // revoked_token_reuse_detected | brute_force_detected | suspicious_login
+  details   Json?
+  ipAddress String?
+  createdAt DateTime @default(now())
+
+  @@index([userId, createdAt])
+  @@index([eventType, createdAt])
 }
 
 // =================== DEVELOPER PLATFORM ===================
