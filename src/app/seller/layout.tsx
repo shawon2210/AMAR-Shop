@@ -488,7 +488,7 @@ export default function SellerLayout({ children }: { children: React.ReactNode }
   return (
     <div className="min-h-screen bg-gradient-to-br from-[#f0f2f6] to-[#e8ecf1]">
       {/* Full-width header */}
-      <header className="sticky top-0 z-50 h-16 bg-white/75 backdrop-blur-xl border-b border-gray-200/40 flex items-center px-4 lg:px-8 gap-3">
+      <header className="sticky top-0 z-50 h-18 bg-white/80 backdrop-blur-xl border-b border-gray-200/40 shadow-sm shadow-black/5 flex items-center px-4 lg:px-8 gap-4">
         <button
           ref={hamburgerRef}
           className="lg:hidden p-2 -ml-2 rounded-lg hover:bg-slate-100 transition-colors"
@@ -565,10 +565,10 @@ export default function SellerLayout({ children }: { children: React.ReactNode }
       {isDesktop ? (
         <div className="flex px-4 pb-4 gap-6 items-start">
           <aside
-            className={`sticky top-20 self-start text-white flex flex-col rounded-2xl border border-white/[0.05] shadow-[0_8px_32px_-4px_rgba(0,0,0,0.12)] bg-[#0f1219] transition-all duration-300 ease-out overflow-hidden ${
+            className={`sticky top-24 self-start text-white flex flex-col rounded-2xl border border-white/[0.05] shadow-[0_8px_32px_-4px_rgba(0,0,0,0.12)] bg-[#0f1219] transition-all duration-300 ease-out overflow-hidden ${
               sidebarCollapsed ? 'w-[72px]' : 'w-60'
             }`}
-            style={{ maxHeight: 'calc(100vh - 5.5rem)' }}
+            style={{ maxHeight: 'calc(100vh - 7rem)' }}
           >
             <SidebarContent
               collapsed={sidebarCollapsed}
