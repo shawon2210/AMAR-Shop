@@ -287,18 +287,16 @@ function SearchOverlay({
   );
 }
 
-function Sidebar({
-  open,
-  onClose,
+function SidebarContent({
   collapsed,
   onToggleCollapse,
   isDesktop,
+  onClose,
 }: {
-  open: boolean;
-  onClose: () => void;
   collapsed: boolean;
   onToggleCollapse: () => void;
   isDesktop: boolean;
+  onClose: () => void;
 }) {
   const [search, setSearch] = useState('');
   const [expandedSections, setExpandedSections] = useState<Record<string, boolean>>(() => {
@@ -308,39 +306,12 @@ function Sidebar({
   });
   const user = useAuthStore((s) => s.user);
   const closeButtonRef = useRef<HTMLButtonElement>(null);
-  const sidebarRef = useRef<HTMLElement>(null);
 
   useEffect(() => {
-    if (open && !isDesktop) {
+    if (!isDesktop) {
       closeButtonRef.current?.focus();
     }
-  }, [open, isDesktop]);
-
-  useEffect(() => {
-    if (!open) return;
-    const handleKey = (e: KeyboardEvent) => {
-      if (e.key === 'Escape') {
-        onClose();
-        return;
-      }
-      if (e.key !== 'Tab' || !sidebarRef.current || isDesktop) return;
-      const focusable = sidebarRef.current.querySelectorAll<HTMLElement>(
-        'a[href], button:not([disabled]), textarea, input, select, [tabindex]:not([tabindex="-1"])'
-      );
-      if (focusable.length === 0) return;
-      const first = focusable[0];
-      const last = focusable[focusable.length - 1];
-      if (e.shiftKey && document.activeElement === first) {
-        e.preventDefault();
-        last.focus();
-      } else if (!e.shiftKey && document.activeElement === last) {
-        e.preventDefault();
-        first.focus();
-      }
-    };
-    document.addEventListener('keydown', handleKey);
-    return () => document.removeEventListener('keydown', handleKey);
-  }, [open, isDesktop, onClose]);
+  }, [isDesktop]);
 
   const toggleSection = useCallback((title: string) => {
     setExpandedSections((prev) => ({ ...prev, [title]: !prev[title] }));
@@ -358,7 +329,7 @@ function Sidebar({
       .filter((s) => s.items.length > 0);
   }, [search, collapsed]);
 
-  const sidebar = (
+  return (
     <div className="flex flex-col h-full relative">
       <div className="absolute top-0 left-0 right-0 h-0.5 bg-linear-to-r from-primary via-primary/50 to-transparent" />
 
@@ -500,41 +471,6 @@ function Sidebar({
         </div>
       </div>
     </div>
-  );
-
-  if (!isDesktop) {
-    return (
-      <>
-        {open && (
-          <div
-            className="fixed inset-0 bg-black/50 z-40 transition-opacity duration-300"
-            onClick={onClose}
-          />
-        )}
-        <aside
-          ref={sidebarRef}
-          role="dialog"
-          aria-modal="true"
-          aria-label="Admin navigation sidebar"
-          className={`fixed top-32 left-4 bottom-4 z-50 w-70 max-w-[85vw] bg-[#0f1219] text-white flex flex-col rounded-2xl shadow-2xl shadow-black/40 border border-white/5 transition-transform duration-300 ease-out ${
-            open ? 'translate-x-0' : '-translate-x-[calc(100%+32px)]'
-          }`}
-        >
-          {sidebar}
-        </aside>
-      </>
-    );
-  }
-
-  return (
-    <aside
-      ref={sidebarRef}
-      className={`fixed top-32 left-4 bottom-4 z-30 text-white flex flex-col rounded-2xl border border-white/[0.05] shadow-[0_8px_32px_-4px_rgba(0,0,0,0.12)] transition-all duration-300 ease-out overflow-hidden bg-[#0f1219] ${
-        collapsed ? 'w-[72px]' : 'w-60'
-      }`}
-    >
-      {sidebar}
-    </aside>
   );
 }
 
@@ -702,27 +638,57 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
         </div>
       </header>
 
-      {/* Sidebar (below header) */}
-      <Sidebar
-        open={sidebarOpen}
-        onClose={() => setSidebarOpen(false)}
-        collapsed={sidebarCollapsed}
-        onToggleCollapse={handleToggleCollapse}
-        isDesktop={isDesktop}
-      />
+      {/* Desktop: flex with sticky sidebar */}
+      {isDesktop ? (
+        <div className="flex px-4 pb-4 gap-6 items-start">
+          <aside
+            className={`sticky top-20 self-start text-white flex flex-col rounded-2xl border border-white/[0.05] shadow-[0_8px_32px_-4px_rgba(0,0,0,0.12)] bg-[#0f1219] transition-all duration-300 ease-out overflow-hidden ${
+              sidebarCollapsed ? 'w-[72px]' : 'w-60'
+            }`}
+            style={{ maxHeight: 'calc(100vh - 5.5rem)' }}
+          >
+            <SidebarContent
+              collapsed={sidebarCollapsed}
+              onToggleCollapse={handleToggleCollapse}
+              isDesktop={true}
+              onClose={() => {}}
+            />
+          </aside>
 
-      {/* Main content (below header) */}
-      <div
-        className={`transition-all duration-300 ease-out ${
-          isDesktop
-            ? sidebarCollapsed ? 'ml-[104px]' : 'ml-[272px]'
-            : 'ml-0'
-        }`}
-      >
-        <main className="p-4 lg:p-8 min-w-0">
-          <ErrorBoundary>{children}</ErrorBoundary>
-        </main>
-      </div>
+          <main className="flex-1 min-w-0 mt-6">
+            <ErrorBoundary>{children}</ErrorBoundary>
+          </main>
+        </div>
+      ) : (
+        <>
+          {/* Mobile: drawer sidebar */}
+          {sidebarOpen && (
+            <div
+              className="fixed inset-0 bg-black/50 z-40 transition-opacity duration-300"
+              onClick={() => setSidebarOpen(false)}
+            />
+          )}
+          <aside
+            role="dialog"
+            aria-modal="true"
+            aria-label="Admin navigation sidebar"
+            className={`fixed top-20 left-4 bottom-4 z-50 w-70 max-w-[85vw] bg-[#0f1219] text-white flex flex-col rounded-2xl shadow-2xl shadow-black/40 border border-white/5 transition-transform duration-300 ease-out ${
+              sidebarOpen ? 'translate-x-0' : '-translate-x-[calc(100%+32px)]'
+            }`}
+          >
+            <SidebarContent
+              collapsed={false}
+              onToggleCollapse={() => {}}
+              isDesktop={false}
+              onClose={() => setSidebarOpen(false)}
+            />
+          </aside>
+
+          <main className="p-4 min-w-0">
+            <ErrorBoundary>{children}</ErrorBoundary>
+          </main>
+        </>
+      )}
 
       {searchOpen && (
         <SearchOverlay
