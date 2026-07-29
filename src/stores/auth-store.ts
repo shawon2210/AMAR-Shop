@@ -148,7 +148,7 @@ export const useAuthStore = create<AuthState>()(
           set({ user, isAuthenticated: true });
         } catch {
           const s = get();
-          if (!s.accessToken?.startsWith('demo-')) {
+          if (!isDemoToken(s.accessToken)) {
             set({ accessToken: null, refreshToken: null, user: null, isAuthenticated: false });
           }
         }

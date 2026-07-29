@@ -6,9 +6,9 @@ import Link from 'next/link';
 import { useAuthStore } from '@/stores/auth-store';
 
 const DEMO_ACCOUNTS = [
-  { label: 'Admin', icon: 'admin_panel_settings', phone: '01712345678', password: 'admin123', route: '/admin/dashboard' },
-  { label: 'Seller', icon: 'storefront', phone: '01711111111', password: 'seller123', route: '/seller/dashboard' },
-  { label: 'Customer', icon: 'person', phone: '01700000000', password: 'customer123', route: '/account' },
+  { label: 'Admin', icon: 'admin_panel_settings', role: 'admin', route: '/admin' },
+  { label: 'Seller', icon: 'storefront', role: 'seller', route: '/seller/dashboard' },
+  { label: 'Customer', icon: 'person', role: 'customer', route: '/account' },
 ];
 
 function LoginForm() {
