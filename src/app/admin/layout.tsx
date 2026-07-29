@@ -562,7 +562,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
   return (
     <div className="min-h-screen bg-gradient-to-br from-[#f0f2f6] to-[#e8ecf1]">
       {/* Full-width header */}
-      <header className="sticky top-0 z-50 h-16 bg-white/75 backdrop-blur-xl border-b border-gray-200/40 flex items-center px-4 lg:px-8 gap-3">
+      <header className="sticky top-0 z-50 h-18 bg-white/80 backdrop-blur-xl border-b border-gray-200/40 shadow-sm shadow-black/5 flex items-center px-4 lg:px-8 gap-4">
         <button
           ref={hamburgerRef}
           className="lg:hidden p-2 -ml-2 rounded-lg hover:bg-slate-100 transition-colors"
