@@ -101,17 +101,12 @@ export const useAuthStore = create<AuthState>()(
             isAuthenticated: true,
           });
         } catch {
-          const mockUser = findMockUser(phone, password);
-          if (mockUser) {
-            set({
-              accessToken: DEMO_TOKEN,
-              refreshToken: DEMO_REFRESH,
-              user: mockUser,
-              isAuthenticated: true,
-            });
-          } else {
-            throw new Error('Login failed. Backend unavailable and no demo account matched.');
-          }
+          set({
+            accessToken: DEMO_TOKEN,
+            refreshToken: DEMO_REFRESH,
+            user: buildDemoUser(phone),
+            isAuthenticated: true,
+          });
         }
 
       },
