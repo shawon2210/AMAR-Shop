@@ -27,7 +27,7 @@ function LoginForm() {
 
   function dashboardRoute(): string {
     const s = useAuthStore.getState();
-    if (s.user?.role === 'ADMIN' || s.user?.role === 'SUPER_ADMIN') return '/admin/dashboard';
+    if (s.user?.role === 'ADMIN' || s.user?.role === 'SUPER_ADMIN') return '/admin';
     if (s.user?.isSeller || s.user?.role === 'SELLER') return '/seller/dashboard';
     return '/account';
   }

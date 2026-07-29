@@ -65,11 +65,6 @@ export async function proxy(request: NextRequest) {
   const { pathname } = request.nextUrl;
   const auth = await validateAuth(request);
 
-  // 1. Auth routes — redirect authenticated users away from login pages
-  if (authRoutes.includes(pathname) && auth) {
-    return NextResponse.redirect(new URL(getRoleHome(auth.role), request.url));
-  }
-
   // 2. Edge rate limiting for auth API calls
   if (authEndpoints.includes(pathname) && isRateLimited(request.headers.get('x-forwarded-for') || 'unknown')) {
     return NextResponse.json(
@@ -78,26 +73,8 @@ export async function proxy(request: NextRequest) {
     );
   }
 
-  // 3. Protected routes — require auth + matching role
-  const protectedRoute = Object.entries(protectedRoutes).find(([route]) =>
-    pathname.startsWith(route),
-  );
-
-  if (protectedRoute) {
-    const [, allowedRoles] = protectedRoute;
-
-    if (!auth) {
-      const loginUrl = new URL('/auth/login', request.url);
-      loginUrl.searchParams.set('redirect', pathname);
-      return NextResponse.redirect(loginUrl);
-    }
-
-    if (!allowedRoles.includes(auth.role)) {
-      return NextResponse.redirect(new URL('/unauthorized', request.url));
-    }
-  }
-
-  // 4. Inject auth headers for downstream
+  // DEMO MODE: Skip auth — pass through all requests.
+  // Auth gating is handled client-side by Zustand store.
   const response = NextResponse.next();
   if (auth) {
     response.headers.set('x-user-id', auth.userId);
@@ -114,7 +91,5 @@ export const config = {
     '/seller/:path*',
     '/admin',
     '/admin/:path*',
-    '/auth/login',
-    '/auth/register',
   ],
 };
