@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useMemo, useEffect, useCallback, useRef, Fragment } from 'react';
+import { useState, useMemo, useEffect, useCallback, useRef } from 'react';
 import Link from 'next/link';
 import { usePathname, useRouter } from 'next/navigation';
 import { useAuthStore, useAuthHydrated } from '@/stores/auth-store';
@@ -238,7 +238,7 @@ function SearchOverlay({
   }, []);
 
   return (
-    <div className="fixed inset-0 z-50 bg-black/40 backdrop-blur-sm" onClick={onClose} role="dialog" aria-modal="true" aria-label="Search">
+    <div className="fixed inset-0 z-[60] bg-black/40 backdrop-blur-sm" onClick={onClose} role="dialog" aria-modal="true" aria-label="Search">
       <div
         className="absolute top-0 sm:top-18 left-0 right-0 sm:left-1/2 sm:-translate-x-1/2 sm:w-full sm:max-w-lg bg-white sm:rounded-2xl shadow-2xl sm:border sm:border-[#eee] overflow-hidden min-h-50 sm:min-h-0"
         onClick={(e) => e.stopPropagation()}
@@ -360,10 +360,8 @@ function Sidebar({
 
   const sidebar = (
     <div className="flex flex-col h-full relative">
-      {/* Top accent gradient bar */}
       <div className="absolute top-0 left-0 right-0 h-0.5 bg-linear-to-r from-primary via-primary/50 to-transparent" />
 
-      {/* Brand header */}
       <div className="flex items-center h-16 shrink-0 border-b border-white/5 px-4">
         <Link href="/admin" className="flex items-center gap-3 min-w-0">
           <div className="w-9 h-9 rounded-xl bg-linear-to-br from-primary to-primary/60 flex items-center justify-center shadow-lg shadow-primary/20 shrink-0">
@@ -385,7 +383,6 @@ function Sidebar({
         )}
       </div>
 
-      {/* Collapse toggle (desktop) */}
       {isDesktop && (
         <button
           onClick={onToggleCollapse}
@@ -400,7 +397,6 @@ function Sidebar({
         </button>
       )}
 
-      {/* Search */}
       {!collapsed && (
         <div className="px-3 pt-3 pb-1 shrink-0">
           <div className="relative">
@@ -418,7 +414,6 @@ function Sidebar({
         </div>
       )}
 
-      {/* Navigation */}
       <nav className="flex-1 overflow-y-auto py-2 space-y-1 hide-scrollbar">
         {collapsed ? (
           <div className="flex flex-col items-center gap-1 px-2 pt-2">
@@ -475,7 +470,6 @@ function Sidebar({
         )}
       </nav>
 
-      {/* User profile */}
       <div className="border-t border-white/5 shrink-0">
         <div className={`flex items-center ${collapsed ? 'justify-center py-3' : 'gap-3 p-3'}`}>
           <div className="w-8 h-8 rounded-full bg-linear-to-br from-primary to-primary/60 flex items-center justify-center text-white text-xs font-bold uppercase shadow-sm shrink-0">
@@ -522,7 +516,7 @@ function Sidebar({
           role="dialog"
           aria-modal="true"
           aria-label="Admin navigation sidebar"
-          className={`fixed top-4 left-4 bottom-4 z-50 w-70 max-w-[85vw] bg-[#0f1219] text-white flex flex-col rounded-2xl shadow-2xl shadow-black/40 border border-white/5 transition-transform duration-300 ease-out ${
+          className={`fixed top-[76px] left-4 bottom-4 z-50 w-70 max-w-[85vw] bg-[#0f1219] text-white flex flex-col rounded-2xl shadow-2xl shadow-black/40 border border-white/5 transition-transform duration-300 ease-out ${
             open ? 'translate-x-0' : '-translate-x-[calc(100%+32px)]'
           }`}
         >
@@ -535,7 +529,7 @@ function Sidebar({
   return (
     <aside
       ref={sidebarRef}
-      className={`fixed top-4 left-4 bottom-4 z-40 text-white flex flex-col rounded-2xl border border-white/[0.05] shadow-[0_8px_32px_-4px_rgba(0,0,0,0.12)] transition-all duration-300 ease-out overflow-hidden bg-[#0f1219] ${
+      className={`fixed top-[76px] left-4 bottom-4 z-30 text-white flex flex-col rounded-2xl border border-white/[0.05] shadow-[0_8px_32px_-4px_rgba(0,0,0,0.12)] transition-all duration-300 ease-out overflow-hidden bg-[#0f1219] ${
         collapsed ? 'w-[72px]' : 'w-60'
       }`}
     >
@@ -631,6 +625,84 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-[#f0f2f6] to-[#e8ecf1]">
+      {/* Full-width header */}
+      <header className="sticky top-0 z-50 h-16 bg-white/75 backdrop-blur-xl border-b border-gray-200/40 flex items-center px-4 lg:px-8 gap-3">
+        <button
+          ref={hamburgerRef}
+          className="lg:hidden p-2 -ml-2 rounded-lg hover:bg-slate-100 transition-colors"
+          onClick={() => setSidebarOpen(true)}
+          aria-label="Open sidebar menu"
+        >
+          <span className="material-symbols-outlined text-slate-500">menu</span>
+        </button>
+
+        <nav className="hidden md:flex items-center gap-1.5 text-xs text-slate-400">
+          {breadcrumbs.map((crumb) => (
+            <span key={crumb.href} className="flex items-center gap-1.5">
+              {crumb.href !== '/admin' && <span className="text-slate-300">/</span>}
+              {crumb.current ? (
+                <span className="text-slate-700 font-medium">{crumb.label}</span>
+              ) : (
+                <Link href={crumb.href} className="hover:text-slate-600 transition-colors">
+                  {crumb.label}
+                </Link>
+              )}
+            </span>
+          ))}
+        </nav>
+
+        <div className="flex-1" />
+        <div className="flex items-center gap-1 md:gap-2">
+          <button
+            onClick={() => setSearchOpen(true)}
+            className="flex items-center gap-2 bg-slate-100/80 hover:bg-slate-200/70 rounded-lg px-2.5 py-2 transition-colors md:w-56"
+            aria-label="Open search"
+          >
+            <span className="material-symbols-outlined text-slate-400 text-lg">search</span>
+            <span className="hidden md:inline text-xs text-slate-400 flex-1 text-left">Search...</span>
+            <kbd className="hidden md:inline-flex text-[9px] bg-white px-1 py-0.5 rounded text-slate-400 font-mono border border-slate-200">
+              ⌘K
+            </kbd>
+          </button>
+
+          <Link
+            href="/admin/notifications"
+            className="relative p-2 rounded-full hover:bg-slate-100 transition-colors shrink-0"
+            aria-label="Notifications"
+          >
+            <span className="material-symbols-outlined text-slate-500 text-lg">notifications</span>
+            <span className="absolute top-1 right-1 w-4 h-4 bg-primary text-white text-[9px] font-bold rounded-full flex items-center justify-center shadow-sm">
+              3
+            </span>
+          </Link>
+
+          <div className="flex items-center gap-2 pl-2 md:pl-3 border-l border-slate-200 shrink-0">
+            <Link
+              href="/admin/settings"
+              className="w-8 h-8 rounded-full bg-linear-to-br from-primary to-primary/60 flex items-center justify-center text-white text-xs font-bold uppercase shadow-sm shrink-0"
+            >
+              {user?.name?.charAt(0) || 'A'}
+            </Link>
+            <div className="hidden lg:block text-left min-w-0">
+              <p className="text-xs font-medium text-slate-700 truncate leading-tight">
+                {user?.name || 'Admin'}
+              </p>
+            </div>
+            <button
+              onClick={async () => {
+                await useAuthStore.getState().logout();
+                window.location.href = '/auth/login';
+              }}
+              className="ml-1 p-1.5 rounded-lg hover:bg-red-50 text-slate-400 hover:text-red-500 transition-colors shrink-0"
+              aria-label="Logout"
+            >
+              <span className="material-symbols-outlined text-lg">logout</span>
+            </button>
+          </div>
+        </div>
+      </header>
+
+      {/* Sidebar (below header) */}
       <Sidebar
         open={sidebarOpen}
         onClose={() => setSidebarOpen(false)}
@@ -639,6 +711,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
         isDesktop={isDesktop}
       />
 
+      {/* Main content (below header) */}
       <div
         className={`transition-all duration-300 ease-out ${
           isDesktop
@@ -646,84 +719,6 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
             : 'ml-0'
         }`}
       >
-        <header className="sticky top-0 z-30 h-16 bg-white/75 backdrop-blur-xl border-b border-gray-200/40 flex items-center px-4 lg:px-8 gap-3">
-          <button
-            ref={hamburgerRef}
-            className="lg:hidden p-2 -ml-2 rounded-lg hover:bg-slate-100 transition-colors"
-            onClick={() => setSidebarOpen(true)}
-            aria-label="Open sidebar menu"
-          >
-            <span className="material-symbols-outlined text-slate-500">menu</span>
-          </button>
-
-          <nav className="hidden md:flex items-center gap-1.5 text-xs text-slate-400">
-            {breadcrumbs.map((crumb) => (
-              <span key={crumb.href} className="flex items-center gap-1.5">
-                {crumb.href !== '/admin' && <span className="text-slate-300">/</span>}
-                {crumb.current ? (
-                  <span className="text-slate-700 font-medium">{crumb.label}</span>
-                ) : (
-                  <Link href={crumb.href} className="hover:text-slate-600 transition-colors">
-                    {crumb.label}
-                  </Link>
-                )}
-              </span>
-            ))}
-          </nav>
-
-          <div className="flex-1" />
-          <div className="flex items-center gap-1 md:gap-2">
-            <button
-              onClick={() => setSearchOpen(true)}
-              className="flex items-center gap-2 bg-slate-100/80 hover:bg-slate-200/70 rounded-lg px-2.5 py-2 transition-colors md:w-56"
-              aria-label="Open search"
-            >
-              <span className="material-symbols-outlined text-slate-400 text-lg">search</span>
-              <span className="hidden md:inline text-xs text-slate-400 flex-1 text-left">Search...</span>
-              <kbd className="hidden md:inline-flex text-[9px] bg-white px-1 py-0.5 rounded text-slate-400 font-mono border border-slate-200">
-                ⌘K
-              </kbd>
-            </button>
-
-            <Link
-              href="/admin/notifications"
-              className="relative p-2 rounded-full hover:bg-slate-100 transition-colors shrink-0"
-              aria-label="Notifications"
-            >
-              <span className="material-symbols-outlined text-slate-500 text-lg">notifications</span>
-              <span className="absolute top-1 right-1 w-4 h-4 bg-primary text-white text-[9px] font-bold rounded-full flex items-center justify-center shadow-sm">
-                3
-              </span>
-            </Link>
-
-            <div className="flex items-center gap-2 pl-2 md:pl-3 border-l border-slate-200 shrink-0">
-              <Link
-                href="/admin/settings"
-                className="w-8 h-8 rounded-full bg-linear-to-br from-primary to-primary/60 flex items-center justify-center text-white text-xs font-bold uppercase shadow-sm shrink-0"
-              >
-                {user?.name?.charAt(0) || 'A'}
-              </Link>
-
-              <div className="hidden lg:block text-left min-w-0">
-                <p className="text-xs font-medium text-slate-700 truncate leading-tight">
-                  {user?.name || 'Admin'}
-                </p>
-              </div>
-
-              <button
-                onClick={async () => {
-                  await useAuthStore.getState().logout();
-                  window.location.href = '/auth/login';
-                }}
-                className="ml-1 p-1.5 rounded-lg hover:bg-red-50 text-slate-400 hover:text-red-500 transition-colors shrink-0"
-                aria-label="Logout"
-              >
-                <span className="material-symbols-outlined text-lg">logout</span>
-              </button>
-            </div>
-          </div>
-        </header>
-
         <main className="p-4 lg:p-8 min-w-0">
           <ErrorBoundary>{children}</ErrorBoundary>
         </main>
