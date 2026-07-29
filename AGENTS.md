@@ -222,4 +222,34 @@ footer.tsx (parent — trusts + newsletter + container)
 | File | Change |
 |---|---|
 | `src/stores/auth-store.ts` | Removed `if(token)` guard + Auth header from `logout()`; added `isLoggingOut` re-entrancy guard |
+
+---
+
+## Session 2026-07-30 — Sidebar positioning: fixed → sticky flex layout
+
+### Problem
+
+Sidebar used `fixed top-32` = 128px offset (64px header + 64px gap). Despite multiple `top-` adjustments (`top-4` → `top-[76px]` → `top-16` → `top-20` → `top-24` → `top-32`), user reported "no changes seen" — likely due to stale build cache / missing hard refresh. More fundamentally, `fixed` positioning requires manual gap tuning and breaks at different viewport heights.
+
+### Fix
+
+Replaced `fixed` sidebar with `sticky` inside a flex container:
+
+- **Desktop (`>=lg`):** Layout now uses `<div className="flex gap-6 items-start">` wrapping sidebar and main content
+  - Sidebar: `sticky top-20 self-start` in the flex flow — no `fixed`, no `absolute`
+  - Height capped with `maxHeight: 'calc(100vh - 5.5rem)'` via inline style
+  - Content: `<main className="flex-1 min-w-0 mt-6">` in the same flex row
+  - Sidebar naturally sits *below* the sticky header (sticky header at `top-0`, sidebar at `top-20`)
+  - Removed `pl-[calc(16rem+2rem)]` spacer hack — flex layout handles spacing naturally
+
+- **Mobile (`<lg`):** Drawer stays `fixed top-20 left-4 bottom-4` (unaffected)
+
+- **Both admin and seller layouts** updated identically (admin: primary accent, seller: emerald accent)
+
+### Files changed
+
+| File | Change |
+|---|---|
+| `src/app/admin/layout.tsx` | Desktop sidebar: `fixed top-32` → `sticky top-20 self-start` inside flex; removed spacer |
+| `src/app/seller/layout.tsx` | Same structural changes |
 <!-- END:session-summary -->
