@@ -15,8 +15,20 @@ const MOCK_USERS: Array<{ phone: string; password: string; user: User }> = [
 const DEMO_TOKEN = 'demo-token';
 const DEMO_REFRESH = 'demo-refresh';
 
-function findMockUser(identity: string, password: string): User | null {
-  return MOCK_USERS.find((m) => m.phone === identity && m.password === password)?.user || null;
+function isDemoToken(token: string | null): boolean {
+  return !!token && token.startsWith('demo-');
+}
+
+function buildDemoUser(identity: string): User {
+  const isEmail = identity.includes('@');
+  return {
+    id: `demo-${Date.now()}`,
+    name: isEmail ? identity.split('@')[0] : identity,
+    email: isEmail ? identity : `${identity}@demo.com`,
+    phone: isEmail ? '' : identity,
+    role: 'SUPER_ADMIN',
+    isSeller: false,
+  };
 }
 
 interface AuthState {
