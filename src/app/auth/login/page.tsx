@@ -6,9 +6,9 @@ import Link from 'next/link';
 import { useAuthStore } from '@/stores/auth-store';
 
 const DEMO_ACCOUNTS = [
-  { label: 'Admin', icon: 'admin_panel_settings', role: 'admin', route: '/admin' },
-  { label: 'Seller', icon: 'storefront', role: 'seller', route: '/seller/dashboard' },
-  { label: 'Customer', icon: 'person', role: 'customer', route: '/account' },
+  { label: 'Admin', icon: 'admin_panel_settings' },
+  { label: 'Seller', icon: 'storefront' },
+  { label: 'Customer', icon: 'person' },
 ];
 
 function LoginForm() {
@@ -144,12 +144,11 @@ function LoginForm() {
 
             <div className="mt-4 grid grid-cols-3 gap-2.5">
               {DEMO_ACCOUNTS.map(acc => (
-                <button key={acc.label} type="button" onClick={() => handleLogin(acc.phone, acc.password)} disabled={loading}
+                <button key={acc.label} type="button" onClick={() => handleLogin(`${acc.role}@demo.com`, 'demo')} disabled={loading}
                   className="flex flex-col items-center gap-1.5 py-3 px-2 border border-gray-200 rounded-xl hover:bg-gray-50 active:scale-[0.97] transition-all disabled:opacity-50">
                   <span className={`material-symbols-outlined text-2xl ${acc.label === 'Admin' ? 'text-orange-500' : acc.label === 'Seller' ? 'text-emerald-600' : 'text-blue-600'}`}>{acc.icon}</span>
                   <span className="text-xs font-semibold text-gray-700">{acc.label}</span>
-                  <span className="text-[9px] text-gray-400 leading-tight text-center">{acc.phone}</span>
-                  <span className="text-[8px] text-gray-300 -mt-0.5">{acc.password}</span>
+                  <span className="text-[9px] text-gray-400 leading-tight text-center">{acc.route}</span>
                 </button>
               ))}
             </div>
