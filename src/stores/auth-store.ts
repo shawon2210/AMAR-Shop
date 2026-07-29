@@ -15,13 +15,19 @@ function isDemoToken(token: string | null): boolean {
 
 function buildDemoUser(identity: string): User {
   const isEmail = identity.includes('@');
+  const lower = identity.toLowerCase();
+  const role: User['role'] = lower.includes('seller')
+    ? 'SELLER'
+    : lower.includes('customer')
+      ? 'CUSTOMER'
+      : 'SUPER_ADMIN';
   return {
     id: `demo-${Date.now()}`,
     name: isEmail ? identity.split('@')[0] : identity,
     email: isEmail ? identity : `${identity}@demo.com`,
     phone: isEmail ? '' : identity,
-    role: 'SUPER_ADMIN',
-    isSeller: false,
+    role,
+    isSeller: role === 'SELLER',
   };
 }
 
