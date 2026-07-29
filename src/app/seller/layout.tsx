@@ -20,11 +20,17 @@ interface NavSection {
 
 const navSections: NavSection[] = [
   {
-    title: 'Overview',
+    title: 'Dashboard',
     items: [
-      { label: 'Dashboard', icon: 'dashboard', href: '/seller/dashboard' },
+      { label: 'Overview', icon: 'dashboard', href: '/seller/overview' },
       { label: 'Analytics', icon: 'analytics', href: '/seller/analytics' },
-      { label: 'Messages', icon: 'chat', href: '/seller/chat', badge: 2 },
+    ],
+  },
+  {
+    title: 'Orders',
+    items: [
+      { label: 'All Orders', icon: 'receipt_long', href: '/seller/orders' },
+      { label: 'Abandoned', icon: 'cancel', href: '/seller/orders/abandoned' },
     ],
   },
   {
@@ -32,50 +38,45 @@ const navSections: NavSection[] = [
     items: [
       { label: 'All Products', icon: 'inventory_2', href: '/seller/products' },
       { label: 'Add Product', icon: 'add_box', href: '/seller/products/add' },
-      { label: 'Inventory', icon: 'warehouse', href: '/seller/inventory', badge: 5 },
-      { label: 'Reviews', icon: 'star', href: '/seller/reviews' },
-    ],
-  },
-  {
-    title: 'Orders',
-    items: [
-      { label: 'All Orders', icon: 'receipt_long', href: '/seller/orders', badge: 3 },
-      { label: 'Returns', icon: 'assignment_return', href: '/seller/orders/returns' },
-      { label: 'Refunds', icon: 'currency_ruble', href: '/seller/orders/refunds' },
-    ],
-  },
-  {
-    title: 'Finance',
-    items: [
-      { label: 'Finance Overview', icon: 'account_balance_wallet', href: '/seller/finance' },
-      { label: 'Payouts', icon: 'payments', href: '/seller/payouts' },
-      { label: 'Transactions', icon: 'receipt', href: '/seller/transactions' },
+      { label: 'Categories', icon: 'category', href: '/seller/categories' },
+      { label: 'Inventory', icon: 'warehouse', href: '/seller/inventory' },
     ],
   },
   {
     title: 'Marketing',
     items: [
-      { label: 'Campaigns', icon: 'campaign', href: '/seller/campaigns' },
+      { label: 'Coupons', icon: 'confirmation_number', href: '/seller/coupons' },
       { label: 'Promotions', icon: 'discount', href: '/seller/promotions' },
+      { label: 'SEO', icon: 'travel_explore', href: '/seller/seo' },
     ],
   },
   {
-    title: 'AI Tools',
+    title: 'Shipping',
     items: [
-      { label: 'Description Gen.', icon: 'auto_awesome', href: '/seller/ai/description-generator' },
-      { label: 'Campaign Copy', icon: 'campaign', href: '/seller/ai/campaign-generator' },
-      { label: 'Smart Pricing', icon: 'trending_up', href: '/seller/ai/smart-pricing' },
-      { label: 'Demand Forecast', icon: 'insights', href: '/seller/ai/demand-forecast' },
+      { label: 'Shipping Rates', icon: 'local_shipping', href: '/seller/shipping' },
+      { label: 'Track Orders', icon: 'pin_drop', href: '/seller/tracking' },
+    ],
+  },
+  {
+    title: 'Finance',
+    items: [
+      { label: 'Revenue', icon: 'trending_up', href: '/seller/revenue' },
+      { label: 'Payouts', icon: 'payments', href: '/seller/payouts' },
+      { label: 'Taxes', icon: 'receipt_long', href: '/seller/taxes' },
+    ],
+  },
+  {
+    title: 'Support',
+    items: [
+      { label: 'Tickets', icon: 'support', href: '/seller/support' },
+      { label: 'Policy', icon: 'description', href: '/seller/policy' },
     ],
   },
   {
     title: 'Settings',
     items: [
-      { label: 'Store Settings', icon: 'store', href: '/seller/store' },
+      { label: 'Store Settings', icon: 'settings', href: '/seller/settings' },
       { label: 'Profile', icon: 'person', href: '/seller/profile' },
-      { label: 'Policy', icon: 'description', href: '/seller/policy' },
-      { label: 'Support', icon: 'headset_mic', href: '/seller/support' },
-      { label: 'Settings', icon: 'settings', href: '/seller/settings' },
     ],
   },
 ];
@@ -84,7 +85,6 @@ const allNavItems = navSections.flatMap((s) => s.items.map((i) => ({ ...i, secti
 
 function useActiveState(href: string): boolean {
   const pathname = usePathname();
-  if (href === '/seller/dashboard') return pathname === href || pathname === '/seller';
   return href === '/seller' ? pathname === '/seller' : pathname.startsWith(href);
 }
 
@@ -100,17 +100,17 @@ function NavItemLink({ item, onClose, collapsed }: { item: NavItem; onClose: () 
         collapsed ? 'justify-center w-10 mx-auto' : 'gap-3 px-3'
       } ${
         isActive
-          ? 'bg-primary/12 text-white shadow-sm shadow-primary/5'
+          ? 'bg-emerald-500/12 text-white shadow-sm shadow-emerald-500/5'
           : 'text-white/45 hover:bg-white/6 hover:text-white/80'
       }`}
     >
       {isActive && (
-        <span className="absolute left-0 top-1 bottom-1 w-0.5 rounded-full bg-linear-to-b from-primary to-primary/50 shadow-sm shadow-primary/30" />
+        <span className="absolute left-0 top-1 bottom-1 w-0.5 rounded-full bg-linear-to-b from-emerald-400 to-emerald-500/50 shadow-sm shadow-emerald-500/30" />
       )}
       <span
         className={`material-symbols-outlined text-lg shrink-0 transition-all duration-150 ${
           isActive
-            ? 'text-primary'
+            ? 'text-emerald-400'
             : 'text-white/25 group-hover:text-white/60 group-hover:scale-110'
         }`}
       >
@@ -120,7 +120,7 @@ function NavItemLink({ item, onClose, collapsed }: { item: NavItem; onClose: () 
         <span className="flex-1 truncate text-sm font-medium">{item.label}</span>
       )}
       {!collapsed && item.badge && (
-        <span className="px-1.5 py-0.5 text-[10px] font-semibold rounded-full bg-primary/20 text-primary">
+        <span className="px-1.5 py-0.5 text-[10px] font-semibold rounded-full bg-emerald-500/20 text-emerald-400">
           {item.badge}
         </span>
       )}
@@ -215,18 +215,16 @@ function SearchOverlay({
   );
 }
 
-function Sidebar({
-  open,
-  onClose,
+function SidebarContent({
   collapsed,
   onToggleCollapse,
   isDesktop,
+  onClose,
 }: {
-  open: boolean;
-  onClose: () => void;
   collapsed: boolean;
   onToggleCollapse: () => void;
   isDesktop: boolean;
+  onClose: () => void;
 }) {
   const [search, setSearch] = useState('');
   const [expandedSections, setExpandedSections] = useState<Record<string, boolean>>(() => {
@@ -236,39 +234,12 @@ function Sidebar({
   });
   const user = useAuthStore((s) => s.user);
   const closeButtonRef = useRef<HTMLButtonElement>(null);
-  const sidebarRef = useRef<HTMLElement>(null);
 
   useEffect(() => {
-    if (open && !isDesktop) {
+    if (!isDesktop) {
       closeButtonRef.current?.focus();
     }
-  }, [open, isDesktop]);
-
-  useEffect(() => {
-    if (!open) return;
-    const handleKey = (e: KeyboardEvent) => {
-      if (e.key === 'Escape') {
-        onClose();
-        return;
-      }
-      if (e.key !== 'Tab' || !sidebarRef.current || isDesktop) return;
-      const focusable = sidebarRef.current.querySelectorAll<HTMLElement>(
-        'a[href], button:not([disabled]), textarea, input, select, [tabindex]:not([tabindex="-1"])'
-      );
-      if (focusable.length === 0) return;
-      const first = focusable[0];
-      const last = focusable[focusable.length - 1];
-      if (e.shiftKey && document.activeElement === first) {
-        e.preventDefault();
-        last.focus();
-      } else if (!e.shiftKey && document.activeElement === last) {
-        e.preventDefault();
-        first.focus();
-      }
-    };
-    document.addEventListener('keydown', handleKey);
-    return () => document.removeEventListener('keydown', handleKey);
-  }, [open, isDesktop, onClose]);
+  }, [isDesktop]);
 
   const toggleSection = useCallback((title: string) => {
     setExpandedSections((prev) => ({ ...prev, [title]: !prev[title] }));
@@ -286,17 +257,17 @@ function Sidebar({
       .filter((s) => s.items.length > 0);
   }, [search, collapsed]);
 
-  const sidebar = (
+  return (
     <div className="flex flex-col h-full relative">
-      <div className="absolute top-0 left-0 right-0 h-0.5 bg-linear-to-r from-primary via-primary/50 to-transparent" />
+      <div className="absolute top-0 left-0 right-0 h-0.5 bg-linear-to-r from-emerald-400 via-emerald-500/50 to-transparent" />
 
       <div className="flex items-center h-16 shrink-0 border-b border-white/5 px-4">
-        <Link href="/seller/dashboard" className="flex items-center gap-3 min-w-0">
-          <div className="w-9 h-9 rounded-xl bg-linear-to-br from-primary to-primary/60 flex items-center justify-center shadow-lg shadow-primary/20 shrink-0">
-            <span className="material-symbols-outlined text-white text-xl">storefront</span>
+        <Link href="/seller" className="flex items-center gap-3 min-w-0">
+          <div className="w-9 h-9 rounded-xl bg-linear-to-br from-emerald-400 to-emerald-600 flex items-center justify-center shadow-lg shadow-emerald-500/20 shrink-0">
+            <span className="material-symbols-outlined text-white text-xl">store</span>
           </div>
           {!collapsed && (
-            <span className="text-base font-bold text-white tracking-tight truncate">Seller Center</span>
+            <span className="text-base font-bold text-white tracking-tight truncate">My Store</span>
           )}
         </Link>
         {!isDesktop && (
@@ -336,7 +307,7 @@ function Sidebar({
               value={search}
               onChange={(e) => setSearch(e.target.value)}
               placeholder="Search menu..."
-              className="w-full bg-white/5 border border-white/8 rounded-lg pl-8 pr-3 py-2 text-xs text-white/60 placeholder:text-white/20 outline-none focus:border-primary/40 focus:bg-white/8 transition-all"
+              className="w-full bg-white/5 border border-white/8 rounded-lg pl-8 pr-3 py-2 text-xs text-white/60 placeholder:text-white/20 outline-none focus:border-emerald-500/40 focus:bg-white/8 transition-all"
             />
           </div>
         </div>
@@ -400,7 +371,7 @@ function Sidebar({
 
       <div className="border-t border-white/5 shrink-0">
         <div className={`flex items-center ${collapsed ? 'justify-center py-3' : 'gap-3 p-3'}`}>
-          <div className="w-8 h-8 rounded-full bg-linear-to-br from-primary to-primary/60 flex items-center justify-center text-white text-xs font-bold uppercase shadow-sm shrink-0">
+          <div className="w-8 h-8 rounded-full bg-linear-to-br from-emerald-400 to-emerald-600 flex items-center justify-center text-white text-xs font-bold uppercase shadow-sm shrink-0">
             {user?.name?.charAt(0) || 'S'}
           </div>
           {!collapsed && (
@@ -409,9 +380,7 @@ function Sidebar({
                 <p className="text-sm font-medium text-white/80 truncate leading-tight">
                   {user?.name || 'Seller'}
                 </p>
-                <p className="text-[10px] text-white/35 truncate tracking-wider uppercase">
-                  Seller
-                </p>
+                <p className="text-[10px] text-white/35 truncate tracking-wider uppercase">Seller</p>
               </div>
               <button
                 onClick={async () => {
@@ -428,41 +397,6 @@ function Sidebar({
         </div>
       </div>
     </div>
-  );
-
-  if (!isDesktop) {
-    return (
-      <>
-        {open && (
-          <div
-            className="fixed inset-0 bg-black/50 z-40 transition-opacity duration-300"
-            onClick={onClose}
-          />
-        )}
-        <aside
-          ref={sidebarRef}
-          role="dialog"
-          aria-modal="true"
-          aria-label="Seller navigation sidebar"
-          className={`fixed top-32 left-4 bottom-4 z-50 w-70 max-w-[85vw] bg-[#0f1219] text-white flex flex-col rounded-2xl shadow-2xl shadow-black/40 border border-white/5 transition-transform duration-300 ease-out ${
-            open ? 'translate-x-0' : '-translate-x-[calc(100%+32px)]'
-          }`}
-        >
-          {sidebar}
-        </aside>
-      </>
-    );
-  }
-
-  return (
-    <aside
-      ref={sidebarRef}
-      className={`fixed top-32 left-4 bottom-4 z-30 text-white flex flex-col rounded-2xl border border-white/[0.05] shadow-[0_8px_32px_-4px_rgba(0,0,0,0.12)] transition-all duration-300 ease-out overflow-hidden bg-[#0f1219] ${
-        collapsed ? 'w-[72px]' : 'w-60'
-      }`}
-    >
-      {sidebar}
-    </aside>
   );
 }
 
@@ -504,7 +438,7 @@ export default function SellerLayout({ children }: { children: React.ReactNode }
     if (!hydrated) return;
     if (pathname.startsWith('/seller/login')) return;
     if (!user) {
-      window.location.href = '/auth/login?redirect=' + encodeURIComponent(pathname);
+      window.location.href = '/seller/login';
     }
   }, [hydrated, user, pathname]);
 
@@ -525,21 +459,15 @@ export default function SellerLayout({ children }: { children: React.ReactNode }
     return () => window.removeEventListener('keydown', handleKey);
   }, []);
 
-  if (!hydrated) {
-    return (
-      <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-[#f0f2f6] to-[#e8ecf1]">
-        <span className="material-symbols-outlined animate-spin text-primary text-3xl">
-          progress_activity
-        </span>
-      </div>
-    );
+  if (!hydrated || pathname.startsWith('/seller/login')) {
+    return <>{children}</>;
   }
 
   if (!user) {
     return (
       <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-[#f0f2f6] to-[#e8ecf1]">
         <div className="text-center">
-          <span className="material-symbols-outlined animate-spin text-primary text-3xl">
+          <span className="material-symbols-outlined animate-spin text-emerald-500 text-3xl">
             progress_activity
           </span>
           <p className="text-sm text-[#888] mt-3">Verifying access...</p>
@@ -600,20 +528,17 @@ export default function SellerLayout({ children }: { children: React.ReactNode }
           </button>
 
           <Link
-            href="/seller/notifications"
+            href="/seller/settings"
             className="relative p-2 rounded-full hover:bg-slate-100 transition-colors shrink-0"
-            aria-label="Notifications"
+            aria-label="Settings"
           >
-            <span className="material-symbols-outlined text-slate-500 text-lg">notifications</span>
-            <span className="absolute top-1 right-1 w-4 h-4 bg-primary text-white text-[9px] font-bold rounded-full flex items-center justify-center shadow-sm">
-              3
-            </span>
+            <span className="material-symbols-outlined text-slate-500 text-lg">settings</span>
           </Link>
 
           <div className="flex items-center gap-2 pl-2 md:pl-3 border-l border-slate-200 shrink-0">
             <Link
               href="/seller/profile"
-              className="w-8 h-8 rounded-full bg-linear-to-br from-primary to-primary/60 flex items-center justify-center text-white text-xs font-bold uppercase shadow-sm shrink-0"
+              className="w-8 h-8 rounded-full bg-linear-to-br from-emerald-400 to-emerald-600 flex items-center justify-center text-white text-xs font-bold uppercase shadow-sm shrink-0"
             >
               {user?.name?.charAt(0) || 'S'}
             </Link>
@@ -636,27 +561,57 @@ export default function SellerLayout({ children }: { children: React.ReactNode }
         </div>
       </header>
 
-      {/* Sidebar (below header) */}
-      <Sidebar
-        open={sidebarOpen}
-        onClose={() => setSidebarOpen(false)}
-        collapsed={sidebarCollapsed}
-        onToggleCollapse={handleToggleCollapse}
-        isDesktop={isDesktop}
-      />
+      {/* Desktop: flex with sticky sidebar */}
+      {isDesktop ? (
+        <div className="flex px-4 pb-4 gap-6 items-start">
+          <aside
+            className={`sticky top-20 self-start text-white flex flex-col rounded-2xl border border-white/[0.05] shadow-[0_8px_32px_-4px_rgba(0,0,0,0.12)] bg-[#0f1219] transition-all duration-300 ease-out overflow-hidden ${
+              sidebarCollapsed ? 'w-[72px]' : 'w-60'
+            }`}
+            style={{ maxHeight: 'calc(100vh - 5.5rem)' }}
+          >
+            <SidebarContent
+              collapsed={sidebarCollapsed}
+              onToggleCollapse={handleToggleCollapse}
+              isDesktop={true}
+              onClose={() => {}}
+            />
+          </aside>
 
-      {/* Main content (below header) */}
-      <div
-        className={`transition-all duration-300 ease-out ${
-          isDesktop
-            ? sidebarCollapsed ? 'ml-[104px]' : 'ml-[272px]'
-            : 'ml-0'
-        }`}
-      >
-        <main className="p-4 lg:p-8 min-w-0">
-          <ErrorBoundary>{children}</ErrorBoundary>
-        </main>
-      </div>
+          <main className="flex-1 min-w-0 mt-6">
+            <ErrorBoundary>{children}</ErrorBoundary>
+          </main>
+        </div>
+      ) : (
+        <>
+          {/* Mobile: drawer sidebar */}
+          {sidebarOpen && (
+            <div
+              className="fixed inset-0 bg-black/50 z-40 transition-opacity duration-300"
+              onClick={() => setSidebarOpen(false)}
+            />
+          )}
+          <aside
+            role="dialog"
+            aria-modal="true"
+            aria-label="Seller navigation sidebar"
+            className={`fixed top-20 left-4 bottom-4 z-50 w-70 max-w-[85vw] bg-[#0f1219] text-white flex flex-col rounded-2xl shadow-2xl shadow-black/40 border border-white/5 transition-transform duration-300 ease-out ${
+              sidebarOpen ? 'translate-x-0' : '-translate-x-[calc(100%+32px)]'
+            }`}
+          >
+            <SidebarContent
+              collapsed={false}
+              onToggleCollapse={() => {}}
+              isDesktop={false}
+              onClose={() => setSidebarOpen(false)}
+            />
+          </aside>
+
+          <main className="p-4 min-w-0">
+            <ErrorBoundary>{children}</ErrorBoundary>
+          </main>
+        </>
+      )}
 
       {searchOpen && (
         <SearchOverlay
