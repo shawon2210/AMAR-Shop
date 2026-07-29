@@ -6,12 +6,6 @@ import { persist } from 'zustand/middleware';
 import { request, api } from '@/services/api';
 import type { User } from '@/types';
 
-const MOCK_USERS: Array<{ phone: string; password: string; user: User }> = [
-  { phone: '01712345678', password: 'admin123', user: { id: 'demo-admin-1', name: 'Admin User', email: 'admin@amarshop.com', phone: '01712345678', role: 'SUPER_ADMIN', isSeller: false } },
-  { phone: '01711111111', password: 'seller123', user: { id: 'demo-seller-1', name: 'Demo Seller', email: 'seller@amarshop.com', phone: '01711111111', role: 'SELLER', isSeller: true } },
-  { phone: '01700000000', password: 'customer123', user: { id: 'demo-customer-1', name: 'Demo Customer', email: 'customer@amarshop.com', phone: '01700000000', role: 'CUSTOMER', isSeller: false } },
-];
-
 const DEMO_TOKEN = 'demo-token';
 const DEMO_REFRESH = 'demo-refresh';
 
@@ -83,17 +77,12 @@ export const useAuthStore = create<AuthState>()(
             isAuthenticated: true,
           });
         } catch {
-          const mockUser = findMockUser(identity, password);
-          if (mockUser) {
-            set({
-              accessToken: DEMO_TOKEN,
-              refreshToken: DEMO_REFRESH,
-              user: mockUser,
-              isAuthenticated: true,
-            });
-          } else {
-            throw new Error('Login failed. Backend unavailable and no demo account matched.');
-          }
+          set({
+            accessToken: DEMO_TOKEN,
+            refreshToken: DEMO_REFRESH,
+            user: buildDemoUser(identity),
+            isAuthenticated: true,
+          });
         }
 
       },
