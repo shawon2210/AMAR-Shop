@@ -330,7 +330,7 @@ function SidebarContent({
   }, [search, collapsed]);
 
   return (
-    <div className="flex flex-col h-full relative">
+    <div className="flex flex-col flex-1 min-h-0 relative">
       <div className="absolute top-0 left-0 right-0 h-0.5 bg-linear-to-r from-primary via-primary/50 to-transparent" />
 
       <div className="flex items-center h-16 shrink-0 border-b border-white/5 px-4">
