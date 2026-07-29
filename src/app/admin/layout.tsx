@@ -642,10 +642,10 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
       {isDesktop ? (
         <div className="flex px-4 pb-4 gap-6 items-start">
           <aside
-            className={`sticky top-20 self-start text-white flex flex-col rounded-2xl border border-white/[0.05] shadow-[0_8px_32px_-4px_rgba(0,0,0,0.12)] bg-[#0f1219] transition-all duration-300 ease-out overflow-hidden ${
+            className={`sticky top-24 self-start text-white flex flex-col rounded-2xl border border-white/[0.05] shadow-[0_8px_32px_-4px_rgba(0,0,0,0.12)] bg-[#0f1219] transition-all duration-300 ease-out overflow-hidden ${
               sidebarCollapsed ? 'w-[72px]' : 'w-60'
             }`}
-            style={{ maxHeight: 'calc(100vh - 5.5rem)' }}
+            style={{ maxHeight: 'calc(100vh - 7rem)' }}
           >
             <SidebarContent
               collapsed={sidebarCollapsed}
@@ -672,13 +672,15 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
             role="dialog"
             aria-modal="true"
             aria-label="Admin navigation sidebar"
-            className={`fixed top-20 left-4 bottom-4 z-50 w-70 max-w-[85vw] bg-[#0f1219] text-white flex flex-col rounded-2xl shadow-2xl shadow-black/40 border border-white/5 transition-transform duration-300 ease-out ${
+            className={`fixed top-24 left-4 bottom-4 z-50 bg-[#0f1219] text-white flex flex-col rounded-2xl shadow-2xl shadow-black/40 border border-white/5 transition-all duration-300 ease-out ${
+              sidebarCollapsed ? 'w-[72px]' : 'w-70 max-w-[85vw]'
+            } ${
               sidebarOpen ? 'translate-x-0' : '-translate-x-[calc(100%+32px)]'
             }`}
           >
             <SidebarContent
-              collapsed={false}
-              onToggleCollapse={() => {}}
+              collapsed={sidebarCollapsed}
+              onToggleCollapse={handleToggleCollapse}
               isDesktop={false}
               onClose={() => setSidebarOpen(false)}
             />
