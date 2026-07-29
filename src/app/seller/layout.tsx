@@ -311,7 +311,7 @@ function SidebarContent({
         </div>
       )}
 
-      <nav className="flex-1 overflow-y-auto py-2 space-y-1 hide-scrollbar">
+      <nav className="flex-1 overflow-y-auto py-2 space-y-1 sidebar-scrollbar">
         {collapsed ? (
           <div className="flex flex-col items-center gap-1 px-2 pt-2">
             {navSections.map((section) =>
