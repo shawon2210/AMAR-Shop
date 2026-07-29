@@ -282,8 +282,7 @@ function SidebarContent({
         )}
       </div>
 
-      {isDesktop && (
-        <button
+      <button
           onClick={onToggleCollapse}
           className={`absolute top-[22px] z-10 w-6 h-6 rounded-full bg-[#1a1f2e] border border-white/8 flex items-center justify-center text-white/40 hover:text-white hover:border-white/20 transition-all shadow-lg shadow-black/20 ${
             collapsed ? '-right-3' : 'right-3'
@@ -294,7 +293,6 @@ function SidebarContent({
             {collapsed ? 'chevron_right' : 'chevron_left'}
           </span>
         </button>
-      )}
 
       {!collapsed && (
         <div className="px-3 pt-3 pb-1 shrink-0">
@@ -595,13 +593,15 @@ export default function SellerLayout({ children }: { children: React.ReactNode }
             role="dialog"
             aria-modal="true"
             aria-label="Seller navigation sidebar"
-            className={`fixed top-20 left-4 bottom-4 z-50 w-70 max-w-[85vw] bg-[#0f1219] text-white flex flex-col rounded-2xl shadow-2xl shadow-black/40 border border-white/5 transition-transform duration-300 ease-out ${
+            className={`fixed top-24 left-4 bottom-4 z-50 bg-[#0f1219] text-white flex flex-col rounded-2xl shadow-2xl shadow-black/40 border border-white/5 transition-all duration-300 ease-out ${
+              sidebarCollapsed ? 'w-[72px]' : 'w-70 max-w-[85vw]'
+            } ${
               sidebarOpen ? 'translate-x-0' : '-translate-x-[calc(100%+32px)]'
             }`}
           >
             <SidebarContent
-              collapsed={false}
-              onToggleCollapse={() => {}}
+              collapsed={sidebarCollapsed}
+              onToggleCollapse={handleToggleCollapse}
               isDesktop={false}
               onClose={() => setSidebarOpen(false)}
             />
