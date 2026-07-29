@@ -444,7 +444,7 @@ function Sidebar({
           role="dialog"
           aria-modal="true"
           aria-label="Seller navigation sidebar"
-          className={`fixed top-24 left-4 bottom-4 z-50 w-70 max-w-[85vw] bg-[#0f1219] text-white flex flex-col rounded-2xl shadow-2xl shadow-black/40 border border-white/5 transition-transform duration-300 ease-out ${
+          className={`fixed top-32 left-4 bottom-4 z-50 w-70 max-w-[85vw] bg-[#0f1219] text-white flex flex-col rounded-2xl shadow-2xl shadow-black/40 border border-white/5 transition-transform duration-300 ease-out ${
             open ? 'translate-x-0' : '-translate-x-[calc(100%+32px)]'
           }`}
         >
@@ -457,7 +457,7 @@ function Sidebar({
   return (
     <aside
       ref={sidebarRef}
-      className={`fixed top-24 left-4 bottom-4 z-30 text-white flex flex-col rounded-2xl border border-white/[0.05] shadow-[0_8px_32px_-4px_rgba(0,0,0,0.12)] transition-all duration-300 ease-out overflow-hidden bg-[#0f1219] ${
+      className={`fixed top-32 left-4 bottom-4 z-30 text-white flex flex-col rounded-2xl border border-white/[0.05] shadow-[0_8px_32px_-4px_rgba(0,0,0,0.12)] transition-all duration-300 ease-out overflow-hidden bg-[#0f1219] ${
         collapsed ? 'w-[72px]' : 'w-60'
       }`}
     >
