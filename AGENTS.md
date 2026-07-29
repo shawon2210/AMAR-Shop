@@ -252,4 +252,35 @@ Replaced `fixed` sidebar with `sticky` inside a flex container:
 |---|---|
 | `src/app/admin/layout.tsx` | Desktop sidebar: `fixed top-32` → `sticky top-20 self-start` inside flex; removed spacer |
 | `src/app/seller/layout.tsx` | Same structural changes |
+
+---
+
+## Session 2026-07-30 (second pass) — Header height enhanced + mobile collapse toggle
+
+### What was done
+
+- **Header**: `h-16` (64px) → `h-18` (72px) with `bg-white/80`, `shadow-sm shadow-black/5`, `gap-4` on both admin and seller layouts
+- **Desktop sidebar**: `sticky top-20` → `sticky top-24`; `maxHeight: calc(100vh - 7rem)` (recalculated for taller header)
+- **Mobile sidebar**: `fixed top-20` → `fixed top-24` to match new header bottom
+- **Mobile collapse toggle**: Removed `{isDesktop &&}` guard from the collapse button — now available on both desktop *and* mobile. Mobile sidebar can expand/collapse between icon-only (`w-[72px]`) and full (`w-70 max-w-[85vw]`) modes.
+- **Mobile responsive width**: `transition-all` (was `transition-transform` only) so width change animates smoothly; width class switches based on `sidebarCollapsed` state
+- **Both admin and seller** updated identically
+
+### Files changed
+
+| File | Change |
+|---|---|
+| `src/app/admin/layout.tsx` | Header `h-16`→`h-18`; sidebar `top-20`→`top-24`; mobile collapse toggle + responsive width |
+| `src/app/seller/layout.tsx` | Same |
+
+### Summary of current layout
+
+| Property | Desktop | Mobile |
+|---|---|---|
+| Header height | `h-18` (72px) | `h-18` (72px) |
+| Sidebar positioning | `sticky top-24` in flex | `fixed top-24 left-4 bottom-4` |
+| Sidebar width (expanded) | `w-60` (240px) | `w-70 max-w-[85vw]` |
+| Sidebar width (collapsed) | `w-[72px]` | `w-[72px]` |
+| Max height | `calc(100vh - 7rem)` | `calc(100vh - 7rem)` (via bottom-4) |
+| Collapse toggle | Yes | Yes (new) |
 <!-- END:session-summary -->
