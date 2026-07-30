@@ -29,8 +29,8 @@ export function MobileSidebar({ open, onClose }: { open: boolean; onClose: () =>
 
   // Close on route change
   useEffect(() => {
-    if (open) onClose();
-  }, [open, onClose, pathname]);
+    onClose();
+  }, [pathname, onClose]);
 
   // Body scroll lock + focus trap
   useEffect(() => {
