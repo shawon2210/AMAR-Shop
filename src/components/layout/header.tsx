@@ -95,7 +95,7 @@ export function Header() {
           <div className="flex items-center gap-0.5 shrink-0">
             <button
               onClick={() => setSidebarOpen(true)}
-              className="lg:hidden flex items-center justify-center w-11 h-11 rounded-xl text-gray-600 hover:bg-gray-100 transition-colors duration-150"
+              className="md:hidden flex items-center justify-center w-11 h-11 rounded-xl text-gray-600 hover:bg-gray-100 transition-colors duration-150"
               aria-label="Open menu"
             >
               <span className="material-symbols-outlined text-[22px]">menu</span>
