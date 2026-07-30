@@ -26,11 +26,13 @@ export function MobileSidebar({ open, onClose }: { open: boolean; onClose: () =>
   const showAuth = hydrated;
   const drawerRef = useRef<HTMLDivElement>(null);
   const previousFocusRef = useRef<HTMLElement | null>(null);
+  const onCloseRef = useRef(onClose);
+  onCloseRef.current = onClose;
 
   // Close on route change
   useEffect(() => {
-    onClose();
-  }, [pathname, onClose]);
+    onCloseRef.current();
+  }, [pathname]);
 
   // Body scroll lock + focus trap
   useEffect(() => {
