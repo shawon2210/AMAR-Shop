@@ -505,6 +505,25 @@
   padding-top: env(safe-area-inset-top, 0px);
 }
 
+.safe-left {
+  padding-left: env(safe-area-inset-left, 0px);
+}
+
+.safe-right {
+  padding-right: env(safe-area-inset-right, 0px);
+}
+
+/* ───── Z-Index Hierarchy (single source of truth) ───── */
+:root {
+  --z-header: 50;
+  --z-bottom-nav: 50;
+  --z-search-overlay: 60;
+  --z-sidebar-overlay: 80;
+  --z-sidebar: 90;
+  --z-skip-link: 9999;
+  --z-toast: 100;
+}
+
 /* ───── Responsive Typography ───── */
 .text-responsive-heading {
   font-size: clamp(20px, 3.5vw, 44px);

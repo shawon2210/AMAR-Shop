@@ -2,9 +2,12 @@
 
 import { useState, useMemo, useEffect, useCallback, useRef } from 'react';
 import Link from 'next/link';
-import { usePathname, useRouter } from 'next/navigation';
+import { usePathname } from 'next/navigation';
 import { useAuthStore, useAuthHydrated } from '@/stores/auth-store';
 import { ErrorBoundary } from '@/components/ui/error-boundary';
+import { useFocusTrap } from '@/components/layout/header/hooks/use-focus-trap';
+import { useBodyLock } from '@/components/layout/header/hooks/use-body-lock';
+import { AdminSearchOverlay } from '@/components/layout/header/search/AdminSearchOverlay';
 
 interface NavItem {
   label: string;
@@ -200,92 +203,7 @@ function NavItemLink({ item, onClose, collapsed }: { item: NavItem; onClose: () 
   );
 }
 
-function SearchOverlay({
-  query,
-  setQuery,
-  onClose,
-}: {
-  query: string;
-  setQuery: (v: string) => void;
-  onClose: () => void;
-}) {
-  const router = useRouter();
-  const prevFocusRef = useRef<HTMLElement | null>(null);
-  const inputRef = useRef<HTMLInputElement>(null);
 
-  const results = useMemo(() => {
-    if (!query.trim()) return [];
-    const q = query.toLowerCase();
-    return allNavItems.filter((i) => i.label.toLowerCase().includes(q));
-  }, [query]);
-
-  useEffect(() => {
-    const handleKey = (e: KeyboardEvent) => {
-      if (e.key === 'Escape') onClose();
-    };
-    window.addEventListener('keydown', handleKey);
-    return () => window.removeEventListener('keydown', handleKey);
-  }, [onClose]);
-
-  useEffect(() => {
-    prevFocusRef.current = document.activeElement as HTMLElement;
-    document.body.style.overflow = 'hidden';
-    setTimeout(() => inputRef.current?.focus(), 50);
-    return () => {
-      document.body.style.overflow = '';
-      prevFocusRef.current?.focus();
-    };
-  }, []);
-
-  return (
-    <div className="fixed inset-0 z-[60] bg-black/40 backdrop-blur-sm" onClick={onClose} role="dialog" aria-modal="true" aria-label="Search">
-      <div
-        className="absolute top-0 sm:top-18 left-0 right-0 sm:left-1/2 sm:-translate-x-1/2 sm:w-full sm:max-w-lg bg-white sm:rounded-2xl shadow-2xl sm:border sm:border-[#eee] overflow-hidden min-h-50 sm:min-h-0"
-        onClick={(e) => e.stopPropagation()}
-      >
-        <div className="flex items-center gap-3 p-4 border-b border-[#eee]">
-          <span className="material-symbols-outlined text-[#888] text-[20px]">search</span>
-          <input
-            ref={inputRef}
-            type="text"
-            value={query}
-            onChange={(e) => setQuery(e.target.value)}
-            placeholder="Search anything..."
-            autoFocus
-            className="flex-1 bg-transparent border-none outline-none text-sm text-[#333] placeholder:text-[#aaa]"
-          />
-          <kbd className="hidden sm:inline-flex text-[10px] bg-[#f5f5f5] px-1.5 py-0.5 rounded text-[#888] font-mono">
-            ESC
-          </kbd>
-        </div>
-        <div className="max-h-80 overflow-y-auto">
-          {results.length === 0 && query.trim() ? (
-            <p className="p-6 text-center text-sm text-[#888]">No results found</p>
-          ) : (
-            results.map((item) => (
-              <button
-                key={item.href}
-                onClick={() => {
-                  router.push(item.href);
-                  onClose();
-                }}
-                className="w-full flex items-center gap-3 px-4 py-3 hover:bg-[#fafafa] transition-colors text-left border-b border-[#f5f5f5] last:border-0"
-              >
-                <span className="material-symbols-outlined text-[18px] text-[#888]">
-                  {item.icon}
-                </span>
-                <div>
-                  <p className="text-sm font-medium text-[#333]">{item.label}</p>
-                  <p className="text-[10px] text-[#aaa]">{item.section}</p>
-                </div>
-              </button>
-            ))
-          )}
-        </div>
-      </div>
-    </div>
-  );
-}
 
 function SidebarContent({
   collapsed,
@@ -497,16 +415,19 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
     return false;
   });
   const [searchOpen, setSearchOpen] = useState(false);
-  const [searchQuery, setSearchQuery] = useState('');
-  const [isDesktop, setIsDesktop] = useState(() => typeof window !== 'undefined' && window.innerWidth >= 1024);
+  const [isDesktop, setIsDesktop] = useState(false);
   const hamburgerRef = useRef<HTMLButtonElement>(null);
+  const mobileDrawerRef = useRef<HTMLDivElement>(null);
+
+  useFocusTrap(mobileDrawerRef, sidebarOpen && !isDesktop);
+  useBodyLock(sidebarOpen && !isDesktop);
 
   useEffect(() => {
-    const handleResize = () => {
-      setIsDesktop(window.innerWidth >= 1024);
-    };
-    window.addEventListener('resize', handleResize);
-    return () => window.removeEventListener('resize', handleResize);
+    const mql = window.matchMedia('(min-width: 1024px)');
+    const update = () => setIsDesktop(mql.matches);
+    update();
+    mql.addEventListener('change', update);
+    return () => mql.removeEventListener('change', update);
   }, []);
 
   const handleToggleCollapse = useCallback(() => {
@@ -675,19 +596,23 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
           {/* Mobile: drawer sidebar */}
           {sidebarOpen && (
             <div
-              className="fixed inset-0 bg-black/50 z-40 transition-opacity duration-300"
+              className="fixed inset-0 bg-black/50 transition-opacity duration-300"
+              style={{ zIndex: 'var(--z-sidebar-overlay, 80)' }}
               onClick={() => setSidebarOpen(false)}
             />
           )}
           <aside
+            ref={mobileDrawerRef}
             role="dialog"
             aria-modal="true"
             aria-label="Admin navigation sidebar"
-            className={`fixed top-24 left-4 bottom-4 z-50 bg-[#0f1219] text-white flex flex-col rounded-2xl shadow-2xl shadow-black/40 border border-white/5 transition-all duration-300 ease-out ${
+            tabIndex={-1}
+            className={`fixed top-24 left-4 bottom-4 bg-[#0f1219] text-white flex flex-col rounded-2xl shadow-2xl shadow-black/40 border border-white/5 transition-all duration-300 ease-out ${
               sidebarCollapsed ? 'w-[72px]' : 'w-70 max-w-[85vw]'
             } ${
               sidebarOpen ? 'translate-x-0' : '-translate-x-[calc(100%+32px)]'
             }`}
+            style={{ zIndex: 'var(--z-sidebar, 90)' }}
           >
             <SidebarContent
               collapsed={sidebarCollapsed}
@@ -704,9 +629,8 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
       )}
 
       {searchOpen && (
-        <SearchOverlay
-          query={searchQuery}
-          setQuery={setSearchQuery}
+        <AdminSearchOverlay
+          allNavItems={allNavItems}
           onClose={() => setSearchOpen(false)}
         />
       )}
