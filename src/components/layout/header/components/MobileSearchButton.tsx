@@ -8,7 +8,7 @@ export function MobileSearchButton() {
   return (
     <button
       onClick={() => setIsSearchOpen(true)}
-      className="flex md:hidden items-center w-full max-w-[260px] h-10 px-3 rounded-full border-2 border-gray-200 bg-white text-sm text-gray-400 hover:border-gray-300 hover:bg-gray-50 transition-all duration-200 text-left gap-2"
+      className="md:hidden flex items-center w-full h-11 px-3 rounded-full border-2 border-gray-200 bg-white text-sm text-gray-400 hover:border-gray-300 hover:bg-gray-50 transition-all duration-200 text-left gap-2 min-w-[120px]"
       aria-label="Search"
     >
       <span className="material-symbols-outlined text-[18px] text-gray-400 shrink-0">search</span>

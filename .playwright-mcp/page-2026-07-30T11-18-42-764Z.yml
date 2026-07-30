@@ -1,0 +1,941 @@
+- generic [active] [ref=f3e1]:
+  - link "Skip to main content" [ref=f3e2] [cursor=pointer]:
+    - /url: "#main-content"
+  - generic [ref=f3e3]:
+    - banner [ref=f3e4]:
+      - generic [ref=f3e6]:
+        - generic [ref=f3e7]:
+          - button "Open menu" [ref=f3e8]:
+            - generic [ref=f3e9]: menu
+          - link [ref=f3e10] [cursor=pointer]:
+            - /url: /
+            - img "AmarShop" [ref=f3e11]
+        - generic [ref=f3e12]:
+          - button "Search" [ref=f3e13]:
+            - generic [ref=f3e14]: search
+          - link "Shopping cart" [ref=f3e15] [cursor=pointer]:
+            - /url: /cart
+            - generic [ref=f3e16]: shopping_cart
+          - link "Admin dashboard" [ref=f3e17] [cursor=pointer]:
+            - /url: /admin
+            - generic [ref=f3e18]: admin_panel_settings
+    - main [ref=f3e19]:
+      - generic [ref=f3e20]:
+        - generic [ref=f3e22]:
+          - generic [ref=f3e23]:
+            - generic [ref=f3e25]:
+              - generic [ref=f3e29]:
+                - generic [ref=f3e30]: Flash Sale
+                - heading "Shop Smart, Live Better" [level=2] [ref=f3e31]
+                - paragraph [ref=f3e32]: Fast delivery across Bangladesh.
+                - link "Shop Now" [ref=f3e33] [cursor=pointer]:
+                  - /url: /categories
+              - generic [ref=f3e39]:
+                - generic [ref=f3e40]: Eid Specials
+                - heading [level=2] [ref=f3e41]: Huge Savings Await
+                - paragraph [ref=f3e42]: Up to 50% off fashion & electronics.
+                - link [ref=f3e43] [cursor=pointer]:
+                  - /url: /flash-sale
+                  - text: Explore Deals
+              - generic [ref=f3e49]:
+                - generic [ref=f3e50]: Summer Sale
+                - heading [level=2] [ref=f3e51]: Up to 70% Off
+                - paragraph [ref=f3e52]: Limited time. Free shipping included.
+                - link [ref=f3e53] [cursor=pointer]:
+                  - /url: /flash-sale
+                  - text: Shop Now
+              - generic [ref=f3e59]:
+                - generic [ref=f3e60]: Tech Fest
+                - heading [level=2] [ref=f3e61]: Latest Gadgets
+                - paragraph [ref=f3e62]: Free shipping on all tech.
+                - link [ref=f3e63] [cursor=pointer]:
+                  - /url: /category/electronics
+                  - text: Explore
+              - button "Previous slide" [ref=f3e66]
+              - button "Next slide" [ref=f3e69]
+              - generic [ref=f3e72]:
+                - button "Slide 1" [ref=f3e73]
+                - button "Slide 2" [ref=f3e75]
+                - button "Slide 3" [ref=f3e76]
+                - button "Slide 4" [ref=f3e77]
+              - generic [ref=f3e78]: 01 / 04
+            - generic [ref=f3e79]:
+              - link "flash_on Flash Sale Up to 70% off today" [ref=f3e80] [cursor=pointer]:
+                - /url: /flash-sale
+                - generic [ref=f3e81]: flash_on
+                - generic [ref=f3e83]:
+                  - paragraph [ref=f3e84]: Flash Sale
+                  - paragraph [ref=f3e85]: Up to 70% off today
+              - link "local_shipping Free Delivery On orders over ৳999" [ref=f3e86] [cursor=pointer]:
+                - /url: "#"
+                - generic [ref=f3e87]: local_shipping
+                - generic [ref=f3e89]:
+                  - paragraph [ref=f3e90]: Free Delivery
+                  - paragraph [ref=f3e91]: On orders over ৳999
+              - link "new_releases New Arrivals Fresh styles every day" [ref=f3e92] [cursor=pointer]:
+                - /url: /categories
+                - generic [ref=f3e93]: new_releases
+                - generic [ref=f3e95]:
+                  - paragraph [ref=f3e96]: New Arrivals
+                  - paragraph [ref=f3e97]: Fresh styles every day
+              - link "storefront Sell on AmarShop Zero listing fees" [ref=f3e98] [cursor=pointer]:
+                - /url: /seller/dashboard
+                - generic [ref=f3e99]: storefront
+                - generic [ref=f3e101]:
+                  - paragraph [ref=f3e102]: Sell on AmarShop
+                  - paragraph [ref=f3e103]: Zero listing fees
+          - generic [ref=f3e105]:
+            - link "Electronics" [ref=f3e106] [cursor=pointer]:
+              - /url: /categories
+            - link "Fashion" [ref=f3e107] [cursor=pointer]:
+              - /url: /categories
+            - link "Beauty" [ref=f3e108] [cursor=pointer]:
+              - /url: /categories
+            - link "Groceries" [ref=f3e109] [cursor=pointer]:
+              - /url: /categories
+            - link "Home" [ref=f3e110] [cursor=pointer]:
+              - /url: /categories
+            - link "Sports" [ref=f3e111] [cursor=pointer]:
+              - /url: /categories
+            - link "🔥 Flash Sale" [ref=f3e112] [cursor=pointer]:
+              - /url: /categories
+            - link "New Arrivals" [ref=f3e113] [cursor=pointer]:
+              - /url: /categories
+        - generic [ref=f3e115]:
+          - generic [ref=f3e116]: 4.8 Average Rating
+          - generic [ref=f3e120]: Nationwide Delivery
+          - generic [ref=f3e127]: Secure Payment
+          - generic [ref=f3e132]: Easy Returns
+          - generic [ref=f3e137]: Verified Sellers
+          - generic [ref=f3e142]: Free Delivery
+        - generic [ref=f3e154]:
+          - generic [ref=f3e155]:
+            - generic [ref=f3e156]:
+              - heading "Flash Sale" [level=2] [ref=f3e161]
+              - generic [ref=f3e162]:
+                - generic [ref=f3e163]:
+                  - generic [ref=f3e164]: "00"
+                  - generic [ref=f3e165]: hrs
+                - generic [ref=f3e166]: ":"
+                - generic [ref=f3e167]:
+                  - generic [ref=f3e168]: "00"
+                  - generic [ref=f3e169]: min
+                - generic [ref=f3e170]: ":"
+                - generic [ref=f3e171]:
+                  - generic [ref=f3e172]: "00"
+                  - generic [ref=f3e173]: sec
+            - link "See All" [ref=f3e174] [cursor=pointer]:
+              - /url: /flash-sale
+          - generic [ref=f3e177]:
+            - generic [ref=f3e178]: flash_on
+            - paragraph [ref=f3e179]: No flash sales right now. Check back soon!
+        - generic [ref=f3e182]:
+          - generic [ref=f3e183]:
+            - heading "Shop by Category" [level=2] [ref=f3e184]
+            - link "View All chevron_right" [ref=f3e185] [cursor=pointer]:
+              - /url: /categories
+              - text: View All
+              - generic [ref=f3e186]: chevron_right
+          - generic [ref=f3e187]:
+            - link "checkroom Fashion 12k+" [ref=f3e188] [cursor=pointer]:
+              - /url: /category/fashion
+              - generic [ref=f3e189]: checkroom
+              - generic [ref=f3e191]:
+                - paragraph [ref=f3e192]: Fashion
+                - generic [ref=f3e193]: 12k+
+            - link "devices Electronics 8.9k" [ref=f3e194] [cursor=pointer]:
+              - /url: /category/electronics
+              - generic [ref=f3e195]: devices
+              - generic [ref=f3e197]:
+                - paragraph [ref=f3e198]: Electronics
+                - generic [ref=f3e199]: 8.9k
+            - link "shopping_basket Groceries 15k+" [ref=f3e200] [cursor=pointer]:
+              - /url: /category/groceries
+              - generic [ref=f3e201]: shopping_basket
+              - generic [ref=f3e203]:
+                - paragraph [ref=f3e204]: Groceries
+                - generic [ref=f3e205]: 15k+
+            - link "chair Home & Living 6.8k" [ref=f3e206] [cursor=pointer]:
+              - /url: /category/home
+              - generic [ref=f3e207]: chair
+              - generic [ref=f3e209]:
+                - paragraph [ref=f3e210]: Home & Living
+                - generic [ref=f3e211]: 6.8k
+            - link "spa Beauty 4.5k" [ref=f3e212] [cursor=pointer]:
+              - /url: /category/beauty
+              - generic [ref=f3e213]: spa
+              - generic [ref=f3e215]:
+                - paragraph [ref=f3e216]: Beauty
+                - generic [ref=f3e217]: 4.5k
+            - link "sports_esports Toys & Games 3.2k" [ref=f3e218] [cursor=pointer]:
+              - /url: /category/toys
+              - generic [ref=f3e219]: sports_esports
+              - generic [ref=f3e221]:
+                - paragraph [ref=f3e222]: Toys & Games
+                - generic [ref=f3e223]: 3.2k
+            - link "fitness_center Sports 2.9k" [ref=f3e224] [cursor=pointer]:
+              - /url: /category/sports
+              - generic [ref=f3e225]: fitness_center
+              - generic [ref=f3e227]:
+                - paragraph [ref=f3e228]: Sports
+                - generic [ref=f3e229]: 2.9k
+            - link "stadia_controller Gaming 5.6k" [ref=f3e230] [cursor=pointer]:
+              - /url: /category/gaming
+              - generic [ref=f3e231]: stadia_controller
+              - generic [ref=f3e233]:
+                - paragraph [ref=f3e234]: Gaming
+                - generic [ref=f3e235]: 5.6k
+            - link "kitchen Appliances 4.3k" [ref=f3e236] [cursor=pointer]:
+              - /url: /category/appliances
+              - generic [ref=f3e237]: kitchen
+              - generic [ref=f3e239]:
+                - paragraph [ref=f3e240]: Appliances
+                - generic [ref=f3e241]: 4.3k
+            - link "menu_book Books 7.2k" [ref=f3e242] [cursor=pointer]:
+              - /url: /category/books-stationery
+              - generic [ref=f3e243]: menu_book
+              - generic [ref=f3e245]:
+                - paragraph [ref=f3e246]: Books
+                - generic [ref=f3e247]: 7.2k
+            - link "directions_car Automotive 2.1k" [ref=f3e248] [cursor=pointer]:
+              - /url: /category/automotive
+              - generic [ref=f3e249]: directions_car
+              - generic [ref=f3e251]:
+                - paragraph [ref=f3e252]: Automotive
+                - generic [ref=f3e253]: 2.1k
+            - link "grid_view More 10.0k" [ref=f3e254] [cursor=pointer]:
+              - /url: /category/more
+              - generic [ref=f3e255]: grid_view
+              - generic [ref=f3e257]:
+                - paragraph [ref=f3e258]: More
+                - generic [ref=f3e259]: 10.0k
+        - generic [ref=f3e261]:
+          - generic [ref=f3e262]:
+            - heading "Trending Now" [level=2] [ref=f3e265]
+            - link "See All" [ref=f3e266] [cursor=pointer]:
+              - /url: /categories
+          - generic [ref=f3e269]:
+            - link "iPhone 16 Pro Max -6% NEW Add to wishlist Official Store iPhone 16 Pro Max star star star star star (1.2k) ৳159,999 ৳169,999 Save ৳10,000 shopping_bag Add to Cart" [ref=f3e270] [cursor=pointer]:
+              - /url: /product/prod_1
+              - generic [ref=f3e271]:
+                - img "iPhone 16 Pro Max" [ref=f3e272]
+                - generic [ref=f3e273]:
+                  - generic [ref=f3e274]: "-6%"
+                  - generic [ref=f3e275]: NEW
+                - button "Add to wishlist" [ref=f3e276]:
+                  - generic [ref=f3e277]: favorite
+              - generic [ref=f3e278]:
+                - generic [ref=f3e279]: Official Store
+                - heading "iPhone 16 Pro Max" [level=3] [ref=f3e286]
+                - generic [ref=f3e287]:
+                  - generic [ref=f3e288]:
+                    - generic [ref=f3e289]: star
+                    - generic [ref=f3e290]: star
+                    - generic [ref=f3e291]: star
+                    - generic [ref=f3e292]: star
+                    - generic [ref=f3e293]: star
+                  - generic [ref=f3e294]: (1.2k)
+                - generic [ref=f3e295]:
+                  - generic [ref=f3e296]:
+                    - generic [ref=f3e297]: ৳159,999
+                    - generic [ref=f3e298]: ৳169,999
+                  - paragraph [ref=f3e299]: Save ৳10,000
+                - button "shopping_bag Add to Cart" [ref=f3e300]:
+                  - generic [ref=f3e301]: shopping_bag
+                  - text: Add to Cart
+            - link "Samsung Galaxy S25 Ultra -7% NEW Add to wishlist Official Store Samsung Galaxy S25 Ultra star star star star star (892) ৳139,999 ৳149,999 Save ৳10,000 shopping_bag Add to Cart" [ref=f3e302] [cursor=pointer]:
+              - /url: /product/prod_2
+              - generic [ref=f3e303]:
+                - img "Samsung Galaxy S25 Ultra" [ref=f3e304]
+                - generic [ref=f3e305]:
+                  - generic [ref=f3e306]: "-7%"
+                  - generic [ref=f3e307]: NEW
+                - button "Add to wishlist" [ref=f3e308]:
+                  - generic [ref=f3e309]: favorite
+              - generic [ref=f3e310]:
+                - generic [ref=f3e311]: Official Store
+                - heading "Samsung Galaxy S25 Ultra" [level=3] [ref=f3e318]
+                - generic [ref=f3e319]:
+                  - generic [ref=f3e320]:
+                    - generic [ref=f3e321]: star
+                    - generic [ref=f3e322]: star
+                    - generic [ref=f3e323]: star
+                    - generic [ref=f3e324]: star
+                    - generic [ref=f3e325]: star
+                  - generic [ref=f3e326]: (892)
+                - generic [ref=f3e327]:
+                  - generic [ref=f3e328]:
+                    - generic [ref=f3e329]: ৳139,999
+                    - generic [ref=f3e330]: ৳149,999
+                  - paragraph [ref=f3e331]: Save ৳10,000
+                - button "shopping_bag Add to Cart" [ref=f3e332]:
+                  - generic [ref=f3e333]: shopping_bag
+                  - text: Add to Cart
+            - link "MacBook Air M4 -6% NEW Add to wishlist Official Store MacBook Air M4 star star star star star (654) ৳145,000 ৳155,000 Save ৳10,000 shopping_bag Add to Cart" [ref=f3e334] [cursor=pointer]:
+              - /url: /product/prod_3
+              - generic [ref=f3e335]:
+                - img "MacBook Air M4" [ref=f3e336]
+                - generic [ref=f3e337]:
+                  - generic [ref=f3e338]: "-6%"
+                  - generic [ref=f3e339]: NEW
+                - button "Add to wishlist" [ref=f3e340]:
+                  - generic [ref=f3e341]: favorite
+              - generic [ref=f3e342]:
+                - generic [ref=f3e343]: Official Store
+                - heading "MacBook Air M4" [level=3] [ref=f3e350]
+                - generic [ref=f3e351]:
+                  - generic [ref=f3e352]:
+                    - generic [ref=f3e353]: star
+                    - generic [ref=f3e354]: star
+                    - generic [ref=f3e355]: star
+                    - generic [ref=f3e356]: star
+                    - generic [ref=f3e357]: star
+                  - generic [ref=f3e358]: (654)
+                - generic [ref=f3e359]:
+                  - generic [ref=f3e360]:
+                    - generic [ref=f3e361]: ৳145,000
+                    - generic [ref=f3e362]: ৳155,000
+                  - paragraph [ref=f3e363]: Save ৳10,000
+                - button "shopping_bag Add to Cart" [ref=f3e364]:
+                  - generic [ref=f3e365]: shopping_bag
+                  - text: Add to Cart
+            - link "Sony WH-1000XM6 Headphones -12% NEW Add to wishlist Sony Sony WH-1000XM6 Headphones star star star star star (423) ৳35,000 ৳39,999 Save ৳4,999 shopping_bag Add to Cart" [ref=f3e366] [cursor=pointer]:
+              - /url: /product/prod_4
+              - generic [ref=f3e367]:
+                - img "Sony WH-1000XM6 Headphones" [ref=f3e368]
+                - generic [ref=f3e369]:
+                  - generic [ref=f3e370]: "-12%"
+                  - generic [ref=f3e371]: NEW
+                - button "Add to wishlist" [ref=f3e372]:
+                  - generic [ref=f3e373]: favorite
+              - generic [ref=f3e374]:
+                - paragraph [ref=f3e376]: Sony
+                - heading "Sony WH-1000XM6 Headphones" [level=3] [ref=f3e377]
+                - generic [ref=f3e378]:
+                  - generic [ref=f3e379]:
+                    - generic [ref=f3e380]: star
+                    - generic [ref=f3e381]: star
+                    - generic [ref=f3e382]: star
+                    - generic [ref=f3e383]: star
+                    - generic [ref=f3e384]: star
+                  - generic [ref=f3e385]: (423)
+                - generic [ref=f3e386]:
+                  - generic [ref=f3e387]:
+                    - generic [ref=f3e388]: ৳35,000
+                    - generic [ref=f3e389]: ৳39,999
+                  - paragraph [ref=f3e390]: Save ৳4,999
+                - button "shopping_bag Add to Cart" [ref=f3e391]:
+                  - generic [ref=f3e392]: shopping_bag
+                  - text: Add to Cart
+            - link "Dell XPS 16 Laptop -5% Add to wishlist Dell Dell XPS 16 Laptop star star star star star (234) ৳189,000 ৳199,000 Save ৳10,000 shopping_bag Add to Cart" [ref=f3e393] [cursor=pointer]:
+              - /url: /product/prod_5
+              - generic [ref=f3e394]:
+                - img "Dell XPS 16 Laptop" [ref=f3e395]
+                - generic [ref=f3e396]: "-5%"
+                - button "Add to wishlist" [ref=f3e398]:
+                  - generic [ref=f3e399]: favorite
+              - generic [ref=f3e400]:
+                - paragraph [ref=f3e402]: Dell
+                - heading "Dell XPS 16 Laptop" [level=3] [ref=f3e403]
+                - generic [ref=f3e404]:
+                  - generic [ref=f3e405]:
+                    - generic [ref=f3e406]: star
+                    - generic [ref=f3e407]: star
+                    - generic [ref=f3e408]: star
+                    - generic [ref=f3e409]: star
+                    - generic [ref=f3e410]: star
+                  - generic [ref=f3e411]: (234)
+                - generic [ref=f3e412]:
+                  - generic [ref=f3e413]:
+                    - generic [ref=f3e414]: ৳189,000
+                    - generic [ref=f3e415]: ৳199,000
+                  - paragraph [ref=f3e416]: Save ৳10,000
+                - button "shopping_bag Add to Cart" [ref=f3e417]:
+                  - generic [ref=f3e418]: shopping_bag
+                  - text: Add to Cart
+            - link "Apple AirPods Pro 3 -14% NEW Add to wishlist Official Store Apple AirPods Pro 3 star star star star star (789) ৳29,999 ৳34,999 Save ৳5,000 shopping_bag Add to Cart" [ref=f3e419] [cursor=pointer]:
+              - /url: /product/prod_6
+              - generic [ref=f3e420]:
+                - img "Apple AirPods Pro 3" [ref=f3e421]
+                - generic [ref=f3e422]:
+                  - generic [ref=f3e423]: "-14%"
+                  - generic [ref=f3e424]: NEW
+                - button "Add to wishlist" [ref=f3e425]:
+                  - generic [ref=f3e426]: favorite
+              - generic [ref=f3e427]:
+                - generic [ref=f3e428]: Official Store
+                - heading "Apple AirPods Pro 3" [level=3] [ref=f3e435]
+                - generic [ref=f3e436]:
+                  - generic [ref=f3e437]:
+                    - generic [ref=f3e438]: star
+                    - generic [ref=f3e439]: star
+                    - generic [ref=f3e440]: star
+                    - generic [ref=f3e441]: star
+                    - generic [ref=f3e442]: star
+                  - generic [ref=f3e443]: (789)
+                - generic [ref=f3e444]:
+                  - generic [ref=f3e445]:
+                    - generic [ref=f3e446]: ৳29,999
+                    - generic [ref=f3e447]: ৳34,999
+                  - paragraph [ref=f3e448]: Save ৳5,000
+                - button "shopping_bag Add to Cart" [ref=f3e449]:
+                  - generic [ref=f3e450]: shopping_bag
+                  - text: Add to Cart
+            - link "Samsung Galaxy Watch 7 -10% NEW Add to wishlist Official Store Samsung Galaxy Watch 7 star star star star star (312) ৳45,000 ৳49,999 Save ৳4,999 shopping_bag Add to Cart" [ref=f3e451] [cursor=pointer]:
+              - /url: /product/prod_7
+              - generic [ref=f3e452]:
+                - img "Samsung Galaxy Watch 7" [ref=f3e453]
+                - generic [ref=f3e454]:
+                  - generic [ref=f3e455]: "-10%"
+                  - generic [ref=f3e456]: NEW
+                - button "Add to wishlist" [ref=f3e457]:
+                  - generic [ref=f3e458]: favorite
+              - generic [ref=f3e459]:
+                - generic [ref=f3e460]: Official Store
+                - heading "Samsung Galaxy Watch 7" [level=3] [ref=f3e467]
+                - generic [ref=f3e468]:
+                  - generic [ref=f3e469]:
+                    - generic [ref=f3e470]: star
+                    - generic [ref=f3e471]: star
+                    - generic [ref=f3e472]: star
+                    - generic [ref=f3e473]: star
+                    - generic [ref=f3e474]: star
+                  - generic [ref=f3e475]: (312)
+                - generic [ref=f3e476]:
+                  - generic [ref=f3e477]:
+                    - generic [ref=f3e478]: ৳45,000
+                    - generic [ref=f3e479]: ৳49,999
+                  - paragraph [ref=f3e480]: Save ৳4,999
+                - button "shopping_bag Add to Cart" [ref=f3e481]:
+                  - generic [ref=f3e482]: shopping_bag
+                  - text: Add to Cart
+        - generic [ref=f3e485]:
+          - generic [ref=f3e486]:
+            - generic [ref=f3e487]: verified
+            - generic [ref=f3e489]:
+              - heading "100% Authentic" [level=4] [ref=f3e491]
+              - paragraph [ref=f3e492]: Genuine products with brand warranty on every purchase
+              - generic [ref=f3e493]: Verified
+          - generic [ref=f3e494]:
+            - generic [ref=f3e495]: lock
+            - generic [ref=f3e497]:
+              - heading "Secure Payments" [level=4] [ref=f3e499]
+              - paragraph [ref=f3e500]: SSL encrypted. bKash, Nagad, cards & COD accepted
+              - generic [ref=f3e501]: SSL Secured
+          - generic [ref=f3e502]:
+            - generic [ref=f3e503]: local_shipping
+            - generic [ref=f3e505]:
+              - heading "Nationwide Delivery" [level=4] [ref=f3e507]
+              - paragraph [ref=f3e508]: Free shipping on orders over ৳999 across Bangladesh
+              - generic [ref=f3e509]: Free Shipping
+          - generic [ref=f3e510]:
+            - generic [ref=f3e511]: assignment_return
+            - generic [ref=f3e513]:
+              - heading "Easy Returns" [level=4] [ref=f3e515]
+              - paragraph [ref=f3e516]: 7-day hassle-free return policy, no questions asked
+              - generic [ref=f3e517]: 7-Day Policy
+        - generic [ref=f3e520]:
+          - generic [ref=f3e521]:
+            - heading "Top Brands" [level=2] [ref=f3e523]
+            - link "View All chevron_right" [ref=f3e524] [cursor=pointer]:
+              - /url: /categories
+              - text: View All
+              - generic [ref=f3e525]: chevron_right
+          - generic [ref=f3e527]:
+            - link "Samsung" [ref=f3e528] [cursor=pointer]:
+              - /url: /brand/samsung
+            - link "Apple" [ref=f3e534] [cursor=pointer]:
+              - /url: /brand/apple
+            - link "Xiaomi" [ref=f3e540] [cursor=pointer]:
+              - /url: /brand/xiaomi
+            - link "Walton" [ref=f3e561] [cursor=pointer]:
+              - /url: /brand/walton
+            - link "Asus" [ref=f3e567] [cursor=pointer]:
+              - /url: /brand/asus
+            - link "Lenovo" [ref=f3e573] [cursor=pointer]:
+              - /url: /brand/lenovo
+            - link "HP" [ref=f3e579] [cursor=pointer]:
+              - /url: /brand/hp
+            - link "Realme" [ref=f3e585] [cursor=pointer]:
+              - /url: /brand/realme
+            - link "Samsung" [ref=f3e591] [cursor=pointer]:
+              - /url: /brand/samsung
+            - link "Apple" [ref=f3e597] [cursor=pointer]:
+              - /url: /brand/apple
+            - link "Xiaomi" [ref=f3e603] [cursor=pointer]:
+              - /url: /brand/xiaomi
+            - link "Walton" [ref=f3e624] [cursor=pointer]:
+              - /url: /brand/walton
+            - link "Asus" [ref=f3e630] [cursor=pointer]:
+              - /url: /brand/asus
+            - link "Lenovo" [ref=f3e636] [cursor=pointer]:
+              - /url: /brand/lenovo
+            - link "HP" [ref=f3e642] [cursor=pointer]:
+              - /url: /brand/hp
+            - link "Realme" [ref=f3e648] [cursor=pointer]:
+              - /url: /brand/realme
+        - generic [ref=f3e658]:
+          - generic [ref=f3e659]: storefront
+          - generic [ref=f3e661]:
+            - heading "Start Selling on AmarShop" [level=3] [ref=f3e662]
+            - paragraph [ref=f3e663]: Reach millions of customers across Bangladesh. Zero listing fees.
+            - generic [ref=f3e664]:
+              - generic [ref=f3e665]:
+                - generic [ref=f3e666]: 2M+
+                - generic [ref=f3e667]: Customers
+              - generic [ref=f3e668]:
+                - generic [ref=f3e669]: 50k+
+                - generic [ref=f3e670]: Sellers
+              - generic [ref=f3e671]:
+                - generic [ref=f3e672]: 0%
+                - generic [ref=f3e673]: Listing Fee
+          - link "Join Free" [ref=f3e674] [cursor=pointer]:
+            - /url: /seller/dashboard
+        - generic [ref=f3e678]:
+          - generic [ref=f3e679]:
+            - heading "Just For You" [level=2] [ref=f3e682]
+            - link "See All" [ref=f3e683] [cursor=pointer]:
+              - /url: /categories
+          - generic [ref=f3e686]:
+            - link "iPhone 16 Pro Max -6% NEW Add to wishlist Official Store iPhone 16 Pro Max star star star star star (1.2k) ৳159,999 ৳169,999 Save ৳10,000 shopping_bag Add to Cart" [ref=f3e687] [cursor=pointer]:
+              - /url: /product/prod_1
+              - generic [ref=f3e688]:
+                - img "iPhone 16 Pro Max" [ref=f3e689]
+                - generic [ref=f3e690]:
+                  - generic [ref=f3e691]: "-6%"
+                  - generic [ref=f3e692]: NEW
+                - button "Add to wishlist" [ref=f3e693]:
+                  - generic [ref=f3e694]: favorite
+              - generic [ref=f3e695]:
+                - generic [ref=f3e696]: Official Store
+                - heading "iPhone 16 Pro Max" [level=3] [ref=f3e703]
+                - generic [ref=f3e704]:
+                  - generic [ref=f3e705]:
+                    - generic [ref=f3e706]: star
+                    - generic [ref=f3e707]: star
+                    - generic [ref=f3e708]: star
+                    - generic [ref=f3e709]: star
+                    - generic [ref=f3e710]: star
+                  - generic [ref=f3e711]: (1.2k)
+                - generic [ref=f3e712]:
+                  - generic [ref=f3e713]:
+                    - generic [ref=f3e714]: ৳159,999
+                    - generic [ref=f3e715]: ৳169,999
+                  - paragraph [ref=f3e716]: Save ৳10,000
+                - button "shopping_bag Add to Cart" [ref=f3e717]:
+                  - generic [ref=f3e718]: shopping_bag
+                  - text: Add to Cart
+            - link "Samsung Galaxy S25 Ultra -7% NEW Add to wishlist Official Store Samsung Galaxy S25 Ultra star star star star star (892) ৳139,999 ৳149,999 Save ৳10,000 shopping_bag Add to Cart" [ref=f3e719] [cursor=pointer]:
+              - /url: /product/prod_2
+              - generic [ref=f3e720]:
+                - img "Samsung Galaxy S25 Ultra" [ref=f3e721]
+                - generic [ref=f3e722]:
+                  - generic [ref=f3e723]: "-7%"
+                  - generic [ref=f3e724]: NEW
+                - button "Add to wishlist" [ref=f3e725]:
+                  - generic [ref=f3e726]: favorite
+              - generic [ref=f3e727]:
+                - generic [ref=f3e728]: Official Store
+                - heading "Samsung Galaxy S25 Ultra" [level=3] [ref=f3e735]
+                - generic [ref=f3e736]:
+                  - generic [ref=f3e737]:
+                    - generic [ref=f3e738]: star
+                    - generic [ref=f3e739]: star
+                    - generic [ref=f3e740]: star
+                    - generic [ref=f3e741]: star
+                    - generic [ref=f3e742]: star
+                  - generic [ref=f3e743]: (892)
+                - generic [ref=f3e744]:
+                  - generic [ref=f3e745]:
+                    - generic [ref=f3e746]: ৳139,999
+                    - generic [ref=f3e747]: ৳149,999
+                  - paragraph [ref=f3e748]: Save ৳10,000
+                - button "shopping_bag Add to Cart" [ref=f3e749]:
+                  - generic [ref=f3e750]: shopping_bag
+                  - text: Add to Cart
+            - link "MacBook Air M4 -6% NEW Add to wishlist Official Store MacBook Air M4 star star star star star (654) ৳145,000 ৳155,000 Save ৳10,000 shopping_bag Add to Cart" [ref=f3e751] [cursor=pointer]:
+              - /url: /product/prod_3
+              - generic [ref=f3e752]:
+                - img "MacBook Air M4" [ref=f3e753]
+                - generic [ref=f3e754]:
+                  - generic [ref=f3e755]: "-6%"
+                  - generic [ref=f3e756]: NEW
+                - button "Add to wishlist" [ref=f3e757]:
+                  - generic [ref=f3e758]: favorite
+              - generic [ref=f3e759]:
+                - generic [ref=f3e760]: Official Store
+                - heading "MacBook Air M4" [level=3] [ref=f3e767]
+                - generic [ref=f3e768]:
+                  - generic [ref=f3e769]:
+                    - generic [ref=f3e770]: star
+                    - generic [ref=f3e771]: star
+                    - generic [ref=f3e772]: star
+                    - generic [ref=f3e773]: star
+                    - generic [ref=f3e774]: star
+                  - generic [ref=f3e775]: (654)
+                - generic [ref=f3e776]:
+                  - generic [ref=f3e777]:
+                    - generic [ref=f3e778]: ৳145,000
+                    - generic [ref=f3e779]: ৳155,000
+                  - paragraph [ref=f3e780]: Save ৳10,000
+                - button "shopping_bag Add to Cart" [ref=f3e781]:
+                  - generic [ref=f3e782]: shopping_bag
+                  - text: Add to Cart
+            - link "Sony WH-1000XM6 Headphones -12% NEW Add to wishlist Sony Sony WH-1000XM6 Headphones star star star star star (423) ৳35,000 ৳39,999 Save ৳4,999 shopping_bag Add to Cart" [ref=f3e783] [cursor=pointer]:
+              - /url: /product/prod_4
+              - generic [ref=f3e784]:
+                - img "Sony WH-1000XM6 Headphones" [ref=f3e785]
+                - generic [ref=f3e786]:
+                  - generic [ref=f3e787]: "-12%"
+                  - generic [ref=f3e788]: NEW
+                - button "Add to wishlist" [ref=f3e789]:
+                  - generic [ref=f3e790]: favorite
+              - generic [ref=f3e791]:
+                - paragraph [ref=f3e793]: Sony
+                - heading "Sony WH-1000XM6 Headphones" [level=3] [ref=f3e794]
+                - generic [ref=f3e795]:
+                  - generic [ref=f3e796]:
+                    - generic [ref=f3e797]: star
+                    - generic [ref=f3e798]: star
+                    - generic [ref=f3e799]: star
+                    - generic [ref=f3e800]: star
+                    - generic [ref=f3e801]: star
+                  - generic [ref=f3e802]: (423)
+                - generic [ref=f3e803]:
+                  - generic [ref=f3e804]:
+                    - generic [ref=f3e805]: ৳35,000
+                    - generic [ref=f3e806]: ৳39,999
+                  - paragraph [ref=f3e807]: Save ৳4,999
+                - button "shopping_bag Add to Cart" [ref=f3e808]:
+                  - generic [ref=f3e809]: shopping_bag
+                  - text: Add to Cart
+            - link "Dell XPS 16 Laptop -5% Add to wishlist Dell Dell XPS 16 Laptop star star star star star (234) ৳189,000 ৳199,000 Save ৳10,000 shopping_bag Add to Cart" [ref=f3e810] [cursor=pointer]:
+              - /url: /product/prod_5
+              - generic [ref=f3e811]:
+                - img "Dell XPS 16 Laptop" [ref=f3e812]
+                - generic [ref=f3e813]: "-5%"
+                - button "Add to wishlist" [ref=f3e815]:
+                  - generic [ref=f3e816]: favorite
+              - generic [ref=f3e817]:
+                - paragraph [ref=f3e819]: Dell
+                - heading "Dell XPS 16 Laptop" [level=3] [ref=f3e820]
+                - generic [ref=f3e821]:
+                  - generic [ref=f3e822]:
+                    - generic [ref=f3e823]: star
+                    - generic [ref=f3e824]: star
+                    - generic [ref=f3e825]: star
+                    - generic [ref=f3e826]: star
+                    - generic [ref=f3e827]: star
+                  - generic [ref=f3e828]: (234)
+                - generic [ref=f3e829]:
+                  - generic [ref=f3e830]:
+                    - generic [ref=f3e831]: ৳189,000
+                    - generic [ref=f3e832]: ৳199,000
+                  - paragraph [ref=f3e833]: Save ৳10,000
+                - button "shopping_bag Add to Cart" [ref=f3e834]:
+                  - generic [ref=f3e835]: shopping_bag
+                  - text: Add to Cart
+            - link "Apple AirPods Pro 3 -14% NEW Add to wishlist Official Store Apple AirPods Pro 3 star star star star star (789) ৳29,999 ৳34,999 Save ৳5,000 shopping_bag Add to Cart" [ref=f3e836] [cursor=pointer]:
+              - /url: /product/prod_6
+              - generic [ref=f3e837]:
+                - img "Apple AirPods Pro 3" [ref=f3e838]
+                - generic [ref=f3e839]:
+                  - generic [ref=f3e840]: "-14%"
+                  - generic [ref=f3e841]: NEW
+                - button "Add to wishlist" [ref=f3e842]:
+                  - generic [ref=f3e843]: favorite
+              - generic [ref=f3e844]:
+                - generic [ref=f3e845]: Official Store
+                - heading "Apple AirPods Pro 3" [level=3] [ref=f3e852]
+                - generic [ref=f3e853]:
+                  - generic [ref=f3e854]:
+                    - generic [ref=f3e855]: star
+                    - generic [ref=f3e856]: star
+                    - generic [ref=f3e857]: star
+                    - generic [ref=f3e858]: star
+                    - generic [ref=f3e859]: star
+                  - generic [ref=f3e860]: (789)
+                - generic [ref=f3e861]:
+                  - generic [ref=f3e862]:
+                    - generic [ref=f3e863]: ৳29,999
+                    - generic [ref=f3e864]: ৳34,999
+                  - paragraph [ref=f3e865]: Save ৳5,000
+                - button "shopping_bag Add to Cart" [ref=f3e866]:
+                  - generic [ref=f3e867]: shopping_bag
+                  - text: Add to Cart
+            - link "Samsung Galaxy Watch 7 -10% NEW Add to wishlist Official Store Samsung Galaxy Watch 7 star star star star star (312) ৳45,000 ৳49,999 Save ৳4,999 shopping_bag Add to Cart" [ref=f3e868] [cursor=pointer]:
+              - /url: /product/prod_7
+              - generic [ref=f3e869]:
+                - img "Samsung Galaxy Watch 7" [ref=f3e870]
+                - generic [ref=f3e871]:
+                  - generic [ref=f3e872]: "-10%"
+                  - generic [ref=f3e873]: NEW
+                - button "Add to wishlist" [ref=f3e874]:
+                  - generic [ref=f3e875]: favorite
+              - generic [ref=f3e876]:
+                - generic [ref=f3e877]: Official Store
+                - heading "Samsung Galaxy Watch 7" [level=3] [ref=f3e884]
+                - generic [ref=f3e885]:
+                  - generic [ref=f3e886]:
+                    - generic [ref=f3e887]: star
+                    - generic [ref=f3e888]: star
+                    - generic [ref=f3e889]: star
+                    - generic [ref=f3e890]: star
+                    - generic [ref=f3e891]: star
+                  - generic [ref=f3e892]: (312)
+                - generic [ref=f3e893]:
+                  - generic [ref=f3e894]:
+                    - generic [ref=f3e895]: ৳45,000
+                    - generic [ref=f3e896]: ৳49,999
+                  - paragraph [ref=f3e897]: Save ৳4,999
+                - button "shopping_bag Add to Cart" [ref=f3e898]:
+                  - generic [ref=f3e899]: shopping_bag
+                  - text: Add to Cart
+            - link "Logitech MX Master 4 Mouse -13% Add to wishlist Logitech Logitech MX Master 4 Mouse star star star star star (156) ৳12,999 ৳14,999 Save ৳2,000 shopping_bag Add to Cart" [ref=f3e900] [cursor=pointer]:
+              - /url: /product/prod_8
+              - generic [ref=f3e901]:
+                - img "Logitech MX Master 4 Mouse" [ref=f3e902]
+                - generic [ref=f3e903]: "-13%"
+                - button "Add to wishlist" [ref=f3e905]:
+                  - generic [ref=f3e906]: favorite
+              - generic [ref=f3e907]:
+                - paragraph [ref=f3e909]: Logitech
+                - heading "Logitech MX Master 4 Mouse" [level=3] [ref=f3e910]
+                - generic [ref=f3e911]:
+                  - generic [ref=f3e912]:
+                    - generic [ref=f3e913]: star
+                    - generic [ref=f3e914]: star
+                    - generic [ref=f3e915]: star
+                    - generic [ref=f3e916]: star
+                    - generic [ref=f3e917]: star
+                  - generic [ref=f3e918]: (156)
+                - generic [ref=f3e919]:
+                  - generic [ref=f3e920]:
+                    - generic [ref=f3e921]: ৳12,999
+                    - generic [ref=f3e922]: ৳14,999
+                  - paragraph [ref=f3e923]: Save ৳2,000
+                - button "shopping_bag Add to Cart" [ref=f3e924]:
+                  - generic [ref=f3e925]: shopping_bag
+                  - text: Add to Cart
+            - link "Anker PowerCore 26800 Portable Charger -14% Add to wishlist Anker Anker PowerCore 26800 Portable Charger star star star star star (2.3k) ৳5,999 ৳6,999 Save ৳1,000 shopping_bag Add to Cart" [ref=f3e926] [cursor=pointer]:
+              - /url: /product/prod_9
+              - generic [ref=f3e927]:
+                - img "Anker PowerCore 26800 Portable Charger" [ref=f3e928]
+                - generic [ref=f3e929]: "-14%"
+                - button "Add to wishlist" [ref=f3e931]:
+                  - generic [ref=f3e932]: favorite
+              - generic [ref=f3e933]:
+                - paragraph [ref=f3e935]: Anker
+                - heading "Anker PowerCore 26800 Portable Charger" [level=3] [ref=f3e936]
+                - generic [ref=f3e937]:
+                  - generic [ref=f3e938]:
+                    - generic [ref=f3e939]: star
+                    - generic [ref=f3e940]: star
+                    - generic [ref=f3e941]: star
+                    - generic [ref=f3e942]: star
+                    - generic [ref=f3e943]: star
+                  - generic [ref=f3e944]: (2.3k)
+                - generic [ref=f3e945]:
+                  - generic [ref=f3e946]:
+                    - generic [ref=f3e947]: ৳5,999
+                    - generic [ref=f3e948]: ৳6,999
+                  - paragraph [ref=f3e949]: Save ৳1,000
+                - button "shopping_bag Add to Cart" [ref=f3e950]:
+                  - generic [ref=f3e951]: shopping_bag
+                  - text: Add to Cart
+            - link "JBL Flip 7 Bluetooth Speaker -11% NEW Add to wishlist JBL JBL Flip 7 Bluetooth Speaker star star star star star (445) ৳15,999 ৳17,999 Save ৳2,000 shopping_bag Add to Cart" [ref=f3e952] [cursor=pointer]:
+              - /url: /product/prod_10
+              - generic [ref=f3e953]:
+                - img "JBL Flip 7 Bluetooth Speaker" [ref=f3e954]
+                - generic [ref=f3e955]:
+                  - generic [ref=f3e956]: "-11%"
+                  - generic [ref=f3e957]: NEW
+                - button "Add to wishlist" [ref=f3e958]:
+                  - generic [ref=f3e959]: favorite
+              - generic [ref=f3e960]:
+                - paragraph [ref=f3e962]: JBL
+                - heading "JBL Flip 7 Bluetooth Speaker" [level=3] [ref=f3e963]
+                - generic [ref=f3e964]:
+                  - generic [ref=f3e965]:
+                    - generic [ref=f3e966]: star
+                    - generic [ref=f3e967]: star
+                    - generic [ref=f3e968]: star
+                    - generic [ref=f3e969]: star
+                    - generic [ref=f3e970]: star
+                  - generic [ref=f3e971]: (445)
+                - generic [ref=f3e972]:
+                  - generic [ref=f3e973]:
+                    - generic [ref=f3e974]: ৳15,999
+                    - generic [ref=f3e975]: ৳17,999
+                  - paragraph [ref=f3e976]: Save ৳2,000
+                - button "shopping_bag Add to Cart" [ref=f3e977]:
+                  - generic [ref=f3e978]: shopping_bag
+                  - text: Add to Cart
+            - link "Nike Air Max 270 Shoes -17% Add to wishlist Official Store Nike Air Max 270 Shoes star star star star star (892) ৳12,500 ৳15,000 Save ৳2,500 shopping_bag Add to Cart" [ref=f3e979] [cursor=pointer]:
+              - /url: /product/prod_11
+              - generic [ref=f3e980]:
+                - img "Nike Air Max 270 Shoes" [ref=f3e981]
+                - generic [ref=f3e982]: "-17%"
+                - button "Add to wishlist" [ref=f3e984]:
+                  - generic [ref=f3e985]: favorite
+              - generic [ref=f3e986]:
+                - generic [ref=f3e987]: Official Store
+                - heading "Nike Air Max 270 Shoes" [level=3] [ref=f3e994]
+                - generic [ref=f3e995]:
+                  - generic [ref=f3e996]:
+                    - generic [ref=f3e997]: star
+                    - generic [ref=f3e998]: star
+                    - generic [ref=f3e999]: star
+                    - generic [ref=f3e1000]: star
+                    - generic [ref=f3e1001]: star
+                  - generic [ref=f3e1002]: (892)
+                - generic [ref=f3e1003]:
+                  - generic [ref=f3e1004]:
+                    - generic [ref=f3e1005]: ৳12,500
+                    - generic [ref=f3e1006]: ৳15,000
+                  - paragraph [ref=f3e1007]: Save ৳2,500
+                - button "shopping_bag Add to Cart" [ref=f3e1008]:
+                  - generic [ref=f3e1009]: shopping_bag
+                  - text: Add to Cart
+            - link "Adidas Ultraboost 22 Running Shoes -15% Add to wishlist Official Store Adidas Ultraboost 22 Running Shoes star star star star star (567) ৳14,500 ৳17,000 Save ৳2,500 shopping_bag Add to Cart" [ref=f3e1010] [cursor=pointer]:
+              - /url: /product/prod_12
+              - generic [ref=f3e1011]:
+                - img "Adidas Ultraboost 22 Running Shoes" [ref=f3e1012]
+                - generic [ref=f3e1013]: "-15%"
+                - button "Add to wishlist" [ref=f3e1015]:
+                  - generic [ref=f3e1016]: favorite
+              - generic [ref=f3e1017]:
+                - generic [ref=f3e1018]: Official Store
+                - heading "Adidas Ultraboost 22 Running Shoes" [level=3] [ref=f3e1025]
+                - generic [ref=f3e1026]:
+                  - generic [ref=f3e1027]:
+                    - generic [ref=f3e1028]: star
+                    - generic [ref=f3e1029]: star
+                    - generic [ref=f3e1030]: star
+                    - generic [ref=f3e1031]: star
+                    - generic [ref=f3e1032]: star
+                  - generic [ref=f3e1033]: (567)
+                - generic [ref=f3e1034]:
+                  - generic [ref=f3e1035]:
+                    - generic [ref=f3e1036]: ৳14,500
+                    - generic [ref=f3e1037]: ৳17,000
+                  - paragraph [ref=f3e1038]: Save ৳2,500
+                - button "shopping_bag Add to Cart" [ref=f3e1039]:
+                  - generic [ref=f3e1040]: shopping_bag
+                  - text: Add to Cart
+    - contentinfo [ref=f3e1041]:
+      - generic [ref=f3e1047]:
+        - generic [ref=f3e1053]:
+          - heading "Stay in the Loop" [level=3] [ref=f3e1054]
+          - paragraph [ref=f3e1055]: Exclusive deals, launches & offers — straight to your inbox.
+        - generic [ref=f3e1056]:
+          - textbox "Your email address" [ref=f3e1061]
+          - button "Subscribe" [ref=f3e1062]
+      - generic [ref=f3e1065]:
+        - generic [ref=f3e1066]:
+          - generic [ref=f3e1067]:
+            - link [ref=f3e1068] [cursor=pointer]:
+              - /url: /
+              - img "AmarShop" [ref=f3e1069]
+            - paragraph [ref=f3e1070]: Bangladesh's premium online marketplace. Shop millions of products from trusted sellers with fast delivery and the best deals.
+            - generic [ref=f3e1071]:
+              - heading "Follow Us" [level=4] [ref=f3e1072]
+              - generic [ref=f3e1073]:
+                - link "Facebook" [ref=f3e1074] [cursor=pointer]:
+                  - /url: "#"
+                - link "Instagram" [ref=f3e1077] [cursor=pointer]:
+                  - /url: "#"
+                - link "X (Twitter)" [ref=f3e1080] [cursor=pointer]:
+                  - /url: "#"
+                - link "YouTube" [ref=f3e1083] [cursor=pointer]:
+                  - /url: "#"
+                - link "LinkedIn" [ref=f3e1086] [cursor=pointer]:
+                  - /url: https://www.linkedin.com/in/md-shawon-molla-2a3877293/
+                - link "GitHub" [ref=f3e1089] [cursor=pointer]:
+                  - /url: https://github.com/shawon2210
+          - generic [ref=f3e1093]:
+            - button "Customer Service" [ref=f3e1095]
+            - button "Shop Categories" [ref=f3e1099]
+            - button "Seller Center" [ref=f3e1103]
+            - button "Company" [ref=f3e1107]
+        - generic [ref=f3e1111]:
+          - generic [ref=f3e1112]:
+            - heading "Download App" [level=4] [ref=f3e1113]
+            - generic [ref=f3e1115]:
+              - link [ref=f3e1116] [cursor=pointer]:
+                - /url: "#"
+                - generic [ref=f3e1120]:
+                  - paragraph [ref=f3e1121]: Download on
+                  - paragraph [ref=f3e1122]: Google Play
+              - link [ref=f3e1123] [cursor=pointer]:
+                - /url: "#"
+                - generic [ref=f3e1127]:
+                  - paragraph [ref=f3e1128]: Download on
+                  - paragraph [ref=f3e1129]: App Store
+          - generic [ref=f3e1130]:
+            - heading "Accepted Payments" [level=4] [ref=f3e1131]
+            - generic [ref=f3e1133]:
+              - generic "bKash" [ref=f3e1134]:
+                - img [ref=f3e1135]:
+                  - generic [ref=f3e1137]: bKash
+              - generic "Nagad" [ref=f3e1138]:
+                - img [ref=f3e1139]:
+                  - generic [ref=f3e1141]: Nagad
+              - generic "Rocket" [ref=f3e1142]:
+                - img [ref=f3e1143]:
+                  - generic [ref=f3e1145]: Rocket
+              - generic "Visa" [ref=f3e1146]:
+                - img [ref=f3e1147]:
+                  - generic [ref=f3e1149]: VISA
+              - generic "Mastercard" [ref=f3e1150]
+              - generic "American Express" [ref=f3e1155]:
+                - img [ref=f3e1156]:
+                  - generic [ref=f3e1158]: AMEX
+              - generic "PayPal" [ref=f3e1159]:
+                - img [ref=f3e1160]:
+                  - generic [ref=f3e1162]: PayPal
+              - generic "COD" [ref=f3e1163]:
+                - img [ref=f3e1164]:
+                  - generic [ref=f3e1166]: COD
+          - generic [ref=f3e1168]:
+            - heading "Delivery Partners" [level=4] [ref=f3e1169]
+            - generic [ref=f3e1170]:
+              - generic [ref=f3e1171]: Pathao
+              - generic [ref=f3e1172]: RedX
+              - generic [ref=f3e1173]: Steadfast
+              - generic [ref=f3e1174]: Sundarban
+              - generic [ref=f3e1175]: Paperfly
+        - generic [ref=f3e1177]:
+          - generic [ref=f3e1178]: 100% Secure Payment
+          - paragraph [ref=f3e1182]: © 2026 AmarShop. All rights reserved.
+          - generic [ref=f3e1183]:
+            - link "Privacy" [ref=f3e1184] [cursor=pointer]:
+              - /url: /privacy
+            - link "Terms" [ref=f3e1185] [cursor=pointer]:
+              - /url: /terms
+            - link "Support" [ref=f3e1186] [cursor=pointer]:
+              - /url: /support/chat
+            - link "Track Order" [ref=f3e1187] [cursor=pointer]:
+              - /url: /orders
+    - navigation "Mobile navigation" [ref=f3e1188]:
+      - link "home Home" [ref=f3e1189] [cursor=pointer]:
+        - /url: /
+        - generic [ref=f3e1190]: home
+        - generic [ref=f3e1191]: Home
+      - link "category Categories" [ref=f3e1192] [cursor=pointer]:
+        - /url: /categories
+        - generic [ref=f3e1193]: category
+        - generic [ref=f3e1194]: Categories
+      - link "mail Messages" [ref=f3e1195] [cursor=pointer]:
+        - /url: /messages
+        - generic [ref=f3e1196]: mail
+        - generic [ref=f3e1197]: Messages
+      - link "shopping_cart Cart" [ref=f3e1198] [cursor=pointer]:
+        - /url: /cart
+        - generic [ref=f3e1199]: shopping_cart
+        - generic [ref=f3e1200]: Cart
+      - link "person Account" [ref=f3e1201] [cursor=pointer]:
+        - /url: /account
+        - generic [ref=f3e1202]: person
+        - generic [ref=f3e1203]: Account
+  - alert [ref=f3e1204]

@@ -7,6 +7,7 @@ import { useSearchStore } from '@/stores/search-store';
 import { useScrollState } from './hooks/use-scroll-state';
 import { TopUtilityBar } from './components/TopUtilityBar';
 import { Logo } from './components/Logo';
+import { MobileSearchButton } from './components/MobileSearchButton';
 import { DesktopSearch } from './components/DesktopSearch';
 import { Actions } from './components/Actions';
 import { CategoryNav } from './components/CategoryNav';
@@ -43,7 +44,7 @@ export function Header() {
       <TopUtilityBar />
 
       <div className="app-container h-16 md:h-18 lg:h-20">
-        <div className="flex items-center gap-2 md:gap-4 lg:gap-6 h-full">
+        <div className="flex items-center gap-2 md:gap-3 lg:gap-6 h-full">
           <div className="flex items-center gap-0.5 shrink-0">
             <button
               onClick={() => setSidebarOpen(true)}
@@ -56,6 +57,8 @@ export function Header() {
             </button>
             <Logo />
           </div>
+
+          <MobileSearchButton />
 
           <DesktopSearch />
 

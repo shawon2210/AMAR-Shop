@@ -13,7 +13,7 @@ export function WishlistButton({ variant = 'default' }: WishlistButtonProps) {
       className={
         variant === 'drawer'
           ? 'flex relative items-center justify-center w-11 h-11 rounded-xl text-gray-600 hover:bg-gray-100 hover:text-primary transition-all duration-150'
-          : 'hidden lg:flex relative items-center justify-center w-11 h-11 rounded-xl text-gray-600 hover:bg-gray-100 hover:text-primary transition-all duration-150'
+          : 'flex relative items-center justify-center w-11 h-11 rounded-xl text-gray-600 hover:bg-gray-100 hover:text-primary transition-all duration-150'
       }
       aria-label="Wishlist"
     >

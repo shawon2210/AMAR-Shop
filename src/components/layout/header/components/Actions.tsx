@@ -8,8 +8,7 @@ import { AuthSection } from './AuthSection';
 
 export function Actions() {
   return (
-    <div className="flex items-center justify-end gap-1 lg:gap-1.5 shrink-0">
-      <MobileSearchButton />
+    <div className="flex items-center justify-end gap-1.5 shrink-0">
       <NotificationButton />
       <WishlistButton />
       <CartButton />

@@ -13,7 +13,7 @@ export function NotificationButton({ variant = 'default' }: NotificationButtonPr
       className={
         variant === 'drawer'
           ? 'flex relative items-center justify-center w-11 h-11 rounded-xl text-gray-600 hover:bg-gray-100 hover:text-primary transition-all duration-150'
-          : 'hidden md:flex relative items-center justify-center w-11 h-11 rounded-xl text-gray-600 hover:bg-gray-100 hover:text-primary transition-all duration-150'
+          : 'flex items-center justify-center w-11 h-11 rounded-xl text-gray-600 hover:bg-gray-100 hover:text-primary transition-all duration-150'
       }
       aria-label="Notifications"
     >
