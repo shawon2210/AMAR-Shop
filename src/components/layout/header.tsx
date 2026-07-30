@@ -147,7 +147,7 @@ export function Header() {
             {/* Notifications */}
             <Link
               href="/notifications"
-              className="hidden lg:flex relative items-center justify-center w-11 h-11 rounded-xl text-gray-600 hover:bg-gray-100 hover:text-primary transition-all duration-150"
+              className="hidden md:flex relative items-center justify-center w-11 h-11 rounded-xl text-gray-600 hover:bg-gray-100 hover:text-primary transition-all duration-150"
               aria-label="Notifications"
             >
               <span className="material-symbols-outlined text-[22px]">notifications</span>
@@ -179,25 +179,43 @@ export function Header() {
 
             {/* Auth */}
             {!showAuth || !isAuthenticated ? (
-              <Link
-                href="/auth/login"
-                className="hidden md:flex items-center h-9 px-5 text-sm font-semibold text-white bg-primary rounded-full hover:bg-primary-dark transition-all duration-150 whitespace-nowrap hover:shadow-md"
-              >
-                Sign In
-              </Link>
+              <>
+                <Link
+                  href="/auth/login"
+                  className="md:hidden flex items-center justify-center w-11 h-11 rounded-xl text-gray-600 hover:bg-gray-100 transition-colors duration-150"
+                  aria-label="Sign in"
+                >
+                  <span className="material-symbols-outlined text-[22px]">person</span>
+                </Link>
+                <Link
+                  href="/auth/login"
+                  className="hidden md:flex items-center h-9 px-5 text-sm font-semibold text-white bg-primary rounded-full hover:bg-primary-dark transition-all duration-150 whitespace-nowrap hover:shadow-md"
+                >
+                  Sign In
+                </Link>
+              </>
             ) : user?.role === 'ADMIN' || user?.role === 'SUPER_ADMIN' ? (
-              <Link
-                href="/admin"
-                className="hidden md:flex items-center h-9 px-4 text-sm font-semibold text-primary bg-primary-fixed rounded-full hover:bg-primary/10 transition-all duration-150 whitespace-nowrap gap-1.5"
-                aria-label="Admin panel"
-              >
-                <span className="material-symbols-outlined text-[18px]">admin_panel_settings</span>
-                Admin
-              </Link>
+              <>
+                <Link
+                  href="/admin"
+                  className="md:hidden flex items-center justify-center w-11 h-11 rounded-xl text-gray-600 hover:bg-gray-100 transition-colors duration-150"
+                  aria-label="Admin dashboard"
+                >
+                  <span className="material-symbols-outlined text-[22px]">admin_panel_settings</span>
+                </Link>
+                <Link
+                  href="/admin"
+                  className="hidden md:flex items-center h-9 px-4 text-sm font-semibold text-primary bg-primary-fixed rounded-full hover:bg-primary/10 transition-all duration-150 whitespace-nowrap gap-1.5"
+                  aria-label="Admin panel"
+                >
+                  <span className="material-symbols-outlined text-[18px]">admin_panel_settings</span>
+                  Admin
+                </Link>
+              </>
             ) : (
               <Link
                 href={user?.isSeller ? '/seller/dashboard' : '/account'}
-                className="hidden md:flex items-center justify-center w-11 h-11 rounded-xl text-gray-600 hover:bg-gray-100 hover:text-primary transition-all duration-150"
+                className="flex items-center justify-center w-11 h-11 rounded-xl text-gray-600 hover:bg-gray-100 hover:text-primary transition-all duration-150"
                 aria-label="My account"
               >
                 <span className="material-symbols-outlined text-[22px]">person</span>
