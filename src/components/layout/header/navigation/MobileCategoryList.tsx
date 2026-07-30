@@ -20,7 +20,7 @@ export function MobileCategoryList({ onClose }: { onClose: () => void }) {
               key={cat.href}
               href={cat.href}
               onClick={onClose}
-              className={`flex items-center gap-3 px-3 py-2.5 text-sm font-medium rounded-xl transition-colors ${
+              className={`flex items-center gap-3 px-3 py-3 min-h-[44px] text-sm font-medium rounded-xl transition-colors ${
                 isActive
                   ? 'bg-primary-fixed text-primary'
                   : cat.highlight

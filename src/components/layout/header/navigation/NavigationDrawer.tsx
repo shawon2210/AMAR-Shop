@@ -1,15 +1,19 @@
 'use client';
 
-import { useEffect, useRef } from 'react';
+import { useRef } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
-import { usePathname, useRouter } from 'next/navigation';
+import { useRouter } from 'next/navigation';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useAuthStore, useAuthHydrated } from '@/stores/auth-store';
 import { useSearchStore } from '@/stores/search-store';
 import { useFocusTrap } from '../hooks/use-focus-trap';
 import { useBodyLock } from '../hooks/use-body-lock';
+import { useSidebarBehavior } from '../hooks/use-sidebar-behavior';
 import { MobileCategoryList } from './MobileCategoryList';
+import { NotificationButton } from '../components/NotificationButton';
+import { WishlistButton } from '../components/WishlistButton';
+import { CartButton } from '../components/CartButton';
 import { Z_SIDEBAR, Z_SIDEBAR_OVERLAY } from '../styles';
 
 const overlayVariants = {
@@ -29,7 +33,6 @@ export function NavigationDrawer({
   open: boolean;
   onClose: () => void;
 }) {
-  const pathname = usePathname();
   const router = useRouter();
   const drawerRef = useRef<HTMLDivElement>(null);
   const hydrated = useAuthHydrated();
@@ -41,19 +44,7 @@ export function NavigationDrawer({
 
   useFocusTrap(drawerRef, open);
   useBodyLock(open);
-
-  useEffect(() => {
-    if (!open) return;
-    const handleKey = (e: KeyboardEvent) => {
-      if (e.key === 'Escape') onClose();
-    };
-    document.addEventListener('keydown', handleKey);
-    return () => document.removeEventListener('keydown', handleKey);
-  }, [open, onClose]);
-
-  useEffect(() => {
-    onClose();
-  }, [pathname]);
+  useSidebarBehavior({ open, onClose });
 
   return (
     <AnimatePresence>
@@ -80,17 +71,21 @@ export function NavigationDrawer({
             animate="visible"
             exit="hidden"
             transition={{ type: 'spring', damping: 25, stiffness: 200 }}
-            className="fixed left-0 top-0 bottom-0 flex flex-col bg-white shadow-2xl outline-none rounded-r-2xl overflow-hidden"
+            className="fixed left-0 right-0 flex flex-col bg-white shadow-2xl outline-none rounded-r-2xl overflow-hidden"
             style={{
               zIndex: Z_SIDEBAR,
               width: 'clamp(280px, 80vw, 400px)',
+              height: '100dvh',
             }}
             role="dialog"
             aria-modal="true"
-            aria-label="Navigation menu"
+            aria-labelledby="navigation-drawer-title"
             tabIndex={-1}
           >
-            <div className="flex items-center justify-between px-5 h-16 md:h-18 border-b border-gray-100 shrink-0">
+            <h2 id="navigation-drawer-title" className="sr-only">
+              Navigation menu
+            </h2>
+            <div className="flex items-center justify-between px-5 h-16 md:h-18 border-b border-gray-100 shrink-0 safe-top">
               <Image
                 src="/images/amarshop-logo.png"
                 alt="AmarShop"
@@ -158,6 +153,12 @@ export function NavigationDrawer({
                 </button>
               </div>
 
+              <div className="flex items-center justify-center gap-4 px-5 py-3">
+                <WishlistButton variant="drawer" />
+                <NotificationButton variant="drawer" />
+                <CartButton />
+              </div>
+
               <MobileCategoryList onClose={onClose} />
 
               <div className="mx-5 my-3 h-px bg-gray-100" />
@@ -173,7 +174,7 @@ export function NavigationDrawer({
                       <Link
                         href="/admin"
                         onClick={onClose}
-                        className="flex items-center gap-3 px-3 py-2.5 text-sm font-semibold text-primary hover:bg-primary-fixed rounded-xl transition-colors"
+                        className="flex items-center gap-3 px-3 py-3 min-h-[44px] text-sm font-semibold text-primary hover:bg-primary-fixed rounded-xl transition-colors"
                       >
                         <span className="material-symbols-outlined text-[20px]">
                           admin_panel_settings
@@ -184,7 +185,7 @@ export function NavigationDrawer({
                   <Link
                     href="/help"
                     onClick={onClose}
-                    className="flex items-center gap-3 px-3 py-2.5 text-sm font-medium text-gray-700 hover:bg-gray-100 rounded-xl transition-colors"
+                    className="flex items-center gap-3 px-3 py-3 min-h-[44px] text-sm font-medium text-gray-700 hover:bg-gray-100 rounded-xl transition-colors"
                   >
                     <span className="material-symbols-outlined text-[20px] text-gray-400">
                       help_outline
@@ -194,7 +195,7 @@ export function NavigationDrawer({
                   <Link
                     href="/orders"
                     onClick={onClose}
-                    className="flex items-center gap-3 px-3 py-2.5 text-sm font-medium text-gray-700 hover:bg-gray-100 rounded-xl transition-colors"
+                    className="flex items-center gap-3 px-3 py-3 min-h-[44px] text-sm font-medium text-gray-700 hover:bg-gray-100 rounded-xl transition-colors"
                   >
                     <span className="material-symbols-outlined text-[20px] text-gray-400">
                       local_shipping
@@ -204,7 +205,7 @@ export function NavigationDrawer({
                   <Link
                     href="/notifications"
                     onClick={onClose}
-                    className="flex items-center gap-3 px-3 py-2.5 text-sm font-medium text-gray-700 hover:bg-gray-100 rounded-xl transition-colors"
+                    className="flex items-center gap-3 px-3 py-3 min-h-[44px] text-sm font-medium text-gray-700 hover:bg-gray-100 rounded-xl transition-colors"
                   >
                     <span className="material-symbols-outlined text-[20px] text-gray-400">
                       notifications
@@ -215,7 +216,7 @@ export function NavigationDrawer({
                     <Link
                       href="/seller/dashboard"
                       onClick={onClose}
-                      className="flex items-center gap-3 px-3 py-2.5 text-sm font-medium text-gray-700 hover:bg-gray-100 rounded-xl transition-colors"
+                      className="flex items-center gap-3 px-3 py-3 min-h-[44px] text-sm font-medium text-gray-700 hover:bg-gray-100 rounded-xl transition-colors"
                     >
                       <span className="material-symbols-outlined text-[20px] text-gray-400">
                         storefront
@@ -228,14 +229,14 @@ export function NavigationDrawer({
             </div>
 
             {showAuth && isAuthenticated && (
-              <div className="shrink-0 border-t border-gray-100 px-5 py-3 safe-bottom">
+              <div className="shrink-0 border-t border-gray-100 px-5 py-4 safe-bottom">
                 <button
                   onClick={async () => {
                     await logout();
                     onClose();
                     router.push('/');
                   }}
-                  className="flex items-center gap-3 w-full px-3 py-2.5 text-sm font-medium text-red-600 hover:bg-red-50 rounded-xl transition-colors"
+                  className="flex items-center gap-3 w-full px-3 py-3 min-h-[44px] text-sm font-medium text-red-600 hover:bg-red-50 rounded-xl transition-colors"
                 >
                   <span className="material-symbols-outlined text-[20px]">logout</span>
                   Sign Out

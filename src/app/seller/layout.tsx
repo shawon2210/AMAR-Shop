@@ -7,6 +7,7 @@ import { useAuthStore, useAuthHydrated } from '@/stores/auth-store';
 import { ErrorBoundary } from '@/components/ui/error-boundary';
 import { useFocusTrap } from '@/components/layout/header/hooks/use-focus-trap';
 import { useBodyLock } from '@/components/layout/header/hooks/use-body-lock';
+import { useSidebarBehavior } from '@/components/layout/header/hooks/use-sidebar-behavior';
 import { AdminSearchOverlay } from '@/components/layout/header/search/AdminSearchOverlay';
 
 interface NavItem {
@@ -347,6 +348,11 @@ export default function SellerLayout({ children }: { children: React.ReactNode }
 
   useFocusTrap(mobileDrawerRef, sidebarOpen && !isDesktop);
   useBodyLock(sidebarOpen && !isDesktop);
+  useSidebarBehavior({
+    open: sidebarOpen,
+    onClose: () => setSidebarOpen(false),
+    isDesktop,
+  });
 
   useEffect(() => {
     const mql = window.matchMedia('(min-width: 1024px)');
@@ -426,6 +432,8 @@ export default function SellerLayout({ children }: { children: React.ReactNode }
           className="lg:hidden p-2 -ml-2 rounded-lg hover:bg-slate-100 transition-colors"
           onClick={() => setSidebarOpen(true)}
           aria-label="Open sidebar menu"
+          aria-expanded={sidebarOpen}
+          aria-controls="seller-sidebar"
         >
           <span className="material-symbols-outlined text-slate-500">menu</span>
         </button>
@@ -519,20 +527,21 @@ export default function SellerLayout({ children }: { children: React.ReactNode }
           {/* Mobile: drawer sidebar */}
           {sidebarOpen && (
             <div
-              className="fixed inset-0 bg-black/50 transition-opacity duration-300"
+              className="fixed inset-0 bg-black/50 animate-fade-in"
               style={{ zIndex: 'var(--z-sidebar-overlay, 80)' }}
               onClick={() => setSidebarOpen(false)}
             />
           )}
           <aside
             ref={mobileDrawerRef}
+            id="seller-sidebar"
             role="dialog"
             aria-modal="true"
             aria-label="Seller navigation sidebar"
             tabIndex={-1}
-            className={`fixed top-24 left-4 bottom-4 bg-[#0f1219] text-white flex flex-col rounded-2xl shadow-2xl shadow-black/40 border border-white/5 transition-all duration-300 ease-out ${
-              sidebarCollapsed ? 'w-[72px]' : 'w-70 max-w-[85vw]'
-            } ${
+className={`fixed top-24 left-4 bottom-4 bg-[#0f1219] text-white flex flex-col rounded-2xl shadow-2xl shadow-black/40 border border-white/5 transition-all duration-300 ease-out ${
+               sidebarCollapsed ? 'w-[72px]' : 'w-[280px] max-w-[85vw]'
+             } ${
               sidebarOpen ? 'translate-x-0' : '-translate-x-[calc(100%+32px)]'
             }`}
             style={{ zIndex: 'var(--z-sidebar, 90)' }}
