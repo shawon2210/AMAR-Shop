@@ -1,0 +1,6 @@
+[   13241ms] [ERROR] Failed to load resource: the server responded with a status of 404 () @ https://amarshop-eight.vercel.app/api/products?flashSale=true:0
+[   14159ms] [ERROR] Failed to load resource: the server responded with a status of 404 () @ https://amarshop-eight.vercel.app/_next/image?url=https%3A%2F%2Fimages.unsplash.com%2Fphoto-1606403838380-80f8a1a8d2b5%3Fw%3D800&w=640&q=75:0
+[   15658ms] [INFO] Banner not shown: beforeinstallpromptevent.preventDefault() called. The page must call beforeinstallpromptevent.prompt() to show the banner. @ https://amarshop-eight.vercel.app/:0
+[   15876ms] [ERROR] Failed to load resource: the server responded with a status of 500 () @ https://amarshop-eight.vercel.app/seller/dashboard?_rsc=5CB68i4pnAekjehf:0
+[   16161ms] [ERROR] Failed to load resource: the server responded with a status of 500 () @ https://amarshop-eight.vercel.app/cart?_rsc=5CB68i4pnAekjehf:0
+[   16291ms] [ERROR] Failed to load resource: the server responded with a status of 500 () @ https://amarshop-eight.vercel.app/account?_rsc=5CB68i4pnAekjehf:0
