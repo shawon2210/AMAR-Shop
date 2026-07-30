@@ -5,6 +5,7 @@ import {
   UnauthorizedException,
   BadRequestException,
 } from '@nestjs/common';
+import { ConfigService } from '@nestjs/config';
 import { JwtService } from '@nestjs/jwt';
 import * as bcrypt from 'bcrypt';
 import { v4 as uuidv4 } from 'uuid';
@@ -16,7 +17,39 @@ export class AuthService {
     private prismaService: PrismaService,
     private jwtService: JwtService,
     @Inject('RefreshJwtService') private refreshJwtService: JwtService,
+    private configService: ConfigService,
   ) {}
+
+  private isMockAuth(): boolean {
+    return this.configService.get<string>('MOCK_AUTH') === 'true';
+  }
+
+  private getMockUser(identity?: string) {
+    const name = identity && identity.includes('@') ? identity.split('@')[0] : 'Demo User';
+    return {
+      id: 'mock-user-id',
+      name,
+      email: identity && identity.includes('@') ? identity : 'admin@demo.com',
+      phone: '01700000000',
+      role: 'SUPER_ADMIN',
+      isSeller: false,
+      avatar: null,
+      isActive: true,
+      isVerified: true,
+      createdAt: new Date('2024-01-01'),
+      lastLoginAt: new Date(),
+      store: null,
+      _count: { orders: 0, reviews: 0, wishlist: 0, addresses: 0 },
+    };
+  }
+
+  private async mockGenerateTokens(userId: string, phone: string, role: string) {
+    const accessToken = this.jwtService.sign({ sub: userId, phone, role });
+    const refreshTokenValue = uuidv4();
+    const expiresAt = new Date(Date.now() + 7 * 24 * 60 * 60 * 1000);
+    const refreshToken = this.refreshJwtService.sign({ sub: userId, jti: refreshTokenValue });
+    return { accessToken, refreshToken, expiresAt: expiresAt.toISOString() };
+  }
 
   async register(data: {
     name: string;
@@ -24,6 +57,11 @@ export class AuthService {
     phone: string;
     password: string;
   }) {
+    if (this.isMockAuth()) {
+      const mockUser = this.getMockUser(data.email || data.phone);
+      const tokens = await this.mockGenerateTokens(mockUser.id, mockUser.phone, mockUser.role);
+      return { ...tokens, user: mockUser };
+    }
     if (data.phone) {
       const existingPhone = await this.prismaService.user.findUnique({
         where: { phone: data.phone },
@@ -71,6 +109,11 @@ export class AuthService {
   }
 
   async login(identity: string, password: string) {
+    if (this.isMockAuth()) {
+      const mockUser = this.getMockUser(identity);
+      const tokens = await this.mockGenerateTokens(mockUser.id, mockUser.phone, mockUser.role);
+      return { ...tokens, user: mockUser };
+    }
     const normalizedPhone = identity.replace(/^(\+?880)/, '');
     const isEmail = identity.includes('@');
 
@@ -124,6 +167,11 @@ export class AuthService {
   }
 
   async refresh(refreshToken: string) {
+    if (this.isMockAuth()) {
+      const mockUser = this.getMockUser();
+      const tokens = await this.mockGenerateTokens(mockUser.id, mockUser.phone, mockUser.role);
+      return { ...tokens, user: mockUser };
+    }
     let payload: { sub: string; jti: string };
     try {
       payload = this.refreshJwtService.verify(refreshToken);
@@ -186,6 +234,9 @@ export class AuthService {
   }
 
   async logout(userId: string, refreshTokenValue?: string) {
+    if (this.isMockAuth()) {
+      return { message: 'Logged out successfully' };
+    }
     if (refreshTokenValue) {
       let payload: { sub: string; jti: string };
       try {
@@ -212,6 +263,9 @@ export class AuthService {
   }
 
   async logoutAll(userId: string) {
+    if (this.isMockAuth()) {
+      return { message: 'Logged out from all devices' };
+    }
     await this.prismaService.refreshToken.updateMany({
       where: { userId, revokedAt: null },
       data: { revokedAt: new Date() },
@@ -220,6 +274,9 @@ export class AuthService {
   }
 
   async getSessions(userId: string, currentToken?: string) {
+    if (this.isMockAuth()) {
+      return [];
+    }
     const tokens = await this.prismaService.refreshToken.findMany({
       where: { userId, revokedAt: null, expiresAt: { gt: new Date() } },
       select: { id: true, token: true, createdAt: true, expiresAt: true },
@@ -243,6 +300,9 @@ export class AuthService {
   }
 
   async revokeSession(userId: string, sessionId: string) {
+    if (this.isMockAuth()) {
+      return { message: 'Session revoked' };
+    }
     const token = await this.prismaService.refreshToken.findUnique({
       where: { id: sessionId },
     });
@@ -260,6 +320,9 @@ export class AuthService {
   }
 
   async logoutAllExcept(userId: string, refreshTokenValue: string) {
+    if (this.isMockAuth()) {
+      return { message: 'Logged out from all other devices' };
+    }
     let payload: { sub: string; jti: string };
     try {
       payload = this.refreshJwtService.verify(refreshTokenValue);
@@ -274,6 +337,9 @@ export class AuthService {
   }
 
   async getProfile(userId: string) {
+    if (this.isMockAuth()) {
+      return this.getMockUser();
+    }
     const user = await this.prismaService.user.findUnique({
       where: { id: userId },
       select: {
@@ -335,6 +401,9 @@ export class AuthService {
   }
 
   async forgotPassword(phone: string) {
+    if (this.isMockAuth()) {
+      return { message: 'If the phone number exists, a reset link has been sent' };
+    }
     const user = await this.prismaService.user.findUnique({
       where: { phone },
     });
@@ -364,6 +433,9 @@ export class AuthService {
   }
 
   async resetPassword(token: string, newPassword: string) {
+    if (this.isMockAuth()) {
+      return { message: 'Password reset successfully' };
+    }
     const resetRecord = await this.prismaService.passwordResetToken.findUnique({
       where: { token },
     });
@@ -397,6 +469,9 @@ export class AuthService {
   }
 
   async verifyEmail(token: string) {
+    if (this.isMockAuth()) {
+      return { message: 'Email verified successfully' };
+    }
     const emailVerification =
       await this.prismaService.emailVerificationToken.findUnique({
         where: { token },
@@ -425,6 +500,9 @@ export class AuthService {
   }
 
   async verifyPhone(token: string) {
+    if (this.isMockAuth()) {
+      return { message: 'Phone verified successfully' };
+    }
     const phoneVerification =
       await this.prismaService.phoneVerificationToken.findUnique({
         where: { token },
@@ -453,6 +531,9 @@ export class AuthService {
   }
 
   async resendEmailVerification(userId: string) {
+    if (this.isMockAuth()) {
+      return { message: 'Verification email sent' };
+    }
     const user = await this.prismaService.user.findUnique({
       where: { id: userId },
     });
@@ -478,6 +559,9 @@ export class AuthService {
   }
 
   async resendPhoneVerification(userId: string) {
+    if (this.isMockAuth()) {
+      return { message: 'Verification SMS sent' };
+    }
     const user = await this.prismaService.user.findUnique({
       where: { id: userId },
     });

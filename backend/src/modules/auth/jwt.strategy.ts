@@ -9,7 +9,7 @@ import { PrismaService } from '../../common/prisma.service';
 export class JwtStrategy extends PassportStrategy(Strategy) {
   constructor(
     private prisma: PrismaService,
-    configService: ConfigService,
+    private configService: ConfigService,
   ) {
     super({
       jwtFromRequest: (req: Request) => {
@@ -28,6 +28,9 @@ export class JwtStrategy extends PassportStrategy(Strategy) {
   }
 
   async validate(payload: { sub: string; role: string }) {
+    if (this.configService.get<string>('MOCK_AUTH') === 'true') {
+      return { id: payload.sub, role: payload.role };
+    }
     const user = await this.prisma.user.findUnique({
       where: { id: payload.sub },
       select: {
