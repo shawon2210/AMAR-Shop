@@ -6,10 +6,8 @@ import Image from 'next/image';
 import { useRouter } from 'next/navigation';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useAuthStore, useAuthHydrated } from '@/stores/auth-store';
-import { useSearchStore } from '@/stores/search-store';
 import { useFocusTrap } from '../hooks/use-focus-trap';
 import { useBodyLock } from '../hooks/use-body-lock';
-import { useSidebarBehavior } from '../hooks/use-sidebar-behavior';
 import { MobileCategoryList } from './MobileCategoryList';
 import { NotificationButton } from '../components/NotificationButton';
 import { WishlistButton } from '../components/WishlistButton';
@@ -39,7 +37,6 @@ export function NavigationDrawer({
   const user = useAuthStore((s) => s.user);
   const isAuthenticated = useAuthStore((s) => s.isAuthenticated);
   const logout = useAuthStore((s) => s.logout);
-  const setIsSearchOpen = useSearchStore((s) => s.setIsOpen);
   const showAuth = hydrated;
 
   useFocusTrap(drawerRef, open);
@@ -139,19 +136,6 @@ export function NavigationDrawer({
                   </div>
                 </div>
               )}
-
-              <div className="px-5 py-3">
-                <button
-                  onClick={() => {
-                    setIsSearchOpen(true);
-                    onClose();
-                  }}
-                  className="flex items-center gap-3 w-full px-4 h-11 rounded-xl bg-gray-100 text-sm text-gray-400 active:bg-gray-200 transition-colors text-left"
-                >
-                  <span className="material-symbols-outlined text-[18px]">search</span>
-                  <span>Search products...</span>
-                </button>
-              </div>
 
               <div className="flex items-center justify-center gap-4 px-5 py-3">
                 <WishlistButton variant="drawer" />
