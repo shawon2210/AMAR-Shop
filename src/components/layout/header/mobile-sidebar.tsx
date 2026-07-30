@@ -6,6 +6,7 @@ import Image from 'next/image';
 import { usePathname, useRouter } from 'next/navigation';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useAuthStore, useAuthHydrated } from '@/stores/auth-store';
+import { useSearchStore } from '@/stores/search-store';
 
 const categoryNav = [
   { href: '/category/fashion', label: 'Fashion', icon: 'checkroom' },
@@ -28,6 +29,7 @@ export function MobileSidebar({ open, onClose }: { open: boolean; onClose: () =>
   const previousFocusRef = useRef<HTMLElement | null>(null);
   const onCloseRef = useRef(onClose);
   onCloseRef.current = onClose;
+  const setIsSearchOpen = useSearchStore(s => s.setIsOpen);
 
   // Close on route change
   useEffect(() => {
@@ -54,11 +56,11 @@ export function MobileSidebar({ open, onClose }: { open: boolean; onClose: () =>
   useEffect(() => {
     if (!open) return;
     const handleKey = (e: KeyboardEvent) => {
-      if (e.key === 'Escape') onClose();
+      if (e.key === 'Escape') onCloseRef.current();
     };
     document.addEventListener('keydown', handleKey);
     return () => document.removeEventListener('keydown', handleKey);
-  }, [open, onClose]);
+  }, [open]);
 
   return (
     <AnimatePresence>
@@ -83,7 +85,7 @@ export function MobileSidebar({ open, onClose }: { open: boolean; onClose: () =>
             animate={{ x: 0 }}
             exit={{ x: '-100%' }}
             transition={{ type: 'spring', damping: 25, stiffness: 200 }}
-             className="              fixed left-0 top-0 bottom-0 h-full w-[80vw] max-w-sm bg-white shadow-2xl z-1000 outline-none overflow-hidden flex flex-col rounded-r-2xl"
+             className="              fixed left-0 top-0 bottom-0 h-full w-[80vw] max-w-sm lg:max-w-md bg-white shadow-2xl z-1000 outline-none overflow-hidden flex flex-col rounded-r-2xl"
             role="dialog"
             aria-modal="true"
             aria-label="Navigation menu"
@@ -144,10 +146,13 @@ export function MobileSidebar({ open, onClose }: { open: boolean; onClose: () =>
 
               {/* Search shortcut */}
               <div className="px-5 py-3">
-                <div className="flex items-center gap-3 px-4 h-11 rounded-xl bg-gray-100 text-sm text-gray-400 cursor-pointer active:bg-gray-200 transition-colors">
+                <button
+                  onClick={() => { setIsSearchOpen(true); onCloseRef.current(); }}
+                  className="flex items-center gap-3 w-full px-4 h-11 rounded-xl bg-gray-100 text-sm text-gray-400 active:bg-gray-200 transition-colors text-left"
+                >
                   <span className="material-symbols-outlined text-[18px]">search</span>
                   <span>Search products...</span>
-                </div>
+                </button>
               </div>
 
               <div className="px-5 pb-2">

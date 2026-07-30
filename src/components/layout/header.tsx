@@ -95,7 +95,7 @@ export function Header() {
           <div className="flex items-center gap-0.5 shrink-0">
             <button
               onClick={() => setSidebarOpen(true)}
-              className="md:hidden flex items-center justify-center w-11 h-11 rounded-xl text-gray-600 hover:bg-gray-100 transition-colors duration-150"
+              className="lg:hidden flex items-center justify-center w-11 h-11 rounded-xl text-gray-600 hover:bg-gray-100 transition-colors duration-150"
               aria-label="Open menu"
             >
               <span className="material-symbols-outlined text-[22px]">menu</span>
@@ -116,14 +116,15 @@ export function Header() {
           <div className="hidden md:flex flex-1 justify-center">
             <button
               onClick={() => setIsSearchOpen(true)}
-              className="relative w-full max-w-580px lg:max-w-700px group"
+              className="relative w-full max-w-[380px] lg:max-w-[580px] xl:max-w-[700px] group"
             >
               <div className="relative w-full transition-all duration-200">
                 <span className="absolute left-4 top-1/2 -translate-y-1/2 material-symbols-outlined text-gray-400 text-[20px] pointer-events-none transition-colors duration-150">
                   search
                 </span>
                 <div className="w-full h-11 rounded-full border-2 border-gray-200 bg-white pl-11 pr-14 text-sm text-gray-400 flex items-center text-left transition-all duration-200 group-hover:border-gray-300 group-hover:bg-gray-50 cursor-text">
-                  Search products, brands & categories...
+                  <span className="hidden xl:inline">Search products, brands & categories...</span>
+                  <span className="xl:hidden">Search products...</span>
                 </div>
                 <div className="absolute right-1.5 top-1/2 -translate-y-1/2 w-8 h-8 flex items-center justify-center rounded-full bg-primary text-white group-hover:bg-primary-dark transition-all duration-150">
                   <span className="material-symbols-outlined text-[17px]">search</span>
@@ -146,7 +147,7 @@ export function Header() {
             {/* Notifications */}
             <Link
               href="/notifications"
-              className="hidden sm:flex relative items-center justify-center w-11 h-11 rounded-xl text-gray-600 hover:bg-gray-100 hover:text-primary transition-all duration-150"
+              className="hidden lg:flex relative items-center justify-center w-11 h-11 rounded-xl text-gray-600 hover:bg-gray-100 hover:text-primary transition-all duration-150"
               aria-label="Notifications"
             >
               <span className="material-symbols-outlined text-[22px]">notifications</span>
@@ -156,7 +157,7 @@ export function Header() {
             {/* Wishlist */}
             <Link
               href="/account"
-              className="hidden sm:flex relative items-center justify-center w-11 h-11 rounded-xl text-gray-600 hover:bg-gray-100 hover:text-primary transition-all duration-150"
+              className="hidden lg:flex relative items-center justify-center w-11 h-11 rounded-xl text-gray-600 hover:bg-gray-100 hover:text-primary transition-all duration-150"
               aria-label="Wishlist"
             >
               <span className="material-symbols-outlined text-[22px]">favorite_border</span>
@@ -207,7 +208,7 @@ export function Header() {
       </div>
 
       {/* ── Category nav ── */}
-      <div className="hidden md:block border-t border-gray-100/80 bg-white">
+      <div className="hidden lg:block border-t border-gray-100/80 bg-white">
         <div className="app-container">
           <nav className="flex items-center gap-0 h-10 overflow-x-auto hide-scrollbar" aria-label="Category navigation">
             {categoryNav.map(cat => {
