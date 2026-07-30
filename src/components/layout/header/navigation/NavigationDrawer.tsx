@@ -8,6 +8,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { useAuthStore, useAuthHydrated } from '@/stores/auth-store';
 import { useFocusTrap } from '../hooks/use-focus-trap';
 import { useBodyLock } from '../hooks/use-body-lock';
+import { useSidebarBehavior } from '../hooks/use-sidebar-behavior';
 import { MobileCategoryList } from './MobileCategoryList';
 import { NotificationButton } from '../components/NotificationButton';
 import { WishlistButton } from '../components/WishlistButton';
