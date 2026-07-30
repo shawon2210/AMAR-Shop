@@ -91,10 +91,9 @@ export function MobileSidebar({ open, onClose }: { open: boolean; onClose: () =>
               <Image
           src="/images/amarshop-logo.png"
           alt="AmarShop"
-          width={110}
-          height={36}
-          className="w-110px h-auto"
-          unoptimized={false}
+          width={120}
+          height={48}
+          className="w-[120px] h-auto object-contain"
         />
               <button
                 onClick={onClose}

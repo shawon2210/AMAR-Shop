@@ -88,8 +88,8 @@ export function Header() {
       </div>
 
       {/* ── Main header ── */}
-      <div className="app-container h-14 md:h-16 lg:h-68px">
-        <div className="grid grid-cols-[auto_1fr_auto] items-center gap-2 md:gap-4 lg:gap-6 h-full">
+      <div className="app-container h-16 md:h-18 lg:h-20">
+        <div className="flex items-center gap-2 md:gap-4 lg:gap-6 h-full">
 
           {/* Logo + mobile menu */}
           <div className="flex items-center gap-0.5 shrink-0">
@@ -104,17 +104,16 @@ export function Header() {
               <Image
                 src="/images/amarshop-logo.png"
                 alt="AmarShop"
-                width={90}
-                height={36}
-                className="h-7 md:h-8 lg:h-9 w-auto object-contain"
-                style={{ minWidth: '90px', maxWidth: '160px', width: 'auto', height: 'auto' }}
-                unoptimized={false}
+                width={160}
+                height={48}
+                className="w-[120px] md:w-[150px] lg:w-[180px] h-auto object-contain"
+                priority
               />
             </Link>
           </div>
 
           {/* Search — prominent */}
-          <div className="hidden md:flex justify-center">
+          <div className="hidden md:flex flex-1 justify-center">
             <button
               onClick={() => setIsSearchOpen(true)}
               className="relative w-full max-w-580px lg:max-w-700px group"
