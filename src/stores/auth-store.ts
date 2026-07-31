@@ -168,11 +168,11 @@ export const useAuthStore = create<AuthState>()(
         user: state.user,
       }),
       merge: (persisted, current) => {
-        const p = persisted as AuthPersist;
+        const p = persisted as AuthPersist | undefined;
         return {
           ...current,
-          user: p.user ?? current.user,
-          isAuthenticated: !!p.user,
+          user: p?.user ?? current.user,
+          isAuthenticated: !!p?.user,
         };
       },
     },
