@@ -283,4 +283,68 @@ Replaced `fixed` sidebar with `sticky` inside a flex container:
 | Sidebar width (collapsed) | `w-[72px]` | `w-[72px]` |
 | Max height | `calc(100vh - 7rem)` | `calc(100vh - 7rem)` (via bottom-4) |
 | Collapse toggle | Yes | Yes (new) |
+
+---
+
+## Session 2026-07-31 — Cart responsive fix, mobile-first header overhaul, auth hydration fix
+
+### Cart page fix (commit `9899a75`, deploy `dpl_Fr5kZCZxjbWymmsT87t7rPa2PDns`)
+
+- **Desktop grid**: `lg:grid-cols-[minmax(0,2fr)_minmax(0,1fr)]` (minmax(0,…) keeps grid children from blowing out the container; `fr` alone does not constrain min-content width)
+- **Product line item**: `grid-cols-[72px_1fr_auto]` + truncation on name/options; price cell `text-right whitespace-nowrap` (force `justify-self-end` — grid children only shrink when it's set)
+- **Variants/size pills**: `flex-wrap` so small screens wrap instead of overflowing; fixed bottom bar hides at `lg:`
+- Verification: playwright overflow checks at 320–1440 (worst overflow 0); production verified via Vercel SSO share URL
+
+### Header mobile overhaul (commit `87d3cd8`, deploy `dpl_8QvUW64nkMQAZzoW46rre8167SM8`)
+
+User decisions: **2 action icons on <sm** (cart + account; wishlist + notifications live in the drawer on phones) and **collapse search row on scroll** (collapses scrolling down, restores scrolling up).
+
+- **`header/index.tsx`**: single `app-container` wraps two stacked rows — row 1 (`h-16 md:h-18 lg:h-20`) = menu + logo (`min-w-0`) + DesktopSearch + Actions; row 2 = `<MobileSearchButton scrolled={scrolled} />` driven by `useScrollState(4)`
+- **`MobileSearchButton.tsx`**: `md:hidden` collapsible row — `h-[52px] opacity-100` ↔ `h-0 opacity-0` (300ms, `overflow-hidden`); removed ⌘K kbd chip
+- **`Actions.tsx`**: Notification + Wishlist wrapped in `hidden sm:block`; Cart + AuthSection get `compact`; `ml-auto`
+- **Compact buttons**: `w-10 h-10 sm:w-11 sm:h-11`, `active:bg-gray-100` (touch feedback) on CartButton/AuthSection/NotificationButton/WishlistButton
+- **`SearchOverlay.tsx`** (was unclosable): always-visible X Close button, Escape key, backdrop click (`e.target === e.currentTarget`), `prevFocusRef` focus restore, `safe-top`, results `max-h-[calc(100dvh-8rem)] md:max-h-[70vh]`
+- Verified locally (320/360/375/390/414 → overflow 0, 2 icons; 768 → 5 items; search row 52px↔0 on scroll; overlay closes 3 ways; focus restored) and on production via share URL
+- Drawer regression note: mobile drawer dialog has an **empty id** — `#navigation-drawer` selector fails; use `[role="dialog"]`
+
+### Auth hydration fix (commit `f685429`, deploy `dpl_GUfCQ6drDVSbkZJa39Xm5Dn8FCSv`)
+
+- **Root cause**: zustand 5 persist `hydrate()` always calls `options.merge()` even with **no persisted state** (`migratedState = undefined`). `auth-store.ts` merge did `p.user ?? current.user` → TypeError → hydration promise rejected → `hasHydrated()` never fired → permanent skeleton pulse instead of Sign In icon for **every fresh visitor** (pre-existing, site-wide)
+- **Fix**: `merge: (persisted, current) => { const p = persisted as AuthPersist | undefined; return { ...current, user: p?.user ?? current.user, isAuthenticated: !!p?.user }; }`
+- Verified on production: fresh visitor → `a[href="/auth/login"]` visible, 0 pulse elements; seeded `amarshop-auth` → `a[href="/account"]` visible, 0 pulse
+- Prod console still shows 4 errors (prior pattern = backend-down artifacts; uninvestigated)
+
+### Patterns / gotchas
+
+- Vercel team ID for this project: `team_F1cEOGelGW4yPCGOAidAOOk8` (slug `shawon2210s-projects`) — a stale/wrong `team_Gcq…` token causes 403
+- `_vercel_share` URLs are per-deployment; regenerate with `vercel_get_access_to_vercel_url` after each deploy (expire ~24h)
+- `tsconfig.json` excludes `tests` — `tests/playwright/mobile-sidebar-visibility.test.ts` is a pre-existing Python-style file saved as `.ts` (triple-quoted docstring) that breaks `tsc`; needs conversion or deletion
+- `tsc --noEmit` + `eslint` on changed files is the verification gate before commits
+- git push stderr warnings are benign (PowerShell renders remote output to stderr)
+
+---
+
+## Session 2026-07-31 (second pass) — Responsive mobile sidebar drawer width
+
+### Problem
+
+Mobile drawer was a fixed `w-[280px] max-w-[85vw]` on every phone (only 75% of a 375px viewport, 68% of 414px) and **shared the persisted desktop collapse state** — collapsing on desktop made the mobile drawer open as a 72px icon rail on phones.
+
+### Fix (commit `c66d6ee`)
+
+- **Responsive width**: mobile drawer expanded = `w-[min(88vw,300px)]` — scales with viewport (282px at 320vw → 300px cap), matching modern ecommerce admin drawer proportions. Applied to both admin (`src/app/admin/layout.tsx`) and seller (`src/app/seller/layout.tsx`) drawers.
+- **State decoupling**: new `mobileCollapsed` state (`useState(false)`, not persisted) replaces `sidebarCollapsed` in the mobile drawer branch. Mobile always opens expanded regardless of desktop collapse; the in-drawer collapse toggle still works locally (72px rail) and never leaks to desktop. Desktop branch keeps the persisted `sidebarCollapsed`.
+
+### Verification (Playwright, dev server with `/api/**` stubbed to 500 to avoid 401→logout→login redirect)
+
+- Drawer widths: 320→282px (88%), 360/375/390/414→300px (80%/77%/72%)
+- With `amarshop-admin-sidebar=true` persisted, mobile drawer still opened at full responsive width (no 72px rail leak)
+- Mobile toggle: collapse→72px, expand→300px; desktop unaffected (240px expanded, 72px collapsed, persistence intact)
+- Seller layout: 300px at 375vw, desktop 240px expanded
+- `tsc --noEmit` + `eslint` clean
+
+### Gotcha
+
+- Local `/admin` testing: backend down → rewrite returns 401 → `api.ts` logs out and redirects to `/auth/login` mid-test. Stub `/api/**` with `page.route` returning 500 JSON to keep the session alive while testing layout.
+- `dev-server.log` at repo root is a transient artifact when launching `npm run dev` via `Start-Process` — delete after use.
 <!-- END:session-summary -->
