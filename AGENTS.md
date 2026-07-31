@@ -347,4 +347,32 @@ Mobile drawer was a fixed `w-[280px] max-w-[85vw]` on every phone (only 75% of a
 
 - Local `/admin` testing: backend down → rewrite returns 401 → `api.ts` logs out and redirects to `/auth/login` mid-test. Stub `/api/**` with `page.route` returning 500 JSON to keep the session alive while testing layout.
 - `dev-server.log` at repo root is a transient artifact when launching `npm run dev` via `Start-Process` — delete after use.
+
+---
+
+## Session 2026-08-01 — Cart Phase 2 verification + mobile-first empty cart state
+
+### Cart Phase 2 todo completion (verification pass over existing `9899a75` fix)
+
+- Re-verified cart page at 360/375/768/1024 with seeded `amarshop-cart` localStorage (3 items, subtotal < ৳999): item cards, variant labels (`colors[0] · sizes[0]` text line), free-shipping bar + progress, sticky Order Summary (lg), mobile checkout bar (`fixed bottom-14 md:hidden`, 65px, "Check Out"), undo toast — all pass, zero horizontal overflow
+- **Undo toast round-trip**: remove → toast "Item removed from cart" → Undo restores (3→2→3). Toast at `bottom-[8.5rem] md:bottom-6`
+- Cold-load flake: first visit at a viewport may show skeleton past 1200ms — use `waitForFunction` on page text instead of fixed sleeps
+- Bottom bar CTA text is "**Check Out**" (two words) — `includes('Checkout')` fails; mobile coupon UI lives in the bar's "Details / Price & promo" sheet (`detailsOpen`/`promoOpen`), not the `hidden md:block` coupon card
+
+### Mobile-first empty cart state (commit `4a1ff04`, deploy `dpl_FwXG6BAJPFre1svWdNiY3D9N6Rt5`)
+
+- `src/app/cart/page.tsx` empty state: icon `w-16 h-16`→`sm:w-20`, heading `text-lg`→`sm:text-2xl`, copy `text-[13px]` + `max-w-[280px]`, container `py-6 md:py-10`
+- Recently Removed rows: `p-2.5 sm:p-3`, `gap-2.5 sm:gap-3`, thumb `w-10 h-10 sm:w-11`, name `text-[13px] font-medium`, Undo `min-h-[44px]`
+- Continue Shopping: `w-full` full-width on mobile (336px @ 375, 48px tall) → `sm:w-auto` centered (178px @ ≥768)
+- Verified 320/360/375/414/768/1024: overflow 0, rows in bounds, button geometry correct
+
+### Customer-facing drawer widths (commit `6382c3d`, deploy `dpl_C1dxnCRoG235wMdLk2csSTR2eJR4`)
+
+- `NavigationDrawer.tsx`: `clamp(280px, 80vw, 400px)` → `clamp(280px, 85vw, 320px)` (was 331–344px on 414–430 phones)
+- `category-filter-sidebar.tsx`: `w-[280px] max-w-[80vw]` → `w-[clamp(280px,85vw,320px)]`
+- Verified 320/375/414/430: 280px (88%) → 319px (85%) → 320px (77%/74%); zero overflow at 320×568
+
+### Gotcha
+
+- `.playwright-mcp/` is **accidentally git-tracked** (old commits) — deleting the directory stages ~200 deletions; `git checkout -- .playwright-mcp` to restore. Consider gitignoring later.
 <!-- END:session-summary -->
