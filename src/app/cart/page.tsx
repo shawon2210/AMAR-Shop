@@ -225,34 +225,37 @@ export default function CartPage() {
         variants={fadeUp}
         initial="hidden"
         animate="show"
-        className="flex flex-col justify-center min-h-[calc(100dvh-10rem)] app-container"
+        className="flex flex-col justify-center min-h-[calc(100dvh-10rem)] app-container py-6 md:py-10"
       >
-        <div className="w-20 h-20 bg-primary/10 rounded-full flex items-center justify-center self-center mb-4">
-          <ShoppingBag className="w-10 h-10 text-primary" />
+        <div className="w-16 h-16 sm:w-20 sm:h-20 bg-primary/10 rounded-full flex items-center justify-center self-center mb-3 sm:mb-4">
+          <ShoppingBag className="w-8 h-8 sm:w-10 sm:h-10 text-primary" />
         </div>
-        <h2 className="text-xl sm:text-2xl font-bold text-center mb-2">Your Cart is Empty</h2>
-        <p className="text-sm text-gray-500 mb-6 text-center max-w-xs mx-auto">
+        <h2 className="text-lg sm:text-2xl font-bold text-center mb-2">Your Cart is Empty</h2>
+        <p className="text-[13px] sm:text-sm text-gray-500 mb-5 sm:mb-6 text-center max-w-[280px] sm:max-w-xs mx-auto">
           Looks like you haven&apos;t added anything yet. Browse our deals and find something you love!
         </p>
 
         {removedItems.length > 0 && (
-          <div className="max-w-md mx-auto w-full mb-4">
-            <h3 className="text-sm font-semibold text-gray-700 mb-2">Recently Removed</h3>
+          <div className="max-w-md mx-auto w-full mb-5 sm:mb-6">
+            <h3 className="text-[13px] sm:text-sm font-semibold text-gray-700 mb-2.5">Recently Removed</h3>
             <div className="space-y-2">
               {removedItems.slice(0, 3).map(r => (
-                <div key={r.item.id} className="flex items-center gap-3 bg-white p-3 rounded-2xl border border-gray-100 shadow-[0_4px_20px_rgba(0,0,0,0.06)]">
-                  <div className="w-10 h-10 rounded-md bg-gray-100 overflow-hidden shrink-0 relative">
-                    <Image src={r.item.product.images[0]} alt={r.item.product.name} width={40} height={40} className="w-full h-full object-cover" />
+                <div
+                  key={r.item.id}
+                  className="flex items-center gap-2.5 sm:gap-3 bg-white p-2.5 sm:p-3 rounded-xl sm:rounded-2xl border border-gray-100 shadow-[0_4px_20px_rgba(0,0,0,0.06)]"
+                >
+                  <div className="w-10 h-10 sm:w-11 sm:h-11 rounded-lg bg-gray-100 overflow-hidden shrink-0 relative">
+                    <Image src={r.item.product.images[0]} alt={r.item.product.name} width={44} height={44} className="w-full h-full object-cover" />
                   </div>
                   <div className="flex-1 min-w-0">
-                    <p className="text-sm truncate">{r.item.product.name}</p>
-                    <p className="text-xs text-gray-400">৳{r.item.product.price.toLocaleString('en-BD')}</p>
+                    <p className="text-[13px] sm:text-sm font-medium text-gray-800 truncate">{r.item.product.name}</p>
+                    <p className="text-[11px] sm:text-xs text-gray-400">৳{r.item.product.price.toLocaleString('en-BD')}</p>
                   </div>
                   <button
                     onClick={() => undoRemoveItem(r.item.id)}
-                    className="flex items-center gap-1 text-xs text-primary font-semibold hover:underline shrink-0 min-h-[44px] px-2"
+                    className="flex items-center gap-1 text-xs sm:text-[13px] text-primary font-semibold hover:underline shrink-0 min-h-[44px] px-2"
                   >
-                    <Undo2 className="w-3 h-3" />
+                    <Undo2 className="w-3.5 h-3.5" />
                     Undo
                   </button>
                 </div>
@@ -263,7 +266,7 @@ export default function CartPage() {
 
         <Link
           href="/"
-          className="bg-primary text-white px-6 py-3 rounded-xl font-semibold hover:brightness-110 transition-all text-center self-center w-full sm:w-auto"
+          className="bg-primary text-white w-full sm:w-auto px-6 py-3.5 sm:py-3 rounded-xl font-semibold hover:brightness-110 transition-all text-center self-center"
         >
           Continue Shopping
         </Link>
