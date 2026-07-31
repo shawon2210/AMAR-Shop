@@ -72,7 +72,7 @@ export function NavigationDrawer({
             className="fixed left-0 right-0 flex flex-col bg-white shadow-2xl outline-none rounded-r-2xl overflow-hidden"
             style={{
               zIndex: Z_SIDEBAR,
-              width: 'clamp(280px, 80vw, 400px)',
+              width: 'clamp(280px, 85vw, 320px)',
               height: '100dvh',
             }}
             role="dialog"

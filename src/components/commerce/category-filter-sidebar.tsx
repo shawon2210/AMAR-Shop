@@ -143,7 +143,7 @@ export function CategoryFilterSidebar() {
                 animate={{ x: 0 }}
                 exit={{ x: '-100%' }}
                 transition={{ type: 'spring', stiffness: 300, damping: 30 }}
-                className="fixed left-0 top-0 h-full w-[280px] max-w-[80vw] bg-white z-[210] shadow-2xl"
+                className="fixed left-0 top-0 h-full w-[clamp(280px,85vw,320px)] bg-white z-[210] shadow-2xl"
                 role="dialog"
                 aria-modal="true"
                 aria-label="Filters"
