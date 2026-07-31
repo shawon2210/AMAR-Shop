@@ -43,12 +43,12 @@ export function Header() {
     >
       <TopUtilityBar />
 
-      <div className="app-container h-16 md:h-18 lg:h-20">
-        <div className="flex items-center gap-2 md:gap-3 lg:gap-6 h-full">
+      <div className="app-container">
+        <div className="flex items-center gap-1.5 md:gap-3 lg:gap-6 h-16 md:h-18 lg:h-20">
           <div className="flex items-center gap-0.5 shrink-0">
             <button
               onClick={() => setSidebarOpen(true)}
-              className="lg:hidden flex items-center justify-center w-11 h-11 rounded-xl text-gray-600 hover:bg-gray-100 transition-colors duration-150"
+              className="lg:hidden flex items-center justify-center w-11 h-11 rounded-xl text-gray-600 hover:bg-gray-100 active:bg-gray-100 transition-colors duration-150"
               aria-label="Open menu"
               aria-expanded={sidebarOpen}
               aria-controls="navigation-drawer"
@@ -58,12 +58,12 @@ export function Header() {
             <Logo />
           </div>
 
-          <MobileSearchButton />
-
           <DesktopSearch />
 
           <Actions />
         </div>
+
+        <MobileSearchButton scrolled={scrolled} />
       </div>
 
       <CategoryNav />

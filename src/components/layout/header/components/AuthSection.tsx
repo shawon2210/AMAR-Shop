@@ -3,14 +3,20 @@
 import { useAuthStore, useAuthHydrated } from '@/stores/auth-store';
 import Link from 'next/link';
 
-export function AuthSection() {
+interface AuthSectionProps {
+  compact?: boolean;
+}
+
+export function AuthSection({ compact = false }: AuthSectionProps) {
   const hydrated = useAuthHydrated();
   const user = useAuthStore((s) => s.user);
   const isAuthenticated = useAuthStore((s) => s.isAuthenticated);
 
+  const iconSize = compact ? 'w-10 h-10 sm:w-11 sm:h-11' : 'w-11 h-11';
+
   if (!hydrated) {
     return (
-      <div className="flex items-center justify-center w-11 h-11 shrink-0">
+      <div className={`flex items-center justify-center shrink-0 ${iconSize}`}>
         <div className="w-5 h-5 rounded-full bg-gray-200 animate-pulse" aria-hidden="true" />
       </div>
     );
@@ -21,7 +27,7 @@ export function AuthSection() {
       <>
         <Link
           href="/auth/login"
-          className="md:hidden flex items-center justify-center w-11 h-11 rounded-xl text-gray-600 hover:bg-gray-100 transition-colors duration-150"
+          className={`md:hidden flex items-center justify-center rounded-xl text-gray-600 hover:bg-gray-100 active:bg-gray-100 transition-colors duration-150 ${iconSize}`}
           aria-label="Sign in"
         >
           <span className="material-symbols-outlined text-[22px]">person</span>
@@ -41,7 +47,7 @@ export function AuthSection() {
       <>
         <Link
           href="/admin"
-          className="md:hidden flex items-center justify-center w-11 h-11 rounded-xl text-gray-600 hover:bg-gray-100 transition-colors duration-150"
+          className={`md:hidden flex items-center justify-center rounded-xl text-gray-600 hover:bg-gray-100 active:bg-gray-100 transition-colors duration-150 ${iconSize}`}
           aria-label="Admin dashboard"
         >
           <span className="material-symbols-outlined text-[22px]">admin_panel_settings</span>
@@ -60,7 +66,7 @@ export function AuthSection() {
   return (
     <Link
       href={user?.isSeller ? '/seller/dashboard' : '/account'}
-      className="flex items-center justify-center w-11 h-11 rounded-xl text-gray-600 hover:bg-gray-100 hover:text-primary transition-all duration-150"
+      className={`flex items-center justify-center rounded-xl text-gray-600 hover:bg-gray-100 hover:text-primary active:bg-gray-100 transition-all duration-150 ${iconSize}`}
       aria-label="My account"
     >
       <span className="material-symbols-outlined text-[22px]">person</span>

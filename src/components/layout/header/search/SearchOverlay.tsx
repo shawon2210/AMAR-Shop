@@ -47,6 +47,7 @@ export function SearchOverlay() {
   const overlayRef = useRef<HTMLDivElement>(null);
   const resultsRef = useRef<HTMLDivElement>(null);
   const debounceRef = useRef<ReturnType<typeof setTimeout>>(undefined);
+  const prevFocusRef = useRef<HTMLElement | null>(null);
 
   const [filteredProducts, setFilteredProducts] = useState<typeof products>([]);
   const [filteredCategories, setFilteredCategories] = useState<string[]>([]);
@@ -99,7 +100,11 @@ export function SearchOverlay() {
 
   useEffect(() => {
     if (isOpen) {
+      prevFocusRef.current = document.activeElement as HTMLElement | null;
       requestAnimationFrame(() => inputRef.current?.focus());
+    } else {
+      prevFocusRef.current?.focus?.();
+      prevFocusRef.current = null;
     }
   }, [isOpen]);
 
@@ -133,6 +138,10 @@ export function SearchOverlay() {
 
   const handleKeyDown = (e: React.KeyboardEvent) => {
     switch (e.key) {
+      case 'Escape':
+        e.preventDefault();
+        setIsOpen(false);
+        break;
       case 'ArrowDown':
         e.preventDefault();
         const nextDown = Math.min(selectedIndex + 1, totalItems - 1);
@@ -210,48 +219,60 @@ export function SearchOverlay() {
       role="dialog"
       aria-modal="true"
       aria-label="Search products"
+      onClick={(e) => {
+        if (e.target === e.currentTarget) setIsOpen(false);
+      }}
     >
       <div
         ref={overlayRef}
-        className="absolute top-0 left-0 right-0 bg-white shadow-2xl border-b border-gray-200"
+        className="absolute top-0 left-0 right-0 bg-white shadow-2xl border-b border-gray-200 safe-top"
       >
         <div className="app-container py-4">
-          <div className="relative max-w-3xl mx-auto">
-            <Search className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400 w-5 h-5 pointer-events-none" />
-            <input
-              ref={inputRef}
-              type="text"
-              value={query}
-              onChange={(e) => setQuery(e.target.value)}
-              onKeyDown={handleKeyDown}
-              placeholder="Search products, brands & categories..."
-              className="w-full h-12 pl-12 pr-12 text-base bg-gray-50 border-2 border-gray-200 rounded-xl outline-none transition-all duration-200 focus:border-primary focus:bg-white focus:shadow-[0_0_0_4px_rgb(166_54_0/0.08)]"
-              aria-label="Search"
-              aria-controls="search-results"
-              aria-activedescendant={
-                selectedIndex >= 0 ? `result-item-${selectedIndex}` : undefined
-              }
-              role="combobox"
-              aria-expanded={showResults}
-              aria-autocomplete="list"
-              autoComplete="off"
-            />
-            {query && (
-              <button
-                onClick={() => setQuery('')}
-                className="absolute right-3 top-1/2 -translate-y-1/2 w-8 h-8 flex items-center justify-center rounded-lg text-gray-400 hover:text-gray-600 hover:bg-gray-100 transition-all"
-                aria-label="Clear search"
-              >
-                <X className="w-4 h-4" />
-              </button>
-            )}
+          <div className="flex items-start gap-2 max-w-3xl mx-auto">
+            <div className="relative flex-1 min-w-0">
+              <Search className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400 w-5 h-5 pointer-events-none" />
+              <input
+                ref={inputRef}
+                type="text"
+                value={query}
+                onChange={(e) => setQuery(e.target.value)}
+                onKeyDown={handleKeyDown}
+                placeholder="Search products, brands & categories..."
+                className="w-full h-12 pl-12 pr-12 text-base bg-gray-50 border-2 border-gray-200 rounded-xl outline-none transition-all duration-200 focus:border-primary focus:bg-white focus:shadow-[0_0_0_4px_rgb(166_54_0/0.08)]"
+                aria-label="Search"
+                aria-controls="search-results"
+                aria-activedescendant={
+                  selectedIndex >= 0 ? `result-item-${selectedIndex}` : undefined
+                }
+                role="combobox"
+                aria-expanded={showResults}
+                aria-autocomplete="list"
+                autoComplete="off"
+              />
+              {query && (
+                <button
+                  onClick={() => setQuery('')}
+                  className="absolute right-3 top-1/2 -translate-y-1/2 w-8 h-8 flex items-center justify-center rounded-lg text-gray-400 hover:text-gray-600 hover:bg-gray-100 transition-all"
+                  aria-label="Clear search"
+                >
+                  <X className="w-4 h-4" />
+                </button>
+              )}
+            </div>
+            <button
+              onClick={() => setIsOpen(false)}
+              className="shrink-0 w-11 h-11 flex items-center justify-center rounded-xl text-gray-500 hover:bg-gray-100 hover:text-gray-800 active:bg-gray-100 transition-all"
+              aria-label="Close search"
+            >
+              <X className="w-5 h-5" />
+            </button>
           </div>
         </div>
 
         <div
           ref={resultsRef}
           id="search-results"
-          className="app-container pb-6 max-h-[70vh] overflow-y-auto overscroll-contain"
+          className="app-container pb-6 max-h-[calc(100dvh-8rem)] md:max-h-[70vh] overflow-y-auto overscroll-contain"
           role="listbox"
           aria-label="Search results"
         >

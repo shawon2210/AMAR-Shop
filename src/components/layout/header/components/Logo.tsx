@@ -5,7 +5,7 @@ import Image from 'next/image';
 
 export function Logo() {
   return (
-    <Link href="/" className="flex items-center shrink-0" aria-label="AmarShop Home">
+    <Link href="/" className="flex items-center min-w-0" aria-label="AmarShop Home">
       <Image
         src="/images/amarshop-logo.png"
         alt="AmarShop"
