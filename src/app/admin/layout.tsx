@@ -409,6 +409,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
   const user = useAuthStore((s) => s.user);
   const hydrated = useAuthHydrated();
   const [sidebarOpen, setSidebarOpen] = useState(false);
+  const [mobileCollapsed, setMobileCollapsed] = useState(false);
   const [sidebarCollapsed, setSidebarCollapsed] = useState(() => {
     if (typeof window === 'undefined') return false;
     const saved = localStorage.getItem('amarshop-admin-sidebar');
@@ -616,16 +617,16 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
             aria-modal="true"
             aria-label="Admin navigation sidebar"
             tabIndex={-1}
-className={`fixed top-24 left-4 bottom-4 bg-[#0f1219] text-white flex flex-col rounded-2xl shadow-2xl shadow-black/40 border border-white/5 transition-all duration-300 ease-out ${
-               sidebarCollapsed ? 'w-[72px]' : 'w-[280px] max-w-[85vw]'
-             } ${
+            className={`fixed top-24 left-4 bottom-4 bg-[#0f1219] text-white flex flex-col rounded-2xl shadow-2xl shadow-black/40 border border-white/5 transition-all duration-300 ease-out ${
+              mobileCollapsed ? 'w-[72px]' : 'w-[min(88vw,300px)]'
+            } ${
               sidebarOpen ? 'translate-x-0' : '-translate-x-[calc(100%+32px)]'
             }`}
             style={{ zIndex: 'var(--z-sidebar, 90)' }}
           >
             <SidebarContent
-              collapsed={sidebarCollapsed}
-              onToggleCollapse={handleToggleCollapse}
+              collapsed={mobileCollapsed}
+              onToggleCollapse={() => setMobileCollapsed((v) => !v)}
               isDesktop={false}
               onClose={() => setSidebarOpen(false)}
             />
