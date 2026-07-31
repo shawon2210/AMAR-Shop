@@ -40,10 +40,11 @@ export const useCartStore = create<CartState>()(
       addItem: (product, quantity = 1, sellerName?: string, sellerId?: string) => {
         const items = get().items;
         const existingIndex = items.findIndex(item => item.product.id === product.id);
+        const stockLimit = product.stockCount > 0 ? product.stockCount : 999;
 
         if (existingIndex >= 0) {
           const updated = [...items];
-          updated[existingIndex].quantity += quantity;
+          updated[existingIndex].quantity = Math.min(updated[existingIndex].quantity + quantity, stockLimit);
           set({ items: updated });
         } else {
           set({
@@ -89,7 +90,9 @@ export const useCartStore = create<CartState>()(
         if (quantity < 1) return;
         set({
           items: get().items.map(item =>
-            item.id === itemId ? { ...item, quantity } : item
+            item.id === itemId
+              ? { ...item, quantity: Math.min(quantity, item.product.stockCount > 0 ? item.product.stockCount : 999) }
+              : item
           ),
         });
       },

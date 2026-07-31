@@ -18,7 +18,7 @@ export function PromoCards() {
     <motion.aside
       variants={staggerContainer}
       initial="hidden"
-      animate="visible"
+      animate="show"
       className="hidden xl:flex flex-col gap-3 w-[360px] shrink-0 h-full overflow-y-auto hide-scrollbar"
     >
       {promos.map((card) => (

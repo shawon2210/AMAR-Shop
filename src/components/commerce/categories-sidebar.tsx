@@ -22,7 +22,7 @@ export function CategoriesSidebar() {
     <motion.aside
       variants={staggerContainer}
       initial="hidden"
-      animate="visible"
+      animate="show"
       className="hidden xl:block bg-white/80 backdrop-blur-xl border border-white/30 rounded-2xl p-4 shadow-[0_8px_30px_rgba(0,0,0,0.06)] h-full"
     >
       <nav className="flex flex-col">

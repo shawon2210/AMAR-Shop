@@ -13,7 +13,7 @@ export function OrderSummary({
   onPlaceOrder: () => void;
 }) {
   const subtotal = items.reduce((sum, item) => sum + item.product.price * item.quantity, 0);
-  const shipping = subtotal >= 2000 ? 0 : 60;
+  const shipping = subtotal >= 999 ? 0 : 60;
   const total = subtotal + shipping;
 
   return (

@@ -19,7 +19,7 @@ export function FlashSaleBanner({
     <motion.section
       variants={fadeUp}
       initial="hidden"
-      whileInView="visible"
+      whileInView="show"
       viewport={{ once: true }}
       className="w-full bg-gradient-to-r from-primary to-primary/80 text-white py-4 md:py-6 px-4 sm:px-6 md:px-8 overflow-hidden relative"
     >
