@@ -20,6 +20,7 @@ import {
   ChevronDown,
 } from 'lucide-react';
 import { useGetProducts } from '@/services/products';
+import { useLanguage } from '@/contexts/language-context';
 
 const couponSuggestions = [
   { code: 'WELCOME10', discount: 100, label: 'New User Discount' },
@@ -215,6 +216,8 @@ export default function CartPage() {
     }
   };
 
+  const { t } = useLanguage();
+
   if (!hydrated) {
     return <CartSkeleton />;
   }
@@ -230,9 +233,9 @@ export default function CartPage() {
         <div className="w-16 h-16 sm:w-20 sm:h-20 bg-primary/10 rounded-full flex items-center justify-center self-center mb-3 sm:mb-4">
           <ShoppingBag className="w-8 h-8 sm:w-10 sm:h-10 text-primary" />
         </div>
-        <h2 className="text-lg sm:text-2xl font-bold text-center mb-2">Your Cart is Empty</h2>
+        <h2 className="text-lg sm:text-2xl font-bold text-center mb-2">{t('cart.emptyTitle')}</h2>
         <p className="text-[13px] sm:text-sm text-gray-500 mb-5 sm:mb-6 text-center max-w-[280px] sm:max-w-xs mx-auto">
-          Looks like you haven&apos;t added anything yet. Browse our deals and find something you love!
+          {t('cart.emptyDesc')}
         </p>
 
         {removedItems.length > 0 && (
@@ -268,7 +271,7 @@ export default function CartPage() {
           href="/"
           className="bg-primary text-white w-full sm:w-auto px-6 py-3.5 sm:py-3 rounded-xl font-semibold hover:brightness-110 transition-all text-center self-center"
         >
-          Continue Shopping
+          {t('cart.startShopping')}
         </Link>
       </motion.div>
     );
@@ -282,8 +285,8 @@ export default function CartPage() {
         animate="show"
         className="text-xl md:text-2xl font-bold mb-4 md:mb-6 flex items-center gap-3"
       >
-        Shopping Cart
-        <span className="text-sm font-medium text-gray-400">({itemCount} item{itemCount === 1 ? '' : 's'})</span>
+        {t('cart.title')}
+        <span className="text-sm font-medium text-gray-400">({t('cart.itemCount', { count: itemCount })})</span>
       </motion.h1>
 
       <div className="lg:grid lg:grid-cols-[minmax(0,2fr)_minmax(0,1fr)] lg:gap-8 lg:items-start">
@@ -301,7 +304,7 @@ export default function CartPage() {
                 <div className="flex items-center gap-2 text-sm text-gray-600 mb-2">
                   <Truck className="w-4 h-4 text-primary" />
                   <span>
-                    You&apos;re <strong className="text-primary">৳{shippingInfo.remaining.toLocaleString('en-BD')}</strong> away from free delivery!
+                    {t('cart.freeShippingProgress', { amount: shippingInfo.remaining.toLocaleString('en-BD') })}
                   </span>
                 </div>
                 <div className="w-full h-2 bg-gray-100 rounded-full overflow-hidden">
@@ -314,7 +317,7 @@ export default function CartPage() {
             ) : (
               <div className="flex items-center gap-2 text-sm text-emerald-600 font-medium">
                 <Gift className="w-4 h-4" />
-                <span>You&apos;ve earned free delivery!</span>
+                <span>{t('cart.freeShippingEligible')}</span>
               </div>
             )}
           </motion.div>
@@ -600,21 +603,21 @@ export default function CartPage() {
                     >
                       <div className="px-4 pt-3 space-y-2 text-[13px]" aria-live="polite">
                         <div className="flex justify-between text-gray-600">
-                          <span>Subtotal ({itemCount} items)</span>
+                          <span>{t('cart.subtotal')} ({t('cart.itemCount', { count: itemCount })})</span>
                           <span className="font-medium text-gray-900">৳{rawSubtotal.toLocaleString('en-BD')}</span>
                         </div>
                         {discount > 0 && (
                           <div className="flex justify-between text-emerald-600">
-                            <span>Coupon Discount</span>
+                            <span>{t('cart.discount')}</span>
                             <span className="font-medium">-৳{discount.toLocaleString('en-BD')}</span>
                           </div>
                         )}
                         <div className="flex justify-between text-gray-600">
-                          <span>Shipping</span>
-                          <span className="font-medium">{shipping === 0 ? <span className="text-emerald-600">Free</span> : `৳${shipping}`}</span>
+                          <span>{t('cart.shippingFee')}</span>
+                          <span className="font-medium">{shipping === 0 ? <span className="text-emerald-600">{t('common.free')}</span> : `৳${shipping}`}</span>
                         </div>
                         <div className="flex justify-between font-bold text-gray-900 pt-1.5">
-                          <span>Total</span>
+                          <span>{t('cart.total')}</span>
                           <span className="text-primary">৳{total.toLocaleString('en-BD')}</span>
                         </div>
                         <button
@@ -623,7 +626,7 @@ export default function CartPage() {
                           aria-expanded={promoOpen}
                         >
                           <Percent className="w-3.5 h-3.5" />
-                          Have a promo code?
+                          {t('cart.promoCode')}?
                           <ChevronDown className={`w-3.5 h-3.5 transition-transform ${promoOpen ? 'rotate-180' : ''}`} />
                         </button>
                         <div className="pb-3">
@@ -637,55 +640,38 @@ export default function CartPage() {
                       transition={{ duration: 0.18 }}
                       className="overflow-hidden"
                     >
-                      <div className="pb-3">
-                        {couponCode ? (
-                          <div className="flex items-center justify-between bg-primary/5 rounded-lg px-3 py-2.5">
-                            <p className="text-[13px] font-semibold text-gray-900">
-                              Coupon: <span className="text-primary">{couponCode}</span>
-                              {discount > 0 && <span className="text-emerald-600 font-medium"> (-৳{discount})</span>}
-                            </p>
+                      <div className="pt-2">
+                        <div className="flex gap-2">
+                          <input
+                            value={couponInput}
+                            onChange={e => setCouponInput(e.target.value)}
+                            onKeyDown={e => e.key === 'Enter' && handleApplyCoupon()}
+                            className="flex-1 bg-gray-50 border border-gray-200 rounded-lg px-3 py-2.5 text-sm focus:ring-2 focus:ring-primary outline-none transition-all min-w-0"
+                            placeholder={t('cart.promoCode')}
+                            aria-label="Coupon code"
+                          />
+                          <button
+                            onClick={handleApplyCoupon}
+                            className="bg-primary text-white px-4 py-2 rounded-lg font-semibold hover:brightness-110 transition-all text-sm shrink-0"
+                          >
+                            {t('cart.applyPromo')}
+                          </button>
+                        </div>
+                        <div className="flex flex-wrap gap-1.5 mt-2">
+                          {couponSuggestions.map(c => (
                             <button
-                              onClick={clearCoupon}
-                              className="text-xs text-red-500 font-medium min-h-[44px] px-1"
+                              key={c.code}
+                              onClick={() => {
+                                setCoupon(c.code, c.discount);
+                                setCouponInput('');
+                              }}
+                              className="flex items-center gap-1 px-2 py-1 bg-gray-50 border border-gray-200 rounded-lg text-[11px] text-gray-600 hover:bg-primary/5 hover:border-primary/30 hover:text-primary transition-all"
                             >
-                              Remove
+                              <Percent className="w-3 h-3" />
+                              {c.code}
                             </button>
-                          </div>
-                        ) : (
-                          <div>
-                            <div className="flex gap-2">
-                              <input
-                                value={couponInput}
-                                onChange={e => setCouponInput(e.target.value)}
-                                onKeyDown={e => e.key === 'Enter' && handleApplyCoupon()}
-                                className="flex-1 bg-gray-50 border border-gray-200 rounded-lg px-3 py-2.5 text-sm focus:ring-2 focus:ring-primary outline-none transition-all min-w-0"
-                                placeholder="Enter coupon code"
-                                aria-label="Coupon code"
-                              />
-                              <button
-                                onClick={handleApplyCoupon}
-                                className="bg-primary text-white px-4 py-2 rounded-lg font-semibold hover:brightness-110 transition-all text-sm shrink-0"
-                              >
-                                Apply
-                              </button>
-                            </div>
-                            <div className="flex flex-wrap gap-1.5 mt-2">
-                              {couponSuggestions.map(c => (
-                                <button
-                                  key={c.code}
-                                  onClick={() => {
-                                    setCoupon(c.code, c.discount);
-                                    setCouponInput('');
-                                  }}
-                                  className="flex items-center gap-1 px-2 py-1 bg-gray-50 border border-gray-200 rounded-lg text-[11px] text-gray-600 hover:bg-primary/5 hover:border-primary/30 hover:text-primary transition-all"
-                                >
-                                  <Percent className="w-3 h-3" />
-                                  {c.code}
-                                </button>
-                              ))}
-                            </div>
-                          </div>
-                        )}
+                          ))}
+                        </div>
                       </div>
                     </motion.div>
                   )}
@@ -707,14 +693,14 @@ export default function CartPage() {
             aria-expanded={detailsOpen}
           >
             <span className="flex items-center gap-0.5 text-xs font-semibold text-gray-700">
-              Details
+              {t('cart.details')}
               <ChevronDown className={`w-3.5 h-3.5 transition-transform ${detailsOpen ? 'rotate-180' : ''}`} />
             </span>
-            <span className="text-[10px] text-gray-400">Price &amp; promo</span>
+            <span className="text-[10px] text-gray-400">{t('cart.pricePromo')}</span>
           </button>
 
           <div className="flex-1 min-w-0 text-right" aria-live="polite">
-            <p className="text-[11px] text-gray-500 leading-none">{itemCount} item{itemCount === 1 ? '' : 's'}</p>
+            <p className="text-[11px] text-gray-500 leading-none">{t('cart.itemCount', { count: itemCount })}</p>
             <p className="text-primary font-bold text-base leading-tight">৳{total.toLocaleString('en-BD')}</p>
           </div>
 
@@ -722,7 +708,7 @@ export default function CartPage() {
             href="/checkout"
             className="bg-primary text-white px-6 py-3 rounded-xl font-semibold shadow-md active:scale-95 transition-transform duration-150 inline-block text-sm shrink-0"
           >
-            Check Out
+            {t('common.checkout')}
           </Link>
         </div>
       </div>

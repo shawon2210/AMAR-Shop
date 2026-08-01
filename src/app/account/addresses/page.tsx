@@ -150,7 +150,7 @@ export default function AddressesPage() {
               className="w-full px-3 py-2 border border-outline rounded-lg bg-transparent outline-none focus:ring-2 focus:ring-primary text-sm"
               placeholder="Street / Area *" disabled={saving}
             />
-            <div className="grid grid-cols-2 gap-2">
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
               <input
                 type="text" value={form.area}
                 onChange={e => setForm(p => ({ ...p, area: e.target.value }))}

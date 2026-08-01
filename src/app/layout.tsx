@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { Inter } from "next/font/google";
+import { Inter, Noto_Sans_Bengali } from "next/font/google";
 import "./globals.css";
 import { Header } from "@/components/layout/header";
 import { Footer } from "@/components/layout/footer";
@@ -12,6 +12,13 @@ const inter = Inter({
   subsets: ["latin"],
   display: "swap",
   variable: "--font-inter",
+});
+
+const notoBengali = Noto_Sans_Bengali({
+  subsets: ["bengali"],
+  display: "swap",
+  weight: ["400", "500", "600", "700"],
+  variable: "--font-bengali",
 });
 
 export const metadata: Metadata = {
@@ -52,8 +59,13 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" className={`${inter.variable}`} data-scroll-behavior="smooth">
+    <html lang="en" className={`${inter.variable} ${notoBengali.variable}`} data-scroll-behavior="smooth" suppressHydrationWarning>
       <head>
+        <script
+          dangerouslySetInnerHTML={{
+            __html: `(function(){try{var t=localStorage.getItem('amarshop-theme');var d=t==='dark'||(!t&&window.matchMedia('(prefers-color-scheme: dark)').matches);if(d){document.documentElement.classList.add('dark');document.documentElement.setAttribute('data-theme','dark');}else{document.documentElement.classList.remove('dark');document.documentElement.setAttribute('data-theme','light');}var l=localStorage.getItem('amarshop-lang');if(l==='bn'){document.documentElement.lang='bn';document.documentElement.setAttribute('data-lang','bn');}else{document.documentElement.lang='en';document.documentElement.setAttribute('data-lang','en');}}catch(e){}})();`,
+          }}
+        />
         <link rel="manifest" href="/manifest.webmanifest" />
         <link rel="icon" type="image/svg+xml" href="/images/icon-192.svg" />
         <link rel="apple-touch-icon" href="/images/icon-192.svg" />

@@ -154,7 +154,7 @@ export default function AnnouncementsPage() {
                 const status = expired ? 'Expired' : a.isActive ? 'Active' : 'Inactive';
                 return (
                   <tr key={a.id} className="border-b border-[#f5f5f5] hover:bg-[#fafafa]">
-                    <td className="p-3 font-medium text-[#333] max-w-[250px] truncate">{a.title}</td>
+                    <td className="p-3 font-medium text-[#333] max-w-xs truncate">{a.title}</td>
                     <td className="p-3">
                       <span className={`text-[11px] font-semibold px-2 py-0.5 rounded-full ${a.type === 'Warning' ? 'bg-red-100 text-red-700' : a.type === 'Promotion' ? 'bg-purple-100 text-purple-700' : 'bg-blue-100 text-blue-700'}`}>{a.type}</span>
                     </td>

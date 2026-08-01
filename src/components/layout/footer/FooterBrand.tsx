@@ -1,8 +1,13 @@
+'use client';
+
 import Link from 'next/link';
 import { SocialLinks } from './SocialLinks';
 import Image from 'next/image';
+import { useLanguage } from '@/contexts/language-context';
 
 export function FooterBrand() {
+  const { t } = useLanguage();
+
   return (
     <div className="text-center md:text-left">
       <Link href="/" className="inline-flex items-center mb-4">
@@ -16,12 +21,12 @@ export function FooterBrand() {
         />
       </Link>
 
-      <p className="text-[15px] leading-7 text-gray-500 max-w-[240px] mx-auto md:mx-0 line-clamp-3">
-        Bangladesh&apos;s premium online marketplace. Shop millions of products from trusted sellers with fast delivery and the best deals.
+      <p className="text-[15px] leading-7 text-gray-500 max-w-[260px] mx-auto md:mx-0 line-clamp-3">
+        {t('footer.aboutDesc')}
       </p>
 
       <div className="mt-5">
-        <h4 className="text-xs font-semibold uppercase tracking-wide text-gray-900 mb-2.5">
+        <h4 className="text-xs font-semibold uppercase tracking-wide text-gray-900 dark:text-gray-100 mb-2.5">
           Follow Us
         </h4>
         <SocialLinks />

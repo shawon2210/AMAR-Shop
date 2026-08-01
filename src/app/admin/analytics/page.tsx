@@ -165,7 +165,7 @@ function DonutChart({ data, cx, cy, r, ir }: {
   });
 
   return (
-    <svg viewBox={`0 0 ${_cx * 2} ${_cy * 2}`} className="w-full max-w-[200px] mx-auto">
+    <svg viewBox={`0 0 ${_cx * 2} ${_cy * 2}`} className="w-full max-w-xs mx-auto">
       {slices.map((s, i) => (
         <path key={i} d={s.path} fill={s.color} opacity="0.85" className="hover:opacity-100 transition-opacity cursor-pointer" />
       ))}
@@ -262,7 +262,7 @@ export default function AnalyticsPage() {
           <h2 className="text-sm font-semibold text-slate-900 mb-3">Order Status Distribution</h2>
           <div className="flex flex-col items-center">
             <DonutChart data={orderStatuses.map((o) => ({ label: o.status, value: o.count, color: o.color }))} />
-            <div className="grid grid-cols-3 gap-x-4 gap-y-2 mt-3 w-full max-w-[260px]">
+            <div className="grid grid-cols-3 gap-x-4 gap-y-2 mt-3 w-full max-w-xs mx-auto">
               {orderStatuses.map((o) => (
                 <div key={o.status} className="flex items-center gap-1.5 text-[10px]">
                   <span className="w-2 h-2 rounded-sm shrink-0" style={{ backgroundColor: o.color }} />

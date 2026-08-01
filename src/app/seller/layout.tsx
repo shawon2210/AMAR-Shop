@@ -9,6 +9,8 @@ import { useFocusTrap } from '@/components/layout/header/hooks/use-focus-trap';
 import { useBodyLock } from '@/components/layout/header/hooks/use-body-lock';
 import { useSidebarBehavior } from '@/components/layout/header/hooks/use-sidebar-behavior';
 import { AdminSearchOverlay } from '@/components/layout/header/search/AdminSearchOverlay';
+import { ThemeToggle } from '@/components/ui/theme-toggle';
+import { LanguageToggle } from '@/components/ui/language-toggle';
 
 interface NavItem {
   label: string;
@@ -425,9 +427,9 @@ export default function SellerLayout({ children }: { children: React.ReactNode }
     }));
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-[#f0f2f6] to-[#e8ecf1]">
+    <div className="min-h-screen bg-gradient-to-br from-[#f0f2f6] to-[#e8ecf1] dark:from-[#0B0F19] dark:to-[#111827]">
       {/* Full-width header */}
-      <header className="sticky top-0 z-50 h-18 bg-white/80 backdrop-blur-xl border-b border-gray-200/40 shadow-sm shadow-black/5 flex items-center px-4 lg:px-8 gap-4">
+      <header className="sticky top-0 z-50 h-18 bg-white/80 dark:bg-gray-900/90 backdrop-blur-xl border-b border-gray-200/40 dark:border-gray-700/60 shadow-sm shadow-black/5 flex items-center px-4 lg:px-8 gap-4">
         <button
           ref={hamburgerRef}
           className="lg:hidden p-2 -ml-2 rounded-lg hover:bg-slate-100 transition-colors"
@@ -467,6 +469,9 @@ export default function SellerLayout({ children }: { children: React.ReactNode }
               ⌘K
             </kbd>
           </button>
+
+          <LanguageToggle />
+          <ThemeToggle />
 
           <Link
             href="/seller/settings"

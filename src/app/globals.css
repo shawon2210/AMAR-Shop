@@ -130,8 +130,8 @@
   --text-price-lg--line-height: 28px;
   --text-price-lg--font-weight: 700;
 
-  --font-sans: 'Inter', 'Plus Jakarta Sans', system-ui, -apple-system, sans-serif;
-  --font-display: 'Plus Jakarta Sans', 'Inter', system-ui, -apple-system, sans-serif;
+  --font-sans: var(--font-bengali), 'Inter', 'Plus Jakarta Sans', system-ui, -apple-system, sans-serif;
+  --font-display: var(--font-bengali), 'Plus Jakarta Sans', 'Inter', system-ui, -apple-system, sans-serif;
 
   --radius-xs: 4px;
   --radius-sm: 8px;
@@ -524,30 +524,98 @@
   --z-toast: 100;
 }
 
-/* ───── Responsive Typography ───── */
+/* ───── Responsive Typography Scale (fluid clamp) ───── */
+/*
+  Follows top e-commerce sites (Amazon, Shopify, Daraz, Shein):
+  — Mobile-first base sizes, scale up linearly to desktop
+  — clamp(MIN, FLUID, MAX) so nothing ever wraps or truncates unexpectedly
+  — Applied globally so every element inherits correct sizes automatically
+*/
+
+:root {
+  /* Base body type — 14px mobile → 16px desktop */
+  --fs-body:        clamp(0.875rem, 0.8rem + 0.35vw, 1rem);
+  --fs-body-sm:     clamp(0.75rem,  0.7rem + 0.25vw, 0.875rem);
+  --fs-body-xs:     clamp(0.6875rem,0.65rem + 0.2vw,  0.75rem);
+
+  /* UI labels */
+  --fs-label:       clamp(0.6875rem,0.65rem + 0.2vw,  0.8125rem);
+  --fs-caption:     clamp(0.625rem, 0.6rem + 0.15vw,  0.75rem);
+
+  /* Headings — mobile tighter, desktop more expressive */
+  --fs-h6:          clamp(0.875rem, 0.8rem + 0.35vw,  1rem);
+  --fs-h5:          clamp(1rem,     0.9rem + 0.5vw,   1.125rem);
+  --fs-h4:          clamp(1.0625rem,0.95rem + 0.65vw, 1.25rem);
+  --fs-h3:          clamp(1.125rem, 1rem + 0.75vw,    1.5rem);
+  --fs-h2:          clamp(1.25rem,  1.05rem + 1vw,    1.875rem);
+  --fs-h1:          clamp(1.5rem,   1.1rem + 2vw,     2.5rem);
+
+  /* Display / hero */
+  --fs-display-sm:  clamp(1.5rem,   1.2rem + 1.5vw,  2rem);
+  --fs-display-md:  clamp(1.75rem,  1.3rem + 2.25vw, 2.75rem);
+  --fs-display-lg:  clamp(2rem,     1.4rem + 3vw,    3.5rem);
+
+  /* Price & badge */
+  --fs-price:       clamp(1.125rem, 0.95rem + 0.9vw,  1.5rem);
+  --fs-price-lg:    clamp(1.375rem, 1.1rem + 1.4vw,   1.875rem);
+  --fs-badge:       clamp(0.625rem, 0.58rem + 0.2vw,  0.6875rem);
+
+  /* Line heights */
+  --lh-tight:   1.15;
+  --lh-snug:    1.25;
+  --lh-normal:  1.5;
+  --lh-relaxed: 1.625;
+  --lh-loose:   1.75;
+}
+
+/* ── Apply fluid scale to Tailwind text-* utility classes globally ── */
+/* Tailwind v4 generates these — we override the font-size with clamp values */
+
+.text-xs   { font-size: var(--fs-body-xs)  !important; }
+.text-sm   { font-size: var(--fs-body-sm)  !important; }
+.text-base { font-size: var(--fs-body)     !important; }
+.text-lg   { font-size: var(--fs-h5)       !important; }
+.text-xl   { font-size: var(--fs-h4)       !important; }
+.text-2xl  { font-size: var(--fs-h3)       !important; }
+.text-3xl  { font-size: var(--fs-h2)       !important; }
+.text-4xl  { font-size: var(--fs-display-sm) !important; }
+.text-5xl  { font-size: var(--fs-display-md) !important; }
+.text-6xl  { font-size: var(--fs-display-lg) !important; }
+
+/* Heading elements — auto-scale without needing classes */
+h1 { font-size: var(--fs-h1);  line-height: var(--lh-tight); }
+h2 { font-size: var(--fs-h2);  line-height: var(--lh-snug); }
+h3 { font-size: var(--fs-h3);  line-height: var(--lh-snug); }
+h4 { font-size: var(--fs-h4);  line-height: var(--lh-normal); }
+h5 { font-size: var(--fs-h5);  line-height: var(--lh-normal); }
+h6 { font-size: var(--fs-h6);  line-height: var(--lh-normal); }
+
+/* Body — applied via globals base already, but enforce here too */
+body {
+  font-size: var(--fs-body);
+  line-height: var(--lh-relaxed);
+}
+
+/* ───── Legacy named utility classes (still used across codebase) ───── */
 .text-responsive-heading {
-  font-size: clamp(20px, 3.5vw, 44px);
-  line-height: 1.1;
+  font-size: var(--fs-display-sm);
+  line-height: var(--lh-tight);
 }
-
 .text-responsive-subheading {
-  font-size: clamp(14px, 2vw, 22px);
-  line-height: 1.3;
+  font-size: var(--fs-h3);
+  line-height: var(--lh-snug);
 }
-
 .text-responsive-body {
-  font-size: clamp(13px, 1vw, 16px);
-  line-height: 1.5;
+  font-size: var(--fs-body);
+  line-height: var(--lh-relaxed);
 }
-
 .text-responsive-small {
-  font-size: clamp(11px, 0.8vw, 14px);
-  line-height: 1.4;
+  font-size: var(--fs-body-sm);
+  line-height: var(--lh-normal);
 }
-
 .text-section-title {
-  font-size: clamp(16px, 2vw, 22px);
-  line-height: 1.25;
+  font-size: var(--fs-h3);
+  line-height: var(--lh-snug);
   font-weight: 700;
 }
 
@@ -609,3 +677,451 @@
   border-radius: 9999px;
   flex-shrink: 0;
 }
+
+/* ══════════════════════════════════════════════════════════════════════
+   DARK MODE — COMPLETE SYSTEM
+   Strategy: CSS variables flip on [html.dark], then targeted cascades
+   cover EVERY hardcoded color pattern found across all 163 pages.
+   Uses !important so Tailwind utility specificity is beaten.
+══════════════════════════════════════════════════════════════════════ */
+
+html.dark,
+:root.dark,
+[data-theme="dark"],
+.dark {
+  /* ─ Surfaces ─ */
+  --color-background:              #0B0F19;
+  --color-surface:                 #111827;
+  --color-surface-container:       #1F2937;
+  --color-surface-container-high:  #374151;
+  --color-surface-container-highest:#4B5563;
+  --color-surface-bright:          #1E293B;
+  --color-surface-dim:             #0F172A;
+  --color-surface-container-lowest:#0B0F19;
+  --color-surface-container-low:   #111827;
+  --color-surface-variant:         #1F2937;
+
+  /* ─ Text ─ */
+  --color-text-primary:     #F9FAFB;
+  --color-text-secondary:   #9CA3AF;
+  --color-text-tertiary:    #6B7280;
+  --color-on-background:    #F9FAFB;
+  --color-on-surface:       #F9FAFB;
+  --color-on-surface-variant:#9CA3AF;
+  --color-secondary:        #9CA3AF;
+  --color-on-secondary:     #F9FAFB;
+
+  /* ─ Borders ─ */
+  --color-border:       #374151;
+  --color-border-dark:  #4B5563;
+  --color-outline:      #374151;
+  --color-outline-variant:#1F2937;
+
+  /* ─ Shadows darken in dark mode ─ */
+  --shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.4);
+  --shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.5), 0 2px 4px -2px rgb(0 0 0 / 0.3);
+  --shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.5), 0 4px 6px -4px rgb(0 0 0 / 0.3);
+
+  color-scheme: dark;
+}
+
+/* ─────────────────── BODY & HTML ROOT ─────────────────── */
+html.dark body,
+.dark body {
+  background-color: #0B0F19 !important;
+  color: #F9FAFB !important;
+}
+
+/* ─────────────────── CARD ─────────────────── */
+.dark .card {
+  background: #111827;
+  border-color: #374151;
+}
+.dark .card-hover:hover {
+  border-color: #4B5563;
+  box-shadow: 0 8px 30px 0 rgb(0 0 0 / 0.5);
+}
+
+/* ═══════════════════════════════════════════════
+   BACKGROUNDS — ALL PATTERNS FOUND IN CODEBASE
+═══════════════════════════════════════════════ */
+
+/* Tailwind gray/slate/zinc named */
+.dark .bg-white              { background-color: #111827 !important; }
+.dark .bg-gray-50            { background-color: #0F172A !important; }
+.dark .bg-gray-100           { background-color: #1F2937 !important; }
+.dark .bg-gray-200           { background-color: #374151 !important; }
+.dark .bg-gray-300           { background-color: #4B5563 !important; }
+.dark .bg-slate-50           { background-color: #0F172A !important; }
+.dark .bg-slate-100          { background-color: #1F2937 !important; }
+.dark .bg-slate-200          { background-color: #374151 !important; }
+.dark .bg-slate-800          { background-color: #111827 !important; }
+.dark .bg-slate-900          { background-color: #0B0F19 !important; }
+.dark .bg-zinc-50            { background-color: #0F172A !important; }
+.dark .bg-zinc-100           { background-color: #1F2937 !important; }
+.dark .bg-neutral-50         { background-color: #0F172A !important; }
+.dark .bg-neutral-100        { background-color: #1F2937 !important; }
+
+/* Hex literal backgrounds — every pattern found across all 163 pages */
+.dark .bg-\[\#fff\],
+.dark .bg-\[\#FFF\],
+.dark .bg-\[\#ffffff\],
+.dark .bg-\[\#FFFFFF\]       { background-color: #111827 !important; }
+
+.dark .bg-\[\#fafafa\],
+.dark .bg-\[\#FAFAFA\],
+.dark .bg-\[\#f9fafb\],
+.dark .bg-\[\#F9FAFB\]       { background-color: #0F172A !important; }
+
+.dark .bg-\[\#f8f9fa\],
+.dark .bg-\[\#F8F9FA\],
+.dark .bg-\[\#f7f8fa\],
+.dark .bg-\[\#F7F8FA\]       { background-color: #0F172A !important; }
+
+.dark .bg-\[\#f5f5f5\],
+.dark .bg-\[\#F5F5F5\],
+.dark .bg-\[\#f5f6f7\],
+.dark .bg-\[\#f3f4f6\],
+.dark .bg-\[\#F3F4F6\]       { background-color: #1F2937 !important; }
+
+.dark .bg-\[\#f0f1f3\],
+.dark .bg-\[\#f0f2f6\],
+.dark .bg-\[\#F0F2F6\],
+.dark .bg-\[\#f0f0f0\]       { background-color: #1F2937 !important; }
+
+.dark .bg-\[\#efefef\],
+.dark .bg-\[\#eee\],
+.dark .bg-\[\#eeeeee\],
+.dark .bg-\[\#e8ecf1\],
+.dark .bg-\[\#E8ECF1\],
+.dark .bg-\[\#e5e7eb\],
+.dark .bg-\[\#E5E7EB\]       { background-color: #374151 !important; }
+
+/* Admin panel specific backgrounds */
+.dark .bg-\[\#1a1a2e\]       { background-color: #0B0F19 !important; }
+.dark .bg-\[\#16213e\]       { background-color: #111827 !important; }
+
+/* ═══════════════════════════════════════════════
+   TEXT COLORS — ALL PATTERNS FOUND IN CODEBASE
+═══════════════════════════════════════════════ */
+
+/* ── Tailwind slate / gray / neutral named classes ── */
+.dark .text-slate-900,
+.dark .text-slate-800        { color: #F9FAFB !important; }
+
+.dark .text-slate-700,
+.dark .text-slate-600        { color: #D1D5DB !important; }
+
+.dark .text-slate-500,
+.dark .text-slate-400        { color: #9CA3AF !important; }
+
+.dark .text-slate-300        { color: #6B7280 !important; }
+
+.dark .text-gray-900,
+.dark .text-gray-800         { color: #F9FAFB !important; }
+
+.dark .text-gray-700,
+.dark .text-gray-600         { color: #D1D5DB !important; }
+
+.dark .text-gray-500         { color: #9CA3AF !important; }
+
+.dark .text-gray-400         { color: #6B7280 !important; }
+
+.dark .text-gray-300         { color: #4B5563 !important; }
+
+.dark .text-zinc-900,
+.dark .text-zinc-800         { color: #F9FAFB !important; }
+.dark .text-zinc-700,
+.dark .text-zinc-600         { color: #D1D5DB !important; }
+.dark .text-zinc-500,
+.dark .text-zinc-400         { color: #9CA3AF !important; }
+
+.dark .text-neutral-900,
+.dark .text-neutral-800      { color: #F9FAFB !important; }
+.dark .text-neutral-700,
+.dark .text-neutral-600      { color: #D1D5DB !important; }
+.dark .text-neutral-500,
+.dark .text-neutral-400      { color: #9CA3AF !important; }
+
+.dark .text-black            { color: #F9FAFB !important; }
+
+/* ── Hex literal text colors — every pattern found across 163 pages ── */
+
+/* Darkest / near-black → primary text */
+.dark .text-\[\#111\],
+.dark .text-\[\#111827\],
+.dark .text-\[\#1a1a1a\],
+.dark .text-\[\#1A1A1A\],
+.dark .text-\[\#0f172a\],
+.dark .text-\[\#0F172A\],
+.dark .text-\[\#0d1117\]     { color: #F9FAFB !important; }
+
+/* Very dark grays → primary text */
+.dark .text-\[\#222\],
+.dark .text-\[\#222222\],
+.dark .text-\[\#2d2d2d\],
+.dark .text-\[\#2D2D2D\],
+.dark .text-\[\#1f2937\],
+.dark .text-\[\#1F2937\],
+.dark .text-\[\#212121\]     { color: #F9FAFB !important; }
+
+/* Dark grays → primary text */
+.dark .text-\[\#333\],
+.dark .text-\[\#333333\],
+.dark .text-\[\#374151\],
+.dark .text-\[\#3d3d3d\],
+.dark .text-\[\#3D3D3D\]     { color: #E5E7EB !important; }
+
+/* Medium-dark → secondary text */
+.dark .text-\[\#444\],
+.dark .text-\[\#444444\],
+.dark .text-\[\#4b5563\],
+.dark .text-\[\#4B5563\],
+.dark .text-\[\#404040\]     { color: #D1D5DB !important; }
+
+/* Mid grays → secondary text */
+.dark .text-\[\#555\],
+.dark .text-\[\#555555\],
+.dark .text-\[\#4a4a4a\],
+.dark .text-\[\#4A4A4A\],
+.dark .text-\[\#525252\]     { color: #D1D5DB !important; }
+
+/* Main body gray → secondary text */
+.dark .text-\[\#666\],
+.dark .text-\[\#666666\],
+.dark .text-\[\#6b7280\],
+.dark .text-\[\#6B7280\],
+.dark .text-\[\#64748b\],
+.dark .text-\[\#64748B\]     { color: #9CA3AF !important; }
+
+/* Muted grays → tertiary text */
+.dark .text-\[\#777\],
+.dark .text-\[\#777777\],
+.dark .text-\[\#737373\],
+.dark .text-\[\#71717a\]     { color: #9CA3AF !important; }
+
+/* Placeholder / muted → tertiary text */
+.dark .text-\[\#888\],
+.dark .text-\[\#888888\],
+.dark .text-\[\#8b8b8b\],
+.dark .text-\[\#858585\],
+.dark .text-\[\#8c8c8c\]     { color: #6B7280 !important; }
+
+/* Light grays → tertiary / dimmed */
+.dark .text-\[\#999\],
+.dark .text-\[\#999999\],
+.dark .text-\[\#9ca3af\],
+.dark .text-\[\#9CA3AF\]     { color: #6B7280 !important; }
+
+.dark .text-\[\#aaa\],
+.dark .text-\[\#aaaaaa\],
+.dark .text-\[\#a0aec0\],
+.dark .text-\[\#A0AEC0\]     { color: #6B7280 !important; }
+
+/* ═══════════════════════════════════════════════
+   BORDERS — ALL PATTERNS FOUND IN CODEBASE
+═══════════════════════════════════════════════ */
+.dark .border-gray-100,
+.dark .border-gray-200,
+.dark .border-gray-300       { border-color: #374151 !important; }
+.dark .border-gray-400       { border-color: #4B5563 !important; }
+
+.dark .border-slate-100,
+.dark .border-slate-200,
+.dark .border-slate-300      { border-color: #374151 !important; }
+
+.dark .border-zinc-100,
+.dark .border-zinc-200       { border-color: #374151 !important; }
+
+.dark .border-\[\#e5e7eb\],
+.dark .border-\[\#E5E7EB\],
+.dark .border-\[\#f3f4f6\],
+.dark .border-\[\#F3F4F6\],
+.dark .border-\[\#f0f1f3\],
+.dark .border-\[\#eeeeee\],
+.dark .border-\[\#eee\],
+.dark .border-\[\#ddd\],
+.dark .border-\[\#dddddd\],
+.dark .border-\[\#d1d5db\],
+.dark .border-\[\#D1D5DB\],
+.dark .border-\[\#e2e8f0\],
+.dark .border-\[\#E2E8F0\],
+.dark .border-\[\#f5f5f5\],
+.dark .border-\[\#F5F5F5\]   { border-color: #374151 !important; }
+
+/* ═══════════════════════════════════════════════
+   DIVIDE (table row dividers, lists etc.)
+═══════════════════════════════════════════════ */
+.dark .divide-gray-100 > :not([hidden]) ~ :not([hidden]),
+.dark .divide-gray-200 > :not([hidden]) ~ :not([hidden]),
+.dark .divide-slate-100 > :not([hidden]) ~ :not([hidden]),
+.dark .divide-slate-200 > :not([hidden]) ~ :not([hidden]) {
+  border-color: #374151 !important;
+}
+
+/* ═══════════════════════════════════════════════
+   FORM INPUTS — ALL VARIANTS
+═══════════════════════════════════════════════ */
+.dark input:not([type="checkbox"]):not([type="radio"]):not([type="range"]),
+.dark select,
+.dark textarea {
+  background-color: #1F2937 !important;
+  color: #F9FAFB !important;
+  border-color: #374151 !important;
+}
+.dark input::placeholder,
+.dark textarea::placeholder {
+  color: #6B7280 !important;
+}
+.dark input:focus:not([type="checkbox"]):not([type="radio"]),
+.dark select:focus,
+.dark textarea:focus {
+  border-color: #0F9D58 !important;
+  outline-color: #0F9D58 !important;
+  background-color: #1F2937 !important;
+}
+
+/* ═══════════════════════════════════════════════
+   HEADER / NAVBAR
+═══════════════════════════════════════════════ */
+.dark header {
+  background-color: rgba(11, 15, 25, 0.95) !important;
+  border-color: #374151 !important;
+}
+
+/* ═══════════════════════════════════════════════
+   HOVER STATES — prevent white flash on hover
+═══════════════════════════════════════════════ */
+.dark .hover\:bg-gray-50:hover   { background-color: #1F2937 !important; }
+.dark .hover\:bg-gray-100:hover  { background-color: #374151 !important; }
+.dark .hover\:bg-gray-200:hover  { background-color: #4B5563 !important; }
+.dark .hover\:bg-slate-50:hover  { background-color: #1F2937 !important; }
+.dark .hover\:bg-slate-100:hover { background-color: #374151 !important; }
+.dark .hover\:bg-white:hover     { background-color: #1F2937 !important; }
+
+.dark .hover\:text-gray-900:hover  { color: #F9FAFB !important; }
+.dark .hover\:text-slate-900:hover { color: #F9FAFB !important; }
+.dark .hover\:text-black:hover     { color: #F9FAFB !important; }
+
+/* ═══════════════════════════════════════════════
+   RING / FOCUS RING
+═══════════════════════════════════════════════ */
+.dark .ring-gray-200    { --tw-ring-color: #374151; }
+.dark .ring-gray-300    { --tw-ring-color: #4B5563; }
+
+/* ═══════════════════════════════════════════════
+   SHADOWS — lift in dark mode
+═══════════════════════════════════════════════ */
+.dark .shadow-sm  { box-shadow: 0 1px 2px 0 rgb(0 0 0 / 0.5) !important; }
+.dark .shadow     { box-shadow: 0 1px 3px 0 rgb(0 0 0 / 0.5), 0 1px 2px -1px rgb(0 0 0 / 0.4) !important; }
+.dark .shadow-md  { box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.6), 0 2px 4px -2px rgb(0 0 0 / 0.4) !important; }
+.dark .shadow-lg  { box-shadow: 0 10px 15px -3px rgb(0 0 0 / 0.6), 0 4px 6px -4px rgb(0 0 0 / 0.4) !important; }
+.dark .shadow-xl  { box-shadow: 0 20px 25px -5px rgb(0 0 0 / 0.7), 0 8px 10px -6px rgb(0 0 0 / 0.5) !important; }
+
+/* ═══════════════════════════════════════════════
+   SKELETON / SHIMMER — dark variant
+═══════════════════════════════════════════════ */
+.dark .animate-shimmer {
+  background: linear-gradient(90deg, #1F2937 25%, #374151 50%, #1F2937 75%) !important;
+  background-size: 200% 100% !important;
+}
+.dark .animate-pulse > * {
+  background-color: #1F2937;
+}
+
+/* ═══════════════════════════════════════════════
+   BADGE / PILL OVERRIDES
+   Keep coloured status badges visible but soften them in dark mode
+═══════════════════════════════════════════════ */
+.dark .bg-green-50   { background-color: rgba(16,185,129,0.12) !important; }
+.dark .bg-green-100  { background-color: rgba(16,185,129,0.18) !important; }
+.dark .bg-red-50     { background-color: rgba(239,68,68,0.12)  !important; }
+.dark .bg-red-100    { background-color: rgba(239,68,68,0.18)  !important; }
+.dark .bg-yellow-50  { background-color: rgba(245,158,11,0.12) !important; }
+.dark .bg-yellow-100 { background-color: rgba(245,158,11,0.18) !important; }
+.dark .bg-blue-50    { background-color: rgba(59,130,246,0.12) !important; }
+.dark .bg-blue-100   { background-color: rgba(59,130,246,0.18) !important; }
+.dark .bg-purple-50  { background-color: rgba(139,92,246,0.12) !important; }
+.dark .bg-purple-100 { background-color: rgba(139,92,246,0.18) !important; }
+.dark .bg-orange-50  { background-color: rgba(249,115,22,0.12) !important; }
+.dark .bg-orange-100 { background-color: rgba(249,115,22,0.18) !important; }
+.dark .bg-pink-50    { background-color: rgba(236,72,153,0.12) !important; }
+.dark .bg-pink-100   { background-color: rgba(236,72,153,0.18) !important; }
+.dark .bg-indigo-50  { background-color: rgba(99,102,241,0.12) !important; }
+.dark .bg-indigo-100 { background-color: rgba(99,102,241,0.18) !important; }
+.dark .bg-teal-50    { background-color: rgba(20,184,166,0.12) !important; }
+.dark .bg-teal-100   { background-color: rgba(20,184,166,0.18) !important; }
+
+/* Keep text readable on softened badges */
+.dark .text-green-700  { color: #4ADE80 !important; }
+.dark .text-green-800  { color: #34D399 !important; }
+.dark .text-red-700    { color: #F87171 !important; }
+.dark .text-red-800    { color: #FCA5A5 !important; }
+.dark .text-yellow-700 { color: #FCD34D !important; }
+.dark .text-yellow-800 { color: #FDE68A !important; }
+.dark .text-blue-700   { color: #60A5FA !important; }
+.dark .text-blue-800   { color: #93C5FD !important; }
+.dark .text-purple-700 { color: #A78BFA !important; }
+.dark .text-purple-800 { color: #C4B5FD !important; }
+.dark .text-orange-700 { color: #FB923C !important; }
+.dark .text-orange-800 { color: #FDBA74 !important; }
+.dark .text-indigo-700 { color: #818CF8 !important; }
+.dark .text-indigo-800 { color: #A5B4FC !important; }
+.dark .text-teal-700   { color: #2DD4BF !important; }
+.dark .text-teal-800   { color: #5EEAD4 !important; }
+.dark .text-pink-700   { color: #F472B6 !important; }
+.dark .text-pink-800   { color: #F9A8D4 !important; }
+
+/* ═══════════════════════════════════════════════
+   THEME TRANSITION — smooth 200ms colour switch
+   Only colour-related properties, only on containers.
+   Does NOT globally transition all elements (that
+   would fight with Framer Motion & Tailwind transitions).
+═══════════════════════════════════════════════ */
+html,
+body,
+header,
+footer,
+nav,
+main,
+aside,
+section,
+article,
+.card,
+.card-hover,
+[class*="bg-white"],
+[class*="bg-gray-"],
+[class*="bg-slate-"] {
+  transition:
+    background-color 200ms ease,
+    color 200ms ease,
+    border-color 200ms ease !important;
+}
+
+/* ═══════════════════════════════════════════════
+   BANGLA TYPOGRAPHY & SCRIPT ADJUSTMENTS
+═══════════════════════════════════════════════ */
+:lang(bn),
+[lang="bn"],
+[data-lang="bn"] {
+  font-family: var(--font-bengali), 'Noto Sans Bengali', 'Inter', system-ui, sans-serif !important;
+  line-height: 1.625;
+}
+
+:lang(bn) h1,
+:lang(bn) h2,
+:lang(bn) h3,
+:lang(bn) h4,
+[data-lang="bn"] h1,
+[data-lang="bn"] h2,
+[data-lang="bn"] h3,
+[data-lang="bn"] h4 {
+  line-height: 1.35 !important;
+  letter-spacing: normal !important;
+}
+
+:lang(bn) body,
+[data-lang="bn"] body {
+  line-height: 1.75 !important;
+}
+

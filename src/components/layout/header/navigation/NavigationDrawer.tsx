@@ -13,6 +13,8 @@ import { MobileCategoryList } from './MobileCategoryList';
 import { NotificationButton } from '../components/NotificationButton';
 import { WishlistButton } from '../components/WishlistButton';
 import { CartButton } from '../components/CartButton';
+import { ThemeToggle } from '@/components/ui/theme-toggle';
+import { LanguageToggle } from '@/components/ui/language-toggle';
 import { Z_SIDEBAR, Z_SIDEBAR_OVERLAY } from '../styles';
 
 const overlayVariants = {
@@ -69,7 +71,7 @@ export function NavigationDrawer({
             animate="visible"
             exit="hidden"
             transition={{ type: 'spring', damping: 25, stiffness: 200 }}
-            className="fixed left-0 right-0 flex flex-col bg-white shadow-2xl outline-none rounded-r-2xl overflow-hidden"
+            className="fixed left-0 right-0 flex flex-col bg-white dark:bg-gray-900 shadow-2xl outline-none rounded-r-2xl overflow-hidden"
             style={{
               zIndex: Z_SIDEBAR,
               width: 'clamp(280px, 85vw, 320px)',
@@ -83,7 +85,7 @@ export function NavigationDrawer({
             <h2 id="navigation-drawer-title" className="sr-only">
               Navigation menu
             </h2>
-            <div className="flex items-center justify-between px-5 h-16 md:h-18 border-b border-gray-100 shrink-0 safe-top">
+            <div className="flex items-center justify-between px-5 h-16 md:h-18 border-b border-gray-100 dark:border-gray-700/60 shrink-0 safe-top">
               <Image
                 src="/images/amarshop-logo.png"
                 alt="AmarShop"
@@ -91,13 +93,17 @@ export function NavigationDrawer({
                 height={48}
                 className="w-[clamp(90px,16vw,120px)] h-auto object-contain"
               />
-              <button
-                onClick={onClose}
-                className="flex items-center justify-center w-11 h-11 rounded-lg text-gray-500 hover:bg-gray-100 transition-colors"
-                aria-label="Close menu"
-              >
-                <span className="material-symbols-outlined text-2xl">close</span>
-              </button>
+              <div className="flex items-center gap-1">
+                <LanguageToggle />
+                <ThemeToggle />
+                <button
+                  onClick={onClose}
+                  className="flex items-center justify-center w-11 h-11 rounded-lg text-gray-500 hover:bg-gray-100 transition-colors"
+                  aria-label="Close menu"
+                >
+                  <span className="material-symbols-outlined text-2xl">close</span>
+                </button>
+              </div>
             </div>
 
             <div className="flex-1 overflow-y-auto overscroll-contain">
