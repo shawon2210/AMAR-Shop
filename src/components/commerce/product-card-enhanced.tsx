@@ -205,36 +205,38 @@ export const ProductCardEnhanced = memo(function ProductCardEnhanced({ product, 
 
       {/* Content */}
       <div className="flex flex-col flex-1 p-3 md:p-3.5">
-        {product.brand && (() => {
-          const BrandLogo = brandLogoMap[product.brand];
-          return (
-            <div className="flex items-center gap-1 mb-1.5">
-              {BrandLogo ? (
-                <BrandLogo className="w52px h-11px text-gray-400" />
-              ) : (
-                <p className="text-[10px] font-bold text-gray-400 uppercase tracking-widest truncate leading-none">
-                  {product.brand}
-                </p>
-              )}
-              {BrandLogo && (
-                <span className="inline-flex items-center gap-2px h-14px px-1 rounded-[2px] bg-primary/10 text-primary text-[7px] font-bold tracking-wider leading-none">
-                  <svg viewBox="0 0 16 16" fill="currentColor" className="w-[8px] h-[8px]">
-                    <path d="M8 1L9.5 4.5L13 6L9.5 7.5L8 11L6.5 7.5L3 6L6.5 4.5L8 1Z" />
-                    <path d="M8 11L9.5 14L13 12.5L9.5 13L8 16L6.5 13L3 12.5L6.5 14L8 11Z" />
-                  </svg>
-                  {t('common.officialStore')}
-                </span>
-              )}
-            </div>
-          );
-        })()}
+        <div className="h-[18px] flex items-center gap-1 mb-1.5">
+          {product.brand && (() => {
+            const BrandLogo = brandLogoMap[product.brand];
+            return (
+              <>
+                {BrandLogo ? (
+                  <BrandLogo className="w52px h-11px text-gray-400" />
+                ) : (
+                  <p className="text-[10px] font-bold text-gray-400 uppercase tracking-widest truncate leading-none">
+                    {product.brand}
+                  </p>
+                )}
+                {BrandLogo && (
+                  <span className="inline-flex items-center gap-2px h-14px px-1 rounded-[2px] bg-primary/10 text-primary text-[7px] font-bold tracking-wider leading-none">
+                    <svg viewBox="0 0 16 16" fill="currentColor" className="w-[8px] h-[8px]">
+                      <path d="M8 1L9.5 4.5L13 6L9.5 7.5L8 11L6.5 7.5L3 6L6.5 4.5L8 1Z" />
+                      <path d="M8 11L9.5 14L13 12.5L9.5 13L8 16L6.5 13L3 12.5L6.5 14L8 11Z" />
+                    </svg>
+                    {t('common.officialStore')}
+                  </span>
+                )}
+              </>
+            );
+          })()}
+        </div>
 
-        <h3 className="text-[13px] font-medium text-gray-800 line-clamp-2 leading-snug flex-1" style={{ minHeight: '2.6em' }}>
+        <h3 className="text-[13px] font-medium text-gray-800 line-clamp-2 leading-snug" style={{ height: '2.75em' }}>
           {product.name}
         </h3>
 
         {/* Rating + Verified Seller */}
-        <div className="flex items-center justify-between mt-2">
+        <div className="flex items-center justify-between mt-auto pt-2">
           <div className="flex items-center gap-1.5">
             <Stars rating={product.rating} />
             <span className="text-[11px] text-gray-400 leading-none">
@@ -289,7 +291,7 @@ export const ProductCardEnhanced = memo(function ProductCardEnhanced({ product, 
             <span className="material-symbols-outlined text-[14px]">
               {added ? 'check' : 'shopping_bag'}
             </span>
-            {added ? 'Added!' : isOutOfStock ? t('product.outOfStock') : t('common.addToCart')}
+            {added ? t('common.added') || 'Added!' : isOutOfStock ? t('product.outOfStock') : t('common.addToCart')}
           </button>
 
           {/* Quick Add ripple animation */}

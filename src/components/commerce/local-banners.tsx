@@ -13,7 +13,7 @@ export function LocalBanners() {
       iconBg: 'bg-emerald-50',
       iconColor: 'text-emerald-600',
       accent: 'border-l-emerald-400',
-      badge: t('home.trust1Title'),
+      badge: t('home.badgeVerified'),
       badgeColor: 'bg-emerald-50 text-emerald-700',
     },
     {
@@ -23,7 +23,7 @@ export function LocalBanners() {
       iconBg: 'bg-blue-50',
       iconColor: 'text-blue-600',
       accent: 'border-l-blue-400',
-      badge: 'SSL Secured',
+      badge: t('home.badgeSecured'),
       badgeColor: 'bg-blue-50 text-blue-700',
     },
     {
@@ -33,7 +33,7 @@ export function LocalBanners() {
       iconBg: 'bg-amber-50',
       iconColor: 'text-amber-600',
       accent: 'border-l-amber-400',
-      badge: t('home.freeShippingTitle'),
+      badge: t('home.badgeShipping'),
       badgeColor: 'bg-amber-50 text-amber-700',
     },
     {
@@ -43,7 +43,7 @@ export function LocalBanners() {
       iconBg: 'bg-purple-50',
       iconColor: 'text-purple-600',
       accent: 'border-l-purple-400',
-      badge: '7-Day',
+      badge: t('home.badgeReturn'),
       badgeColor: 'bg-purple-50 text-purple-700',
     },
   ];

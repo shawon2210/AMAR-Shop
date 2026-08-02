@@ -4,12 +4,14 @@ import { useState, Suspense } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import Link from 'next/link';
 import { useAuthStore } from '@/stores/auth-store';
+import { useLanguage } from '@/contexts/language-context';
 
 function RegisterForm() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const redirectTo = searchParams.get('redirect') || '/';
   const register = useAuthStore(s => s.register);
+  const { t } = useLanguage();
 
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
@@ -21,22 +23,22 @@ function RegisterForm() {
   const [error, setError] = useState('');
   const [success, setSuccess] = useState('');
 
-  const nameError = name.length > 0 && name.length < 2 ? 'Name must be at least 2 characters' : '';
+  const nameError = name.length > 0 && name.length < 2 ? t('auth.errorNameLength') : '';
   const emailError =
     email.length > 0 && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)
-      ? 'Enter a valid email address'
+      ? t('auth.errorEmailInvalid')
       : '';
   const phoneError =
     phone.length > 0 && !/^(\+?88)?01[3-9]\d{8}$/.test(phone)
-      ? 'Enter a valid Bangladeshi phone number (01XXXXXXXXX)'
+      ? t('auth.errorPhoneInvalid')
       : '';
   const passwordError =
     password.length > 0 && password.length < 8
-      ? 'Password must be at least 8 characters'
+      ? t('auth.errorPasswordLength')
       : '';
   const confirmError =
     confirmPassword.length > 0 && password !== confirmPassword
-      ? 'Passwords do not match'
+      ? t('auth.errorPasswordMismatch')
       : '';
 
   const passwordStrength =
@@ -56,7 +58,7 @@ function RegisterForm() {
     setSuccess('');
     if (nameError || emailError || phoneError || passwordError || confirmError) return;
     if (!agreeTerms) {
-      setError('You must agree to the Terms & Conditions');
+      setError(t('auth.errorAgreeTerms'));
       return;
     }
     setLoading(true);
@@ -67,7 +69,7 @@ function RegisterForm() {
         phone: `+880${phone.replace(/^(\+?88|0)/, '')}`,
         password,
       });
-      setSuccess('Account created successfully!');
+      setSuccess(t('auth.successAccountCreated'));
       setTimeout(() => {
         const state = useAuthStore.getState();
         if (state.user?.role === 'ADMIN' || state.user?.role === 'SUPER_ADMIN') {
@@ -77,7 +79,7 @@ function RegisterForm() {
         }
       }, 500);
     } catch (err: unknown) {
-      const message = err instanceof Error ? err.message : 'Registration failed. Please try again.';
+      const message = err instanceof Error ? err.message : t('auth.errorRegistrationFailed');
       setError(message);
     } finally {
       setLoading(false);
@@ -90,9 +92,9 @@ function RegisterForm() {
         <div className="p-5 sm:p-6 md:p-8">
           <div className="text-center mb-5 sm:mb-6">
             <h1 className="text-xl sm:text-2xl md:text-[28px] font-bold text-primary mb-1 leading-tight text-balance">
-              Create Account
+              {t('auth.registerTitle')}
             </h1>
-            <p className="text-xs sm:text-sm text-secondary">Join AmarShop and start shopping</p>
+            <p className="text-xs sm:text-sm text-secondary">{t('auth.registerSubtitle')}</p>
           </div>
 
           <form onSubmit={handleSubmit} className="space-y-4 sm:space-y-4" noValidate>
@@ -110,13 +112,13 @@ function RegisterForm() {
             )}
 
             <div>
-              <label className="text-xs sm:text-sm font-label-bold block mb-1.5">Full Name *</label>
+              <label className="text-xs sm:text-sm font-label-bold block mb-1.5">{t('auth.fullName')}</label>
               <input
                 type="text"
                 value={name}
                 onChange={e => setName(e.target.value)}
                 className={`w-full px-3 py-2.5 border ${nameError ? 'border-error' : 'border-outline'} rounded-lg bg-transparent outline-none focus:ring-2 focus:ring-primary text-xs sm:text-sm`}
-                placeholder="John Doe"
+                placeholder={t('auth.fullNamePlaceholder')}
                 disabled={loading}
                 required
                 autoComplete="name"
@@ -125,13 +127,13 @@ function RegisterForm() {
             </div>
 
             <div>
-              <label className="text-xs sm:text-sm font-label-bold block mb-1.5">Email</label>
+              <label className="text-xs sm:text-sm font-label-bold block mb-1.5">{t('auth.email')}</label>
               <input
                 type="email"
                 value={email}
                 onChange={e => setEmail(e.target.value)}
                 className={`w-full px-3 py-2.5 border ${emailError ? 'border-error' : 'border-outline'} rounded-lg bg-transparent outline-none focus:ring-2 focus:ring-primary text-xs sm:text-sm`}
-                placeholder="john@example.com"
+                placeholder={t('auth.emailPlaceholder')}
                 disabled={loading}
                 autoComplete="email"
               />
@@ -139,7 +141,7 @@ function RegisterForm() {
             </div>
 
             <div>
-              <label className="text-xs sm:text-sm font-label-bold block mb-1.5">Phone Number *</label>
+              <label className="text-xs sm:text-sm font-label-bold block mb-1.5">{t('auth.phone')}</label>
               <div className={`grid grid-cols-[auto_1fr] border ${phoneError ? 'border-error' : 'border-outline'} rounded-lg overflow-hidden focus-within:ring-2 focus-within:ring-primary`}>
                 <span className="px-3 py-2.5 bg-surface-container text-xs sm:text-sm font-label-bold border-r border-outline whitespace-nowrap">+880</span>
                 <input
@@ -147,7 +149,7 @@ function RegisterForm() {
                   value={phone}
                   onChange={e => setPhone(e.target.value)}
                   className="w-full px-3 py-2.5 bg-transparent border-none outline-none text-xs sm:text-sm"
-                  placeholder="1XXXXXXXXX"
+                  placeholder={t('auth.phonePlaceholder')}
                   disabled={loading}
                   required
                   autoComplete="tel"
@@ -157,13 +159,13 @@ function RegisterForm() {
             </div>
 
             <div>
-              <label className="text-xs sm:text-sm font-label-bold block mb-1.5">Password *</label>
+              <label className="text-xs sm:text-sm font-label-bold block mb-1.5">{t('auth.password')}</label>
               <input
                 type="password"
                 value={password}
                 onChange={e => setPassword(e.target.value)}
                 className={`w-full px-3 py-2.5 border ${passwordError ? 'border-error' : 'border-outline'} rounded-lg bg-transparent outline-none focus:ring-2 focus:ring-primary text-xs sm:text-sm`}
-                placeholder="Min. 8 characters"
+                placeholder={t('auth.passwordMinLength')}
                 minLength={8}
                 disabled={loading}
                 required
@@ -193,20 +195,20 @@ function RegisterForm() {
                   <span className={`text-[10px] capitalize ${
                     passwordStrength === 'strong' ? 'text-tertiary' : passwordStrength === 'medium' ? 'text-warning' : 'text-error'
                   }`}>
-                    {passwordStrength}
+                    {passwordStrength === 'strong' ? t('auth.passwordStrong') : passwordStrength === 'medium' ? t('auth.passwordMedium') : t('auth.passwordWeak')}
                   </span>
                 </div>
               )}
             </div>
 
             <div>
-              <label className="text-xs sm:text-sm font-label-bold block mb-1.5">Confirm Password *</label>
+              <label className="text-xs sm:text-sm font-label-bold block mb-1.5">{t('auth.confirmPassword')}</label>
               <input
                 type="password"
                 value={confirmPassword}
                 onChange={e => setConfirmPassword(e.target.value)}
                 className={`w-full px-3 py-2.5 border ${confirmError ? 'border-error' : 'border-outline'} rounded-lg bg-transparent outline-none focus:ring-2 focus:ring-primary text-xs sm:text-sm`}
-                placeholder="Re-enter your password"
+                placeholder={t('auth.confirmPasswordPlaceholder')}
                 disabled={loading}
                 required
                 autoComplete="new-password"
@@ -223,10 +225,10 @@ function RegisterForm() {
                 disabled={loading}
               />
               <span>
-                I agree to the{' '}
-                <Link href="/terms" className="text-primary hover:underline">Terms &amp; Conditions</Link>
-                {' '}and{' '}
-                <Link href="/privacy" className="text-primary hover:underline">Privacy Policy</Link> *
+                {t('auth.agreeTo')}{' '}
+                <Link href="/terms" className="text-primary hover:underline">{t('auth.terms')}</Link>
+                {' '}{t('auth.and')}{' '}
+                <Link href="/privacy" className="text-primary hover:underline">{t('auth.privacyPolicy')}</Link> *
               </span>
             </label>
 
@@ -238,18 +240,18 @@ function RegisterForm() {
               {loading ? (
                 <>
                   <span className="material-symbols-outlined animate-spin text-base">progress_activity</span>
-                  Creating account...
+                  {t('auth.creatingAccount')}
                 </>
               ) : (
-                'Create Account'
+                t('auth.signUp')
               )}
             </button>
           </form>
 
           <p className="mt-5 sm:mt-6 text-center text-xs sm:text-sm text-secondary">
-            Already have an account?{' '}
+            {t('auth.hasAccount')}{' '}
             <Link href={`/auth/login?redirect=${encodeURIComponent(redirectTo)}`} className="text-primary font-label-bold hover:underline whitespace-nowrap">
-              Sign In
+              {t('auth.signIn')}
             </Link>
           </p>
         </div>
@@ -259,12 +261,13 @@ function RegisterForm() {
 }
 
 export default function RegisterPage() {
+  const { t } = useLanguage();
   return (
     <Suspense fallback={
       <div className="flex flex-col items-center justify-center min-h-[80dvh] px-3 sm:px-4 py-6 sm:py-8">
         <div className="w-full max-w-[440px] bg-surface-container-lowest rounded-xl p-8 shadow-sm text-center">
           <span className="material-symbols-outlined animate-spin text-primary text-2xl">progress_activity</span>
-          <p className="text-sm text-secondary mt-3">Loading...</p>
+          <p className="text-sm text-secondary mt-3">{t('common.loading')}</p>
         </div>
       </div>
     }>
