@@ -8,7 +8,7 @@ export function DesktopSearch() {
   const { t } = useLanguage();
 
   return (
-    <div className="hidden md:flex flex-1 justify-center">
+    <div className="hidden lg:flex flex-1 justify-center">
       <button
         onClick={() => setIsSearchOpen(true)}
         className="relative w-full max-w-[clamp(280px,35vw,600px)] group"

@@ -34,9 +34,9 @@ export function Header() {
     <header
       ref={headerRef}
       className={
-        'sticky top-0 w-full bg-white/95 backdrop-blur-md border-b border-gray-200/70 transition-shadow duration-200 ' +
+        'sticky top-0 w-full bg-white/95 dark:bg-gray-900/95 backdrop-blur-md border-b border-gray-200/70 dark:border-gray-800/70 transition-shadow duration-200 ' +
         (scrolled
-          ? 'shadow-[0_1px_0_0_rgb(0_0_0/0.06),0_4px_16px_0_rgb(0_0_0/0.07)]'
+          ? 'shadow-[0_1px_0_0_rgb(0_0_0/0.06),0_4px_16px_0_rgb(0_0_0/0.07)] dark:shadow-[0_1px_0_0_rgb(0_0_0/0.5),0_4px_16px_0_rgb(0_0_0/0.4)]'
           : '')
       }
       style={{ zIndex: searchOpen ? 'auto' : Z_HEADER }}

@@ -9,7 +9,7 @@ export function MobileSearchButton({ scrolled = false }: { scrolled?: boolean })
 
   return (
     <div
-      className={`md:hidden overflow-hidden transition-all duration-300 ease-in-out ${
+      className={`lg:hidden overflow-hidden transition-all duration-300 ease-in-out ${
         scrolled ? 'h-0 opacity-0' : 'h-[52px] opacity-100'
       }`}
     >

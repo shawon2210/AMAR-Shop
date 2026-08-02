@@ -10,8 +10,12 @@ import { LanguageToggle } from '@/components/ui/language-toggle';
 export function Actions() {
   return (
     <div className="flex items-center justify-end gap-1.5 sm:gap-2 shrink-0 ml-auto">
-      <LanguageToggle />
-      <ThemeToggle />
+      <div className="hidden md:block">
+        <LanguageToggle />
+      </div>
+      <div className="hidden md:block">
+        <ThemeToggle />
+      </div>
       <div className="hidden sm:block">
         <NotificationButton />
       </div>

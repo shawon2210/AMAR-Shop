@@ -1,5 +1,7 @@
 @import "tailwindcss";
 
+@custom-variant dark (&:where(.dark, .dark *));
+
 @theme inline {
   /* New brand colors */
   --color-primary: #0F9D58;
@@ -844,6 +846,19 @@ html.dark body,
 .dark .text-neutral-400      { color: #9CA3AF !important; }
 
 .dark .text-black            { color: #F9FAFB !important; }
+
+/* ── M3 semantic text tokens (Tailwind `@theme inline` bakes the literal hex,
+      so they must be overridden here to follow the html.dark variable flip) ── */
+.dark .text-on-surface,
+.dark .text-on-background    { color: #F9FAFB !important; }
+
+.dark .text-secondary,
+.dark .text-on-surface-variant    { color: #9CA3AF !important; }
+.dark .text-on-secondary          { color: #F9FAFB !important; }
+
+.dark .hover\:text-on-surface:hover,
+.dark .hover\:text-on-background:hover { color: #F9FAFB !important; }
+.dark .hover\:text-secondary:hover      { color: #9CA3AF !important; }
 
 /* ── Hex literal text colors — every pattern found across 163 pages ── */
 
