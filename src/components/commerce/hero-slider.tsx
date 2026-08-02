@@ -176,7 +176,7 @@ export function HeroSlider({ priority = false }: { priority?: boolean }) {
             key={i}
             aria-label={`Slide ${i + 1}`}
             onClick={() => setCurrent(i)}
-            className="relative h-1 rounded-full overflow-hidden transition-all duration-300 bg-white/30"
+            className="relative h-11 rounded-full overflow-hidden transition-all duration-300 bg-white/30"
             style={{ width: i === current ? "32px" : "8px" }}
           >
             {i === current && (
