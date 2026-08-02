@@ -3,6 +3,7 @@
 import { motion } from 'framer-motion';
 import { CountdownTimer } from '@/components/ui/countdown-timer';
 import { fadeUp } from '@/lib/motion-variants';
+import { useLanguage } from '@/contexts/language-context';
 
 interface FlashSaleBannerProps {
   endDate: string;
@@ -12,9 +13,14 @@ interface FlashSaleBannerProps {
 
 export function FlashSaleBanner({
   endDate,
-  title = 'FLASH SALE',
-  subtitle = 'Deals end in',
+  title,
+  subtitle,
 }: FlashSaleBannerProps) {
+  const { t } = useLanguage();
+  
+  const displayTitle = title || t('home.flashSale');
+  const displaySubtitle = subtitle || t('home.dealsEndIn');
+
   return (
     <motion.section
       variants={fadeUp}
@@ -34,8 +40,8 @@ export function FlashSaleBanner({
             bolt
           </motion.span>
           <div>
-            <h2 className="text-lg md:text-xl font-bold">{title}</h2>
-            <p className="text-sm opacity-90">{subtitle}</p>
+            <h2 className="text-lg md:text-xl font-bold">{displayTitle}</h2>
+            <p className="text-sm opacity-90">{displaySubtitle}</p>
           </div>
         </div>
 

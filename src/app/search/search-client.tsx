@@ -6,6 +6,7 @@ import Image from 'next/image';
 import { useSearchProducts } from '@/services/products';
 import { Star } from 'lucide-react';
 import { useLanguage } from '@/contexts/language-context';
+import { ProductCard } from '@/components/commerce/product-card';
 
 export default function SearchPageClient() {
   const searchParams = useSearchParams();
@@ -60,52 +61,11 @@ export default function SearchPageClient() {
       ) : null}
 
       {results.length > 0 ? (
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mt-6">
+        <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-3 md:gap-4 mt-6">
           {results.map((product) => (
-            <Link
-              key={product.id}
-              href={product.slug ? `/product/${product.slug}` : '#'}
-              className="group bg-white rounded-xl border border-gray-100 overflow-hidden hover:shadow-md transition-shadow"
-            >
-              <div className="aspect-square bg-gray-50 relative overflow-hidden">
-                <Image
-                  src={product.images[0]}
-                  alt={product.name}
-                  width={200}
-                  height={200}
-                  unoptimized
-                  className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
-                />
-                {product.discount ? (
-                  <span className="absolute top-2 left-2 bg-red-500 text-white text-[11px] font-semibold px-1.5 py-0.5 rounded">
-                    -{product.discount}%
-                  </span>
-                ) : null}
-                {product.isNew ? (
-                  <span className="absolute top-2 right-2 bg-green-500 text-white text-[11px] font-semibold px-1.5 py-0.5 rounded">
-                    {t('search.new')}
-                  </span>
-                ) : null}
-              </div>
-              <div className="p-3 space-y-1.5">
-                <p className="text-[13px] text-gray-600 truncate">{product.name}</p>
-                <div className="flex items-center gap-1.5">
-                  <span className="text-sm font-bold text-gray-900">
-                    {product.currency}{product.price.toLocaleString()}
-                  </span>
-                  {product.originalPrice ? (
-                    <span className="text-[11px] text-gray-400 line-through">
-                      {product.currency}{product.originalPrice.toLocaleString()}
-                    </span>
-                  ) : null}
-                </div>
-                <div className="flex items-center gap-1 text-[11px] text-gray-400">
-                  <Star className="w-3 h-3 fill-yellow-400 text-yellow-400" />
-                  <span>{product.rating}</span>
-                  <span>({product.reviewCount})</span>
-                </div>
-              </div>
-            </Link>
+            <div key={product.id} className="h-full">
+              <ProductCard product={product} />
+            </div>
           ))}
         </div>
       ) : null}
