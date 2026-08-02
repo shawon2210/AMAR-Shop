@@ -27,7 +27,7 @@ export function FooterBrand() {
 
       <div className="mt-5">
         <h4 className="text-xs font-semibold uppercase tracking-wide text-gray-900 dark:text-gray-100 mb-2.5">
-          Follow Us
+          {t('footer.followUs')}
         </h4>
         <SocialLinks />
       </div>

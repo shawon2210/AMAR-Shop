@@ -2,6 +2,7 @@
 
 import { useAuthStore, useAuthHydrated } from '@/stores/auth-store';
 import Link from 'next/link';
+import { useLanguage } from '@/contexts/language-context';
 
 interface AuthSectionProps {
   compact?: boolean;
@@ -13,6 +14,7 @@ export function AuthSection({ compact = false }: AuthSectionProps) {
   const isAuthenticated = useAuthStore((s) => s.isAuthenticated);
 
   const iconSize = compact ? 'w-10 h-10 sm:w-11 sm:h-11' : 'w-11 h-11';
+  const { t } = useLanguage();
 
   if (!hydrated) {
     return (
@@ -36,7 +38,7 @@ export function AuthSection({ compact = false }: AuthSectionProps) {
           href="/auth/login"
           className="hidden md:flex items-center h-9 px-5 text-sm font-semibold text-white bg-primary rounded-full hover:bg-primary-dark transition-all duration-150 whitespace-nowrap hover:shadow-md"
         >
-          Sign In
+          {t('auth.signIn')}
         </Link>
       </>
     );
@@ -57,7 +59,7 @@ export function AuthSection({ compact = false }: AuthSectionProps) {
           className="hidden md:flex items-center h-9 px-4 text-sm font-semibold text-primary bg-primary-fixed rounded-full hover:bg-primary/10 transition-all duration-150 whitespace-nowrap gap-1.5"
         >
           <span className="material-symbols-outlined text-[18px]">admin_panel_settings</span>
-          Admin
+          {t('nav.adminPanel')}
         </Link>
       </>
     );

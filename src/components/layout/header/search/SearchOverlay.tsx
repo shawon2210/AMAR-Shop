@@ -9,6 +9,7 @@ import { useBodyLock } from '../hooks/use-body-lock';
 import { Z_SEARCH_OVERLAY } from '../styles';
 import { Search, X, TrendingUp, Clock, ArrowRight, Store, Grid3X3 } from 'lucide-react';
 import Image from 'next/image';
+import { useLanguage } from '@/contexts/language-context';
 
 const DEBOUNCE_MS = 200;
 
@@ -42,6 +43,7 @@ export function SearchOverlay() {
     clearRecentSearches,
     trendingSearches,
   } = useSearchStore();
+  const { t } = useLanguage();
 
   const inputRef = useRef<HTMLInputElement>(null);
   const overlayRef = useRef<HTMLDivElement>(null);
@@ -237,7 +239,7 @@ export function SearchOverlay() {
                 value={query}
                 onChange={(e) => setQuery(e.target.value)}
                 onKeyDown={handleKeyDown}
-                placeholder="Search products, brands & categories..."
+                placeholder={t('search.placeholder')}
                 className="w-full h-12 pl-12 pr-12 text-base bg-gray-50 border-2 border-gray-200 rounded-xl outline-none transition-all duration-200 focus:border-primary focus:bg-white focus:shadow-[0_0_0_4px_rgb(166_54_0/0.08)]"
                 aria-label="Search"
                 aria-controls="search-results"
@@ -282,13 +284,13 @@ export function SearchOverlay() {
                 <div className="flex items-center justify-between mb-3">
                   <h3 className="text-sm font-semibold text-gray-700 flex items-center gap-2">
                     <Clock className="w-4 h-4 text-gray-400" />
-                    Recent Searches
+                    {t('search.recentSearches')}
                   </h3>
                   <button
                     onClick={clearRecentSearches}
                     className="text-xs text-primary hover:underline min-h-[44px] px-2"
                   >
-                    Clear All
+                    {t('search.clearAll')}
                   </button>
                 </div>
                 <div className="flex flex-wrap gap-2">
@@ -324,7 +326,7 @@ export function SearchOverlay() {
               <div>
                 <h3 className="text-sm font-semibold text-gray-700 mb-3 flex items-center gap-2">
                   <TrendingUp className="w-4 h-4 text-primary" />
-                  Trending Now
+                  {t('search.trendingNow')}
                 </h3>
                 <div className="grid grid-cols-2 md:grid-cols-3 gap-2">
                   {trendingSearches.map((item) => (
@@ -349,7 +351,7 @@ export function SearchOverlay() {
                 {filteredCategories.length > 0 && (
                   <div>
                     <h4 className="text-xs font-semibold text-gray-400 uppercase tracking-wider mb-2">
-                      Categories
+                      {t('search.categories')}
                     </h4>
                     <div className="space-y-0.5">
                       {filteredCategories.map((cat, i) => {
@@ -385,7 +387,7 @@ export function SearchOverlay() {
                 {filteredBrands.length > 0 && (
                   <div>
                     <h4 className="text-xs font-semibold text-gray-400 uppercase tracking-wider mb-2">
-                      Brands
+                      {t('search.brands')}
                     </h4>
                     <div className="space-y-0.5">
                       {filteredBrands.map((brand, i) => {
@@ -423,7 +425,7 @@ export function SearchOverlay() {
                 {filteredProducts.length > 0 && (
                   <div>
                     <h4 className="text-xs font-semibold text-gray-400 uppercase tracking-wider mb-2">
-                      Products
+                      {t('search.productsLabel')}
                     </h4>
                     <div className="space-y-0.5">
                       {filteredProducts.map((prod, i) => {
@@ -480,7 +482,7 @@ export function SearchOverlay() {
                     role="option"
                     aria-selected={selectedIndex === totalItems - 1}
                   >
-                    View all results for &ldquo;{query}&rdquo;
+                    {t('search.viewAllResults')} &ldquo;{query}&rdquo;
                     <ArrowRight className="w-4 h-4" />
                   </button>
                 )}
@@ -489,10 +491,10 @@ export function SearchOverlay() {
                   <div className="text-center py-8">
                     <Search className="w-12 h-12 text-gray-200 mx-auto mb-3" />
                     <p className="text-gray-500 font-medium">
-                      No results found for &ldquo;{query}&rdquo;
+                      {t('search.noResultsFor')} &ldquo;{query}&rdquo;
                     </p>
                     <p className="text-sm text-gray-400 mt-1">
-                      Try different keywords or browse categories
+                      {t('search.tryDifferent')}
                     </p>
                   </div>
                 )}

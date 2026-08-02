@@ -16,6 +16,7 @@ import { CartButton } from '../components/CartButton';
 import { ThemeToggle } from '@/components/ui/theme-toggle';
 import { LanguageToggle } from '@/components/ui/language-toggle';
 import { Z_SIDEBAR, Z_SIDEBAR_OVERLAY } from '../styles';
+import { useLanguage } from '@/contexts/language-context';
 
 const overlayVariants = {
   hidden: { opacity: 0 },
@@ -41,6 +42,7 @@ export function NavigationDrawer({
   const isAuthenticated = useAuthStore((s) => s.isAuthenticated);
   const logout = useAuthStore((s) => s.logout);
   const showAuth = hydrated;
+  const { t } = useLanguage();
 
   useFocusTrap(drawerRef, open);
   useBodyLock(open);
@@ -83,7 +85,7 @@ export function NavigationDrawer({
             tabIndex={-1}
           >
             <h2 id="navigation-drawer-title" className="sr-only">
-              Navigation menu
+              {t('drawer.navTitle')}
             </h2>
             <div className="flex items-center justify-between px-5 h-16 md:h-18 border-b border-gray-100 dark:border-gray-700/60 shrink-0 safe-top">
               <Image
@@ -131,14 +133,14 @@ export function NavigationDrawer({
                       onClick={onClose}
                       className="flex-1 h-10 flex items-center justify-center text-sm font-semibold text-white bg-primary rounded-xl hover:brightness-110 transition-all shadow-sm"
                     >
-                      Sign In
+                      {t('drawer.signIn')}
                     </Link>
                     <Link
                       href="/auth/register"
                       onClick={onClose}
                       className="flex-1 h-10 flex items-center justify-center text-sm font-semibold text-primary border border-primary rounded-xl hover:bg-primary/5 transition-all"
                     >
-                      Register
+                      {t('drawer.register')}
                     </Link>
                   </div>
                 </div>
@@ -156,7 +158,7 @@ export function NavigationDrawer({
 
               <div className="px-5 pb-6">
                 <p className="text-[11px] font-semibold text-gray-400 uppercase tracking-widest mb-2">
-                  Quick Links
+                  {t('drawer.quickLinks')}
                 </p>
                 <div className="flex flex-col gap-0.5">
                   {showAuth &&
@@ -181,7 +183,7 @@ export function NavigationDrawer({
                     <span className="material-symbols-outlined text-[20px] text-gray-400">
                       help_outline
                     </span>
-                    Help Center
+                    {t('drawer.helpCenter')}
                   </Link>
                   <Link
                     href="/orders"
@@ -191,7 +193,7 @@ export function NavigationDrawer({
                     <span className="material-symbols-outlined text-[20px] text-gray-400">
                       local_shipping
                     </span>
-                    Track Order
+                    {t('drawer.trackOrder')}
                   </Link>
                   <Link
                     href="/notifications"
@@ -201,7 +203,7 @@ export function NavigationDrawer({
                     <span className="material-symbols-outlined text-[20px] text-gray-400">
                       notifications
                     </span>
-                    Offers & Deals
+                    {t('drawer.offersDeals')}
                   </Link>
                   {!isAuthenticated && (
                     <Link
@@ -212,7 +214,7 @@ export function NavigationDrawer({
                       <span className="material-symbols-outlined text-[20px] text-gray-400">
                         storefront
                       </span>
-                      Become a Seller
+                      {t('drawer.becomeSeller')}
                     </Link>
                   )}
                 </div>
@@ -230,7 +232,7 @@ export function NavigationDrawer({
                   className="flex items-center gap-3 w-full px-3 py-3 min-h-[44px] text-sm font-medium text-red-600 hover:bg-red-50 rounded-xl transition-colors"
                 >
                   <span className="material-symbols-outlined text-[20px]">logout</span>
-                  Sign Out
+                  {t('drawer.signOut')}
                 </button>
               </div>
             )}

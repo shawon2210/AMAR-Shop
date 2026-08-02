@@ -4,19 +4,21 @@ import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { useAuthHydrated } from '@/stores/auth-store';
 import { useCartStore } from '@/stores/cart-store';
-
-const navItems = [
-  { href: '/', label: 'Home', icon: 'home' },
-  { href: '/categories', label: 'Categories', icon: 'category' },
-  { href: '/messages', label: 'Messages', icon: 'mail' },
-  { href: '/cart', label: 'Cart', icon: 'shopping_cart' },
-  { href: '/account', label: 'Account', icon: 'person' },
-];
+import { useLanguage } from '@/contexts/language-context';
 
 export function BottomNav() {
   const pathname = usePathname();
   const hydrated = useAuthHydrated();
   const itemCount = useCartStore((s) => s.getItemCount());
+  const { t } = useLanguage();
+
+  const navItems = [
+    { href: '/', label: t('bottomNav.home'), icon: 'home' },
+    { href: '/categories', label: t('bottomNav.categories'), icon: 'category' },
+    { href: '/messages', label: t('bottomNav.messages'), icon: 'mail' },
+    { href: '/cart', label: t('bottomNav.cart'), icon: 'shopping_cart' },
+    { href: '/account', label: t('bottomNav.account'), icon: 'person' },
+  ];
 
   return (
     <nav

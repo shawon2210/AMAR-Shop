@@ -9,6 +9,7 @@ import { CartItem as CartItemType } from '@/types';
 import { PriceDisplay } from '@/components/ui/price-display';
 import { useCartStore } from '@/stores/cart-store';
 import { cardItem, fastTransition } from '@/lib/motion-variants';
+import { useLanguage } from '@/contexts/language-context';
 
 interface CartItemCardProps {
   item: CartItemType;
@@ -19,6 +20,7 @@ const STOCK_LIMIT = 999;
 export function CartItemCard({ item }: CartItemCardProps) {
   const { toggleSelect, updateQuantity, removeItem } = useCartStore();
   const [qtyDraft, setQtyDraft] = useState<number | null>(null);
+  const { t } = useLanguage();
 
   const stockLimit = item.product.stockCount > 0 ? item.product.stockCount : STOCK_LIMIT;
   const variantLabel = [
@@ -104,7 +106,7 @@ export function CartItemCard({ item }: CartItemCardProps) {
         {lowStock && item.product.inStock !== false && (
           <p className="flex items-center gap-1 text-[11px] text-amber-600 font-medium mt-1">
             <AlertTriangle className="w-3 h-3" />
-            Only {item.product.stockCount} left in stock
+            {t('product.onlyLeft').replace('{count}', String(item.product.stockCount))}
           </p>
         )}
 
@@ -149,7 +151,7 @@ export function CartItemCard({ item }: CartItemCardProps) {
           </div>
 
           <div className="text-right shrink-0 ml-auto">
-            <p className="text-[11px] text-gray-400 leading-none">Total</p>
+            <p className="text-[11px] text-gray-400 leading-none">{t('cart.total')}</p>
             <p className="text-primary font-bold text-sm md:text-base leading-tight whitespace-nowrap">
               ৳{(item.product.price * item.quantity).toLocaleString('en-BD')}
             </p>
