@@ -1,3 +1,5 @@
+'use client';
+
 import { FooterBrand } from './FooterBrand';
 import { FooterLinks } from './FooterLinks';
 import { AccordionFooter } from './AccordionFooter';
@@ -5,8 +7,10 @@ import { FooterBottom } from './FooterBottom';
 import { AppDownload } from './AppDownload';
 import { PaymentMethods } from './PaymentMethods';
 import { DeliveryPartners } from './DeliveryPartners';
+import { useLanguage } from '@/contexts/language-context';
 
 export function Footer() {
+  const { t } = useLanguage();
   return (
     <>
       {/* Brand + Links — single mobile-first grid */}
@@ -24,16 +28,16 @@ export function Footer() {
       <div className="mt-6 pt-6 border-t border-gray-100">
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
           <div className="text-center md:text-left">
-            <h4 className="text-xs font-semibold uppercase tracking-wide text-gray-900 mb-2.5">
-              Download App
+            <h4 className="text-xs font-semibold uppercase tracking-wide text-gray-900 dark:text-gray-100 mb-2.5">
+              {t('footer.downloadAppTitle')}
             </h4>
             <div className="flex justify-center md:justify-start">
               <AppDownload />
             </div>
           </div>
           <div className="text-center md:text-left">
-            <h4 className="text-xs font-semibold uppercase tracking-wide text-gray-900 mb-2.5">
-              Accepted Payments
+            <h4 className="text-xs font-semibold uppercase tracking-wide text-gray-900 dark:text-gray-100 mb-2.5">
+              {t('footer.acceptedPayments')}
             </h4>
             <div className="flex justify-center md:justify-start">
               <PaymentMethods />

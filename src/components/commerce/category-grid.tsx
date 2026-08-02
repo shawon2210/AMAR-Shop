@@ -2,6 +2,7 @@
 
 import Link from 'next/link';
 import { categories } from '@/lib/data/categories';
+import { useLanguage } from '@/contexts/language-context';
 
 const categoryColors: Record<string, { bg: string; icon: string; hover: string }> = {
   'cat-1':  { bg: 'bg-pink-50',    icon: 'text-pink-500',    hover: 'group-hover:bg-pink-500' },
@@ -25,19 +26,20 @@ function formatCount(n: number) {
 }
 
 export function CategoryGrid() {
+  const { t } = useLanguage();
   return (
     <section>
       <div className="app-container">
         <div className="bg-white rounded-2xl border border-gray-100 p-4 md:p-5 shadow-sm">
           <div className="flex items-center justify-between mb-4">
-            <h2 className="font-bold text-gray-900 tracking-tight" style={{ fontSize: 'clamp(15px, 1.6vw, 20px)' }}>
-              Shop by Category
+            <h2 className="font-bold text-gray-900 dark:text-gray-100 tracking-tight" style={{ fontSize: 'clamp(15px, 1.6vw, 20px)' }}>
+              {t('home.shopByCategory')}
             </h2>
             <Link
               href="/categories"
               className="flex items-center gap-0.5 text-xs font-semibold text-primary hover:text-primary-dark transition-colors duration-150"
             >
-              View All
+              {t('common.viewAll')}
               <span className="material-symbols-outlined text-[13px]">chevron_right</span>
             </Link>
           </div>

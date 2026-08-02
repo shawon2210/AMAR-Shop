@@ -5,6 +5,7 @@ import { useGetProducts } from '@/services/products';
 import dynamic from 'next/dynamic';
 import { ProductCard } from '@/components/commerce/product-card';
 import Link from 'next/link';
+import { useLanguage } from '@/contexts/language-context';
 
 const CategoryFilterSidebar = dynamic(
   () => import('@/components/commerce/category-filter-sidebar').then((m) => m.CategoryFilterSidebar),
@@ -14,6 +15,7 @@ const CategoryFilterSidebar = dynamic(
 export default function CategoryPage() {
   const params = useParams();
   const slug = params.slug as string;
+  const { t } = useLanguage();
 
   const { data: categoryProducts = [], isLoading: loading } = useGetProducts(0, 50, slug);
 
@@ -21,14 +23,14 @@ export default function CategoryPage() {
     <div className="app-container py-6 space-y-6 pb-24">
       {/* Breadcrumb */}
       <nav className="flex items-center gap-1 text-xs text-secondary">
-        <Link href="/" className="hover:text-primary">Home</Link>
+        <Link href="/" className="hover:text-primary">{t('category.home')}</Link>
         <span className="material-symbols-outlined text-sm">chevron_right</span>
         <span className="text-on-surface capitalize">{slug.replace(/-/g, ' ')}</span>
       </nav>
 
       <div className="flex items-center justify-between">
         <h1 className="text-responsive-subheading font-bold capitalize">{slug.replace(/-/g, ' ')}</h1>
-        <span className="text-xs text-secondary">{loading ? '...' : `${categoryProducts.length} products`}</span>
+        <span className="text-xs text-secondary">{loading ? '...' : `${categoryProducts.length} ${t('category.products')}`}</span>
       </div>
 
       {/* Filter bar — mobile */}
@@ -45,7 +47,7 @@ export default function CategoryPage() {
       ) : categoryProducts.length === 0 ? (
         <div className="flex flex-col items-center justify-center py-20">
           <span className="material-symbols-outlined text-4xl text-secondary mb-3">inventory_2</span>
-          <p className="text-secondary">No products in this category yet</p>
+          <p className="text-secondary">{t('category.noProducts')}</p>
         </div>
       ) : (
         <div className="flex gap-6">

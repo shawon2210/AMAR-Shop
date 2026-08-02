@@ -4,6 +4,7 @@ import { useState, useEffect, Suspense } from 'react';
 import { useSearchParams } from 'next/navigation';
 import Link from 'next/link';
 import { useAuthStore } from '@/stores/auth-store';
+import { useLanguage } from '@/contexts/language-context';
 
 const DEMO_ACCOUNTS = [
   { label: 'Admin', icon: 'admin_panel_settings' },
@@ -15,6 +16,7 @@ function LoginForm() {
   const searchParams = useSearchParams();
   const redirectTo = searchParams.get('redirect') || '/';
   const { login, logout, isAuthenticated, user } = useAuthStore();
+  const { t } = useLanguage();
 
   const [identity, setIdentity] = useState('');
   const [password, setPassword] = useState('');
@@ -74,8 +76,8 @@ function LoginForm() {
               <div className="w-10 h-10 rounded-xl bg-orange-500 flex items-center justify-center mx-auto mb-3">
                 <span className="material-symbols-outlined text-white text-xl">shopping_bag</span>
               </div>
-              <h1 className="text-xl font-bold text-gray-900">Welcome Back</h1>
-              <p className="text-sm text-gray-500 mt-1">Sign in to your AmarShop account</p>
+              <h1 className="text-xl font-bold text-gray-900">{t('auth.welcomeBack')}</h1>
+              <p className="text-sm text-gray-500 mt-1">{t('auth.welcomeDesc')}</p>
             </div>
 
             <form onSubmit={handleSubmit} className="space-y-4" noValidate>
@@ -87,7 +89,7 @@ function LoginForm() {
               )}
 
               <div>
-                <label className="text-sm font-medium text-gray-700 block mb-1.5">Email or Phone</label>
+                <label className="text-sm font-medium text-gray-700 block mb-1.5">{t('auth.emailOrPhone')}</label>
                 <input
                   type="text"
                   value={identity}
@@ -101,14 +103,14 @@ function LoginForm() {
               </div>
 
               <div>
-                <label className="text-sm font-medium text-gray-700 block mb-1.5">Password</label>
+                <label className="text-sm font-medium text-gray-700 block mb-1.5">{t('auth.password')}</label>
                 <div className="flex border border-gray-200 rounded-xl overflow-hidden focus-within:ring-2 focus-within:ring-orange-500 bg-gray-50">
                   <input
                     type={showPassword ? 'text' : 'password'}
                     value={password}
                     onChange={e => setPassword(e.target.value)}
                     className="w-full px-3.5 py-2.5 bg-transparent border-none outline-none text-sm"
-                    placeholder="Enter your password"
+                    placeholder={t('auth.passwordPlaceholder')}
                     disabled={loading}
                     required
                     autoComplete="current-password"
@@ -122,24 +124,24 @@ function LoginForm() {
               <div className="flex items-center justify-between text-sm">
                 <label className="flex items-center gap-2 text-gray-600 cursor-pointer select-none">
                   <input type="checkbox" className="rounded border-gray-300 text-orange-500 focus:ring-orange-500" />
-                  Remember me
+                  {t('auth.rememberMe')}
                 </label>
-                <Link href="/auth/forgot-password" className="text-orange-600 hover:underline font-medium">Forgot password?</Link>
+                <Link href="/auth/forgot-password" className="text-orange-600 hover:underline font-medium">{t('auth.forgotPassword')}</Link>
               </div>
 
               <button type="submit" disabled={loading} className="w-full py-2.5 bg-orange-500 text-white font-semibold text-sm rounded-xl hover:bg-orange-600 active:scale-[0.98] transition-all disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2 shadow-sm">
-                {loading ? <><span className="material-symbols-outlined animate-spin text-base">progress_activity</span> Signing in...</> : 'Sign In'}
+                {loading ? <><span className="material-symbols-outlined animate-spin text-base">progress_activity</span> {t('auth.signingIn')}</> : t('auth.signIn')}
               </button>
             </form>
 
             <p className="mt-5 text-center text-sm text-gray-500">
-              No account?{' '}
-              <Link href={`/auth/register?redirect=${encodeURIComponent(redirectTo)}`} className="text-orange-600 font-medium hover:underline">Register</Link>
+              {t('auth.noAccount')}{' '}
+              <Link href={`/auth/register?redirect=${encodeURIComponent(redirectTo)}`} className="text-orange-600 font-medium hover:underline">{t('auth.registerLink')}</Link>
             </p>
 
             <div className="mt-6 relative">
               <div className="absolute inset-0 flex items-center"><div className="w-full border-t border-gray-200" /></div>
-              <div className="relative flex justify-center"><span className="bg-white px-3 text-xs text-gray-400">Quick demo login</span></div>
+              <div className="relative flex justify-center"><span className="bg-white px-3 text-xs text-gray-400">{t('auth.demoLogin')}</span></div>
             </div>
 
             <div className="mt-4 grid grid-cols-3 gap-2.5">

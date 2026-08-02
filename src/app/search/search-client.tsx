@@ -5,10 +5,12 @@ import Link from 'next/link';
 import Image from 'next/image';
 import { useSearchProducts } from '@/services/products';
 import { Star } from 'lucide-react';
+import { useLanguage } from '@/contexts/language-context';
 
 export default function SearchPageClient() {
   const searchParams = useSearchParams();
   const query = searchParams.get('q') || '';
+  const { t } = useLanguage();
 
   const { data, isLoading } = useSearchProducts(query);
   const results = data?.products || [];
@@ -17,10 +19,12 @@ export default function SearchPageClient() {
   return (
     <div className="app-container pt-4 md:pt-6 pb-16 md:pb-20">
       <h1 className="text-xl md:text-2xl font-bold text-gray-900">
-        {query.trim() ? `Results for "${query}"` : 'Search Products'}
+        {query.trim() ? `${t('search.resultsFor')} "${query}"` : t('search.title')}
       </h1>
       <p className="text-sm text-gray-500 mt-1">
-        {isLoading ? 'Searching...' : `${total} ${total === 1 ? 'product' : 'products'} found`}
+        {isLoading
+          ? t('search.searching')
+          : `${total} ${total === 1 ? t('search.product') : t('search.products')}`}
       </p>
 
       {isLoading ? (
@@ -38,9 +42,9 @@ export default function SearchPageClient() {
       {!isLoading && results.length === 0 && query.trim() ? (
         <div className="flex flex-col items-center justify-center py-20 text-center">
           <span className="material-symbols-outlined text-5xl text-gray-300 mb-4">search_off</span>
-          <h2 className="text-lg font-semibold text-gray-700">No results found</h2>
+          <h2 className="text-lg font-semibold text-gray-700">{t('search.noResults')}</h2>
           <p className="text-sm text-gray-500 mt-1 max-w-md">
-            We couldn&apos;t find any products matching &quot;{query}&quot;. Try a different search term or browse categories.
+            {t('search.noResultsDesc')}
           </p>
         </div>
       ) : null}
@@ -48,9 +52,9 @@ export default function SearchPageClient() {
       {!isLoading && !query.trim() ? (
         <div className="flex flex-col items-center justify-center py-20 text-center">
           <span className="material-symbols-outlined text-5xl text-gray-300 mb-4">search</span>
-          <h2 className="text-lg font-semibold text-gray-700">Search our store</h2>
+          <h2 className="text-lg font-semibold text-gray-700">{t('search.searchOurStore')}</h2>
           <p className="text-sm text-gray-500 mt-1">
-            Enter a product name, brand, or category above to find what you&apos;re looking for.
+            {t('search.searchHint')}
           </p>
         </div>
       ) : null}
@@ -79,7 +83,7 @@ export default function SearchPageClient() {
                 ) : null}
                 {product.isNew ? (
                   <span className="absolute top-2 right-2 bg-green-500 text-white text-[11px] font-semibold px-1.5 py-0.5 rounded">
-                    New
+                    {t('search.new')}
                   </span>
                 ) : null}
               </div>

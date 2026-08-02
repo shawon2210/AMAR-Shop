@@ -6,6 +6,7 @@ import { FlashSaleBanner } from '@/components/commerce/flash-sale-banner';
 import { ProductCard } from '@/components/commerce/product-card';
 import { useGetFlashSaleProducts } from '@/services/products';
 import type { Product } from '@/types';
+import { useLanguage } from '@/contexts/language-context';
 
 const FLASH_SALE_END = '2026-06-30T23:59:59Z';
 
@@ -24,16 +25,6 @@ interface CategoryFilterProps {
   activeCategory: string;
   onCategoryChange: (category: string) => void;
 }
-
-const categories = [
-  'All Products',
-  'Electronics',
-  'Fashion',
-  'Home Decor',
-  'Health & Beauty',
-  'Kitchen',
-  'Sports',
-] as const;
 
 // Extracted tab component to eliminate duplication
 const PhaseTab = ({ active, type, title, subtitle, onClick }: TabProps) => (
@@ -74,63 +65,78 @@ const CategoryFilter = ({ categories: cats, activeCategory, onCategoryChange }: 
 );
 
 // Extracted upcoming product card component
-const UpcomingProductCard = ({ product }: { product: Product }) => {
-  const interestText = '2.4k People Interested';
-
-  return (
-    <article
-      className="bg-white border border-gray-200 rounded-xl overflow-hidden group opacity-90"
-    >
-      <div className="relative aspect-square overflow-hidden grayscale-[0.2]">
-        <Image
-          fill
-          sizes="(max-width: 768px) 50vw, 25vw"
-          className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
-          src={product.images[0]}
-          alt={product.name}
-        />
-        <div className="absolute inset-0 bg-black/20 flex items-center justify-center">
-          <div className="bg-white/90 px-4 py-1 rounded-full text-primary font-semibold text-xs">
-            Starts at 12:00
-          </div>
+const UpcomingProductCard = ({ product, startsText, specialPriceText, interestedText, remindMeText }: {
+  product: Product;
+  startsText: string;
+  specialPriceText: string;
+  interestedText: string;
+  remindMeText: string;
+}) => (
+  <article className="bg-white border border-gray-200 rounded-xl overflow-hidden group opacity-90">
+    <div className="relative aspect-square overflow-hidden grayscale-[0.2]">
+      <Image
+        fill
+        sizes="(max-width: 768px) 50vw, 25vw"
+        className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+        src={product.images[0]}
+        alt={product.name}
+      />
+      <div className="absolute inset-0 bg-black/20 flex items-center justify-center">
+        <div className="bg-white/90 px-4 py-1 rounded-full text-primary font-semibold text-xs">
+          {startsText}
         </div>
       </div>
-      <div className="p-3 space-y-1">
-        <h3 className="text-sm text-gray-900 line-clamp-2 h-10">
-          {product.name}
-        </h3>
-        <div className="flex items-baseline gap-1">
-          <span className="text-lg font-bold text-primary">
-            ৳{product.price.toLocaleString('en-BD')}
-          </span>
-          <span className="text-[10px] text-gray-500 italic">Special Price</span>
-        </div>
-        <div className="pt-1">
-          <div className="flex items-center gap-1 text-[10px] font-semibold text-gray-500">
-            <span className="material-symbols-outlined text-sm">notifications</span>
-            <span>{interestText}</span>
-          </div>
-        </div>
-        <button className="w-full mt-2 h-11 min-h-11 border-2 border-primary text-primary font-semibold rounded-xl hover:bg-primary/5 active:scale-95 transition-all flex items-center justify-center gap-1 text-sm">
-          <span className="material-symbols-outlined text-[18px]">alarm</span>
-          Remind Me
-        </button>
+    </div>
+    <div className="p-3 space-y-1">
+      <h3 className="text-sm text-gray-900 line-clamp-2 h-10">
+        {product.name}
+      </h3>
+      <div className="flex items-baseline gap-1">
+        <span className="text-lg font-bold text-primary">
+          ৳{product.price.toLocaleString('en-BD')}
+        </span>
+        <span className="text-[10px] text-gray-500 italic">{specialPriceText}</span>
       </div>
-    </article>
-  );
-};
+      <div className="pt-1">
+        <div className="flex items-center gap-1 text-[10px] font-semibold text-gray-500">
+          <span className="material-symbols-outlined text-sm">notifications</span>
+          <span>{interestedText}</span>
+        </div>
+      </div>
+      <button className="w-full mt-2 h-11 min-h-11 border-2 border-primary text-primary font-semibold rounded-xl hover:bg-primary/5 active:scale-95 transition-all flex items-center justify-center gap-1 text-sm">
+        <span className="material-symbols-outlined text-[18px]">alarm</span>
+        {remindMeText}
+      </button>
+    </div>
+  </article>
+);
 
 export default function FlashSalePage() {
   const [activeTab, setActiveTab] = useState<TabType>('active');
-  const [activeCategory, setActiveCategory] = useState<string>('All Products');
+  const [activeCategory, setActiveCategory] = useState<string>('');
   const { data: flashSaleProducts = [] } = useGetFlashSaleProducts();
+  const { t } = useLanguage();
+
+  const categories = [
+    t('flashSale.allProducts'),
+    t('cat.electronics'),
+    t('cat.fashion'),
+    t('flashSale.homeDecor'),
+    t('flashSale.healthBeauty'),
+    t('flashSale.kitchen'),
+    t('cat.sports'),
+  ];
+
+  // Set default category when t is ready
+  const defaultCategory = categories[0];
+  const resolvedCategory = activeCategory || defaultCategory;
 
   // Memoized filtering to avoid recalculating on every render
   const filteredProducts = useMemo(() =>
     flashSaleProducts.filter(p =>
-      activeCategory === 'All Products' || p.category === activeCategory
+      resolvedCategory === defaultCategory || p.category === resolvedCategory
     ),
-    [flashSaleProducts, activeCategory]
+    [flashSaleProducts, resolvedCategory, defaultCategory]
   );
 
   const upcomingProducts = useMemo(
@@ -148,15 +154,15 @@ export default function FlashSalePage() {
           <PhaseTab
             active={activeTab}
             type="active"
-            title="Happening Now"
-            subtitle="Active Deals"
+            title={t('flashSale.happeningNow')}
+            subtitle={t('flashSale.activeDeals')}
             onClick={() => setActiveTab('active')}
           />
           <PhaseTab
             active={activeTab}
             type="upcoming"
-            title="Coming Soon"
-            subtitle="Starts 12:00 PM"
+            title={t('flashSale.comingSoon')}
+            subtitle={t('flashSale.startsAt')}
             onClick={() => setActiveTab('upcoming')}
           />
         </div>
@@ -164,7 +170,7 @@ export default function FlashSalePage() {
 
       <CategoryFilter
         categories={categories}
-        activeCategory={activeCategory}
+        activeCategory={resolvedCategory}
         onCategoryChange={setActiveCategory}
       />
 
@@ -176,7 +182,14 @@ export default function FlashSalePage() {
                 <ProductCard key={product.id} product={product} variant="flash-sale" />
               ))
             : upcomingProducts.map(product => (
-                <UpcomingProductCard key={product.id} product={product} />
+                <UpcomingProductCard
+                  key={product.id}
+                  product={product}
+                  startsText={t('flashSale.startsAtTime')}
+                  specialPriceText={t('flashSale.specialPrice')}
+                  interestedText={t('flashSale.peopleInterested')}
+                  remindMeText={t('flashSale.remindMe')}
+                />
               ))
           }
         </div>

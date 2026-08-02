@@ -5,15 +5,7 @@ import Link from 'next/link';
 import Image from 'next/image';
 import { useRouter } from 'next/navigation';
 import { useAuthStore, useAuthHydrated } from '@/stores/auth-store';
-
-const menuItems = [
-  { href: '/orders', icon: 'receipt_long', label: 'My Orders' },
-  { href: '/account/wishlist', icon: 'favorite', label: 'Wishlist' },
-  { href: '/account/addresses', icon: 'location_on', label: 'My Addresses' },
-  { href: '/account/reviews', icon: 'rate_review', label: 'My Reviews' },
-  { href: '/account/settings', icon: 'settings', label: 'Settings' },
-  { href: '/account/help', icon: 'help', label: 'Help Center' },
-];
+import { useLanguage } from '@/contexts/language-context';
 
 export default function AccountPage() {
   const router = useRouter();
@@ -21,6 +13,16 @@ export default function AccountPage() {
   const isAuthenticated = useAuthStore(s => s.isAuthenticated);
   const logout = useAuthStore(s => s.logout);
   const hydrated = useAuthHydrated();
+  const { t } = useLanguage();
+
+  const menuItems = [
+    { href: '/orders', icon: 'receipt_long', label: t('account.menuOrders') },
+    { href: '/account/wishlist', icon: 'favorite', label: t('account.menuWishlist') },
+    { href: '/account/addresses', icon: 'location_on', label: t('account.menuAddresses') },
+    { href: '/account/reviews', icon: 'rate_review', label: t('account.menuReviews') },
+    { href: '/account/settings', icon: 'settings', label: t('account.menuSettings') },
+    { href: '/account/help', icon: 'help', label: t('account.menuHelp') },
+  ];
 
   const handleLogout = async () => {
     await logout();
@@ -51,35 +53,35 @@ export default function AccountPage() {
             <span className="material-symbols-outlined text-3xl">person</span>
           </div>
           <div className="flex-1 min-w-0">
-            <h2 className="text-base font-semibold">Welcome!</h2>
-            <p className="text-sm text-gray-500">Sign in to access your account</p>
+            <h2 className="text-base font-semibold">{t('account.welcome')}</h2>
+            <p className="text-sm text-gray-500">{t('account.signInToAccess')}</p>
           </div>
           <Link
             href="/auth/login?redirect=/account"
             className="bg-primary text-white px-5 py-2 rounded-lg text-sm font-semibold hover:brightness-110 transition-all shrink-0"
           >
-            Sign In
+            {t('account.signIn')}
           </Link>
         </div>
 
         <div className="bg-white rounded-xl p-4 border border-gray-100 shadow-sm">
-          <h3 className="text-sm font-semibold mb-3">Why create an account?</h3>
+          <h3 className="text-sm font-semibold mb-3">{t('account.whyCreate')}</h3>
           <ul className="space-y-2 text-sm text-gray-500">
             <li className="flex items-center gap-2">
               <span className="material-symbols-outlined text-primary text-base shrink-0">check_circle</span>
-              Track your orders in real-time
+              {t('account.benefit1')}
             </li>
             <li className="flex items-center gap-2">
               <span className="material-symbols-outlined text-primary text-base shrink-0">check_circle</span>
-              Faster checkout with saved addresses
+              {t('account.benefit2')}
             </li>
             <li className="flex items-center gap-2">
               <span className="material-symbols-outlined text-primary text-base shrink-0">check_circle</span>
-              Exclusive deals and personalized recommendations
+              {t('account.benefit3')}
             </li>
             <li className="flex items-center gap-2">
               <span className="material-symbols-outlined text-primary text-base shrink-0">check_circle</span>
-              Easy returns and order management
+              {t('account.benefit4')}
             </li>
           </ul>
           <div className="mt-4 flex gap-2">
@@ -87,28 +89,28 @@ export default function AccountPage() {
               href="/auth/login?redirect=/account"
               className="flex-1 py-2.5 bg-primary text-white text-center rounded-lg text-sm font-semibold hover:brightness-110 transition-all"
             >
-              Sign In
+              {t('account.signIn')}
             </Link>
             <Link
               href="/auth/register?redirect=/account"
               className="flex-1 py-2.5 border border-primary text-primary text-center rounded-lg text-sm font-semibold hover:bg-emerald-50 transition-all"
             >
-              Register
+              {t('account.register')}
             </Link>
           </div>
         </div>
 
         <div className="bg-white rounded-xl p-4 border border-gray-100 shadow-sm">
-          <h3 className="text-sm font-semibold mb-3">Track Your Order</h3>
-          <p className="text-sm text-gray-500 mb-3">Enter your order ID to track your shipment</p>
+          <h3 className="text-sm font-semibold mb-3">{t('account.trackOrder')}</h3>
+          <p className="text-sm text-gray-500 mb-3">{t('account.trackDesc')}</p>
           <div className="flex gap-2">
             <input
               type="text"
-              placeholder="Order ID"
+              placeholder={t('account.orderId')}
               className="flex-1 h-11 min-h-[44px] px-3 border border-gray-200 rounded-lg bg-transparent text-sm outline-none focus:ring-2 focus:ring-primary"
             />
             <button className="px-5 h-11 min-h-[44px] bg-primary text-white rounded-lg text-sm font-semibold hover:brightness-110 transition-all">
-              Track
+              {t('account.track')}
             </button>
           </div>
         </div>
@@ -137,16 +139,16 @@ export default function AccountPage() {
           href="/account/edit"
           className="text-primary text-xs font-semibold hover:underline shrink-0"
         >
-          Edit
+          {t('account.editProfile')}
         </Link>
       </div>
 
       <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-4 gap-2">
         {[
-          { icon: 'payments', label: 'To Pay', value: '0' },
-          { icon: 'local_shipping', label: 'To Ship', value: '0' },
-          { icon: 'inventory_2', label: 'To Receive', value: '1' },
-          { icon: 'star', label: 'Reviews', value: '0' },
+          { icon: 'payments', label: t('account.toPay'), value: '0' },
+          { icon: 'local_shipping', label: t('account.toShip'), value: '0' },
+          { icon: 'inventory_2', label: t('account.toReceive'), value: '1' },
+          { icon: 'star', label: t('account.reviews'), value: '0' },
         ].map(stat => (
           <div key={stat.label} className="bg-white rounded-xl p-2 text-center border border-gray-100 shadow-sm">
             <span className="material-symbols-outlined text-primary text-2xl">{stat.icon}</span>
@@ -176,7 +178,7 @@ export default function AccountPage() {
           className="flex items-center gap-4 px-4 py-3.5 bg-white rounded-xl shadow-sm border border-gray-100 hover:bg-gray-50 transition-colors"
         >
           <span className="material-symbols-outlined text-primary">dashboard</span>
-          <span className="flex-1 text-sm">Admin Dashboard</span>
+          <span className="flex-1 text-sm">{t('account.adminDashboard')}</span>
           <span className="material-symbols-outlined text-gray-400 text-lg">chevron_right</span>
         </Link>
       ) : null}
@@ -186,7 +188,7 @@ export default function AccountPage() {
         className="w-full h-11 min-h-[44px] text-red-600 font-semibold rounded-xl border border-red-200 hover:bg-red-50 transition-colors flex items-center justify-center gap-2 text-sm"
       >
         <span className="material-symbols-outlined text-base">logout</span>
-        Logout
+        {t('account.logout')}
       </button>
     </div>
   );

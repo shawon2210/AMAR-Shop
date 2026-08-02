@@ -7,6 +7,7 @@ import type { Product } from '@/types';
 import { useCartStore } from '@/stores/cart-store';
 import { useUIStore } from '@/stores/ui-store';
 import { brandLogoMap } from '@/components/commerce/brand-logos';
+import { useLanguage } from '@/contexts/language-context';
 
 interface ProductCardProps {
   product: Product;
@@ -37,6 +38,7 @@ export const ProductCard = memo(function ProductCard({ product }: ProductCardPro
   const [added, setAdded] = useState(false);
   const addItem = useCartStore(s => s.addItem);
   const addToast = useUIStore(s => s.addToast);
+  const { t } = useLanguage();
 
   const discount = product.originalPrice && product.originalPrice > product.price
     ? Math.round(((product.originalPrice - product.price) / product.originalPrice) * 100)
@@ -51,18 +53,18 @@ export const ProductCard = memo(function ProductCard({ product }: ProductCardPro
     e.stopPropagation();
     addItem(product);
     setAdded(true);
-    addToast(product.name + ' added to cart!');
+    addToast(product.name + ' ' + t('home.addedToCart'));
     setTimeout(() => setAdded(false), 1500);
-  }, [addItem, addToast, product]);
+  }, [addItem, addToast, product, t]);
 
   const handleWishlist = useCallback((e: React.MouseEvent) => {
     e.preventDefault();
     e.stopPropagation();
     setWishlisted(prev => {
-      addToast(prev ? 'Removed from wishlist' : 'Added to wishlist!');
+      addToast(prev ? t('product.addToWishlist') : t('product.addToWishlist'));
       return !prev;
     });
-  }, [addToast]);
+  }, [addToast, t]);
 
   return (
     <Link
@@ -96,7 +98,7 @@ export const ProductCard = memo(function ProductCard({ product }: ProductCardPro
           )}
           {product.isNew && (
             <span className="bg-blue-500 text-white text-[10px] font-bold px-1.5 py-0.5 rounded-md leading-none shadow-sm">
-              NEW
+              {t('common.new') || 'NEW'}
             </span>
           )}
           {product.isMall && (
@@ -132,7 +134,7 @@ export const ProductCard = memo(function ProductCard({ product }: ProductCardPro
             <span className="material-symbols-outlined text-[15px]">
               {added ? 'check' : 'shopping_bag'}
             </span>
-            {added ? 'Added to Cart!' : 'Add to Cart'}
+            {added ? 'Added to Cart' : t('common.addToCart')}
           </button>
         </div>
       </div>
@@ -156,7 +158,7 @@ export const ProductCard = memo(function ProductCard({ product }: ProductCardPro
                     <path d="M8 1L9.5 4.5L13 6L9.5 7.5L8 11L6.5 7.5L3 6L6.5 4.5L8 1Z" />
                     <path d="M8 11L9.5 14L13 12.5L9.5 13L8 16L6.5 13L3 12.5L6.5 14L8 11Z" />
                   </svg>
-                  Official Store
+                  {t('common.officialStore')}
                 </span>
               )}
             </div>
@@ -188,7 +190,7 @@ export const ProductCard = memo(function ProductCard({ product }: ProductCardPro
           </div>
           {savings > 0 && (
             <p className="text-[11px] text-emerald-600 font-semibold mt-1 leading-none">
-              Save ৳{savings.toLocaleString('en-BD')}
+              {t('common.saveAmount', { amount: savings.toLocaleString('en-BD') })}
             </p>
           )}
         </div>
@@ -204,7 +206,7 @@ export const ProductCard = memo(function ProductCard({ product }: ProductCardPro
           <span className="material-symbols-outlined text-[14px]">
             {added ? 'check' : 'shopping_bag'}
           </span>
-          {added ? 'Added!' : 'Add to Cart'}
+          {added ? 'Added!' : t('common.addToCart')}
         </button>
       </div>
     </Link>

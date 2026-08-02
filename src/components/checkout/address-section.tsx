@@ -5,6 +5,7 @@ import { api } from '@/services/api';
 import { useAuthStore, useAuthHydrated } from '@/stores/auth-store';
 import { useUIStore } from '@/stores/ui-store';
 import type { Address } from '@/types';
+import { useLanguage } from '@/contexts/language-context';
 
 export function AddressSection({
   selectedAddress,
@@ -13,6 +14,7 @@ export function AddressSection({
   selectedAddress: string;
   onSelect: (id: string) => void;
 }) {
+  const { t } = useLanguage();
   const addToast = useUIStore((s) => s.addToast);
   const token = useAuthStore((s) => s.accessToken);
   const hydrated = useAuthHydrated();
@@ -111,11 +113,11 @@ export function AddressSection({
       <div className="px-5 py-4 border-b border-slate-100 dark:border-slate-800 flex items-center justify-between">
         <div className="flex items-center gap-3">
           <span className="material-symbols-outlined text-primary text-xl">location_on</span>
-          <h2 className="font-semibold text-slate-900 dark:text-white">Shipping Address</h2>
+          <h2 className="font-semibold text-slate-900 dark:text-white">{t('checkout.shippingAddress')}</h2>
         </div>
         {!showForm && addresses.length > 0 && (
           <button onClick={() => setShowForm(true)} className="text-primary font-semibold text-sm hover:underline">
-            + Add New
+            {t('checkout.addNew')}
           </button>
         )}
       </div>
@@ -127,21 +129,21 @@ export function AddressSection({
         ) : showForm || addresses.length === 0 ? (
           <div className="space-y-4">
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-              <input type="text" value={form.fullName} onChange={(e) => setForm((f) => ({ ...f, fullName: e.target.value }))} className={inputClass} placeholder="Full Name *" disabled={saving} />
-              <input type="tel" value={form.phone} onChange={(e) => setForm((f) => ({ ...f, phone: e.target.value }))} className={inputClass} placeholder="Phone Number *" disabled={saving} />
+              <input type="text" value={form.fullName} onChange={(e) => setForm((f) => ({ ...f, fullName: e.target.value }))} className={inputClass} placeholder={t('checkout.fullName') + ' *'} disabled={saving} />
+              <input type="tel" value={form.phone} onChange={(e) => setForm((f) => ({ ...f, phone: e.target.value }))} className={inputClass} placeholder={t('checkout.phone') + ' *'} disabled={saving} />
             </div>
-            <input type="text" value={form.street} onChange={(e) => setForm((f) => ({ ...f, street: e.target.value }))} className={inputClass} placeholder="Street / Area *" disabled={saving} />
+            <input type="text" value={form.street} onChange={(e) => setForm((f) => ({ ...f, street: e.target.value }))} className={inputClass} placeholder={t('checkout.streetArea')} disabled={saving} />
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-              <input type="text" value={form.area} onChange={(e) => setForm((f) => ({ ...f, area: e.target.value }))} className={inputClass} placeholder="Area / Thana *" disabled={saving} />
-              <input type="text" value={form.city} onChange={(e) => setForm((f) => ({ ...f, city: e.target.value }))} className={inputClass} placeholder="City" disabled={saving} />
+              <input type="text" value={form.area} onChange={(e) => setForm((f) => ({ ...f, area: e.target.value }))} className={inputClass} placeholder={t('checkout.areaThana')} disabled={saving} />
+              <input type="text" value={form.city} onChange={(e) => setForm((f) => ({ ...f, city: e.target.value }))} className={inputClass} placeholder={t('checkout.city')} disabled={saving} />
             </div>
             <div className="flex gap-3">
               <button onClick={handleSave} disabled={saving} className="flex-1 py-3 bg-primary text-white font-semibold text-sm rounded-xl hover:brightness-110 transition-all disabled:opacity-70">
-                {saving ? 'Saving...' : 'Save Address'}
+                {saving ? t('checkout.saving') : t('checkout.saveAddress')}
               </button>
               {addresses.length > 0 && (
                 <button onClick={reset} className="py-3 px-6 border border-slate-200 dark:border-slate-800 rounded-xl text-sm text-slate-500 hover:bg-slate-50 dark:hover:bg-slate-900 transition-colors">
-                  Cancel
+                  {t('common.cancel')}
                 </button>
               )}
             </div>

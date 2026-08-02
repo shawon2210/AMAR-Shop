@@ -3,6 +3,7 @@
 import Link from 'next/link';
 import { memo, useRef, useEffect, useState } from 'react';
 import { brandData, type BrandInfo } from './brand-logos';
+import { useLanguage } from '@/contexts/language-context';
 
 const VISIBLE_COUNT = { desktop: 8, tablet: 6, mobile: 4 };
 
@@ -105,21 +106,22 @@ function BrandCarousel() {
 }
 
 export const TopBrands = memo(function TopBrands() {
+  const { t } = useLanguage();
   return (
     <section>
       <div className="app-container">
         <div className="bg-white rounded-2xl border border-gray-100 p-4 md:p-5 shadow-sm">
           <div className="flex items-center justify-between mb-4">
             <div className="flex items-center gap-3">
-              <h2 className="font-bold text-gray-900 tracking-tight" style={{ fontSize: 'clamp(15px, 1.6vw, 20px)' }}>
-                Top Brands
+              <h2 className="font-bold text-gray-900 dark:text-gray-100 tracking-tight" style={{ fontSize: 'clamp(15px, 1.6vw, 20px)' }}>
+                {t('home.topBrands')}
               </h2>
               <span className="hidden sm:inline-flex items-center h-5 px-2 rounded-full bg-primary/10 text-primary text-[10px] font-semibold">
-                Official Stores
+                {t('home.officialStores')}
               </span>
             </div>
             <Link href="/categories" className="text-xs font-semibold text-primary hover:text-primary-dark transition-colors duration-150 flex items-center gap-0.5">
-              View All
+              {t('common.viewAll')}
               <span className="material-symbols-outlined text-[13px]">chevron_right</span>
             </Link>
           </div>

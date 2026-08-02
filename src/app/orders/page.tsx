@@ -8,6 +8,7 @@ import { useAuthStore, useAuthHydrated } from '@/stores/auth-store';
 import { useUIStore } from '@/stores/ui-store';
 import { api } from '@/services/api';
 import { AuthGuard } from '@/components/auth/auth-guard';
+import { useLanguage } from '@/contexts/language-context';
 
 interface OrderItem {
   id: string;
@@ -62,6 +63,7 @@ export default function OrdersPage() {
   const token = useAuthStore(s => s.accessToken);
   const addToast = useUIStore(s => s.addToast);
   const hydrated = useAuthHydrated();
+  const { t } = useLanguage();
 
   const [activeTab, setActiveTab] = useState('All');
   const [orders, setOrders] = useState<Order[]>([]);
@@ -95,7 +97,7 @@ export default function OrdersPage() {
   return (
     <AuthGuard>
     <div className="app-container py-6 pb-24">
-      <h1 className="text-responsive-subheading font-bold mb-6">My Orders</h1>
+      <h1 className="text-responsive-subheading font-bold mb-6">{t('orders.title')}</h1>
 
       {/* Tabs */}
       <div className="flex overflow-x-auto hide-scrollbar gap-1 border-b border-outline-variant -mx-[clamp(12px,2.5vw,40px)] px-[clamp(12px,2.5vw,40px)]">
@@ -121,14 +123,14 @@ export default function OrdersPage() {
             <span className="material-symbols-outlined animate-spin text-3xl text-secondary mb-3">
               progress_activity
             </span>
-            <p className="text-secondary text-sm">Loading orders...</p>
+            <p className="text-secondary text-sm">{t('orders.loading')}</p>
           </div>
         ) : displayOrders.length === 0 ? (
           <div className="flex flex-col items-center justify-center py-20">
             <span className="material-symbols-outlined text-5xl text-secondary mb-3">receipt_long</span>
-            <p className="text-secondary">No orders found</p>
+            <p className="text-secondary">{t('orders.noOrders')}</p>
             <Link href="/" className="mt-4 text-primary font-label-bold text-sm">
-              Start Shopping
+              {t('cart.startShopping')}
             </Link>
           </div>
         ) : (

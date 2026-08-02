@@ -5,13 +5,16 @@ import Link from "next/link";
 import { ChevronLeft, ChevronRight, ArrowRight } from "lucide-react";
 import Image from 'next/image';
 
+import { useLanguage } from "@/contexts/language-context";
+import { TranslationKey } from "@/translations";
+
 interface HeroSlide {
   image: string;
-  badge: string;
+  badgeKey: TranslationKey;
   badgeColor: string;
-  title: string;
-  subtitle: string;
-  cta: string;
+  titleKey: TranslationKey;
+  subtitleKey: TranslationKey;
+  ctaKey: TranslationKey;
   ctaHref: string;
   accentColor: string;
 }
@@ -19,41 +22,41 @@ interface HeroSlide {
 const slides: HeroSlide[] = [
   {
     image: "/images/poster.png",
-    badge: "Flash Sale",
+    badgeKey: "home.flashDeals",
     badgeColor: "bg-red-500/90",
-    title: "Shop Smart, Live Better",
-    subtitle: "Fast delivery across Bangladesh.",
-    cta: "Shop Now",
+    titleKey: "home.slide1Title",
+    subtitleKey: "home.slide1Subtitle",
+    ctaKey: "home.shopNow",
     ctaHref: "/categories",
     accentColor: "from-slate-900/80 via-slate-900/50 to-transparent",
   },
   {
     image: "/images/hero-poster.png",
-    badge: "Eid Specials",
+    badgeKey: "home.slide2Tag",
     badgeColor: "bg-violet-600/90",
-    title: "Huge Savings Await",
-    subtitle: "Up to 50% off fashion & electronics.",
-    cta: "Explore Deals",
+    titleKey: "home.slide2Title",
+    subtitleKey: "home.slide2Subtitle",
+    ctaKey: "home.exploreDeals",
     ctaHref: "/flash-sale",
     accentColor: "from-slate-900/80 via-slate-900/50 to-transparent",
   },
   {
     image: "/images/poster.png",
-    badge: "Summer Sale",
+    badgeKey: "home.slide3Tag",
     badgeColor: "bg-amber-500/90",
-    title: "Up to 70% Off",
-    subtitle: "Limited time. Free shipping included.",
-    cta: "Shop Now",
+    titleKey: "home.slide3Title",
+    subtitleKey: "home.slide3Subtitle",
+    ctaKey: "home.shopNow",
     ctaHref: "/flash-sale",
     accentColor: "from-slate-900/80 via-slate-900/50 to-transparent",
   },
   {
     image: "/images/hero-poster.png",
-    badge: "Tech Fest",
+    badgeKey: "home.slide4Tag",
     badgeColor: "bg-blue-600/90",
-    title: "Latest Gadgets",
-    subtitle: "Free shipping on all tech.",
-    cta: "Explore",
+    titleKey: "home.slide4Title",
+    subtitleKey: "home.slide4Subtitle",
+    ctaKey: "home.explore",
     ctaHref: "/category/electronics",
     accentColor: "from-slate-900/80 via-slate-900/50 to-transparent",
   },
@@ -67,6 +70,7 @@ export function HeroSlider({ priority = false }: { priority?: boolean }) {
   const paused = useRef(false);
   const touchStartX = useRef(0);
   const timerRef = useRef<ReturnType<typeof setInterval> | null>(null);
+  const { t } = useLanguage();
 
   const next = useCallback(() => setCurrent(c => (c + 1) % slides.length), []);
   const prev = useCallback(() => setCurrent(c => (c - 1 + slides.length) % slides.length), []);
@@ -78,7 +82,7 @@ export function HeroSlider({ priority = false }: { priority?: boolean }) {
     return () => { if (timerRef.current) clearInterval(timerRef.current); };
   }, [next]);
 
-      return (
+  return (
     <div
       className="relative overflow-hidden rounded-2xl w-full h-hero bg-gray-900 group"
       onMouseEnter={() => { paused.current = true; }}
@@ -124,25 +128,25 @@ export function HeroSlider({ priority = false }: { priority?: boolean }) {
             }
           >
             <span className={`inline-flex items-center self-start mb-3 px-3 py-1.5 rounded-full ${slide.badgeColor} backdrop-blur-sm text-white text-xs font-semibold leading-none tracking-wide`}>
-              {slide.badge}
+              {t(slide.badgeKey)}
             </span>
             <h2
               className="font-bold text-white leading-[1.1] mb-3 tracking-tight drop-shadow-sm"
               style={{ fontSize: "clamp(26px, 4vw, 54px)", whiteSpace: "pre-line" }}
             >
-              {slide.title}
+              {t(slide.titleKey)}
             </h2>
             <p
               className="text-white/85 mb-6 max-w-xs md:max-w-md leading-relaxed drop-shadow-sm"
               style={{ fontSize: "clamp(13px, 1.1vw, 16px)" }}
             >
-              {slide.subtitle}
+              {t(slide.subtitleKey)}
             </p>
             <Link
               href={slide.ctaHref}
               className="self-start inline-flex items-center gap-2.5 h-11 md:h-12 px-6 md:px-7 rounded-full bg-white text-gray-900 font-bold text-sm shadow-xl hover:bg-gray-50 hover:shadow-2xl hover:gap-3.5 transition-all duration-200 active:scale-95"
             >
-              {slide.cta}
+              {t(slide.ctaKey)}
               <ArrowRight size={15} />
             </Link>
           </div>

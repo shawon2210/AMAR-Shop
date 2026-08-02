@@ -2,30 +2,32 @@
 
 import Link from 'next/link';
 import { useAuthStore, useAuthHydrated } from '@/stores/auth-store';
+import { useLanguage } from '@/contexts/language-context';
 
 export function TopUtilityBar() {
   const hydrated = useAuthHydrated();
   const user = useAuthStore((s) => s.user);
   const isAuthenticated = useAuthStore((s) => s.isAuthenticated);
   const showAuth = hydrated;
+  const { t } = useLanguage();
 
   return (
-    <div className="hidden lg:block bg-gray-50/80 border-b border-gray-100">
+    <div className="hidden lg:block bg-gray-50/80 dark:bg-gray-900/80 border-b border-gray-100 dark:border-gray-800">
       <div className="app-container h-9 flex items-center justify-between">
-        <div className="flex items-center gap-5 text-xs text-gray-500">
+        <div className="flex items-center gap-5 text-xs text-gray-500 dark:text-gray-400">
           <Link
             href="/help"
             className="hover:text-primary transition-colors duration-150 flex items-center gap-1"
           >
             <span className="material-symbols-outlined text-[13px]">help_outline</span>
-            Help Center
+            {t('nav.help')}
           </Link>
           <Link
             href="/orders"
             className="hover:text-primary transition-colors duration-150 flex items-center gap-1"
           >
             <span className="material-symbols-outlined text-[13px]">local_shipping</span>
-            Track Order
+            {t('nav.trackOrder')}
           </Link>
           {!isAuthenticated && (
             <Link
@@ -33,29 +35,29 @@ export function TopUtilityBar() {
               className="hover:text-primary transition-colors duration-150 flex items-center gap-1"
             >
               <span className="material-symbols-outlined text-[13px]">storefront</span>
-              Become a Seller
+              {t('footer.becomeSeller')}
             </Link>
           )}
           {showAuth && isAuthenticated && (user?.role === 'ADMIN' || user?.role === 'SUPER_ADMIN') && (
             <Link
               href="/admin"
-              className="hover:text-primary transition-colors duration-150 flex items-center gap-1 font-semibold text-gray-700"
+              className="hover:text-primary transition-colors duration-150 flex items-center gap-1 font-semibold text-gray-700 dark:text-gray-200"
             >
               <span className="material-symbols-outlined text-[13px]">admin_panel_settings</span>
-              Admin Panel
+              {t('nav.adminPanel')}
             </Link>
           )}
         </div>
-        <div className="flex items-center gap-5 text-xs text-gray-500">
+        <div className="flex items-center gap-5 text-xs text-gray-500 dark:text-gray-400">
           <span className="flex items-center gap-1 text-emerald-600 font-medium">
             <span className="material-symbols-outlined text-[13px]">verified</span>
-            100% Authentic Products
+            {t('nav.authenticProducts')}
           </span>
           <Link href="/notifications" className="hover:text-primary transition-colors duration-150">
-            Offers & Deals
+            {t('nav.offersDeals')}
           </Link>
           <Link href="/help" className="hover:text-primary transition-colors duration-150">
-            Download App
+            {t('nav.downloadApp')}
           </Link>
         </div>
       </div>

@@ -12,6 +12,7 @@ import { ProductGallery } from '@/components/commerce/product-gallery';
 import { useCartStore } from '@/stores/cart-store';
 import { useUIStore } from '@/stores/ui-store';
 import { useRecentlyViewedStore } from '@/stores/recently-viewed-store';
+import { useLanguage } from '@/contexts/language-context';
 
 export default function ProductDetailPage() {
   const params = useParams();
@@ -25,6 +26,7 @@ export default function ProductDetailPage() {
   const addItem = useCartStore(s => s.addItem);
   const addToast = useUIStore(s => s.addToast);
   const addToRecentlyViewed = useRecentlyViewedStore(s => s.addItem);
+  const { t } = useLanguage();
 
   // Track recently viewed
   if (product) {
@@ -35,7 +37,7 @@ export default function ProductDetailPage() {
     return (
       <div className="flex flex-col items-center justify-center py-32 app-container">
         <span className="material-symbols-outlined animate-spin text-3xl text-secondary mb-3">progress_activity</span>
-        <p className="text-secondary">Loading product...</p>
+        <p className="text-secondary">{t('product.loadingProduct')}</p>
       </div>
     );
   }
@@ -44,13 +46,13 @@ export default function ProductDetailPage() {
     return (
       <div className="flex flex-col items-center justify-center py-32 app-container">
         <span className="material-symbols-outlined text-6xl text-secondary mb-4">block</span>
-        <h2 className="text-xl font-bold mb-2">Product Not Found</h2>
-<p className="text-secondary mb-6">The product you&rsquo;re looking for doesn&rsquo;t exist or has been removed.</p>
+        <h2 className="text-xl font-bold mb-2">{t('product.notFound')}</h2>
+        <p className="text-secondary mb-6">{t('product.notFoundDesc')}</p>
         <Link
           href="/"
           className="bg-primary text-on-primary px-lg py-4 rounded-lg font-semibold hover:brightness-110 transition-all"
         >
-          Back to Home
+          {t('product.backToHome')}
         </Link>
       </div>
     );
@@ -74,7 +76,7 @@ export default function ProductDetailPage() {
     <div className="app-container py-6 space-y-6 pb-24">
       {/* Breadcrumb */}
       <nav className="flex items-center gap-1 text-xs text-secondary">
-        <Link href="/" className="hover:text-primary">Home</Link>
+        <Link href="/" className="hover:text-primary">{t('product.home')}</Link>
         <span className="material-symbols-outlined text-sm">chevron_right</span>
         <Link href={`/category/${product.categoryId}`} className="hover:text-primary">{product.category}</Link>
         <span className="material-symbols-outlined text-sm">chevron_right</span>
@@ -97,9 +99,9 @@ export default function ProductDetailPage() {
         <section className="md:col-span-7 space-y-md">
           <div className="bg-white p-4 md:p-5 rounded-xl space-y-4 border border-gray-100">
             <div className="flex items-center gap-1.5 flex-wrap">
-              {product.isMall && <Badge variant="primary">Mall</Badge>}
-              {product.isNew && <Badge variant="tertiary">New</Badge>}
-              {product.freeShipping && <Badge variant="success">Free Shipping</Badge>}
+              {product.isMall && <Badge variant="primary">{t('product.mall')}</Badge>}
+              {product.isNew && <Badge variant="tertiary">{t('product.new')}</Badge>}
+              {product.freeShipping && <Badge variant="success">{t('product.freeShipping')}</Badge>}
               {discount > 0 && <DiscountBadge discount={discount} />}
             </div>
 
@@ -128,7 +130,7 @@ export default function ProductDetailPage() {
                 ))}
               </div>
               <span className="text-sm text-secondary font-semibold">
-                {product.rating} ({product.reviewCount.toLocaleString()} reviews)
+                {product.rating} ({product.reviewCount.toLocaleString()} {t('product.reviews')})
               </span>
             </div>
 
@@ -146,7 +148,7 @@ export default function ProductDetailPage() {
                   bolt
                 </span>
                 <div className="flex-1">
-                  <p className="font-semibold text-primary">Flash Sale ends in</p>
+                  <p className="font-semibold text-primary">{t('product.flashSaleEndsIn')}</p>
                 </div>
                 <CountdownTimer targetDate={product.flashSaleEndsAt} />
               </div>
@@ -156,9 +158,9 @@ export default function ProductDetailPage() {
             {product.seller && (
               <div className="flex items-center gap-2 text-sm text-gray-500 border-t border-gray-100 pt-3">
                 <span className="material-symbols-outlined text-base">store</span>
-                <span>Sold by: <strong className="text-gray-900">{product.seller.name}</strong></span>
+                <span>{t('product.soldBy')}: <strong className="text-gray-900">{product.seller.name}</strong></span>
                 {product.seller.isOfficial && (
-                  <Badge variant="primary" size="sm">Official Store</Badge>
+                  <Badge variant="primary" size="sm">{t('product.officialStore')}</Badge>
                 )}
               </div>
             )}
@@ -166,7 +168,7 @@ export default function ProductDetailPage() {
             {/* Specs */}
             {product.specifications && Object.keys(product.specifications).length > 0 && (
               <div className="border-t border-gray-100 pt-3">
-                <h4 className="font-semibold text-sm text-gray-700 mb-2">Specifications</h4>
+                <h4 className="font-semibold text-sm text-gray-700 mb-2">{t('product.specifications')}</h4>
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-1.5">
                   {Object.entries(product.specifications).map(([key, val]) => (
                     <div key={key} className="flex gap-1 text-sm min-w-0">
@@ -181,7 +183,7 @@ export default function ProductDetailPage() {
             {/* Quantity + Actions */}
             <div className="border-t border-gray-100 pt-3 space-y-3">
               <div className="flex items-center gap-3">
-                <span className="font-semibold">Quantity:</span>
+                <span className="font-semibold">{t('product.quantity')}:</span>
                 <div className="flex items-center border border-gray-200 rounded-lg overflow-hidden">
                   <button
                     onClick={() => setQuantity(Math.max(1, quantity - 1))}
@@ -199,7 +201,7 @@ export default function ProductDetailPage() {
                     <span className="material-symbols-outlined text-base">add</span>
                   </button>
                 </div>
-                <span className="text-xs text-secondary">({product.stockCount} available)</span>
+                <span className="text-xs text-secondary">({product.stockCount} {t('product.available')})</span>
               </div>
 
               <div className="flex gap-3">
@@ -207,13 +209,13 @@ export default function ProductDetailPage() {
                   onClick={handleAddToCart}
                   className="flex-1 py-3 border-2 border-primary text-primary font-semibold rounded-lg hover:bg-primary-fixed transition-all active:scale-95"
                 >
-                  Add to Cart
+                  {t('product.addToCart')}
                 </button>
                 <button
                   onClick={handleBuyNow}
                   className="flex-1 py-3 bg-primary text-on-primary font-semibold rounded-lg hover:bg-primary-container transition-all active:scale-95"
                 >
-                  Buy Now
+                  {t('product.buyNow')}
                 </button>
               </div>
             </div>
@@ -225,7 +227,7 @@ export default function ProductDetailPage() {
       {related.length > 0 && (
         <ProductGrid
           products={related}
-          title="You May Also Like"
+          title={t('product.youMayLike')}
           columns={4}
           showLoadMore={false}
         />

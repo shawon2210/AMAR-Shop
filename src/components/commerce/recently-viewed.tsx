@@ -5,10 +5,12 @@ import { useRecentlyViewedStore } from '@/stores/recently-viewed-store';
 import { ProductCardEnhanced } from '@/components/commerce/product-card-enhanced';
 import { staggerContainer, cardItem } from '@/lib/motion-variants';
 import { Clock, Trash2 } from 'lucide-react';
+import { useLanguage } from '@/contexts/language-context';
 
 export function RecentlyViewed() {
   const items = useRecentlyViewedStore(s => s.items);
   const clearItems = useRecentlyViewedStore(s => s.clearItems);
+  const { t } = useLanguage();
 
   if (items.length === 0) return null;
 
@@ -23,7 +25,7 @@ export function RecentlyViewed() {
       <div className="flex items-center justify-between mb-4">
         <div className="flex items-center gap-2">
           <Clock className="w-5 h-5 text-primary" />
-          <h2 className="text-lg md:text-xl font-bold text-gray-900">Recently Viewed</h2>
+          <h2 className="text-lg md:text-xl font-bold text-gray-900 dark:text-gray-100">{t('home.recentlyViewed')}</h2>
         </div>
         <button
           onClick={clearItems}
@@ -31,7 +33,7 @@ export function RecentlyViewed() {
           aria-label="Clear recently viewed"
         >
           <Trash2 className="w-3.5 h-3.5" />
-          Clear
+          {t('home.clearHistory')}
         </button>
       </div>
 

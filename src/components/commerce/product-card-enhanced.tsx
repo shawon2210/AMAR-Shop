@@ -9,6 +9,7 @@ import { useCartStore } from '@/stores/cart-store';
 import { useUIStore } from '@/stores/ui-store';
 import { brandLogoMap } from '@/components/commerce/brand-logos';
 import { Truck, ShieldCheck, Clock, Zap, Heart } from 'lucide-react';
+import { useLanguage } from '@/contexts/language-context';
 
 interface ProductCardEnhancedProps {
   product: Product;
@@ -54,6 +55,7 @@ export const ProductCardEnhanced = memo(function ProductCardEnhanced({ product, 
   const [showQuickAdd, setShowQuickAdd] = useState(false);
   const addItem = useCartStore(s => s.addItem);
   const addToast = useUIStore(s => s.addToast);
+  const { t } = useLanguage();
 
   const discount = product.originalPrice && product.originalPrice > product.price
     ? Math.round(((product.originalPrice - product.price) / product.originalPrice) * 100)
@@ -74,10 +76,10 @@ export const ProductCardEnhanced = memo(function ProductCardEnhanced({ product, 
     addItem(product);
     setAdded(true);
     setShowQuickAdd(true);
-    addToast(product.name + ' added to cart!');
+    addToast(product.name + ' ' + t('home.addedToCart'));
     setTimeout(() => setShowQuickAdd(false), 800);
     setTimeout(() => setAdded(false), 1500);
-  }, [addItem, addToast, product, isOutOfStock]);
+  }, [addItem, addToast, product, isOutOfStock, t]);
 
   const handleWishlist = useCallback((e: React.MouseEvent) => {
     e.preventDefault();
@@ -97,7 +99,7 @@ export const ProductCardEnhanced = memo(function ProductCardEnhanced({ product, 
       {recentlyViewed && (
         <div className="absolute top-0 left-0 right-0 z-20 bg-linear-to-r from-primary/90 to-primary/70 backdrop-blur-sm px-2.5 py-1 flex items-center gap-1">
           <Clock className="w-3 h-3 text-white" />
-          <span className="text-[9px] text-white font-semibold tracking-wide">Recently Viewed</span>
+          <span className="text-[9px] text-white font-semibold tracking-wide">{t('home.recentlyViewed')}</span>
         </div>
       )}
 
@@ -128,7 +130,7 @@ export const ProductCardEnhanced = memo(function ProductCardEnhanced({ product, 
           )}
           {product.isNew && (
             <span className="bg-blue-500 text-white text-[10px] font-bold px-1.5 py-0.5 rounded-md leading-none shadow-sm">
-              NEW
+              {t('common.new') || 'NEW'}
             </span>
           )}
           {product.isMall && (
@@ -138,7 +140,7 @@ export const ProductCardEnhanced = memo(function ProductCardEnhanced({ product, 
           )}
           {product.freeShipping && (
             <span className="bg-emerald-500 text-white text-[10px] font-bold px-1.5 py-0.5 rounded-md leading-none shadow-sm">
-              FREE SHIP
+              {t('common.freeDelivery')}
             </span>
           )}
         </div>
@@ -172,13 +174,13 @@ export const ProductCardEnhanced = memo(function ProductCardEnhanced({ product, 
         {isLowStock && (
           <div className="absolute bottom-2 left-2 z-10 bg-orange-500/90 backdrop-blur-sm text-white text-[9px] font-bold px-2 py-0.5 rounded-full leading-none shadow-sm flex items-center gap-1">
             <Zap className="w-2.5 h-2.5" />
-            Only {product.stockCount} left
+            {t('product.onlyLeft', { count: product.stockCount })}
           </div>
         )}
         {isOutOfStock && (
           <div className="absolute inset-0 z-10 bg-black/40 backdrop-blur-[2px] flex items-center justify-center">
             <span className="bg-white/95 text-gray-900 text-xs font-bold px-4 py-2 rounded-full shadow-lg">
-              Out of Stock
+              {t('product.outOfStock')}
             </span>
           </div>
         )}
@@ -196,7 +198,7 @@ export const ProductCardEnhanced = memo(function ProductCardEnhanced({ product, 
             <span className="material-symbols-outlined text-[15px]">
               {added ? 'check' : 'shopping_bag'}
             </span>
-            {added ? 'Added to Cart!' : isOutOfStock ? 'Out of Stock' : 'Add to Cart'}
+            {added ? t('home.addedToCart') : isOutOfStock ? t('product.outOfStock') : t('common.addToCart')}
           </button>
         </div>
       </div>
@@ -220,7 +222,7 @@ export const ProductCardEnhanced = memo(function ProductCardEnhanced({ product, 
                     <path d="M8 1L9.5 4.5L13 6L9.5 7.5L8 11L6.5 7.5L3 6L6.5 4.5L8 1Z" />
                     <path d="M8 11L9.5 14L13 12.5L9.5 13L8 16L6.5 13L3 12.5L6.5 14L8 11Z" />
                   </svg>
-                  Official Store
+                  {t('common.officialStore')}
                 </span>
               )}
             </div>
@@ -261,7 +263,7 @@ export const ProductCardEnhanced = memo(function ProductCardEnhanced({ product, 
           </div>
           {savings > 0 && (
             <p className="text-[11px] text-emerald-600 font-semibold mt-1 leading-none">
-              Save ৳{savings.toLocaleString('en-BD')}
+              {t('common.saveAmount', { amount: savings.toLocaleString('en-BD') })}
             </p>
           )}
         </div>
@@ -270,7 +272,7 @@ export const ProductCardEnhanced = memo(function ProductCardEnhanced({ product, 
         {!isOutOfStock && (
           <div className="flex items-center gap-1 mt-2 text-[10px] text-gray-400">
             <Truck className="w-3 h-3" />
-            <span>Free delivery <strong className="text-gray-600 font-medium">{deliveryDate()}</strong></span>
+            <span>{t('common.freeDelivery')} <strong className="text-gray-600 font-medium">{deliveryDate()}</strong></span>
           </div>
         )}
 
@@ -287,7 +289,7 @@ export const ProductCardEnhanced = memo(function ProductCardEnhanced({ product, 
             <span className="material-symbols-outlined text-[14px]">
               {added ? 'check' : 'shopping_bag'}
             </span>
-            {added ? 'Added!' : isOutOfStock ? 'Out of Stock' : 'Add to Cart'}
+            {added ? 'Added!' : isOutOfStock ? t('product.outOfStock') : t('common.addToCart')}
           </button>
 
           {/* Quick Add ripple animation */}

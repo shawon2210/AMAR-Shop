@@ -2,22 +2,24 @@
 
 import Link from 'next/link';
 import { useGetNotifications, useMarkAllRead } from '@/services/notifications';
+import { useLanguage } from '@/contexts/language-context';
 
 export default function NotificationsPage() {
   const { data } = useGetNotifications();
   const { mutate: markAllRead } = useMarkAllRead();
   const notifications = data?.notifications ?? [];
+  const { t } = useLanguage();
 
   return (
     <div className="app-container py-6 space-y-6 pb-24">
       <div className="flex items-center justify-between">
-        <h1 className="text-responsive-subheading font-bold">Notifications</h1>
+        <h1 className="text-responsive-subheading font-bold">{t('notifications.title')}</h1>
         {notifications.length > 0 && (
           <button
             onClick={() => markAllRead()}
             className="text-primary font-label-bold text-label-bold"
           >
-            Mark All Read
+            {t('notifications.markAllRead')}
           </button>
         )}
       </div>
@@ -55,7 +57,7 @@ export default function NotificationsPage() {
       {notifications.length === 0 && (
         <div className="flex flex-col items-center justify-center py-20">
           <span className="material-symbols-outlined text-5xl text-secondary mb-4">notifications</span>
-          <p className="text-body-md text-secondary">No notifications yet</p>
+          <p className="text-body-md text-secondary">{t('notifications.empty')}</p>
         </div>
       )}
     </div>

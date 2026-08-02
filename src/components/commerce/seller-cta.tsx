@@ -2,14 +2,23 @@
 
 import Link from 'next/link';
 import { ArrowRight } from 'lucide-react';
+import { useLanguage } from '@/contexts/language-context';
+import { TranslationKey } from '@/translations';
 
-const stats = [
-  { value: '2M+', label: 'Customers' },
-  { value: '50k+', label: 'Sellers' },
-  { value: '0%', label: 'Listing Fee' },
+interface StatItem {
+  value: string;
+  labelKey: TranslationKey;
+}
+
+const stats: StatItem[] = [
+  { value: '2M+', labelKey: 'home.customers' },
+  { value: '50k+', labelKey: 'home.sellers' },
+  { value: '0%', labelKey: 'home.listingFee' },
 ];
 
 export function SellerCta() {
+  const { t } = useLanguage();
+
   return (
     <section>
       <div className="app-container">
@@ -26,17 +35,17 @@ export function SellerCta() {
 
             <div className="text-center sm:text-left flex-1 min-w-0">
               <h3 className="font-bold text-white tracking-tight" style={{ fontSize: 'clamp(17px, 2vw, 24px)' }}>
-                Start Selling on AmarShop
+                {t('home.startSelling')}
               </h3>
               <p className="text-sm text-emerald-100 mt-1">
-                Reach millions of customers across Bangladesh. Zero listing fees.
+                {t('home.reachMillions')}
               </p>
               {/* Stats */}
               <div className="flex items-center gap-4 mt-3 justify-center sm:justify-start">
                 {stats.map(s => (
-                  <div key={s.label} className="flex items-center gap-1.5">
+                  <div key={s.labelKey} className="flex items-center gap-1.5">
                     <span className="text-white font-bold text-sm">{s.value}</span>
-                    <span className="text-emerald-200 text-xs">{s.label}</span>
+                    <span className="text-emerald-200 text-xs">{t(s.labelKey)}</span>
                   </div>
                 ))}
               </div>
@@ -46,7 +55,7 @@ export function SellerCta() {
               href="/seller/dashboard"
               className="inline-flex items-center gap-2 h-12 px-7 rounded-full bg-white font-bold text-emerald-700 text-sm shadow-xl hover:bg-emerald-50 hover:shadow-2xl hover:gap-3 transition-all duration-200 whitespace-nowrap shrink-0"
             >
-              Join Free
+              {t('home.joinFree')}
               <ArrowRight size={15} />
             </Link>
           </div>

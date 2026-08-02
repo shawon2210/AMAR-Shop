@@ -1,78 +1,84 @@
+'use client';
+
 import Link from 'next/link';
+import { useLanguage } from '@/contexts/language-context';
+import { TranslationKey } from '@/translations';
 
 interface LinkItem {
-  label: string;
+  labelKey: TranslationKey;
   href: string;
 }
 
 interface Column {
-  title: string;
+  titleKey: TranslationKey;
   links: LinkItem[];
 }
 
 const columns: Column[] = [
   {
-    title: 'Customer Service',
+    titleKey: 'footer.customerCare',
     links: [
-      { label: 'Help Center', href: '/help' },
-      { label: 'Returns & Refunds', href: '/help/returns' },
-      { label: 'Shipping Info', href: '/help/shipping' },
-      { label: 'Order Tracking', href: '/orders' },
-      { label: 'Payment Methods', href: '/help/payment' },
-      { label: 'Contact Us', href: '/contact' },
+      { labelKey: 'nav.help', href: '/help' },
+      { labelKey: 'footer.returnsRefunds', href: '/help/returns' },
+      { labelKey: 'footer.shippingInfo', href: '/help/shipping' },
+      { labelKey: 'footer.orderTracking', href: '/orders' },
+      { labelKey: 'footer.paymentMethods', href: '/help/payment' },
+      { labelKey: 'footer.contactUs', href: '/contact' },
     ],
   },
   {
-    title: 'Shop Categories',
+    titleKey: 'footer.shopCategories',
     links: [
-      { label: 'Electronics', href: '/category/electronics' },
-      { label: 'Fashion', href: '/category/fashion' },
-      { label: 'Beauty', href: '/category/beauty' },
-      { label: 'Groceries', href: '/category/groceries' },
-      { label: 'Home & Living', href: '/category/home' },
-      { label: 'Sports', href: '/category/sports' },
+      { labelKey: 'cat.electronics', href: '/category/electronics' },
+      { labelKey: 'cat.fashion', href: '/category/fashion' },
+      { labelKey: 'cat.beauty', href: '/category/beauty' },
+      { labelKey: 'cat.groceries', href: '/category/groceries' },
+      { labelKey: 'cat.homeLiving', href: '/category/home' },
+      { labelKey: 'cat.sports', href: '/category/sports' },
     ],
   },
   {
-    title: 'Seller Center',
+    titleKey: 'footer.sellerCenter',
     links: [
-      { label: 'Become a Seller', href: '/seller/dashboard' },
-      { label: 'Seller Dashboard', href: '/seller/dashboard' },
-      { label: 'Seller Analytics', href: '/seller/analytics' },
-      { label: 'Seller Finance', href: '/seller/finance' },
-      { label: 'Seller Policy', href: '/seller/policy' },
-      { label: 'Seller Support', href: '/support/chat' },
+      { labelKey: 'footer.becomeSeller', href: '/seller/dashboard' },
+      { labelKey: 'footer.sellerDashboard', href: '/seller/dashboard' },
+      { labelKey: 'footer.sellerAnalytics', href: '/seller/analytics' },
+      { labelKey: 'footer.sellerFinance', href: '/seller/finance' },
+      { labelKey: 'footer.sellerPolicy', href: '/seller/policy' },
+      { labelKey: 'footer.sellerSupport', href: '/support/chat' },
     ],
   },
   {
-    title: 'Company',
+    titleKey: 'footer.company',
     links: [
-      { label: 'About Us', href: '/about' },
-      { label: 'Careers', href: '/careers' },
-      { label: 'Press & Media', href: '/press' },
-      { label: 'Blog', href: '/blog' },
-      { label: 'Terms of Service', href: '/terms' },
-      { label: 'Privacy Policy', href: '/privacy' },
+      { labelKey: 'footer.aboutUs', href: '/about' },
+      { labelKey: 'footer.careers', href: '/careers' },
+      { labelKey: 'footer.pressMedia', href: '/press' },
+      { labelKey: 'footer.blog', href: '/blog' },
+      { labelKey: 'footer.termsOfService', href: '/terms' },
+      { labelKey: 'footer.privacyPolicy', href: '/privacy' },
     ],
   },
 ];
 
 export function FooterLinks() {
+  const { t } = useLanguage();
+
   return (
     <>
       {columns.map((col) => (
-        <div key={col.title}>
-          <h3 className="text-sm font-semibold uppercase tracking-wide text-gray-900 mb-5">
-            {col.title}
+        <div key={col.titleKey}>
+          <h3 className="text-sm font-semibold uppercase tracking-wide text-gray-900 dark:text-gray-100 mb-5">
+            {t(col.titleKey)}
           </h3>
           <ul className="space-y-3">
             {col.links.map((link) => (
-              <li key={link.label}>
+              <li key={link.labelKey}>
                 <Link
                   href={link.href}
-                  className="text-sm text-gray-500 leading-6 hover:text-primary transition-colors"
+                  className="text-sm text-gray-500 dark:text-gray-400 leading-6 hover:text-primary transition-colors"
                 >
-                  {link.label}
+                  {t(link.labelKey)}
                 </Link>
               </li>
             ))}

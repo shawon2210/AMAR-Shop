@@ -3,10 +3,12 @@
 import { useState } from 'react';
 import { Mail, ArrowRight, CheckCircle } from 'lucide-react';
 import { Footer as FooterGrid } from './footer/Footer';
+import { useLanguage } from '@/contexts/language-context';
 
 function Newsletter() {
   const [email, setEmail] = useState('');
   const [submitted, setSubmitted] = useState(false);
+  const { t } = useLanguage();
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -30,15 +32,15 @@ function Newsletter() {
                 <Mail className="text-white" size={18} />
               </div>
               <div>
-                <h3 className="text-base font-bold text-white leading-tight">Stay in the Loop</h3>
-                <p className="text-sm text-emerald-100 mt-0.5">Exclusive deals, launches & offers — straight to your inbox.</p>
+                <h3 className="text-base font-bold text-white leading-tight">{t('home.newsletterTitle')}</h3>
+                <p className="text-sm text-emerald-100 mt-0.5">{t('home.newsletterDesc')}</p>
               </div>
             </div>
 
             {submitted ? (
               <div className="flex items-center gap-2 text-white font-semibold text-sm bg-white/20 rounded-full px-5 py-2.5 sm:min-w-[340px] justify-center">
                 <CheckCircle size={16} />
-                You&apos;re subscribed!
+                {t('home.subscribedMsg')}
               </div>
             ) : (
               <form
@@ -51,7 +53,7 @@ function Newsletter() {
                     type="email"
                     value={email}
                     onChange={e => setEmail(e.target.value)}
-                    placeholder="Your email address"
+                    placeholder={t('home.enterEmail')}
                     className="h-11 w-full rounded-full border border-white/20 bg-white/15 pl-9 pr-3 text-white text-sm placeholder:text-emerald-100/60 outline-none focus:ring-2 focus:ring-white/30 transition-all duration-150"
                     required
                   />
@@ -60,7 +62,7 @@ function Newsletter() {
                   type="submit"
                   className="h-11 px-5 rounded-full bg-white text-emerald-700 font-bold text-sm whitespace-nowrap hover:bg-emerald-50 hover:shadow-lg transition-all duration-150 inline-flex items-center gap-1.5 shrink-0"
                 >
-                  Subscribe <ArrowRight size={14} />
+                  {t('home.subscribe')} <ArrowRight size={14} />
                 </button>
               </form>
             )}

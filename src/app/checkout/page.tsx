@@ -11,9 +11,11 @@ import { EmptyCart } from '@/components/checkout/empty-cart';
 import { AddressSection } from '@/components/checkout/address-section';
 import { PaymentSection } from '@/components/checkout/payment-section';
 import { OrderSummary } from '@/components/checkout/order-summary';
+import { useLanguage } from '@/contexts/language-context';
 
 export default function CheckoutPage() {
   const router = useRouter();
+  const { t } = useLanguage();
   const allItems = useCartStore(s => s.items);
   const clearCart = useCartStore(s => s.clearCart);
   const addToast = useUIStore(s => s.addToast);
@@ -91,7 +93,7 @@ export default function CheckoutPage() {
       ) : (
     <div className="app-container pt-4 md:pt-6 space-y-4 md:space-y-6 pb-[calc(7rem+env(safe-area-inset-bottom,0px))] lg:pb-12">
       <h1 className="text-responsive-subheading font-bold text-slate-900 dark:text-white">
-        Checkout
+        {t('checkout.title')}
       </h1>
 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">

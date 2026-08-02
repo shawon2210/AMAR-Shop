@@ -3,6 +3,7 @@
 import { useState } from 'react';
 import Link from 'next/link';
 import { api } from '@/services/api';
+import { useLanguage } from '@/contexts/language-context';
 
 const subjects = [
   { value: '', label: 'Select a subject' },
@@ -24,6 +25,7 @@ interface FormData {
 const initialForm: FormData = { name: '', email: '', phone: '', subject: '', message: '' };
 
 export default function ContactPage() {
+  const { t } = useLanguage();
   const [form, setForm] = useState<FormData>(initialForm);
   const [errors, setErrors] = useState<Partial<Record<keyof FormData, string>>>({});
   const [submitting, setSubmitting] = useState(false);
@@ -70,12 +72,12 @@ export default function ContactPage() {
   return (
     <div className="app-container py-6 space-y-6 pb-24">
       <nav className="flex items-center gap-1 text-xs text-secondary">
-        <Link href="/" className="hover:text-primary">Home</Link>
+        <Link href="/" className="hover:text-primary">{t('nav.home')}</Link>
         <span className="material-symbols-outlined text-sm">chevron_right</span>
-        <span className="text-on-surface">Contact Us</span>
+        <span className="text-on-surface">{t('help.contactUs')}</span>
       </nav>
 
-      <h1 className="text-responsive-subheading font-bold">Contact Us</h1>
+      <h1 className="text-responsive-subheading font-bold">{t('help.contactUs')}</h1>
 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
         <div className="lg:col-span-2">
