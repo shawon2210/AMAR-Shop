@@ -289,7 +289,7 @@
   .border-outline-variant { border-color: var(--color-outline-variant); }
 
   .material-symbols-outlined {
-    font-family: 'Material Symbols Outlined';
+    font-family: 'Material Symbols Outlined' !important;
     font-weight: normal;
     font-style: normal;
     font-size: 24px;
@@ -1104,8 +1104,14 @@ article,
 :lang(bn),
 [lang="bn"],
 [data-lang="bn"] {
-  font-family: var(--font-bengali), 'Noto Sans Bengali', 'Inter', system-ui, sans-serif !important;
+  font-family: var(--font-bengali), 'Noto Sans Bengali', 'Inter', system-ui, sans-serif;
   line-height: 1.625;
+}
+
+:lang(bn) .material-symbols-outlined,
+[lang="bn"] .material-symbols-outlined,
+[data-lang="bn"] .material-symbols-outlined {
+  font-family: 'Material Symbols Outlined' !important;
 }
 
 :lang(bn) h1,

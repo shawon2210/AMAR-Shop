@@ -26,7 +26,7 @@ function formatCount(n: number) {
 }
 
 export function CategoryGrid() {
-  const { t } = useLanguage();
+  const { t, language } = useLanguage();
   return (
     <section>
       <div className="app-container">
@@ -61,7 +61,7 @@ export function CategoryGrid() {
                   </div>
                   <div className="text-center">
                     <p className="text-[11px] md:text-[12px] font-semibold text-gray-700 group-hover:text-primary transition-colors duration-150 line-clamp-1 leading-tight">
-                      {cat.name}
+                      {language === 'bn' ? (cat.bnName || cat.name) : cat.name}
                     </p>
                     <span className="text-[10px] text-gray-400 leading-none mt-0.5 block">
                       {formatCount(cat.productCount)}

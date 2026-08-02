@@ -6,6 +6,8 @@ import { ArrowRight } from 'lucide-react';
 import { Product } from '@/types';
 import { ProductCard } from '@/components/commerce/product-card';
 
+import { useLanguage } from '@/contexts/language-context';
+
 interface ProductGridProps {
   products: Product[];
   title?: string;
@@ -26,8 +28,19 @@ const ITEMS_PER_PAGE = 12;
 
 export function ProductGrid({ products, title, columns = 4, showLoadMore = true }: ProductGridProps) {
   const [page, setPage] = useState(1);
+  const { t } = useLanguage();
   const visible = useMemo(() => products.slice(0, page * ITEMS_PER_PAGE), [products, page]);
   const hasMore = visible.length < products.length;
+
+  const displayTitle = title === 'Trending Now'
+    ? t('home.trendingNow')
+    : title === 'Just For You'
+    ? t('home.justForYou')
+    : title === 'Recently Viewed'
+    ? t('home.recentlyViewed')
+    : title === 'Popular Products'
+    ? t('home.popularProducts')
+    : title;
 
   return (
     <section>
@@ -37,14 +50,14 @@ export function ProductGrid({ products, title, columns = 4, showLoadMore = true 
             <div className="flex items-center gap-3">
               <div className="w-1 h-6 bg-primary rounded-full" />
               <h2 className="font-bold text-gray-900 tracking-tight" style={{ fontSize: 'clamp(16px, 1.8vw, 22px)' }}>
-                {title}
+                {displayTitle}
               </h2>
             </div>
             <Link
               href="/categories"
               className="flex items-center gap-1 text-sm font-semibold text-primary hover:text-primary-dark transition-colors duration-150"
             >
-              See All <ArrowRight size={15} />
+              {t('common.seeAll')} <ArrowRight size={15} />
             </Link>
           </div>
         )}
@@ -60,7 +73,7 @@ export function ProductGrid({ products, title, columns = 4, showLoadMore = true 
             onClick={() => setPage(p => p + 1)}
             className="w-full mt-5 h-11 border-2 border-primary text-primary font-semibold rounded-xl hover:bg-primary hover:text-white transition-all duration-200 text-sm"
           >
-            Load More Products
+            {t('common.seeAll')}
           </button>
         )}
       </div>
