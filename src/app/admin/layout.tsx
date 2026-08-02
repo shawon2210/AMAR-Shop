@@ -392,7 +392,7 @@ function SidebarContent({
                   await useAuthStore.getState().logout();
                   window.location.href = '/auth/login';
                 }}
-                className="p-2 rounded-lg hover:bg-white/8 text-white/25 hover:text-red-400 transition-colors"
+                className="w-11 h-11 flex items-center justify-center rounded-lg hover:bg-white/8 text-white/25 hover:text-red-400 transition-colors"
                 aria-label="Logout"
               >
                 <span className="material-symbols-outlined text-lg">logout</span>
