@@ -9,6 +9,7 @@ export function useFocusTrap(
   ref: RefObject<HTMLElement | null>,
   active: boolean,
   restoreFocus = true,
+  onEscapeClose?: () => void,
 ) {
   useEffect(() => {
     if (!active || !ref.current) return;
@@ -17,6 +18,10 @@ export function useFocusTrap(
     const previouslyFocused = document.activeElement as HTMLElement | null;
 
     const trapHandler = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') {
+        onEscapeClose?.();
+        return;
+      }
       if (e.key !== 'Tab') return;
       const focusable = el.querySelectorAll<HTMLElement>(FOCUSABLE_SELECTOR);
       if (focusable.length === 0) return;
@@ -45,5 +50,5 @@ export function useFocusTrap(
         previouslyFocused?.focus();
       }
     };
-  }, [ref, active, restoreFocus]);
+  }, [ref, active, restoreFocus, onEscapeClose]);
 }

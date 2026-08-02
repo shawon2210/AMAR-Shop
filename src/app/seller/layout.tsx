@@ -183,7 +183,7 @@ function SidebarContent({
       <div className="absolute top-0 left-0 right-0 h-0.5 bg-linear-to-r from-emerald-400 via-emerald-500/50 to-transparent" />
 
       <div className="flex items-center h-16 shrink-0 border-b border-white/5 px-4">
-        <Link href="/seller" className="flex items-center gap-3 min-w-0">
+        <Link href="/seller" onClick={onClose} className="flex items-center gap-3 min-w-0">
           <div className="w-9 h-9 rounded-xl bg-linear-to-br from-emerald-400 to-emerald-600 flex items-center justify-center shadow-lg shadow-emerald-500/20 shrink-0">
             <span className="material-symbols-outlined text-white text-xl">store</span>
           </div>
@@ -349,7 +349,7 @@ export default function SellerLayout({ children }: { children: React.ReactNode }
   const hamburgerRef = useRef<HTMLButtonElement>(null);
   const mobileDrawerRef = useRef<HTMLDivElement>(null);
 
-  useFocusTrap(mobileDrawerRef, sidebarOpen && !isDesktop);
+  useFocusTrap(mobileDrawerRef, sidebarOpen && !isDesktop, true, () => setSidebarOpen(false));
   useBodyLock(sidebarOpen && !isDesktop);
   useSidebarBehavior({
     open: sidebarOpen,

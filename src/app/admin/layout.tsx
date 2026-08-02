@@ -254,7 +254,7 @@ function SidebarContent({
       <div className="absolute top-0 left-0 right-0 h-0.5 bg-linear-to-r from-primary via-primary/50 to-transparent" />
 
       <div className="flex items-center h-16 shrink-0 border-b border-white/5 px-4">
-        <Link href="/admin" className="flex items-center gap-3 min-w-0">
+        <Link href="/admin" onClick={onClose} className="flex items-center gap-3 min-w-0">
           <div className="w-9 h-9 rounded-xl bg-linear-to-br from-primary to-primary/60 flex items-center justify-center shadow-lg shadow-primary/20 shrink-0">
             <span className="material-symbols-outlined text-white text-xl">store</span>
           </div>
@@ -422,7 +422,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
   const hamburgerRef = useRef<HTMLButtonElement>(null);
   const mobileDrawerRef = useRef<HTMLDivElement>(null);
 
-  useFocusTrap(mobileDrawerRef, sidebarOpen && !isDesktop);
+  useFocusTrap(mobileDrawerRef, sidebarOpen && !isDesktop, true, () => setSidebarOpen(false));
   useBodyLock(sidebarOpen && !isDesktop);
   useSidebarBehavior({
     open: sidebarOpen,
