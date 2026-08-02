@@ -76,7 +76,7 @@ export default function ProductDetailPage() {
     <div className="app-container py-6 space-y-6 pb-24">
       {/* Breadcrumb */}
       <nav className="flex items-center gap-1 text-xs text-secondary">
-        <Link href="/" className="hover:text-primary">{t('product.home')}</Link>
+        <Link href="/" className="inline-flex items-center min-h-11 px-1 -mx-1 hover:text-primary">{t('product.home')}</Link>
         <span className="material-symbols-outlined text-sm">chevron_right</span>
         <Link href={`/category/${product.categoryId}`} className="hover:text-primary">{product.category}</Link>
         <span className="material-symbols-outlined text-sm">chevron_right</span>

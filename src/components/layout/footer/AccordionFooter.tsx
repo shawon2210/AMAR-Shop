@@ -85,7 +85,7 @@ function AccordionItem({ titleKey, links }: Column) {
             <li key={link.labelKey}>
               <Link
                 href={link.href}
-                className="text-sm text-gray-500 hover:text-primary transition-colors"
+                className="inline-flex items-center min-h-11 w-full py-1 text-sm text-gray-500 hover:text-primary transition-colors"
               >
                 {t(link.labelKey as Parameters<typeof t>[0])}
               </Link>

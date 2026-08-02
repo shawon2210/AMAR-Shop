@@ -20,11 +20,11 @@ export function FooterBottom() {
         &copy; {new Date().getFullYear()} AmarShop. {t('footer.rights')}
       </p>
 
-      <div className="flex items-center gap-4 text-xs text-gray-400">
-        <Link href="/privacy" className="hover:text-primary transition-colors">{t('footer.privacyPolicy')}</Link>
-        <Link href="/terms" className="hover:text-primary transition-colors">{t('footer.termsOfService')}</Link>
-        <Link href="/support/tickets" className="hover:text-primary transition-colors">{t('nav.help')}</Link>
-        <Link href="/orders" className="hover:text-primary transition-colors">{t('nav.orders')}</Link>
+      <div className="flex items-center gap-1 md:gap-4 text-xs text-gray-400">
+        <Link href="/privacy" className="inline-flex items-center justify-center min-h-11 px-2 -mx-1 hover:text-primary transition-colors">{t('footer.privacyPolicy')}</Link>
+        <Link href="/terms" className="inline-flex items-center justify-center min-h-11 px-2 -mx-1 hover:text-primary transition-colors">{t('footer.termsOfService')}</Link>
+        <Link href="/support/tickets" className="inline-flex items-center justify-center min-h-11 px-2 -mx-1 hover:text-primary transition-colors">{t('nav.help')}</Link>
+        <Link href="/orders" className="inline-flex items-center justify-center min-h-11 px-2 -mx-1 hover:text-primary transition-colors">{t('nav.orders')}</Link>
       </div>
     </div>
   );

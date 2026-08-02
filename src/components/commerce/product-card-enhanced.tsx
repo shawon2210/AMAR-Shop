@@ -162,7 +162,7 @@ export const ProductCardEnhanced = memo(function ProductCardEnhanced({ product, 
         {/* Wishlist */}
         <button
           onClick={handleWishlist}
-          className="absolute bottom-2 right-2 z-20 w-8 h-8 rounded-full bg-white/95 backdrop-blur-sm flex items-center justify-center shadow-sm border border-gray-100/80 transition-all duration-150 hover:scale-110 active:scale-95"
+          className="absolute bottom-1.5 right-1.5 z-20 w-11 h-11 rounded-full bg-white/95 backdrop-blur-sm flex items-center justify-center shadow-sm border border-gray-100/80 transition-all duration-150 hover:scale-110 active:scale-95"
           aria-label={wishlisted ? 'Remove from wishlist' : 'Add to wishlist'}
         >
           <Heart

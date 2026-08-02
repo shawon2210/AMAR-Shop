@@ -303,7 +303,7 @@ function SidebarContent({
 
       <div className="border-t border-white/5 shrink-0">
         <div className={`flex items-center ${collapsed ? 'justify-center py-3' : 'gap-3 p-3'}`}>
-          <div className="w-8 h-8 rounded-full bg-linear-to-br from-emerald-400 to-emerald-600 flex items-center justify-center text-white text-xs font-bold uppercase shadow-sm shrink-0">
+          <div className="flex items-center justify-center min-w-11 min-h-11 rounded-full bg-linear-to-br from-emerald-400 to-emerald-600 text-white text-xs font-bold uppercase shadow-sm shrink-0">
             {user?.name?.charAt(0) || 'S'}
           </div>
           {!collapsed && (
@@ -432,7 +432,7 @@ export default function SellerLayout({ children }: { children: React.ReactNode }
       <header className="sticky top-0 z-50 h-18 bg-white/80 dark:bg-gray-900/90 backdrop-blur-xl border-b border-gray-200/40 dark:border-gray-700/60 shadow-sm shadow-black/5 flex items-center px-4 lg:px-8 gap-4">
         <button
           ref={hamburgerRef}
-          className="lg:hidden p-2 -ml-2 rounded-lg hover:bg-slate-100 transition-colors"
+          className="lg:hidden flex items-center justify-center min-w-11 min-h-11 px-2 -ml-2 rounded-lg hover:bg-slate-100 transition-colors"
           onClick={() => setSidebarOpen(true)}
           aria-label="Open sidebar menu"
           aria-expanded={sidebarOpen}
@@ -460,7 +460,7 @@ export default function SellerLayout({ children }: { children: React.ReactNode }
         <div className="flex items-center gap-1 md:gap-2">
           <button
             onClick={() => setSearchOpen(true)}
-            className="flex items-center gap-2 bg-slate-100/80 hover:bg-slate-200/70 rounded-lg px-2.5 py-2 transition-colors md:w-56"
+            className="flex items-center gap-2 bg-slate-100/80 hover:bg-slate-200/70 rounded-lg px-2.5 min-h-11 min-w-11 justify-center transition-colors md:w-56 md:justify-start"
             aria-label="Open search"
           >
             <span className="material-symbols-outlined text-slate-400 text-lg">search</span>
@@ -475,7 +475,7 @@ export default function SellerLayout({ children }: { children: React.ReactNode }
 
           <Link
             href="/seller/settings"
-            className="relative p-2 rounded-full hover:bg-slate-100 transition-colors shrink-0"
+            className="relative flex items-center justify-center min-w-11 min-h-11 p-2 rounded-full hover:bg-slate-100 transition-colors shrink-0"
             aria-label="Settings"
           >
             <span className="material-symbols-outlined text-slate-500 text-lg">settings</span>
@@ -484,7 +484,7 @@ export default function SellerLayout({ children }: { children: React.ReactNode }
           <div className="flex items-center gap-2 pl-2 md:pl-3 border-l border-slate-200 shrink-0">
             <Link
               href="/seller/profile"
-              className="w-8 h-8 rounded-full bg-linear-to-br from-emerald-400 to-emerald-600 flex items-center justify-center text-white text-xs font-bold uppercase shadow-sm shrink-0"
+              className="flex items-center justify-center min-w-11 min-h-11 rounded-full bg-linear-to-br from-emerald-400 to-emerald-600 text-white text-xs font-bold uppercase shadow-sm shrink-0"
             >
               {user?.name?.charAt(0) || 'S'}
             </Link>
@@ -498,7 +498,7 @@ export default function SellerLayout({ children }: { children: React.ReactNode }
                 await useAuthStore.getState().logout();
                 window.location.href = '/auth/login';
               }}
-              className="ml-1 p-1.5 rounded-lg hover:bg-red-50 text-slate-400 hover:text-red-500 transition-colors shrink-0"
+              className="ml-1 flex items-center justify-center min-w-11 min-h-11 p-1.5 rounded-lg hover:bg-red-50 text-slate-400 hover:text-red-500 transition-colors shrink-0"
               aria-label="Logout"
             >
               <span className="material-symbols-outlined text-lg">logout</span>

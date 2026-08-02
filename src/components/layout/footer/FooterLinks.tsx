@@ -76,7 +76,7 @@ export function FooterLinks() {
               <li key={link.labelKey}>
                 <Link
                   href={link.href}
-                  className="text-sm text-gray-500 dark:text-gray-400 leading-6 hover:text-primary transition-colors"
+                  className="inline-flex items-center min-h-11 text-sm text-gray-500 dark:text-gray-400 leading-6 hover:text-primary transition-colors"
                 >
                   {t(link.labelKey)}
                 </Link>
