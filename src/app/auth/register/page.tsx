@@ -226,16 +226,16 @@ function RegisterForm() {
               />
               <span>
                 {t('auth.agreeTo')}{' '}
-                <Link href="/terms" className="text-primary hover:underline">{t('auth.terms')}</Link>
+                <Link href="/terms" className="inline-flex items-center min-h-11 text-primary hover:underline">{t('auth.terms')}</Link>
                 {' '}{t('auth.and')}{' '}
-                <Link href="/privacy" className="text-primary hover:underline">{t('auth.privacyPolicy')}</Link> *
+                <Link href="/privacy" className="inline-flex items-center min-h-11 text-primary hover:underline">{t('auth.privacyPolicy')}</Link> *
               </span>
             </label>
 
             <button
               type="submit"
               disabled={!agreeTerms || loading || !!nameError || !!emailError || !!phoneError || !!passwordError || !!confirmError}
-              className="w-full py-2.5 sm:py-3 bg-primary text-on-primary font-label-bold text-xs sm:text-sm rounded-lg hover:brightness-110 active:scale-[0.98] transition-all disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
+              className="w-full py-2.5 sm:py-3 min-h-11 bg-primary text-on-primary font-label-bold text-xs sm:text-sm rounded-lg hover:brightness-110 active:scale-[0.98] transition-all disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
             >
               {loading ? (
                 <>
@@ -250,7 +250,7 @@ function RegisterForm() {
 
           <p className="mt-5 sm:mt-6 text-center text-xs sm:text-sm text-secondary">
             {t('auth.hasAccount')}{' '}
-            <Link href={`/auth/login?redirect=${encodeURIComponent(redirectTo)}`} className="text-primary font-label-bold hover:underline whitespace-nowrap">
+            <Link href={`/auth/login?redirect=${encodeURIComponent(redirectTo)}`} className="inline-flex items-center min-h-11 text-primary font-label-bold hover:underline whitespace-nowrap">
               {t('auth.signIn')}
             </Link>
           </p>

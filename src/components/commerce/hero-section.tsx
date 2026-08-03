@@ -137,7 +137,7 @@ export function HeroSection({ priority = false }: { priority?: boolean }) {
               <Link
                 key={pill.key}
                 href={pill.href}
-                className="flex items-center h-8 px-3.5 rounded-full bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 text-xs font-medium text-gray-600 dark:text-gray-300 hover:border-primary hover:text-primary transition-all duration-150 whitespace-nowrap shadow-xs"
+                className="flex items-center min-h-11 px-3.5 rounded-full bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 text-xs font-medium text-gray-600 dark:text-gray-300 hover:border-primary hover:text-primary transition-all duration-150 whitespace-nowrap shadow-xs"
               >
                 {t(pill.key)}
               </Link>

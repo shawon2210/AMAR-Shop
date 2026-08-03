@@ -1,4 +1,4 @@
-import Link from 'next/link';
+﻿import Link from 'next/link';
 
 export const metadata = {
   title: 'Blog - AmarShop',
@@ -9,7 +9,7 @@ export default function BlogPage() {
   return (
     <div className="app-container py-6 space-y-6 pb-24">
       <nav className="flex items-center gap-1 text-xs text-secondary">
-        <Link href="/" className="inline-flex items-center min-h-11 px-1 -mx-1 hover:text-primary">Home</Link>
+        <Link href="/" className="inline-flex items-center min-h-11 min-w-11 px-1 -mx-1 hover:text-primary">Home</Link>
         <span className="material-symbols-outlined text-sm">chevron_right</span>
         <span className="text-on-surface">Blog</span>
       </nav>

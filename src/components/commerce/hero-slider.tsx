@@ -176,15 +176,18 @@ export function HeroSlider({ priority = false }: { priority?: boolean }) {
             key={i}
             aria-label={`Slide ${i + 1}`}
             onClick={() => setCurrent(i)}
-            className="relative h-11 rounded-full overflow-hidden transition-all duration-300 bg-white/30"
+            className="relative flex h-11 items-center justify-center rounded-full transition-transform duration-200 hover:scale-110 focus-visible:outline-2 focus-visible:outline-white/60"
             style={{ width: i === current ? "32px" : "8px" }}
           >
-            {i === current && (
-              <span
-                className="absolute inset-0 bg-white rounded-full origin-left"
-                style={{ animation: `slideProgress ${AUTO_PLAY_MS}ms linear forwards` }}
-              />
-            )}
+            <span aria-hidden="true" className="absolute -inset-x-[18px] -inset-y-1" />
+            <span className="relative h-11 w-full rounded-full overflow-hidden bg-white/30 transition-colors duration-300 hover:bg-white/50">
+              {i === current && (
+                <span
+                  className="absolute inset-0 bg-white rounded-full origin-left"
+                  style={{ animation: `slideProgress ${AUTO_PLAY_MS}ms linear forwards` }}
+                />
+              )}
+            </span>
           </button>
         ))}
       </div>

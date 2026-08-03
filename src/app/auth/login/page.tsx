@@ -126,17 +126,17 @@ function LoginForm() {
                   <input type="checkbox" className="w-5 h-5 rounded border-gray-300 text-orange-500 focus:ring-orange-500" />
                   {t('auth.rememberMe')}
                 </label>
-                <Link href="/auth/forgot-password" className="text-orange-600 hover:underline font-medium">{t('auth.forgotPassword')}</Link>
+                <Link href="/auth/forgot-password" className="inline-flex items-center min-h-11 text-orange-600 hover:underline font-medium">{t('auth.forgotPassword')}</Link>
               </div>
 
-              <button type="submit" disabled={loading} className="w-full py-2.5 bg-orange-500 text-white font-semibold text-sm rounded-xl hover:bg-orange-600 active:scale-[0.98] transition-all disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2 shadow-sm">
+              <button type="submit" disabled={loading} className="w-full py-2.5 min-h-11 bg-orange-500 text-white font-semibold text-sm rounded-xl hover:bg-orange-600 active:scale-[0.98] transition-all disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2 shadow-sm">
                 {loading ? <><span className="material-symbols-outlined animate-spin text-base">progress_activity</span> {t('auth.signingIn')}</> : t('auth.signIn')}
               </button>
             </form>
 
             <p className="mt-5 text-center text-sm text-gray-500">
               {t('auth.noAccount')}{' '}
-              <Link href={`/auth/register?redirect=${encodeURIComponent(redirectTo)}`} className="text-orange-600 font-medium hover:underline">{t('auth.registerLink')}</Link>
+              <Link href={`/auth/register?redirect=${encodeURIComponent(redirectTo)}`} className="inline-flex items-center min-h-11 text-orange-600 font-medium hover:underline">{t('auth.registerLink')}</Link>
             </p>
 
             <div className="mt-6 relative">

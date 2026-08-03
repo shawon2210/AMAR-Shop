@@ -205,7 +205,7 @@ export default function ChatPage() {
                 <button
                   key={qr}
                   onClick={() => handleQuickReply(qr)}
-                  className="text-xs px-3 py-1.5 bg-surface-container-high hover:bg-surface-container-highest rounded-full transition-colors"
+                  className="text-xs px-3 py-1.5 min-h-11 bg-surface-container-high hover:bg-surface-container-highest rounded-full transition-colors"
                 >
                   {qr}
                 </button>
