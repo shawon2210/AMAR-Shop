@@ -58,7 +58,7 @@ export default function AccountPage() {
           </div>
           <Link
             href="/auth/login?redirect=/account"
-            className="bg-primary text-white px-5 py-2 rounded-lg text-sm font-semibold hover:brightness-110 transition-all shrink-0"
+            className="inline-flex items-center bg-primary text-white px-5 py-2 min-h-11 rounded-lg text-sm font-semibold hover:brightness-110 transition-all shrink-0"
           >
             {t('account.signIn')}
           </Link>

@@ -44,7 +44,7 @@ export default function WalletPage() {
           <span className="text-sm opacity-80">Available Balance</span>
           <button
             onClick={() => setShowBalance(!showBalance)}
-            className="p-1 rounded-full hover:bg-white/20 transition-colors"
+            className="p-1 -mr-1 min-w-11 min-h-11 flex items-center justify-center rounded-full hover:bg-white/20 transition-colors"
           >
             <span className="material-symbols-outlined text-lg">
               {showBalance ? 'visibility' : 'visibility_off'}

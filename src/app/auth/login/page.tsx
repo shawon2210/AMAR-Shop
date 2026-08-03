@@ -94,7 +94,7 @@ function LoginForm() {
                   type="text"
                   value={identity}
                   onChange={e => setIdentity(e.target.value)}
-                  className={`w-full px-3.5 py-2.5 border ${identityError ? 'border-red-300' : 'border-gray-200'} rounded-xl bg-gray-50 outline-none focus:ring-2 focus:ring-orange-500 focus:border-transparent text-sm transition-all`}
+                  className={`w-full px-3.5 py-2.5 min-h-11 border ${identityError ? 'border-red-300' : 'border-gray-200'} rounded-xl bg-gray-50 outline-none focus:ring-2 focus:ring-orange-500 focus:border-transparent text-sm transition-all`}
                   placeholder="admin@amarshop.com or 01712345678"
                   disabled={loading}
                   required
@@ -109,7 +109,7 @@ function LoginForm() {
                     type={showPassword ? 'text' : 'password'}
                     value={password}
                     onChange={e => setPassword(e.target.value)}
-                    className="w-full px-3.5 py-2.5 bg-transparent border-none outline-none text-sm"
+                    className="w-full px-3.5 py-2.5 min-h-11 bg-transparent border-none outline-none text-sm"
                     placeholder={t('auth.passwordPlaceholder')}
                     disabled={loading}
                     required
@@ -123,7 +123,7 @@ function LoginForm() {
 
               <div className="flex items-center justify-between text-sm">
                 <label className="flex items-center gap-2 text-gray-600 cursor-pointer select-none">
-                  <input type="checkbox" className="rounded border-gray-300 text-orange-500 focus:ring-orange-500" />
+                  <input type="checkbox" className="w-5 h-5 rounded border-gray-300 text-orange-500 focus:ring-orange-500" />
                   {t('auth.rememberMe')}
                 </label>
                 <Link href="/auth/forgot-password" className="text-orange-600 hover:underline font-medium">{t('auth.forgotPassword')}</Link>

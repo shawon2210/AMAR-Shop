@@ -144,7 +144,7 @@ export function HeroSlider({ priority = false }: { priority?: boolean }) {
             </p>
             <Link
               href={slide.ctaHref}
-              className="self-start inline-flex items-center gap-2.5 h-11 md:h-12 px-6 md:px-7 rounded-full bg-white text-gray-900 font-bold text-sm shadow-xl hover:bg-gray-50 hover:shadow-2xl hover:gap-3.5 transition-all duration-200 active:scale-95"
+              className="self-start shrink-0 inline-flex items-center gap-2.5 h-11 md:h-12 px-6 md:px-7 rounded-full bg-white text-gray-900 font-bold text-sm shadow-xl hover:bg-gray-50 hover:shadow-2xl hover:gap-3.5 transition-all duration-200 active:scale-95"
             >
               {t(slide.ctaKey)}
               <ArrowRight size={15} />

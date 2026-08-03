@@ -111,7 +111,7 @@ export function CategoryFilterSidebar() {
       {/* Filter Button — mobile only */}
       <button
         onClick={() => setMobileOpen(true)}
-        className="lg:hidden flex items-center gap-2 h-9 px-4 rounded-full border border-gray-200 text-sm font-medium text-gray-700 hover:bg-gray-50 transition-colors"
+        className="lg:hidden inline-flex items-center gap-2 min-h-11 px-4 rounded-full border border-gray-200 text-sm font-medium text-gray-700 hover:bg-gray-50 transition-colors"
         aria-label="Open filters"
       >
         <SlidersHorizontal size={16} />

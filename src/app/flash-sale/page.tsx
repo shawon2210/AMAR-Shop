@@ -50,7 +50,7 @@ const CategoryFilter = ({ categories: cats, activeCategory, onCategoryChange }: 
         <button
           key={cat}
           onClick={() => onCategoryChange(cat)}
-          className={`px-4 py-1.5 rounded-full text-sm font-medium transition-colors whitespace-nowrap ${
+          className={`inline-flex items-center min-h-11 px-4 py-1.5 rounded-full text-sm font-medium transition-colors whitespace-nowrap ${
             activeCategory === cat
               ? 'bg-primary text-white'
               : 'bg-gray-100 text-gray-700 hover:bg-gray-200'

@@ -117,7 +117,7 @@ function RegisterForm() {
                 type="text"
                 value={name}
                 onChange={e => setName(e.target.value)}
-                className={`w-full px-3 py-2.5 border ${nameError ? 'border-error' : 'border-outline'} rounded-lg bg-transparent outline-none focus:ring-2 focus:ring-primary text-xs sm:text-sm`}
+                className={`w-full px-3 py-2.5 min-h-11 border ${nameError ? 'border-error' : 'border-outline'} rounded-lg bg-transparent outline-none focus:ring-2 focus:ring-primary text-xs sm:text-sm`}
                 placeholder={t('auth.fullNamePlaceholder')}
                 disabled={loading}
                 required
@@ -132,7 +132,7 @@ function RegisterForm() {
                 type="email"
                 value={email}
                 onChange={e => setEmail(e.target.value)}
-                className={`w-full px-3 py-2.5 border ${emailError ? 'border-error' : 'border-outline'} rounded-lg bg-transparent outline-none focus:ring-2 focus:ring-primary text-xs sm:text-sm`}
+                className={`w-full px-3 py-2.5 min-h-11 border ${emailError ? 'border-error' : 'border-outline'} rounded-lg bg-transparent outline-none focus:ring-2 focus:ring-primary text-xs sm:text-sm`}
                 placeholder={t('auth.emailPlaceholder')}
                 disabled={loading}
                 autoComplete="email"
@@ -148,7 +148,7 @@ function RegisterForm() {
                   type="tel"
                   value={phone}
                   onChange={e => setPhone(e.target.value)}
-                  className="w-full px-3 py-2.5 bg-transparent border-none outline-none text-xs sm:text-sm"
+                  className="w-full px-3 py-2.5 min-h-11 bg-transparent border-none outline-none text-xs sm:text-sm"
                   placeholder={t('auth.phonePlaceholder')}
                   disabled={loading}
                   required
@@ -164,7 +164,7 @@ function RegisterForm() {
                 type="password"
                 value={password}
                 onChange={e => setPassword(e.target.value)}
-                className={`w-full px-3 py-2.5 border ${passwordError ? 'border-error' : 'border-outline'} rounded-lg bg-transparent outline-none focus:ring-2 focus:ring-primary text-xs sm:text-sm`}
+                className={`w-full px-3 py-2.5 min-h-11 border ${passwordError ? 'border-error' : 'border-outline'} rounded-lg bg-transparent outline-none focus:ring-2 focus:ring-primary text-xs sm:text-sm`}
                 placeholder={t('auth.passwordMinLength')}
                 minLength={8}
                 disabled={loading}
@@ -207,7 +207,7 @@ function RegisterForm() {
                 type="password"
                 value={confirmPassword}
                 onChange={e => setConfirmPassword(e.target.value)}
-                className={`w-full px-3 py-2.5 border ${confirmError ? 'border-error' : 'border-outline'} rounded-lg bg-transparent outline-none focus:ring-2 focus:ring-primary text-xs sm:text-sm`}
+                className={`w-full px-3 py-2.5 min-h-11 border ${confirmError ? 'border-error' : 'border-outline'} rounded-lg bg-transparent outline-none focus:ring-2 focus:ring-primary text-xs sm:text-sm`}
                 placeholder={t('auth.confirmPasswordPlaceholder')}
                 disabled={loading}
                 required
@@ -221,7 +221,7 @@ function RegisterForm() {
                 type="checkbox"
                 checked={agreeTerms}
                 onChange={e => setAgreeTerms(e.target.checked)}
-                className="mt-0.5 rounded border-outline text-primary shrink-0"
+                className="mt-0.5 w-5 h-5 rounded border-outline text-primary shrink-0"
                 disabled={loading}
               />
               <span>

@@ -72,7 +72,7 @@ export default function ContactPage() {
   return (
     <div className="app-container py-6 space-y-6 pb-24">
       <nav className="flex items-center gap-1 text-xs text-secondary">
-        <Link href="/" className="hover:text-primary">{t('nav.home')}</Link>
+        <Link href="/" className="inline-flex items-center min-h-11 px-1 -mx-1 hover:text-primary">{t('nav.home')}</Link>
         <span className="material-symbols-outlined text-sm">chevron_right</span>
         <span className="text-on-surface">{t('help.contactUs')}</span>
       </nav>

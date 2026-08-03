@@ -101,7 +101,7 @@ export default function TicketsPage() {
       {/* Header */}
       <div className="flex items-center justify-between">
         <h1 className="text-xl font-bold">My Tickets</h1>
-        <button className="flex items-center gap-1.5 bg-primary text-on-primary px-4 py-2 rounded-lg font-semibold text-sm hover:brightness-110 transition-all active:scale-95">
+        <button className="inline-flex items-center gap-1.5 bg-primary text-on-primary px-4 py-2 min-h-11 rounded-lg font-semibold text-sm hover:brightness-110 transition-all active:scale-95">
           <span className="material-symbols-outlined text-lg">add</span>
           Create Ticket
         </button>

@@ -140,7 +140,7 @@ export default function ChatPage() {
       <div className="flex-1 flex flex-col bg-surface-container-lowest">
         {/* Chat Header */}
         <div className="flex items-center gap-3 p-4 border-b border-outline-variant bg-surface">
-          <button className="md:hidden p-1" onClick={() => {}}>
+          <button className="md:hidden p-1 -ml-1 min-w-11 min-h-11 flex items-center justify-center" onClick={() => {}}>
             <span className="material-symbols-outlined">arrow_back</span>
           </button>
           <div className="relative flex-shrink-0">
@@ -158,7 +158,7 @@ export default function ChatPage() {
               {activeConversation?.isSupport ? ' · Support' : ' · Store'}
             </p>
           </div>
-          <button className="p-1">
+          <button className="p-1 -mr-1 min-w-11 min-h-11 flex items-center justify-center">
             <span className="material-symbols-outlined text-secondary">more_vert</span>
           </button>
         </div>
