@@ -217,7 +217,7 @@ export default function ChatPage() {
         {/* Input */}
         <div className="p-4 border-t border-outline-variant bg-surface">
           <div className="flex items-end gap-2">
-            <button className="p-2 flex-shrink-0">
+            <button className="p-2 min-w-11 min-h-11 flex items-center justify-center flex-shrink-0">
               <span className="material-symbols-outlined text-secondary">attach_file</span>
             </button>
             <textarea
@@ -225,7 +225,7 @@ export default function ChatPage() {
               onChange={e => setMessageText(e.target.value)}
               placeholder="Type a message..."
               rows={1}
-              className="flex-1 px-3 py-2 border border-outline-variant rounded-xl text-sm bg-transparent outline-none focus:ring-2 focus:ring-primary resize-none max-h-24"
+              className="flex-1 px-3 py-2 min-h-11 border border-outline-variant rounded-xl text-sm bg-transparent outline-none focus:ring-2 focus:ring-primary resize-none max-h-24"
               onKeyDown={e => {
                 if (e.key === 'Enter' && !e.shiftKey) {
                   e.preventDefault();
@@ -236,7 +236,7 @@ export default function ChatPage() {
             <button
               onClick={handleSend}
               disabled={!messageText.trim()}
-              className="p-2.5 bg-primary text-on-primary rounded-xl disabled:opacity-50 hover:brightness-110 transition-all flex-shrink-0"
+              className="p-2.5 min-w-11 min-h-11 bg-primary text-on-primary rounded-xl disabled:opacity-50 hover:brightness-110 transition-all flex-shrink-0"
             >
               <span className="material-symbols-outlined text-lg">send</span>
             </button>

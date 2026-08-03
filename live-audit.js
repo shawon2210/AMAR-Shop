@@ -1,7 +1,7 @@
 const { chromium } = require('playwright');
 
 const BASE = 'https://amarshop-shawon2210s-projects.vercel.app';
-const SHARE_URL = 'https://amarshop-shawon2210s-projects.vercel.app/?_vercel_share=RaRYF3Xs6ckAAzVZRfrQGaDUR2CcZFj7';
+const SHARE_URL = 'https://amarshop-shawon2210s-projects.vercel.app/?_vercel_share=abSDdpc5Xv3OdfNQXcEKD01wBKoFx1cA';
 const VIEWPORTS = [360, 375, 390, 768, 1024, 1440];
 const MOBILE = [360, 375, 390];
 
@@ -88,16 +88,30 @@ async function touchTargetCheck(page) {
       const c = el.getAttribute('class');
       return (typeof c === 'string' ? c : '').slice(0, 50);
     };
+    const hitRect = (el) => {
+      const r = el.getBoundingClientRect();
+      let minX = r.left, minY = r.top, maxX = r.right, maxY = r.bottom;
+      for (const d of el.querySelectorAll('*')) {
+        const dr = d.getBoundingClientRect();
+        if (dr.width === 0 && dr.height === 0) continue;
+        if (dr.left < minX) minX = dr.left;
+        if (dr.top < minY) minY = dr.top;
+        if (dr.right > maxX) maxX = dr.right;
+        if (dr.bottom > maxY) maxY = dr.bottom;
+      }
+      return { left: minX, top: minY, right: maxX, bottom: maxY };
+    };
     for (const el of document.querySelectorAll('a, button, input, select, textarea, [role="button"]')) {
       if (el.type === 'checkbox' || el.type === 'radio') continue;
       const cs = getComputedStyle(el);
       const b = el.getBoundingClientRect();
       const display = cs.display === 'none' || cs.visibility === 'hidden' || b.width === 0 || b.height === 0;
       if (display) continue;
-      if (b.width < 40 || b.height < 40) {
-        const r = el.getBoundingClientRect();
-        if (r.top > 0 && r.bottom < window.innerHeight && r.left > 0 && r.right < window.innerWidth) {
-          bad.push({ tag: el.tagName, cls: cls(el), w: Math.round(b.width), h: Math.round(b.height), txt: (el.textContent || '').trim().slice(0, 20) });
+      const h = hitRect(el);
+      const w = h.right - h.left, ht = h.bottom - h.top;
+      if (w < 40 || ht < 40) {
+        if (h.top > 0 && h.bottom < window.innerHeight && h.left > 0 && h.right < window.innerWidth) {
+          bad.push({ tag: el.tagName, cls: cls(el), w: Math.round(w), h: Math.round(ht), txt: (el.textContent || '').trim().slice(0, 20) });
         }
       }
       if (bad.length >= 6) break;
