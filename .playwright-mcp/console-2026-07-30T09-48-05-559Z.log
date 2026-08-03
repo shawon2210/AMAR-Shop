@@ -1,6 +1,0 @@
-[    1967ms] [INFO] Banner not shown: beforeinstallpromptevent.preventDefault() called. The page must call beforeinstallpromptevent.prompt() to show the banner. @ https://amarshop-eight.vercel.app/:0
-[    2320ms] [ERROR] Failed to load resource: the server responded with a status of 404 () @ https://amarshop-eight.vercel.app/api/products?flashSale=true:0
-[    3839ms] [ERROR] Failed to load resource: the server responded with a status of 404 () @ https://amarshop-eight.vercel.app/_next/image?url=https%3A%2F%2Fimages.unsplash.com%2Fphoto-1606403838380-80f8a1a8d2b5%3Fw%3D800&w=256&q=75:0
-[   92308ms] [LOG] BUTTON CLICKED 2026-07-30T09:49:37.863Z @ :2
-[  107977ms] [LOG] BUTTON CLICKED 2026-07-30T09:49:53.535Z @ :2
-[  117578ms] [LOG] BUTTON CLICKED 2026-07-30T09:50:03.137Z @ :2

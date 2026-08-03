@@ -1,8 +1,0 @@
-[    1973ms] [ERROR] Failed to load resource: the server responded with a status of 404 () @ https://amarshop-eight.vercel.app/auth/forgot-password?_rsc=n5hqsW7r31npIJSZ:0
-[    2403ms] [INFO] Banner not shown: beforeinstallpromptevent.preventDefault() called. The page must call beforeinstallpromptevent.prompt() to show the banner. @ https://amarshop-eight.vercel.app/auth/login:0
-[    7984ms] [ERROR] Failed to load resource: the server responded with a status of 404 () @ https://amarshop-eight.vercel.app/api/auth/login:0
-[    8608ms] [INFO] Banner not shown: beforeinstallpromptevent.preventDefault() called. The page must call beforeinstallpromptevent.prompt() to show the banner. @ https://amarshop-eight.vercel.app/admin:0
-[    8613ms] [ERROR] Failed to load resource: the server responded with a status of 404 () @ https://amarshop-eight.vercel.app/api/admin/dashboard:0
-[    8829ms] [ERROR] Failed to load resource: the server responded with a status of 404 () @ https://amarshop-eight.vercel.app/api/admin/dashboard:0
-[    8836ms] [ERROR] Failed to load resource: the server responded with a status of 404 () @ https://amarshop-eight.vercel.app/admin/invoices?_rsc=xFVjKFL12UrVWmwy:0
-[    9297ms] [ERROR] Failed to load resource: the server responded with a status of 404 () @ https://amarshop-eight.vercel.app/admin/notifications?_rsc=xFVjKFL12UrVWmwy:0
