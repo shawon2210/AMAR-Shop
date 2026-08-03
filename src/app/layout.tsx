@@ -5,7 +5,7 @@ import { Header } from "@/components/layout/header";
 import { Footer } from "@/components/layout/footer";
 import { BottomNav } from "@/components/layout/bottom-nav";
 import { ToastContainer } from "@/components/ui/toast-container";
-import { PwaPrompt } from "@/components/layout/pwa-prompt";
+
 import Providers from "@/app/providers";
 
 const inter = Inter({
@@ -90,7 +90,6 @@ export default function RootLayout({
             <main id="main-content" className="flex-1 pb-16 md:pb-0 min-w-0">{children}</main>
             <Footer />
             <BottomNav />
-            <PwaPrompt />
             <ToastContainer />
           </Providers>
         </div>
