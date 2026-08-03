@@ -1,7 +1,7 @@
 const { chromium } = require('playwright');
 
 const BASE = 'https://amarshop-shawon2210s-projects.vercel.app';
-const SHARE_URL = 'https://amarshop-shawon2210s-projects.vercel.app/?_vercel_share=abSDdpc5Xv3OdfNQXcEKD01wBKoFx1cA';
+const SHARE_URL = 'https://amarshop-shawon2210s-projects.vercel.app/?_vercel_share=20mvxnvmCoXSLCc8cE38zfNV5YJM7TOR';
 const VIEWPORTS = [360, 375, 390, 768, 1024, 1440];
 const MOBILE = [360, 375, 390];
 
